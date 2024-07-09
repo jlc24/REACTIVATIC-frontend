@@ -1,0 +1,96 @@
+<app-cabeceratitulos [titulo]="'Perfil'" [descripcion]="'Perfil del usuario'" [icono]="'user'" [opcion]="'perfil'">
+</app-cabeceratitulos>
+
+<div class="row user">
+    <div class="col-md-12">
+        <div class="tile">
+            <section class="invoice">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h2 class="page-header">
+                            <i class="fa fa-user"></i> Información del Usuario
+                        </h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <img class="usuario-img" [src]="imagen" />
+                        <p>
+                            <button class="btn btn-primary" (click)="fcambiarimagen(cargarimagen)">
+                            <i class="fa fa-picture-o"></i> Cambiar imagen
+                          </button>
+                        </p>
+
+                        <button class="btn btn-primary" (click)="fcambiarclave(cambiarclave)">
+                          <i class="fa fa-key"></i> Cambiar clave
+                        </button>
+                    </div>
+                    <div class="col-md-4" *ngIf="perfil">
+                        Nombre completo
+                        <address>
+                          <b>{{ perfil.primerapellido }} <br />C.I.: {{ perfil.dip}}{{ perfil.numerocomplementario }}</b>
+                        </address>
+                        <label *ngIf="esempresa">Datos adicionales</label>
+                        <address *ngIf="empresa">
+                          <b>EMPRESA: {{ empresa.empresa }}<br />RUBRO: {{ empresa.subrubro.rubro.rubro }}</b>
+                        </address>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<ng-template #cargarimagen>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">{{ estado }} Imagen</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label>Fotografía</label>
+            <input class="form-control" type="file" (change)="fseleccionarArchivo($event)" />
+        </div>
+
+        <div class="text-center">
+            <button type="button" class="btn btn-success m-2" (click)="fcargar()">
+        <i class="fa fa-save"></i> Grabar
+      </button>
+            <button type="button" class="btn btn-danger" (click)="fcancelar()">
+        <i class="fa fa-times"></i> Cancelar
+      </button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #cambiarclave>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">{{ estado }} Contraseña de acceso</h4>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="formulario" (ngSubmit)="faceptarcambiarclave()">
+            <div class="form-group">
+                <label>Nueva contraseña</label>
+                <input type="password" class="form-control" formControlName="clave" [class.is-invalid]="f.clave.errors && f.clave.touched" />
+                <small *ngIf="f.clave.errors && f.clave.touched" class="text-danger">
+          El dato es obligatorio de por lo menos 8 caracterres
+        </small>
+            </div>
+            <div class="form-group">
+                <label>confirmar nueva contraseña</label>
+                <input type="password" class="form-control" formControlName="cclave" [class.is-invalid]="f.cclave.errors && f.cclave.touched" />
+                <small *ngIf="f.cclave.errors && f.cclave.touched" class="text-danger">
+          El dato es obligatorio de por lo menos 8 caracterres
+        </small>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-success m-2" [disabled]="!formulario.valid">
+          <i class="fa fa-save"></i> Cambiar clave
+        </button>
+                <button type="button" class="btn btn-danger" (click)="fcancelar()">
+          <i class="fa fa-times"></i> Cancelar
+        </button>
+            </div>
+        </form>
+    </div>
+</ng-template>

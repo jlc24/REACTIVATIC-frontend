@@ -1,0 +1,78 @@
+<app-cabeceratitulos [titulo]="'Compras'" [descripcion]="'Lista de compras'" [icono]="'cubes'" [opcion]="'compras'">
+</app-cabeceratitulos>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="table-responsive" *ngIf="carritos?.length > 0">
+                <table class="table table-sm">
+                    <thead>
+                        <tr class="table-primary">
+                            <th class="text-left">Producto</th>
+                            <th class="text-right">Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let _item of carritos; let i = index">
+                            <td class="text-left">{{ _item.producto.producto }}</td>
+                            <td class="text-right">{{ _item.cantidad }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-center">
+                    <button class="btn btn-primary mr-2" (click)="fprocesa()">
+                      <span><i class="fa fa-cogs"></i> Procesa la solicitud</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <!-- <button class="btn btn-primary" (click)="fsiguecomprando()">
+              <span><i class="fa fa-cogs"></i> Sigue buscando en el catalogo</span>
+            </button> -->
+            <div class="table-responsive" *ngIf="datos?.length > 0">
+                <p class="text-right" *ngIf="total==1">Total: <b>{{total}} registro</b></p>
+                <p class="text-right" *ngIf="total>1">Total: <b>{{total}} registros</b></p>
+                <table class="table table-sm">
+                    <thead>
+                        <tr class="table-primary">
+                            <th class="text-left">Datos</th>
+                            <th class="text-left">Estado</th>
+                            <th class="text-right">Operaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let _item of datos; let i = index">
+                            <td class="text-left">
+                                <b>{{ _item.solicitud }}</b> Fecha: <b>{{ _item.fecha }}</b> Hora: <b>{{ _item.hora }}</b><br>
+                                <ul>
+                                    <li *ngFor="let _itemp of _item.solicitudproductos; let i = index">Producto: <b>{{_itemp.producto.producto}}</b>, Cantidad: <b>{{_itemp.cantidad}}</b>, Precio de venta: <b>{{_itemp.precioventa}} Bs.</b>, Total: <b>{{_itemp.total}} Bs.</b></li>
+                                </ul>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge badge-warning" *ngIf="_item.estado==false">En processo</span>
+                                <span class="badge badge-success" *ngIf="_item.estado">Finalizado</span>
+                            </td>
+                            <td class="text-right">
+                                <button class="btn btn-outline-primary" (click)="fenviarmensaje(_item.empresa.celular)"><i class="fa fa-whatsapp"></i>Enviar Mensaje</button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="total > cantidad">
+                            <td colspan="3">
+                                <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive" *ngIf="total == 0">
+                <p class="text-center"><b>Sin Solicitudes</b></p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+import { Asociaciones } from 'src/app/_entidades/asociaciones';
+import { Localidades } from './localidades';
+import { Subrubros } from './subrubros';
+import { Representantes } from './representantes';
+export class Empresas {
+  idempresa: number;
+  idsubrubro: number;
+  idlocalidad: number;
+  idrepresentante: number;
+  idasociacion: number;
+  empresa: string;
+  descripcion: string;
+  tipo: string;
+  direccion: string;
+  telefono: string;
+  celular: string;
+  correo: string;
+  facebook: string;
+  twitter: string;
+  instagram: string;
+  paginaweb: string;
+  otro: string;
+  registrosenasag: number;
+  latitud: number;
+  longitud: number;
+  representante: Representantes;
+  subrubro: Subrubros;
+  localidad: Localidades;
+  asociacion: Asociaciones;
+}

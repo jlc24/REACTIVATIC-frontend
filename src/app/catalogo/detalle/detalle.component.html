@@ -1,0 +1,323 @@
+<header class="app-header" style="background-color: a51c30;">
+    <p style="color: #fff;text-align:center;padding: 0 15px;font-size:26px;">MiPyMEs</p>
+    <ul class="app-nav">
+      <li class="dropdown">
+        <p class="app-nav__item text-right" *ngIf="localnombre" style="color: white;">Bienvenido: {{ localnombre }} </p>
+      </li>
+      <li class="dropdown">
+        <a *ngIf="localnombre==''" class="app-nav__item text-right" (click)="faccesom(accesom)" style="color: white;">Ingresar a sistema <i class="fa fa-sign-in fa-lg"></i></a>
+        <a *ngIf="localnombre" class="app-nav__item text-right" (click)="fsalir()" style="color: white;"><i class="fa fa-sign-out fa-lg"></i> Cerrar sesión</a>
+      </li>
+    </ul>
+</header>
+
+  <div class="container-lg" style="padding-top: 70px;">
+      <div class="row mb-2">
+        <div class="col-md-2">
+          <p class="text-left d-none d-lg-block mt-4">
+            <img src="assets/imagenes/logogador.png" class="rounded" width="110px"/>
+          </p>
+          <p class="text-center d-none d-lg-none d-sm-block d-block mt-4">
+            <img src="assets/imagenes/logogador.png" class="rounded" width="150px"/>
+          </p>
+        </div>
+
+          <div class="col-md-4">
+              <p class="text-left d-none d-lg-block mt-4">
+                  <img src="assets/imagenes/logor.png" class="img-fluid" />
+              </p>
+              <p class="text-center d-none d-lg-none d-sm-block d-block mt-4">
+                  <img src="assets/imagenes/logor.png" class="img-fluid" />
+              </p>
+          </div>
+          <div class="col-md-6" *ngIf="cantidadcarrito">
+              <h1 class="text-primary text-right mt-4">
+                  <button class="btn btn-outline-primary " (click)="fsolicitar(solicita)">
+                    <i class="fa fa-shopping-cart fa-3x"></i> Mi carrito
+                    <span class="badge badge-primary" *ngIf="cantidadcarrito.cantidad > 0">{{ cantidadcarrito.cantidad }}</span>
+                  </button>
+              </h1>
+          </div>
+      </div>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item active" aria-current="page"><a (click)="finicio()" style="cursor: pointer"><i class="fa fa-home"></i> Inicio</a></li>
+        </ol>
+      </nav>
+  </div>
+
+  <div class="container-lg" *ngIf="dato">
+      <div class="row">
+          <div class="col-md-6 text-center">
+            <img
+                [src]="ruta+id"
+                class="img-thumbnail"
+            />
+                <div class="d-flex justify-content-center">
+                    <img class="img-fluid" [src]="ruta+id" width="50px" height="50px">
+                    <img class="img-fluid" [src]="ruta+id+1" width="50px" height="50px">
+                    <img class="img-fluid" [src]="ruta+id+2" width="50px" height="50px">
+                    <img class="img-fluid" [src]="ruta+id+3" width="50px" height="50px">
+                    <img class="img-fluid" [src]="ruta+id+4" width="50px" height="50px">
+                    <img class="img-fluid" [src]="ruta+id+5" width="50px" height="50px">
+              </div>
+              <hr>
+              <h3 class="d-block mb-3 font-size-xs text-muted">Precio de Referencia <span class="font-weight-semibold">{{ dato.precioventa }} Bs</span></h3>
+              <button class="btn btn-pill btn-outline-primary btn-sm m-2" (click)="fadicionar(dato.idproducto, 1, solicitaproducto)"><i class="fa fa-cart-plus"></i></button>
+              <button class="btn btn-pill btn-outline-primary btn-sm mr-2" (click)="fwhastapp(dato.empresa.celular)"><i class="fa fa-whatsapp"></i></button>
+          </div>
+          <div class="col-md-6 text-center">
+            <h1 class="text-center" style="color: #a51c30;">{{dato.producto}}</h1>
+            <h5 class="text-justify">{{dato.descripcion}}</h5>
+            <img
+              [src]="rutaempresa+dato.empresa.idempresa"
+              class="rounded-circle"
+              weight="80px"
+              height="80px"
+            />
+            <p class="text-justify">{{ dato.empresa.descripcion }}</p>
+            <table class="table table-sm">
+                <tr>
+                  <td class="text-right">Empresa:</td>
+                  <td class="text-left"><b>{{ dato.empresa.empresa }}</b></td>
+                </tr>
+                <tr>
+                  <td class="text-right">Municipio y Localidad:</td>
+                  <td class="text-left"><b>{{ dato.empresa.localidad.municipio.municipio}}, {{ dato.empresa.localidad.localidad }}</b></td>
+                </tr>
+                <tr *ngIf="dato.empresa.direccion">
+                  <td class="text-right">Dirección:</td>
+                  <td class="text-left"><b>{{ dato.empresa.direccion }}</b></td>
+                </tr>
+                <tr *ngIf="dato.empresa.telefono">
+                  <td class="text-right">Teléfono:</td>
+                  <td class="text-left"><b>{{ dato.empresa.telefono }}</b></td>
+                </tr>
+                <tr *ngIf="dato.empresa.celular">
+                  <td class="text-right">Celular:</td>
+                  <td class="text-left"><b>{{ dato.empresa.celular }}</b></td>
+                </tr>
+                <tr *ngIf="dato.empresa.correo">
+                  <td class="text-right">Correo Electrónico:</td>
+                  <td class="text-left"><b><a href="mailto:{{ dato.empresa.correo }}">{{ dato.empresa.correo }}</a></b></td>
+                </tr>
+                <tr *ngIf="dato.empresa.facebook">
+                    <td class="text-right">Facebook:</td>
+                    <td class="text-left"><b><a href="{{ dato.empresa.facebook }}" target="_blank">{{ dato.empresa.facebook }}</a></b></td>
+                  </tr>
+              </table>
+        </div>
+    </div>
+</div>
+    <footer class="container-fluid" >
+      <p class="app-footer__logo text-center">
+        <small>Potenciado por: CNVF &copy; 2008-{{ gestion }} IngeSoft</small>
+      </p>
+    </footer>
+
+    <ng-template #solicita>
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Mi Carrito</h4>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive" *ngIf="carritos?.length > 0">
+          <table class="table table-sm">
+            <thead>
+              <tr class="table-primary">
+                <th class="text-left">Producto</th>
+                <th class="text-right">Cantidad</th>
+                <th class="text-right">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let _item of carritos; let i = index">
+                <td class="text-left">{{ _item.producto.producto }}</td>
+                <td class="text-right">{{ _item.cantidad }}</td>
+                <td class="text-right">
+                  <button
+                    class="btn btn-outline-primary"
+                    (click)="feliminar(_item.idproducto)"
+                  >
+                    <i class="fa fa-times-circle"> Eliminar</i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="text-center">
+            <button
+              class="btn btn-primary mr-2"
+              (click)="fprocesa(pedido)"
+            >
+              <span><i class="fa fa-cogs"></i> Procesa la solicitud</span>
+            </button>
+          </div>
+        </div>
+        <h3 class="text-center" *ngIf="!(carritos?.length > 0)">
+          Tu carrito esta vacío
+        </h3>
+        <div class="text-center" *ngIf="!(carritos?.length > 0)">
+          <button class="btn btn-primary mr-2" (click)="fcerrar()">
+            <span><i class="fa fa-close"></i> Cerrar</span>
+          </button>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #solicitaproducto>
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Mi Carrito</h4>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive" *ngIf="carritos?.length > 0">
+          <table class="table table-sm">
+            <thead>
+              <tr class="table-primary">
+                <th class="text-left">Producto</th>
+                <th class="text-right">Cantidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let _item of carritos; let i = index">
+                <td class="text-left">{{ _item.producto.producto }}</td>
+                <td class="text-right">{{ _item.cantidad }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="text-center">
+            <button class="btn btn-primary mr-2" (click)="fcerrar()">
+              <span><i class="fa fa-cogs"></i> Aceptar</span>
+            </button>
+          </div>
+        </div>
+        <h3 class="text-center" *ngIf="!(carritos?.length > 0)">
+          Tu carrito esta vacío
+        </h3>
+        <div class="text-center" *ngIf="!(carritos?.length > 0)"></div>
+      </div>
+    </ng-template>
+
+    <ng-template #empresa>
+      <div class="modal-header">
+        <h4 class="modal-title pull-left" *ngIf="datosempresa">
+          {{ datosempresa.empresa }}
+        </h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-sm">
+          <tr>
+            <td>Empresa:</td>
+            <td>
+              <b>{{ datosempresa.empresa }}</b>
+            </td>
+          </tr>
+          <tr>
+            <td>Dirección:</td>
+            <td>
+              <b>{{ datosempresa.direccion }}</b>
+            </td>
+          </tr>
+          <tr>
+            <td>Teléfono:</td>
+            <td>
+              <b>{{ datosempresa.telefono }}</b>
+            </td>
+          </tr>
+          <tr>
+            <td>Celular:</td>
+            <td>
+              <b>{{ datosempresa.celular }}</b>
+            </td>
+          </tr>
+          <tr>
+            <td>Correo Electrónico:</td>
+            <td>
+              <b>{{ datosempresa.correo }}</b>
+            </td>
+          </tr>
+        </table>
+        <div class="text-center">
+          <button class="btn btn-primary mr-2" (click)="fcerrar()">
+            <span><i class="fa fa-close"></i> Cerrar</span>
+          </button>
+        </div>
+      </div>
+    </ng-template>
+
+
+  <ng-template #pedido>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> Proceso de solicitud</h4>
+        <div class="alert alert-info" role="alert">
+            Estimado cliente Los campos remarcados con * son necesarios.
+        </div>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="formulario" (ngSubmit)="faceptar()">
+            <div class="form-group">
+                <label>Nombre completo <span class="text-danger"><b>*</b></span></label>
+                <input type="text" class="form-control" formControlName="primerapellido" [class.is-invalid]="f.primerapellido.errors && f.primerapellido.touched" />
+                <small *ngIf="f.primerapellido.errors&& f.primerapellido.touched" class="text-danger">
+                  El dato es obligatorio y solo permite letras
+                </small>
+            </div>
+            <div class="form-group">
+                <label>Celular <span class="text-danger"><b>*</b></span></label>
+                <input type="number" class="form-control" formControlName="celular" [class.is-invalid]="f.celular.errors && f.celular.touched" />
+                <small *ngIf="f.celular.errors && f.celular.touched" class="text-danger">
+                El dato es obligatorio y solo permite numeros de celulares
+                </small>
+            </div>
+            <div class="form-group">
+                <label>Correo </label>
+                <input type="email" class="form-control" formControlName="correo" [class.is-invalid]="f.correo.errors && f.correo.touched" />
+                <small *ngIf="f.correo.errors && f.correo.touched" class="text-danger">
+                El dato es obligatorio
+                </small>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success m-2" [disabled]="!formulario.valid">
+                  <i class="fa fa-save"></i> Grabar
+              </button>
+                <button type="button" class="btn btn-danger" (click)="fcancelar()">
+                  <i class="fa fa-times"></i> Cancelar
+              </button>
+            </div>
+        </form>
+    </div>
+  </ng-template>
+
+  <ng-template #accesom>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> Acceso al sistema</h4>
+        <div class="alert alert-info" role="alert">
+            Estimado cliente Los campos remarcados con * son necesarios.
+        </div>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="formulariom" (ngSubmit)="faceptarm()">
+            <div class="form-group">
+                <label>Celular <span class="text-danger"><b>*</b></span></label>
+                <input type="number" class="form-control" formControlName="celular" [class.is-invalid]="fm.celular.errors && fm.celular.touched" />
+                <small *ngIf="fm.celular.errors && fm.celular.touched" class="text-danger">
+                El dato es obligatorio y solo permite numeros de celulares
+                </small>
+            </div>
+            <div class="form-group">
+                <label>Clave de acceso <span class="text-danger"><b>*</b></span></label>
+                <input type="password" class="form-control" formControlName="clave" [class.is-invalid]="fm.clave.errors && fm.clave.touched" />
+                <small *ngIf="fm.clave.errors && fm.clave.touched" class="text-danger">
+                El dato es obligatorio
+                </small>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success m-2" [disabled]="!formulariom.valid">
+                  <i class="fa fa-sign-in"></i> Ingresar
+              </button>
+                <button type="button" class="btn btn-danger" (click)="fcancelar()">
+                  <i class="fa fa-times"></i> Cancelar
+              </button>
+            </div>
+        </form>
+    </div>
+  </ng-template>

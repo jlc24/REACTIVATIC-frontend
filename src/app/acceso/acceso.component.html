@@ -1,0 +1,30 @@
+<section class="material-half-bg">
+    <div class="cover"></div>
+</section>
+<section class="login-content">
+    <div class="logo">
+        <img src="assets/imagenes/logo.png" class="img-fluid" />
+    </div>
+    <div class="login-box">
+        <form class="login-form" [formGroup]="formulario" (ngSubmit)="faceptar()">
+            <h4 class="login-head">Acceso al Sistema</h4>
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Usuario del sistema" autofocus formControlName="usuario" [class.is-invalid]="f.usuario.errors && f.usuario.touched" />
+                <small *ngIf="f.usuario.errors && f.usuario.touched" class="text-danger">El dato es obligatorio</small>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="password" placeholder="Clave de acceso" formControlName="clave" [class.is-invalid]="f.clave.errors && f.clave.touched" />
+                <small *ngIf="f.clave.errors && f.clave.touched" class="text-danger">El dato es obligatorio</small>
+            </div>
+            <div class="form-group btn-container">
+                <button class="btn btn-block" type="submit" [ngClass]="{ 'btn-outline-success': !estado }" [disabled]="!formulario.valid">
+                    <span *ngIf="!estado"><i class="fa fa-sign-in fa-lg fa-fw"></i> Iniciar sesion</span>
+                    <span *ngIf="estado"><i class="fa fa-refresh fa-spin"></i> Verificando</span>
+                </button><br>
+                <p class="text-center">
+                    <small>&copy; 2022-{{ gestion }} SDDPI - REACTIVA TIC</small>
+                </p>
+            </div>
+        </form>
+    </div>
+</section>

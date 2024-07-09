@@ -1,0 +1,68 @@
+<app-cabeceratitulos [titulo]="'Ventas'" [descripcion]="'Lista de ventas'" [icono]="'cubes'" [opcion]="'ventas'">
+</app-cabeceratitulos>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="table-responsive" *ngIf="datos?.length > 0">
+                <p class="text-right" *ngIf="total==1">Total: <b>{{total}} registro</b></p>
+                <p class="text-right" *ngIf="total>1">Total: <b>{{total}} registros</b></p>
+                <table class="table table-sm">
+                    <thead>
+                        <tr class="table-primary">
+                            <th class="text-center">Nro.</th>
+                            <th class="text-center">Datos</th>
+                            <th class="text-center">Estado</th>
+                            <th class="text-center">Operaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let _item of datos; let i = index">
+                            <td>{{ i+1 }}</td>
+                            <td class="text-left">
+                                <b>{{ _item.solicitud }}</b> Fecha: <b>{{ _item.fecha }}</b> Hora: <b>{{ _item.hora }}</b><br>
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Nro.</th>
+                                            <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio unitario</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let _itemp of _item.solicitudproductos; let i = index">
+                                            <td scope="row"> {{ i+1 }}</td>
+                                            <td>{{_itemp.producto.producto}}</td>
+                                            <td>{{_itemp.cantidad}}</td>
+                                            <td>{{_itemp.precioventa}}</td>
+                                            <td>{{_itemp.total}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge badge-warning" *ngIf="_item.estado==false">En processo</span>
+                                <span class="badge badge-success" *ngIf="_item.estado">Finalizado</span>
+                            </td>
+                            <td class="text-right">
+                                <button class="btn btn-outline-primary mr-2" (click)="factualizarestado(_item.idsolicitud)"><i class="fa fa-check"></i>Aceptar venta</button>
+                                <button class="btn btn-outline-primary" (click)="fenviarmensaje(_item.cliente.persona.celular)"><i class="fa fa-whatsapp"></i>Enviar Mensaje</button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="total > cantidad">
+                            <td colspan="3">
+                                <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive" *ngIf="total == 0">
+                <p class="text-center"><b>Sin Solicitudes</b></p>
+            </div>
+        </div>
+    </div>
+</div>

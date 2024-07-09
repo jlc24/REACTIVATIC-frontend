@@ -1,0 +1,92 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <!-- <div class="form-group row">
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <span class="input-group-prepend">
+                          <button class="btn btn-primary btn-sm" (click)="fadicionar(ab)">
+                              <i class="fa fa-plus"> Adicionar subrubro</i>
+                          </button>
+                      </span>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="row">
+                <div class="col-md-12 mb-2">
+                    <div class="input-group justify-content-end">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-primary mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Subrubro</button>
+                            <!-- <div class="dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-bars"></i> Opciones
+                  </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                            <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+                        </div>
+                    </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive" *ngIf="datos?.length > 0">
+                <table class="table table-sm">
+                    <thead>
+                        <tr class="table-primary">
+                            <th class="text-left">Nro.</th>
+                            <th class="text-left">Subrubros</th>
+                            <th class="text-right">Operaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let _item of datos; let i = index">
+                            <td>{{i+1}}</td>
+                            <td class="text-left"><b>{{ _item.subrubro }}</b></td>
+                            <td class="text-right">
+                                <button class="btn btn-outline-dark btn-sm" (click)="fmodificar(_item.idsubrubro, ab)">
+                                  <i class="fa fa-edit"> Editar subrubro</i>
+                              </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive" *ngIf="!(datos?.length > 0)">
+                <p class="text-center"><b>Sin subrubros</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #ab>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Subrubros</h4>
+        <div class="alert alert-info" role="alert">
+            Estimado usuario Los campos remarcados con * son necesarios.
+        </div>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="formulario" (ngSubmit)="faceptar()">
+
+            <div class="form-group">
+                <label>Subrubro <span class="text-danger"><b>*</b></span></label>
+                <input type="text" class="form-control" formControlName="subrubro" [class.is-invalid]="f.subrubro.errors && f.subrubro.touched" />
+                <small *ngIf="f.subrubro.errors&& f.subrubro.touched" class="text-danger">
+                  El dato es obligatorio
+              </small>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-success m-2" [disabled]="!formulario.valid">
+                  <i class="fa fa-save"></i> Grabar
+              </button>
+                <button type="button" class="btn btn-danger" (click)="fcancelar()">
+                  <i class="fa fa-times"></i> Cancelar
+              </button>
+            </div>
+        </form>
+    </div>
+</ng-template>

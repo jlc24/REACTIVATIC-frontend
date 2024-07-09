@@ -1,0 +1,34 @@
+<app-cabeceratitulos [titulo]="'Estadística'" [descripcion]="'Productos mas vendidos'" [icono]="'chart-pie'" [opcion]="'estadística'">
+</app-cabeceratitulos>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="tile">
+            <h4 class="text-center">Resultados {{titulo}}</h4>
+            <div class="table-responsive">
+                <table class="table table-hover table-inverse">
+                    <thead>
+                        <tr>
+                            <th>Nro.</th>
+                            <th>Empresa</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of datos; let i=index">
+                            <td>{{i+1}}</td>
+                            <td>{{item.entidad}}</td>
+                            <td>{{item.cantidad}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="tile">
+            <h4 class="text-center">Gráfico {{titulo}}</h4>
+            <div [chart]="chart1"></div>
+        </div>
+    </div>
+</div>

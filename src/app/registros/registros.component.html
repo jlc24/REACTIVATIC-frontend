@@ -1,0 +1,44 @@
+<div class="row-fluid">
+    <div class="col-md-12">
+        <div class="tile">
+            <p class="tile-title"><img src="assets/imagenes/logor.png" class="img-fluid" /></p>
+            <h3 class="tile-title text-center">Registro de cliente</h3>
+            <p class="text-justify">El Proyecto de “Fortalecer el Desarrollo Productivo Empresarial de la MiPyMEs del Depto. De Oruro”, es un proyecto de desarrollo para las Unidades Productivas que busca mejorar la capacidad de producción, mediante el fortalecimiento de las
+                capacidades técnicas de transformación de la materia prima, servicio de asistencia técnica a las MiPyMEs y promocionar los productos artesanales atraves de organización y participación de ferias locales, Departamentales y Nacionales.</p>
+            <p class="text-justify"><b>Para el registro del cliente el número de celular sera su usuario y clave de acceso tenga presente este dato al momento de registrarse</b></p>
+            <hr>
+            <form [formGroup]="formulario" (ngSubmit)="faceptar()" *ngIf="registronuevo">
+                <div class="form-group row">
+                    <label class="col-4 col-form-label text-right">Nombre completo: </label>
+                    <div class="col-8">
+                        <input type="text" class="form-control" formControlName="primernombre" [class.is-invalid]="f.primernombre.errors && f.primernombre.touched" />
+                        <small *ngIf="f.primernombre.errors && f.primernombre.touched" class="text-danger">El dato es obligatorio</small>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-4 col-form-label text-right">Celular: </label>
+                    <div class="col-8">
+                        <input type="text" class="form-control" formControlName="celular" [class.is-invalid]="f.celular.errors && f.celular.touched" />
+                        <small *ngIf="f.celular.errors && f.celular.touched" class="text-danger">El dato es obligatorio</small>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-4 col-form-label text-right">Correo: </label>
+                    <div class="col-8">
+                        <input type="email" class="form-control" formControlName="correo" [class.is-invalid]="f.correo.errors && f.correo.touched" />
+                        <small *ngIf="f.correo.errors && f.correo.touched" class="text-danger">El dato es obligatorio</small>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary mr-2" [ngClass]="{ 'btn-primary': !estadoboton }" [disabled]="!formulario.valid">
+                            <span *ngIf="!estadoboton"><i class="fa fa-save fa-lg fa-fw"></i> Grabar</span>
+                            <span *ngIf="estadoboton"><i class="fa fa-refresh fa-spin"></i> Grabando</span>
+                        </button>
+                    <a class="btn btn-info btn-primary" [routerLink]="['/catalogo']">
+                        <i class="fa fa-home"></i> Volver a Inicio
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+@import "https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.css";
+#mapa {
+    height: 750px;
+    width: 100%;
+}
+
+.marker {
+    height: 9px;
+    width: 7px;
+    cursor: pointer;
+}

@@ -1,0 +1,135 @@
+<app-cabeceratitulos [titulo]="'Representantes'" [descripcion]="'Lista de representantes'" [icono]="'users'" [opcion]="'representantes'">
+</app-cabeceratitulos>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+
+            <div class="row">
+                <div class="col-md-12 mb-2">
+                    <div class="input-group justify-content-end">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-primary mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Representante</button>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bars"></i> Opciones
+                      </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                                    <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Representante a buscar..." (keyup.enter)="fbuscar()" />
+                        <span class="input-group-prepend">
+                      <button class="btn btn-outline-primary mr-2" (click)="fbuscar()">
+                          <i class="fa fa-search"></i> Buscar
+                      </button>
+                      <button class="btn btn-outline-dark" (click)="limpiar()">
+                          <i class="fa fa-list"></i> Limpiar
+                      </button>
+                  </span>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-1" *ngIf="total > cantidad">
+                    <ngb-pagination class="d-flex justify-content-end align-items-baseline pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)" size="sm"></ngb-pagination>
+                </div>
+            </div>            
+
+            <div class="table-responsive" *ngIf="datos?.length > 0">
+                <p class="text-right" *ngIf="total == 1">
+                    Total: <b>{{ total }} registro</b>
+                </p>
+                <p class="text-right" *ngIf="total > 1">
+                    Total: <b>{{ total }} registros</b>
+                </p>
+                <!-- Mostrando del registro {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de un total de {{total}} datos -->
+                <table class="table table-sm">
+                    <thead>
+                        <tr class="table-primary">
+                            <th class="text-center">Nro</th>
+                            <th class="text-center">Usuario</th>
+                            <th class="text-center">Nombre</th>
+                            <th class="text-center">Carnet de Identidad</th>
+                            <th class="text-center">Operaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let _item of datos; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ _item.usuario }}</td>
+                            <td>{{ _item.persona.primerapellido}}
+                            </td>
+                            <td>{{_item.persona.dip}}</td>
+                            <td class="text-center">
+                                <button class="btn btn-outline-dark btn-sm mr-2" (click)="fmodificar(_item.idusuario, ab)">
+                                  <i class="fa fa-edit"> Editar representante</i>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" (click)="feliminar(_item.idusuario)">
+                                  <i class="fa fa-trash"> Eliminar representante</i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="total > cantidad">
+                            <td colspan="5">
+                                <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive" *ngIf="total == 0">
+                <p class="text-center"><b>Sin usuarios</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #ab>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Representante</h4>
+        <div class="alert alert-info" role="alert">
+            Estimado usuario Los campos remarcados con * son necesarios.
+        </div>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="formulario" (ngSubmit)="faceptar()">
+            <div class="form-group">
+                <label>Nombre completo <span class="text-danger"><b>*</b></span></label>
+                <input type="text" class="form-control" formControlName="primerapellido" [class.is-invalid]="f.primerapellido.errors && f.primerapellido.touched" />
+                <small *ngIf="f.primerapellido.errors&& f.primerapellido.touched" class="text-danger">
+                  El dato es obligatorio y solo permite letras
+                </small>
+            </div>
+            <div class="form-group">
+                <label>Fecha de nacimiento <span class="text-danger"><b>*</b></span></label>
+                <input type="date" class="form-control" formControlName="fechanacimiento" [class.is-invalid]="f.fechanacimiento.errors && f.fechanacimiento.touched" />
+                <small *ngIf="f.fechanacimiento.errors&& f.fechanacimiento.touched" class="text-danger">
+                El dato es obligatorio
+                </small>
+            </div>
+            <div class="form-group">
+                <label>Carnet de identidad <span class="text-danger"><b>*</b></span></label>
+                <input type="number" class="form-control" formControlName="dip" [class.is-invalid]="f.dip.errors && f.dip.touched" />
+                <small *ngIf="f.dip.errors&& f.dip.touched" class="text-danger">
+                El dato es obligatorio y solo permite letras
+                </small>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success m-2" [disabled]="!formulario.valid">
+                  <i class="fa fa-save"></i> Grabar
+              </button>
+                <button type="button" class="btn btn-danger" (click)="fcancelar()">
+                  <i class="fa fa-times"></i> Cancelar
+              </button>
+            </div>
+        </form>
+    </div>
+</ng-template>
