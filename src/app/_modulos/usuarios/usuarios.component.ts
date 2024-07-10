@@ -74,12 +74,51 @@ export class UsuariosComponent implements OnInit {
 
   fformulario(dato: Personas) {
     this.formulario = this._fb.group({
-      primerapellido: [dato.primerapellido, [Validators.required]],
-      /* segundoapellido: [dato.segundoapellido],
-      primernombre: [dato.primernombre, [Validators.required]],
-      segundonombre: [dato.segundonombre], */
-      fechanacimiento: [dato.fechanacimiento, [Validators.required]],
-      dip: [dato.dip, [Validators.required]],
+      primerapellido: [
+        dato.primerapellido, 
+        [
+          Validators.required,
+          Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$'),
+          Validators.maxLength(50)
+        ],
+      ],
+      segundoapellido: [
+        dato.segundoapellido,
+        [
+          Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$'),
+          Validators.maxLength(50)
+        ]
+      ],
+      primernombre: [
+        dato.primernombre, 
+        [
+          Validators.required,
+          Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$'),
+          Validators.maxLength(50)
+        ]
+      ],
+      // segundonombre: [dato.segundonombre],
+      fechanacimiento: [
+        dato.fechanacimiento, 
+        [
+          Validators.required
+        ]
+      ],
+      dip: [
+        dato.dip, 
+        [
+          Validators.required,
+          Validators.pattern('^[0-9]+$'),
+          Validators.maxLength(15)
+        ]
+      ],
+      complemento:[
+        dato.numerocomplementario,
+        [
+          Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1]+$'),
+          Validators.maxLength(5)
+        ]
+      ],
       direccion: [dato.direccion, [Validators.required]],
       telefono: [
         dato.telefono,
@@ -105,15 +144,42 @@ export class UsuariosComponent implements OnInit {
     return this.formulario.controls;
   }
 
+  onInput(event: any, controlName: string, type: 'letras' | 'letrasyespacios' | 'numeros' | 'letrasynumerosguion'): void {
+    let input = event.target.value;
+    switch (type) {
+      case 'letras':
+        input = input.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1]/g, '');
+        break;
+      case 'letrasyespacios':
+        input = input.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1\s]/g, '');
+        break;
+      case 'numeros':
+        input = input.replace(/[^0-9]/g, '');
+        break;
+      case 'letrasynumerosguion':
+        input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1]/g, '');
+        break;
+    }
+    this.formulario.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
+  }
+
   fadicionar(content: any) {
     this.estado = 'Adicionar';
     this.dato = new Personas();
     this.fformulario(this.dato);
-    this._modalService.open(content);
+    this._modalService.open(content, { size: 'lg' });
   }
 
   fmodificar(id: number, content: any) {
     this.estado = 'Modificar';
+    this._personasService.dato(id).subscribe((data) => {
+      this.dato = data;
+      this.fformulario(this.dato);
+      this._modalService.open(content);
+    });
+  }
+  fver(id: number, content: any) {
+    this.estado = 'Ver';
     this._personasService.dato(id).subscribe((data) => {
       this.dato = data;
       this.fformulario(this.dato);

@@ -1,10 +1,10 @@
 import { FormGroup } from '@angular/forms';
 
-// export const RUTA = 'http://localhost:8678/reactivaticapp';
-export const RUTA = 'https://desarrolla.oruro.gob.bo:8443/mipymesapp';
+export const RUTA = 'http://localhost:8678/reactivaticapp';
+// export const RUTA = 'https://desarrolla.oruro.gob.bo:8443/mipymesapp';
 export const TOKEN = 'access_token';
-// export const TOKEN_USUARIO = 'reactivaticapp';
-export const TOKEN_USUARIO = 'mipymesapp';
+export const TOKEN_USUARIO = 'reactivaticapp';
+// export const TOKEN_USUARIO = 'mipymesapp';
 export const TOKEN_PASSWORD = 'djEA45d%2er';
 export const ROLES = 'ROLES';
 export const NOMBRE = 'NOMBRE';

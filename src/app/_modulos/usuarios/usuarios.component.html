@@ -8,9 +8,9 @@
                 <div class="col-md-12 mb-2">
                     <div class="input-group justify-content-end">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-primary mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Usuario</button>
+                            <button class="btn btn-outline-success mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Usuario</button>
                             <div class="dropdown">
-                                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-bars"></i> Opciones
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -31,7 +31,7 @@
                         <button class="btn btn-outline-primary mr-2" (click)="fbuscar()">
                             <i class="fa fa-search"></i> Buscar
                         </button>
-                        <button class="btn btn-outline-dark" (click)="limpiar()">
+                        <button class="btn btn-outline-secondary" (click)="limpiar()">
                             <i class="fa fa-list"></i> Limpiar
                         </button>
                     </span>
@@ -54,33 +54,40 @@
                     <thead>
                         <tr class="table-info">
                             <th class="text-center">Nro</th>
-                            <th class="text-center">Usuario</th>
                             <th class="text-center">Nombre</th>
-                            <th class="text-center">Carnet de Identidad</th>
+                            <th class="text-center">Carnet</th>
                             <th class="text-center">Dirección</th>
                             <th class="text-center">Teléfono</th>
                             <th class="text-center">Celular</th>
-                            <th class="text-center">Correo electrónico</th>
+                            <th class="text-center">Estado</th>
                             <th class="text-center">Operaciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let _item of datos; let i = index">
-                            <td>{{ i + 1 }}</td>
-                            <td>{{ _item.usuario }}</td>
+                            <td class="text-right">{{ i + 1 }}</td>
                             <td>{{ _item.persona.primerapellido}} {{_item.persona.segundoapellido}} {{_item.persona.primernombre}} {{_item.persona.segundonombre}}</td>
                             <td>{{_item.persona.dip}}</td>
                             <td>{{ _item.persona.direccion }}</td>
                             <td>{{ _item.persona.telefono }}</td>
                             <td>{{ _item.persona.celular }}</td>
-                            <td>{{ _item.persona.correo }}</td>
                             <td class="text-center">
-                                <button class="btn btn-outline-dark btn-sm m-2" (click)="fmodificar(_item.idusuario, ab)">
-                                  <i class="fa fa-edit"> Editar usuario</i>
-                                </button>
-                                <button class="btn btn-outline-danger btn-sm" (click)="feliminar(_item.idusuario)">
-                                  <i class="fa fa-trash"> Eliminar usuario</i>
-                                </button>
+                                <span class="badge {{ _item.persona.estado ? 'badge-success' : 'badge-danger' }}">
+                                    {{ _item.persona.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                                  </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group" aria-label="First group">
+                                    <button class="btn btn-outline-info btn-sm" title="Ver Informacion" (click)="fver(_item.idusuario, aa)">
+                                      <i class="fa fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-outline-warning btn-sm" title="Editar Usuario" (click)="fmodificar(_item.idusuario, ab)">
+                                      <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm" title="Eliminar Usuario" (click)="feliminar(_item.idusuario)">
+                                      <i class="fa fa-trash"></i>
+                                    </button>
+                                  </div>
                             </td>
                         </tr>
                         <tr *ngIf="total > cantidad">
@@ -92,13 +99,170 @@
                 </table>
             </div>
             <div class="table-responsive" *ngIf="total == 0">
-                <h1 class="text-center"><b>Sin usuarios</b></h1>
+                <table class="table table-bordered table-striped table-sm">
+                    <thead>
+                        <tr class="table-info">
+                            <th class="text-center">Nro</th>
+                            <th class="text-center">Nombre</th>
+                            <th class="text-center">Carnet</th>
+                            <th class="text-center">Dirección</th>
+                            <th class="text-center">Teléfono</th>
+                            <th class="text-center">Celular</th>
+                            <th class="text-center">Estado</th>
+                            <th class="text-center">Operaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="8" class="text-center">No se encontraron datos</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
 
 <ng-template #ab>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Usuario</h4><br>
+        <div class="alert alert-info" role="alert">
+            Estimado usuario Los campos remarcados con * son necesarios.
+        </div>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="formulario" (ngSubmit)="faceptar()">
+            <div class="row">
+                <div class="form-group col-md-4 col-sm-12">
+                    <label>Apellido Paterno <span class="text-danger"><b>*</b></span></label>
+                    <input type="text" class="form-control form-control-sm" formControlName="primerapellido" [class.is-invalid]="f.primerapellido.errors && f.primerapellido.touched" (input)="onInput($event, 'primerapellido', 'letrasyespacios')" autocomplete="no"/>
+                    <small *ngIf="f.primerapellido.errors&& f.primerapellido.touched" class="text-danger">
+                        <ng-container *ngIf="f.primerapellido.errors.required">
+                            El dato es obligatorio.
+                        </ng-container>
+                        <ng-container *ngIf="f.primerapellido.errors.pattern">
+                            Solo se permiten letras.
+                        </ng-container>
+                        <ng-container *ngIf="f.primerapellido.errors.maxlength">
+                            No puede exceder los 50 caracteres.
+                        </ng-container>
+                    </small>
+                </div>
+                <div class="form-group col-md-4 col-sm-12">
+                    <label>Apellido Materno </label>
+                    <input type="text" class="form-control form-control-sm" formControlName="segundoapellido" [class.is-invalid]="f.segundoapellido.errors && f.segundoapellido.touched" (input)="onInput($event, 'segundoapellido', 'letrasyespacios')" autocomplete="no" />
+                    <small *ngIf="f.segundoapellido.errors&& f.segundoapellido.touched" class="text-danger">
+                        <ng-container *ngIf="f.segundoapellido.errors.pattern">
+                            Solo se permiten letras.
+                        </ng-container>
+                        <ng-container *ngIf="f.segundoapellido.errors.maxlength">
+                            No puede exceder los 50 caracteres.
+                        </ng-container>
+                    </small>
+                </div>
+                <div class="form-group col-md-4 col-sm-12">
+                    <label>Nombres <span class="text-danger"><b>*</b></span></label>
+                    <input type="text" class="form-control form-control-sm" formControlName="primernombre" [class.is-invalid]="f.primernombre.errors && f.primernombre.touched" (input)="onInput($event, 'primernombre', 'letrasyespacios')" autocomplete="no" />
+                    <small *ngIf="f.primernombre.errors&& f.primernombre.touched" class="text-danger">
+                        <ng-container *ngIf="f.primernombre.errors.required">
+                            El dato es obligatorio.
+                        </ng-container>
+                        <ng-container *ngIf="f.primernombre.errors.pattern">
+                            Solo se permiten letras.
+                        </ng-container>
+                        <ng-container *ngIf="f.primernombre.errors.maxlength">
+                            No puede exceder los 50 caracteres.
+                        </ng-container>
+                    </small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4 col-sm-12">
+                    <label>Fecha de nacimiento <span class="text-danger"><b>*</b></span></label>
+                    <input type="date" class="form-control form-control-sm" formControlName="fechanacimiento" [class.is-invalid]="f.fechanacimiento.errors && f.fechanacimiento.touched" />
+                    <small *ngIf="f.fechanacimiento.errors&& f.fechanacimiento.touched" class="text-danger">
+                        <ng-container *ngIf="f.fechanacimiento.errors.required">
+                            El dato es obligatorio.
+                        </ng-container>
+                    </small>
+                </div>
+                <div class="form-group col-md-3 col-sm-12">
+                    <label>Carnet de identidad <span class="text-danger"><b>*</b></span></label>
+                    <input type="text" class="form-control form-control-sm" formControlName="dip" [class.is-invalid]="f.dip.errors && f.dip.touched" (input)="onInput($event, 'dip', 'numeros')" autocomplete="no"/>
+                    <small *ngIf="f.dip.errors&& f.dip.touched" class="text-danger">
+                        <ng-container *ngIf="f.dip.errors.required">
+                            El dato es obligatorio.
+                        </ng-container>
+                        <ng-container *ngIf="f.dip.errors.pattern">
+                            Solo se permite números.
+                        </ng-container>
+                        <ng-container *ngIf="f.dip.errors.maxlength">
+                            No puede exceder los 15 caracteres.
+                        </ng-container>
+                    </small>
+                </div>
+                <div class="form-group col-md-2 col-sm-12">
+                    <label>Complemento</label>
+                    <input type="text" class="form-control form-control-sm" formControlName="complemento" [class.is-invalid]="f.complemento.errors && f.complemento.touched" (input)="onInput($event, 'complemento', 'letrasynumerosguion')" autocomplete="no"/>
+                    <small *ngIf="f.complemento.errors&& f.complemento.touched" class="text-danger">
+                        <ng-container *ngIf="f.complemento.errors.pattern">
+                            Caracter no permitido.
+                        </ng-container>
+                        <ng-container *ngIf="f.complemento.errors.maxlength">
+                            No puede exceder los 5 caracteres.
+                        </ng-container>
+                    </small>
+                </div>
+                <div class="form-group col-md-3 col-sm-12">
+                    <label for="">Expedido</label>
+                    <input type="text" class="form-control form-control-sm" >
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-12">
+                    <label>Dirección <span class="text-danger"><b>*</b></span></label>
+                    <input type="text" class="form-control form-control-sm" formControlName="direccion" [class.is-invalid]="f.direccion.errors && f.direccion.touched" />
+                    <small *ngIf="f.direccion.errors && f.direccion.touched" class="text-danger">
+                    El dato es obligatorio
+                    </small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6 col-sm-12">
+                    <label>Teléfono <span class="text-danger"><b>*</b></span></label>
+                    <input type="number" class="form-control" formControlName="telefono" [class.is-invalid]="f.telefono.errors && f.telefono.touched" />
+                    <small *ngIf="f.telefono.errors && f.telefono.touched" class="text-danger">
+                    El dato es obligatorio y solo permite numeros
+                    </small>
+                </div>
+                <div class="form-group col-md-6 col-sm-12">
+                    <label>Celular <span class="text-danger"><b>*</b></span></label>
+                    <input type="number" class="form-control" formControlName="celular" [class.is-invalid]="f.celular.errors && f.celular.touched" />
+                    <small *ngIf="f.celular.errors && f.celular.touched" class="text-danger">
+                    El dato es obligatorio y solo permite numeros
+                    </small>
+                </div>
+                
+            </div>
+            <div class="form-group">
+                <label>Correo <span class="text-danger"><b>*</b></span></label>
+                <input type="email" class="form-control" formControlName="correo" [class.is-invalid]="f.correo.errors && f.correo.touched" />
+                <small *ngIf="f.correo.errors && f.correo.touched" class="text-danger">
+                El dato es obligatorio
+                </small>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success m-2" [disabled]="!formulario.valid">
+                <i class="fa fa-save"></i> Grabar
+            </button>
+                <button type="button" class="btn btn-danger" (click)="fcancelar()">
+                <i class="fa fa-times"></i> Cancelar
+            </button>
+            </div>
+        </form>
+    </div>
+</ng-template>
+<ng-template #aa>
     <div class="modal-header">
         <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Usuario</h4>
         <div class="alert alert-info" role="alert">
