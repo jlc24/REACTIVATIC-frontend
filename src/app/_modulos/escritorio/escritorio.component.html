@@ -8,15 +8,38 @@
                 <p class="text-center">
                     <img src="assets/imagenes/logo.png" class="img-fluid" />
                 </p>
+                <p class="text-center">versión 2.0.0 </p>
                 <p class="text-center">
                     <button class="btn btn-outline-primary" (click)="fmiscompras()" *ngIf="escliente">Mis solicitudes de compra</button>
                     <button class="btn btn-outline-primary" (click)="fmisventas()" *ngIf="esempresa">Mis solicitudes de venta</button>
                 </p>
-                <p class="text-center">versión 2.0.0 </p>
                 <hr>
+                <div class="row">
+                    <div class="col-lg-3 col-md-12 mb4 mt-5">
+                        <div class="card-section border rounded p-3 ml-3">
+                            <div class="card-header-first rounded pb-5 text-center">
+                                <h2 class="card-header-title text-white pt-3">Usuarios</h2>
+                            </div>
+                            <div class="card-body text-center body-user">
+                                <h4 class="card-text">Registrados: </h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-12 mb-4 mt-5">
+                        <div class="card-section border rounded p-3 ml-3">
+                            <div class="card-header-second rounded pb-5 text-center">
+                                <h2 class="card-header-title text-white pt-3">Usuarios</h2>
+                            </div>
+                            <div class="card-body text-center">
+                                <h4 class="card-text">Registrados: </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-md-12">
+        
+        <!-- <div class="col-md-12">
             <div class="tile">
                 <p>
                     El proyecto <strong>"APOYO A LA COMPETITIVIDAD DE LA MICRO Y PEQUEÑA EMPRESA (REACTIVA TIC) DE LOS MUNICIPIOS PRODUCTORES DEL DEPARTAMENTO DE ORURO"</strong>  
@@ -38,6 +61,6 @@
                     <img src="assets/imagenes/actividades.png" class="img-fluid" width="auto" />
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
