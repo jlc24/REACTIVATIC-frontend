@@ -11,6 +11,9 @@ export class EscritorioComponent implements OnInit {
 
   escliente: boolean =false;
   esempresa: boolean =false;
+  esreactivatic: boolean =false;
+  essddpi: boolean =false;
+  esadmin: boolean =false;
 
   constructor(
     private _accesoService: AccesoService,
@@ -20,6 +23,9 @@ export class EscritorioComponent implements OnInit {
   ngOnInit() {
     this.escliente = this._accesoService.esRolClientes();
     this.esempresa = this._accesoService.esRolEmpresa();
+    this.esreactivatic = this._accesoService.esRolReactivatic();
+    this.essddpi = this._accesoService.esRolSddpi();
+    this.esadmin = this._accesoService.esRolAdmin();
   }
 
   fmiscompras() {
@@ -28,6 +34,19 @@ export class EscritorioComponent implements OnInit {
 
   fmisventas() {
     this._ruta.navigate(['solicitudesventa']);
+  }
+
+  fusuario(){
+    this._ruta.navigate(['usuarios']);
+  }
+  funidadprod(){
+    this._ruta.navigate(['empresas']);
+  }
+  fmunicipio(){
+    this._ruta.navigate(['municipios']);
+  }
+  fproductos(){
+    this._ruta.navigate(['productos']);
   }
 
 }

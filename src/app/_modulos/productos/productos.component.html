@@ -8,57 +8,44 @@
                 <div class="col-md-12 mb-2">
                     <div class="input-group justify-content-end">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-primary mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Usuario</button>
-                            <!-- <div class="dropdown">
-                                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-outline-success mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus" title="Agregar Producto"></i> Agregar Producto</button>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-bars"></i> Opciones
                             </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
-                                    <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+                                    <!-- <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                                    <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button> -->
+                                    <button class="dropdown-item" ><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                                    <button class="dropdown-item" ><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- <div class="form-group row">
-                <div class="col-md-12">
+            <div class="form-group row">
+                <div class="col-lg-8 col-md-12">
                     <div class="input-group">
-                        <span class="input-group-prepend">
-                            <button class="btn btn-primary mr-2" (click)="fadicionar(ab)">
-                                <i class="fa fa-plus"> Adicionar producto</i>
-                            </button>
-                        </span>
                         <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Producto a buscar..." (keyup.enter)="fbuscar()" />
                         <span class="input-group-prepend">
-                            <button class="btn btn-primary mr-2" (click)="fbuscar()">
+                            <button class="btn btn-outline-danger d-none d-md-inline" (click)="limpiar()" title="Limpiar datos">
+                                <i class="fa fa-times"></i> 
+                            </button>
+                            <button class="btn btn-outline-danger d-inline d-md-none" (click)="limpiar()" title="Limpiar datos">
+                                <i class="fa fa-times"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary d-none d-md-inline" (click)="fbuscar()" title="Buscar">
+                                <i class="fa fa-search"></i> Buscar
+                            </button>
+                            <button class="btn btn-outline-secondary d-inline d-md-none" (click)="fbuscar()" title="Buscar">
                                 <i class="fa fa-search"></i>
                             </button>
-                            <button class="btn btn-dark" (click)="limpiar()">
-                                <i class="fa fa-list"></i>
-                            </button>
                         </span>
                     </div>
                 </div>
-            </div> -->
-
-            <div class="form-group row">
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Producto a buscar..." (keyup.enter)="fbuscar()" />
-                        <span class="input-group-prepend">
-                      <button class="btn btn-outline-primary mr-2" (click)="fbuscar()">
-                          <i class="fa fa-search"></i> Buscar
-                      </button>
-                      <button class="btn btn-outline-dark" (click)="limpiar()">
-                          <i class="fa fa-list"></i> Limpiar
-                      </button>
-                  </span>
-                    </div>
-                </div>
-                <div class="col-md-6 mt-1" *ngIf="total > cantidad">
+                <div class="col-lg-4 col-md-12 mt-1" *ngIf="total > cantidad">
                     <ngb-pagination class="d-flex justify-content-end align-items-baseline pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)" size="sm"></ngb-pagination>
                 </div>
             </div>
@@ -78,8 +65,8 @@
                             <th class="text-center">Producto</th>
                             <th class="text-center">Detalle</th>
                             <th class="text-center">Precio venta</th>
-                            <th class="text-center">Precio compra</th>
-                            <th class="text-center">Cantidad</th>
+                            <!-- <th class="text-center">Precio compra</th>
+                            <th class="text-center">Cantidad</th> -->
                             <th class="text-center">Imagen</th>
                             <th class="text-center">Operaciones</th>
                         </tr>
@@ -90,8 +77,8 @@
                             <td>{{ _item.producto }}</td>
                             <td>{{ _item.descripcion }}</td>
                             <td>{{_item.precioventa}}</td>
-                            <td>{{_item.preciocompra}}</td>
-                            <td>{{_item.cantidad}}</td>
+                            <!-- <td>{{_item.preciocompra}}</td>
+                            <td>{{_item.cantidad}}</td> -->
                             <td class="text-center">
                                 <div class="main-img text-center">
                                     <img
@@ -120,7 +107,25 @@
                 </table>
             </div>
             <div class="table-responsive" *ngIf="total == 0">
-                <p class="text-center"><b>Sin productos</b></p>
+                <table class="table table-sm table-bordered table-striped">
+                    <thead>
+                        <tr class="table-primary">
+                            <th class="text-center">Nro</th>
+                            <th class="text-center">Producto</th>
+                            <th class="text-center">Detalle</th>
+                            <th class="text-center">Precio venta</th>
+                            <!-- <th class="text-center">Precio compra</th>
+                            <th class="text-center">Cantidad</th> -->
+                            <th class="text-center">Imagen</th>
+                            <th class="text-center">Operaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="8" class="text-center"><b>No se encontraron datos.</b></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -130,40 +135,66 @@
     <div class="modal-header">
         <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Producto</h4>
         <div class="alert alert-info" role="alert">
-            Estimado usuario Los campos remarcados con * son necesarios.
+            Estimado usuario los campos remarcados con <b>*</b> son necesarios.
         </div>
     </div>
     <div class="modal-body">
         <form [formGroup]="formulario" (ngSubmit)="faceptar()">
             <div class="form-group">
                 <label>Producto <span class="text-danger"><b>*</b></span></label>
-                <input type="text" class="form-control" formControlName="producto" [class.is-invalid]="f.producto.errors && f.producto.touched" />
+                <input type="text" class="form-control form-control-sm" formControlName="producto" [class.is-invalid]="f.producto.errors && f.producto.touched" (input)="onInput($event, 'producto', 'letrasyespacios')" autocomplete="no" required/>
                 <small *ngIf="f.producto.errors&& f.producto.touched" class="text-danger">
-                  El dato es obligatorio y solo permite letras
-              </small>
+                    <ng-container *ngIf="f.producto.errors.required">
+                        El dato es obligatorio.
+                    </ng-container>
+                    <ng-container *ngIf="f.producto.errors.pattern">
+                        Solo se permiten letras.
+                    </ng-container>
+                    <ng-container *ngIf="f.producto.errors.maxlength">
+                        No puede exceder los 50 caracteres.
+                    </ng-container>
+                </small>
             </div>
             <div class="form-group">
                 <label>Descripción <span class="text-danger"><b>*</b></span></label>
-                <input type="text" class="form-control" formControlName="descripcion" [class.is-invalid]="f.descripcion.errors && f.descripcion.touched" />
+                <textarea class="form-control form-control-sm" formControlName="descripcion" [class.is-invalid]="f.descripcion.errors && f.descripcion.touched" (input)="onInput($event, 'descripcion', 'letrasynumerosguion')" autocomplete="no" required></textarea>
                 <small *ngIf="f.descripcion.errors&& f.descripcion.touched" class="text-danger">
-                  El dato es obligatorio y solo permite letras
+                    <ng-container *ngIf="f.descripcion.errors.required">
+                        El dato es obligatorio.
+                    </ng-container>
+                    <ng-container *ngIf="f.descripcion.errors.pattern">
+                        Solo se permiten letras.
+                    </ng-container>
+                    <ng-container *ngIf="f.descripcion.errors.maxlength">
+                        No puede exceder los 50 caracteres.
+                    </ng-container>
               </small>
             </div>
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label>Precio compra <span class="text-danger"><b>*</b></span></label>
-                <input type="number" class="form-control" formControlName="preciocompra" [class.is-invalid]="f.preciocompra.errors && f.preciocompra.touched" />
+                <input type="number" class="form-control" formControlName="preciocompra" [class.is-invalid]="f.preciocompra.errors && f.preciocompra.touched" (input)="onInput($event, 'preciocompra', 'numeros')" placeholder="0.00" min="1.00" step="0.01"/>
                 <small *ngIf="f.preciocompra.errors&& f.preciocompra.touched" class="text-danger">
-                  El dato es obligatorio y solo permite letras
+                    <ng-container *ngIf="f.preciocompra.errors.required">
+                        El dato es obligatorio.
+                    </ng-container>
+                    <ng-container *ngIf="f.preciocompra.errors.pattern">
+                        Solo se permiten letras.
+                    </ng-container>
               </small>
             </div>
             <div class="form-group">
                 <label>Precio venta <span class="text-danger"><b>*</b></span></label>
-                <input type="number" class="form-control" formControlName="precioventa" [class.is-invalid]="f.precioventa.errors && f.precioventa.touched" />
+                <input type="number" class="form-control form-control-sm" formControlName="precioventa" [class.is-invalid]="f.precioventa.errors && f.precioventa.touched" (input)="onInput($event, 'precioventa', 'numeros')" placeholder="0.00" min="1.00" step="0.01" required/>
                 <small *ngIf="f.precioventa.errors&& f.precioventa.touched" class="text-danger">
-                  El dato es obligatorio y solo permite letras
+                    <ng-container *ngIf="f.precioventa.errors.required">
+                        El dato es obligatorio.
+                    </ng-container>
+                    <ng-container *ngIf="f.precioventa.errors.pattern">
+                        Solo se permiten letras.
+                    </ng-container>
               </small>
             </div>
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label>Cantidad <span class="text-danger"><b>*</b></span></label>
                 <input type="number" class="form-control" formControlName="cantidad" [class.is-invalid]="f.cantidad.errors && f.cantidad.touched" />
                 <small *ngIf="f.cantidad.errors&& f.cantidad.touched" class="text-danger">
@@ -172,14 +203,26 @@
             </div>
             <div class="form-group">
                 <label>Fotografía <span class="text-danger"><b>*</b></span></label>
-                <input type="file" class="form-control" (change)="fseleccionarArchivo($event)" />
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroupFileAddon01">Subir Imagen</span>
+                    </div>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/png, image/jpeg" (change)="fseleccionarArchivo($event)">
+                      <label class="custom-file-label" for="inputGroupFile01">Seleccionar imagen...</label>
+                    </div>
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile">
+                    <label class="custom-file-label" for="customFile"></label>
+                </div>
                 <hr>
                 <img [src]="imageSrc" *ngIf="imageSrc" class="img-fluid mx-auto d-block" height="150px" width="150px" />
             </div>
 
             <div class="text-center">
                 <button type="submit" class="btn btn-success m-2" [disabled]="!formulario.valid">
-                  <i class="fa fa-save"></i> Grabar
+                  <i class="fa fa-save"></i> Guardar
               </button>
                 <button type="button" class="btn btn-danger" (click)="fcancelar()">
                   <i class="fa fa-times"></i> Cancelar

@@ -79,15 +79,54 @@ export class ProductosComponent implements OnInit {
 
   fformulario(dato: Productos) {
     this.formulario = this._fb.group({
-      producto: [dato.producto, [Validators.required]],
-      descripcion: [dato.descripcion, [Validators.required]],
-      preciocompra: [dato.preciocompra, [Validators.required, Validators.pattern('[0-9.]*')]],
-      precioventa: [dato.precioventa, [Validators.required, Validators.pattern('[0-9.]*')]],
-      cantidad: [dato.cantidad, [Validators.required, Validators.pattern('[0-9]*')]],
+      producto: [
+        dato.producto, 
+        [
+          Validators.required,
+          Validators.pattern('^[a-zA-Z\u00f1\u00d1\\s]+$'),
+          Validators.maxLength(50)
+        ]
+      ],
+      descripcion: [
+        dato.descripcion, 
+        [
+          Validators.required,
+          Validators.pattern('^[a-zA-Z0-9.,\u00f1\u00d1\\s]+$'),
+          Validators.maxLength(255)
+        ]
+      ],
+      preciocompra: [dato.preciocompra, [ Validators.pattern('[0-9.]*')]],
+      precioventa: [
+        dato.precioventa, 
+        [
+          Validators.required, 
+          Validators.pattern('^[0-9.,]+$')
+        ]
+      ],
+      cantidad: [dato.cantidad, [ Validators.pattern('[0-9]*')]],
     });
   }
 
   get f() { return this.formulario.controls; }
+
+  onInput(event: any, controlName: string, type: 'letras' | 'letrasyespacios' | 'numeros' | 'letrasynumerosguion'): void {
+    let input = event.target.value;
+    switch (type) {
+      case 'letras':
+        input = input.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1]/g, '');
+        break;
+      case 'letrasyespacios':
+        input = input.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1\s]/g, '');
+        break;
+      case 'numeros':
+        input = input.replace(/[^0-9]/g, '');
+        break;
+      case 'letrasynumerosguion':
+        input = input.replace(/[^a-zA-Z0-9.,\u00f1\u00d1\s]/g, '');
+        break;
+    }
+    this.formulario.get(controlName)?.setValue(input, { emitEvent: false });
+  }
 
   fadicionar(content: any) {
     this.estado = 'Adicionar';
@@ -143,7 +182,6 @@ export class ProductosComponent implements OnInit {
         this.imageSrc = reader.result as string;
       };
     }
-
   }
 
 
@@ -187,3 +225,4 @@ export class ProductosComponent implements OnInit {
   }
 
 }
+

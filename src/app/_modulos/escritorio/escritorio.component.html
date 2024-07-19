@@ -1,66 +1,143 @@
 <app-cabeceratitulos [titulo]="'Escritorio'" [descripcion]="'Pantalla principal'" [icono]="'dashboard'" [opcion]="'escritorio'">
 </app-cabeceratitulos>
 
-<div class="row">
-    <div class="col-md-12 justify-content-center">
-        <div class="col-md-12">
-            <div class="tile">
-                <p class="text-center">
-                    <img src="assets/imagenes/logo.png" class="img-fluid" />
-                </p>
-                <p class="text-center">versión 2.0.0 </p>
-                <p class="text-center">
-                    <button class="btn btn-outline-primary" (click)="fmiscompras()" *ngIf="escliente">Mis solicitudes de compra</button>
-                    <button class="btn btn-outline-primary" (click)="fmisventas()" *ngIf="esempresa">Mis solicitudes de venta</button>
-                </p>
-                <hr>
-                <div class="row">
-                    <div class="col-lg-3 col-md-12 mb4 mt-5">
-                        <div class="card-section border rounded p-3 ml-3">
-                            <div class="card-header-first rounded pb-5 text-center">
-                                <h2 class="card-header-title text-white pt-3">Usuarios</h2>
-                            </div>
-                            <div class="card-body text-center body-user">
-                                <h4 class="card-text">Registrados: </h4>
-                            </div>
-                        </div>
+<div class="row justify-content-center">
+    <div class="col-lg-3 col-md-6 col-sm-12 mt-1" *ngIf="esadmin">
+        <div class="card card-header-first">
+            <div class="card-body">
+                <div class="row pb-2">
+                    <div class="col-12 text-white align-content-center">
+                        <h2 class="card-title">55</h2>
+                        <h5 class="card-subtitle mb-2">Usuarios registrados</h5>
                     </div>
-                    <div class="col-lg-3 col-md-12 mb-4 mt-5">
-                        <div class="card-section border rounded p-3 ml-3">
-                            <div class="card-header-second rounded pb-5 text-center">
-                                <h2 class="card-header-title text-white pt-3">Usuarios</h2>
-                            </div>
-                            <div class="card-body text-center">
-                                <h4 class="card-text">Registrados: </h4>
-                            </div>
-                        </div>
-                    </div>
+                    <i class="small-box-icon fa fa-user-plus fa-5x"></i>                                
+                </div>
+            </div>
+            <div class="card-footer m-0 p-1">
+                <div class="col-12 text-white text-right align-content-center">
+                    <i class="fa fa-arrow-circle-o-right fa-3x boton-info" title="Ver mas" (click)="fusuario()"></i>
                 </div>
             </div>
         </div>
-        
-        <!-- <div class="col-md-12">
-            <div class="tile">
-                <p>
-                    El proyecto <strong>"APOYO A LA COMPETITIVIDAD DE LA MICRO Y PEQUEÑA EMPRESA (REACTIVA TIC) DE LOS MUNICIPIOS PRODUCTORES DEL DEPARTAMENTO DE ORURO"</strong>  
-                    es un proyecto de desarrollo para las Unidades Productivas que busca mejorar la capacidad de producción, mediante el fortalecimiento de las 
-                    capacidades técnicas de transformación de la materia prima, servicio de asistencia técnica de transformación de la materia prima, servicio 
-                    de asistencia técnica a las MiPyMEs y promocionar los productos artesanales a través de organización y participación de ferias locales, 
-                    departamentales y nacionales.
-                </p>
-                <strong>OBJETIVO GENERAL</strong>
-                <p> - Fortalecer de manera integral la competitividad de las unidades productivas en el departamento de Oruro, mediante la planificación, capacitación y promoción de las MyPEs.</p>
-                <strong>OBJETIVO ESPECIFICO</strong>
-                <p>
-                    - Formar al personal de unidades productivas, en técnicas de producción, formación social y liderazgo, psicología laboral, educación financiera, formación en normativas impositivas, laborales de comercio y nuevas TIC. <br>
-                    - Aplicación de herramientas tecnológicas (CRM, ERP), etc. en gestión de la pro. <br>
-                    - Brindar asistencia tecnica en desarrollo de plataformas digitales CRM y ERP en un sistema que permite gestionar clientes mientras que un ERP gestiona procesos informativos, ventas y promoción e-commerce TIC. <br>
-                </p>
-                <strong>ACTIVIDADES</strong><br>
-                <div class="col-md-12 text-center">
-                    <img src="assets/imagenes/actividades.png" class="img-fluid" width="auto" />
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mt-1" *ngIf="esadmin">
+        <div class="card card-header-second">
+            <div class="card-body">
+                <div class="row pb-2">
+                    <div class="col-12 text-white align-content-center" style="z-index: 1;">
+                        <h2 class="card-title">55</h2>
+                        <h5 class="card-subtitle mb-2">Unidades Productivas</h5>
+                    </div>
+                    <i class="small-box-icon fa fa-list-alt fa-5x"></i>
                 </div>
             </div>
-        </div> -->
+            <div class="card-footer m-0 p-1">
+                <div class="col-12 text-white text-right align-content-center">
+                    <i class="fa fa-arrow-circle-o-right fa-3x boton-info" title="Ver mas" (click)="funidadprod()"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mt-1" *ngIf="esadmin">
+        <div class="card card-header-third">
+            <div class="card-body">
+                <div class="row pb-2">
+                    <div class="col-12 text-white align-content-center">
+                        <h2 class="card-title">55</h2>
+                        <h5 class="card-subtitle mb-2">Municipios</h5>
+                    </div>
+                    <i class="small-box-icon fa fa-map-o fa-5x"></i>
+                </div>
+            </div>
+            <div class="card-footer m-0 p-1">
+                <div class="col-12 text-white text-right align-content-center">
+                    <i class="fa fa-arrow-circle-o-right fa-3x boton-info" title="Ver mas" (click)="fmunicipio()"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mt-1" *ngIf="esadmin || esempresa">
+        <div class="card card-header-fourth">
+            <div class="card-body">
+                <div class="row pb-2">
+                    <div class="col-12 text-white align-content-center">
+                        <h2 class="card-title">55</h2>
+                        <h5 class="card-subtitle mb-2">Productos</h5>
+                    </div>
+                    <i class="small-box-icon fa fa-shopping-basket fa-5x"></i>
+                </div>
+            </div>
+            <div class="card-footer m-0 p-1">
+                <div class="col-12 text-white text-right align-content-center">
+                    <i class="fa fa-arrow-circle-o-right fa-3x boton-info" title="Ver mas" (click)="fproductos()"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mt-1" *ngIf="esempresa">
+        <div class="card card-header-fifth">
+            <div class="card-body">
+                <div class="row pb-2">
+                    <div class="col-12 text-white align-content-center">
+                        <h2 class="card-title">55</h2>
+                        <h5 class="card-subtitle mb-2">Mis solicitudes de venta</h5>
+                    </div>
+                    <i class="small-box-icon fa fa-shopping-cart fa-5x"></i>
+                </div>
+            </div>
+            <div class="card-footer m-0 p-1">
+                <div class="col-12 text-white text-right align-content-center">
+                    <i class="fa fa-arrow-circle-o-right fa-3x boton-info" title="Ver mas" (click)="fmisventas()"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-3" *ngIf="esadmin || esreactivatic || essddpi">
+    <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12">
+        <div class="card card-stadistic">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa fa-bar-chart"></i> Unidades Productivas por Gestión</h3>
+            </div>
+            <div class="card-body">
+
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12">
+        <div class="card card-calendario">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa fa-calendar"></i> Calendario</h3>
+            </div>
+            <div class="card-body">
+                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-3" *ngIf="esempresa || esadmin || esreactivatic || essddpi">
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <div class="card card-stadistic">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa fa-bar-chart"></i> Productos vendidos</h3>
+            </div>
+            <div class="card-body">
+
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <div class="card card-stadistic">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa fa-comment"></i> Comentarios</h3>
+            </div>
+            <div class="card-body">
+                <i class="fa fa-home"></i>
+                <i class="fa fa-file"></i>
+                <i class="fa fa-wifi"></i>
+                <i class="fa fa-bar-chart"></i>
+            </div>
+        </div>
     </div>
 </div>

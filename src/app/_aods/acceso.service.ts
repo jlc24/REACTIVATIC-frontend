@@ -64,6 +64,32 @@ export class AccesoService {
     }
   }
 
+  esRolReactivatic(){
+    const roles = sessionStorage.getItem(ROLES);
+    if (roles.indexOf('ROLE_REACTIVATIC') >= 0) {
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  esRolSddpi(){
+    const roles = sessionStorage.getItem(ROLES);
+    if (roles.indexOf('ROLE_SDDPI') >= 0) {
+      return true;
+    }else{
+      return false;
+    }
+  }
+  esRolAdmin(){
+    const roles = sessionStorage.getItem(ROLES);
+    if (roles.indexOf('ROLE_ADMINISTRADORES') >= 0) {
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   cerrarSesion() {
     sessionStorage.clear();
     this._ruta.navigateByUrl('/acceso');

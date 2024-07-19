@@ -1,5 +1,11 @@
 import { PersonasService } from './../../_aods/personas.service';
 import { Personas } from './../../_entidades/personas';
+import { TiposdocumentosService } from 'src/app/_aods/tiposdocumentos.service';
+import { Tiposdocumentos } from 'src/app/_entidades/tiposdocumentos';
+import { TiposextensionesService } from 'src/app/_aods/tiposextensiones.service';
+import { Tiposextensiones } from 'src/app/_entidades/tiposextensiones';
+import { TiposgenerosService } from 'src/app/_aods/tiposgeneros.service';
+import { Tiposgeneros } from 'src/app/_entidades/tiposgeneros';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -15,6 +21,9 @@ import swal from 'sweetalert2';
 export class UsuariosComponent implements OnInit {
   datos: Usuarios[];
   dato: Personas;
+  documento: Tiposdocumentos[];
+  extensiones: Tiposextensiones[];
+  generos: Tiposgeneros[];
 
   pagina: number = 0;
   numPaginas: number = 0;
@@ -29,6 +38,9 @@ export class UsuariosComponent implements OnInit {
   constructor(
     private _usuariosService: UsuariosService,
     private _personasService: PersonasService,
+    private _documentoService: TiposdocumentosService,
+    private _extensionesService: TiposextensionesService,
+    private _generosService: TiposgenerosService,
     private _fb: FormBuilder,
     config: NgbModalConfig,
     private _modalService: NgbModal
@@ -39,6 +51,10 @@ export class UsuariosComponent implements OnInit {
 
   ngOnInit(): void {
     this.fdatos();
+  }
+
+  fdocumento() {
+    
   }
 
   fcantidad() {
@@ -119,24 +135,47 @@ export class UsuariosComponent implements OnInit {
           Validators.maxLength(5)
         ]
       ],
-      direccion: [dato.direccion, [Validators.required]],
+      expedido:[
+        dato.idtipoextension,
+        [
+          Validators.required,
+          Validators.pattern('^[a-zA-Z]+$'),
+          Validators.maxLength(5)
+        ]
+      ],
+      direccion: [
+        dato.direccion, 
+        [
+          Validators.required,
+          Validators.maxLength(255)
+        ]
+      ],
       telefono: [
-        dato.telefono,
-        [Validators.required, Validators.pattern('[0-9]*')],
+        dato.telefono, 
+        [
+          Validators.pattern('^[0-9]+$'),
+          Validators.maxLength(15)
+        ],
       ],
       celular: [
         dato.celular,
-        [Validators.required, Validators.pattern('[0-9]*')],
+        [
+          Validators.required, 
+          Validators.pattern('^[0-9]+$'),
+          Validators.maxLength(15)
+        ],
       ],
       correo: [
         dato.correo,
         [
           Validators.required,
-          Validators.pattern(
-            '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'
-          ),
+          Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'),
+          Validators.maxLength(255)
         ],
       ],
+      usuario: [
+        
+      ]
     });
   }
 
@@ -175,7 +214,7 @@ export class UsuariosComponent implements OnInit {
     this._personasService.dato(id).subscribe((data) => {
       this.dato = data;
       this.fformulario(this.dato);
-      this._modalService.open(content);
+      this._modalService.open(content, { size: 'lg' });
     });
   }
   fver(id: number, content: any) {
@@ -183,7 +222,7 @@ export class UsuariosComponent implements OnInit {
     this._personasService.dato(id).subscribe((data) => {
       this.dato = data;
       this.fformulario(this.dato);
-      this._modalService.open(content);
+      this._modalService.open(content, { size: 'lg' });
     });
   }
 
