@@ -82,7 +82,7 @@
                             <td>{{ _item.persona.telefono }}</td>
                             <td>{{ _item.persona.celular }}</td>
                             <td class="text-center">
-                                <span class="badge {{ _item.persona.estado ? 'badge-success' : 'badge-danger' }}">
+                                <span class="estado badge {{ _item.persona.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idusuario, _item.estado)">
                                     {{ _item.persona.estado ? 'HABILITADO' : 'INHABILITADO' }}
                                   </span>
                             </td>
@@ -189,34 +189,30 @@
                         </ng-container>
                     </small>
                 </div>
-                <div class="form-group col-md-4 col-sm-12" hidden>
-                    <label>Fecha de nacimiento: <span class="text-danger"><b>*</b></span></label>
-                    <input type="date" class="form-control form-control-sm" formControlName="fechanacimiento" [class.is-invalid]="f.fechanacimiento.errors && f.fechanacimiento.touched" value="" />
-                    <small *ngIf="f.fechanacimiento.errors&& f.fechanacimiento.touched" class="text-danger">
-                        <ng-container *ngIf="f.fechanacimiento.errors.required">
-                            El dato es obligatorio.
-                        </ng-container>
-                    </small>
-                </div>
-                <div class="form-group col-lg-2 col-md-6 col-sm-12">
-                    <label>Documento: <span class="text-danger"><b>*</b></span></label>
-                    <input type="text" class="form-control form-control-sm" formControlName="dip" [class.is-invalid]="f.dip.errors && f.dip.touched" (input)="onInput($event, 'dip', 'numeros')" autocomplete="no" hidden/>
-                    <select class="custom-select custom-select-sm" name="" id="">
-                        <option value="" selected>Seleccionar...</option>
+                <div class="form-group col-lg-4 col-md-6 col-sm-12">
+                    <label>Genero: <span class="text-danger"><b>*</b></span></label>
+                    <select class="custom-select custom-select-sm" formControlName="idtipogenero">
+                        <option *ngFor="let _itemp of genero" [value]="_itemp.idtipogenero">{{ _itemp.tipogenero }}</option>
                     </select>
-                    <small *ngIf="f.dip.errors&& f.dip.touched" class="text-danger">
-                        <ng-container *ngIf="f.dip.errors.required">
+                    <small *ngIf="f.idtipogenero.errors&& f.idtipogenero.touched" class="text-danger">
+                        <ng-container *ngIf="f.idtipogenero.errors.required">
                             El dato es obligatorio.
-                        </ng-container>
-                        <ng-container *ngIf="f.dip.errors.pattern">
-                            Solo se permite números.
-                        </ng-container>
-                        <ng-container *ngIf="f.dip.errors.maxlength">
-                            No puede exceder los 15 caracteres.
                         </ng-container>
                     </small>
                 </div>
-                <div class="form-group col-lg-3 col-md-6 col-sm-12">
+                
+                <div class="form-group col-lg-4 col-md-6 col-sm-12">
+                    <label>Documento: <span class="text-danger"><b>*</b></span></label>
+                    <select class="custom-select custom-select-sm" formControlName="idtipodocumento" >
+                        <option *ngFor="let _itemp of documento" [value]="_itemp.idtipodocumento">{{ _itemp.tipodocumento }}</option>
+                    </select>
+                    <small *ngIf="f.idtipodocumento.errors&& f.idtipodocumento.touched" class="text-danger">
+                        <ng-container *ngIf="f.dip.errors.required">
+                            Obligatorio.
+                        </ng-container>
+                    </small>
+                </div>
+                <div class="form-group col-lg-4 col-md-6 col-sm-12">
                     <label>DIP: <span class="text-danger"><b>*</b></span></label>
                     <input type="text" class="form-control form-control-sm" formControlName="dip" [class.is-invalid]="f.dip.errors && f.dip.touched" (input)="onInput($event, 'dip', 'numeros')" autocomplete="no" required/>
                     <small *ngIf="f.dip.errors&& f.dip.touched" class="text-danger">
@@ -231,33 +227,26 @@
                         </ng-container>
                     </small>
                 </div>
-                <div class="form-group col-lg-2 col-md-6 col-sm-12">
+                <div class="form-group col-lg-4 col-md-6 col-sm-12">
                     <label>Complemento: </label>
-                    <input type="text" class="form-control form-control-sm" formControlName="complemento" [class.is-invalid]="f.complemento.errors && f.complemento.touched" (input)="onInput($event, 'complemento', 'letrasynumerosguion')" autocomplete="no" />
-                    <small *ngIf="f.complemento.errors && f.complemento.touched" class="text-danger">
-                        <ng-container *ngIf="f.complemento.errors.pattern">
+                    <input type="text" class="form-control form-control-sm" formControlName="complementario" [class.is-invalid]="f.complementario.errors && f.complementario.touched" (input)="onInput($event, 'complementario', 'letrasynumerosguion')" autocomplete="no" />
+                    <small *ngIf="f.complementario.errors && f.complementario.touched" class="text-danger">
+                        <ng-container *ngIf="f.complementario.errors.pattern">
                             Caracter no permitido.
                         </ng-container>
-                        <ng-container *ngIf="f.complemento.errors.maxlength">
+                        <ng-container *ngIf="f.complementario.errors.maxlength">
                             No puede exceder los 5 caracteres.
                         </ng-container>
                     </small>
                 </div>
-                <div class="form-group col-lg-2 col-md-6 col-sm-12">
+                <div class="form-group col-lg-4 col-md-6 col-sm-12">
                     <label for="">Expedido: <span class="text-danger"><b>*</b></span></label>
-                    <input type="text" class="form-control form-control-sm" formControlName="expedido" [class.is-invalid]="f.expedido.errors && f.expedido.touched" (input)="onInput($event, 'expedido', 'letras')" autocomplete="no" hidden>
-                    <select class="custom-select custom-select-sm" name="" id="" [class.is-invalid]="f.expedido.errors && f.expedido.touched">
-                        <option value="" selected>Seleccionar...</option>
+                    <select class="custom-select custom-select-sm" formControlName="idtipoextension" [class.is-invalid]="f.idtipoextension.errors && f.idtipoextension.touched">
+                        <option *ngFor="let _itemp of extension" [value]="_itemp.idtipoextension">{{ _itemp.tipoextension }}</option>
                     </select>
-                    <small *ngIf="f.expedido.errors && f.expedido.touched" class="text-danger">
-                        <ng-container *ngIf="f.expedido.errors.required">
-                            El dato es obligatorio.
-                        </ng-container>
-                        <ng-container *ngIf="f.expedido.errors.pattern">
-                            Caracter no permitido.
-                        </ng-container>
-                        <ng-container *ngIf="f.expedido.errors.maxlength">
-                            No puede exceder los 5 caracteres.
+                    <small *ngIf="f.idtipoextension.errors && f.idtipoextension.touched" class="text-danger">
+                        <ng-container *ngIf="f.idtipoextension.errors.required">
+                            Obligatorio.
                         </ng-container>
                     </small>
                 </div>
@@ -270,7 +259,7 @@
                         </ng-container>
                     </small>
                 </div>
-                <div class="form-group col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group col-lg-4 col-md-6 col-sm-12">
                     <label>Teléfono/Celular: <span class="text-danger"><b>*</b></span></label>
                     <input type="number" class="form-control form-control-sm" formControlName="celular" [class.is-invalid]="f.celular.errors && f.celular.touched" autocomplete="no"/>
                     <small *ngIf="f.celular.errors && f.celular.touched" class="text-danger">
@@ -284,10 +273,13 @@
                 </div>
                 <div class="form-group col-lg-6 col-md-6 col-sm-12">
                     <label>Dirección: <span class="text-danger"><b>*</b></span></label>
-                    <input type="text" class="form-control form-control-sm" formControlName="direccion" [class.is-invalid]="f.direccion.errors && f.direccion.touched" autocomplete="no"/>
+                    <input type="text" class="form-control form-control-sm" formControlName="direccion" [class.is-invalid]="f.direccion.errors && f.direccion.touched" (input)="onInput($event, 'direccion', 'direccion')" autocomplete="no"/>
                     <small *ngIf="f.direccion.errors && f.direccion.touched" class="text-danger">
                         <ng-container *ngIf="f.direccion.errors.required">
                             El dato es obligatorio.
+                        </ng-container>
+                        <ng-container *ngIf="f.direccion.errors.pattern">
+                            Caracter no válido.
                         </ng-container>
                         <ng-container *ngIf="f.direccion.errors.maxlength">
                             No puede exceder los 255 caracteres.
@@ -311,39 +303,44 @@
                 </div>
                 <div class="form-group col-lg-4 col-md-6 col-sm-12">
                     <label>Usuario: <span class="text-danger"><b>*</b></span></label>
-                    <input type="number" class="form-control form-control-sm" formControlName="telefono" [class.is-invalid]="f.telefono.errors && f.telefono.touched" autocomplete="no"/>
-                    <small *ngIf="f.telefono.errors && f.telefono.touched" class="text-danger">
-                        <ng-container *ngIf="f.correo.errors.required">
+                    <input type="text" class="form-control form-control-sm" formControlName="usuario" [class.is-invalid]="f.usuario.errors && f.usuario.touched" autocomplete="no"/>
+                    <small *ngIf="f.usuario.errors && f.usuario.touched" class="text-danger">
+                        <ng-container *ngIf="f.usuario.errors.required">
                             El dato es obligatorio.
                         </ng-container>
-                        <ng-container *ngIf="f.correo.errors.pattern">
+                        <ng-container *ngIf="f.usuario.errors.pattern">
                             Caracter no permitido.
                         </ng-container>
-                        <ng-container *ngIf="f.correo.errors.maxlength">
-                            No puede exceder los 50 caracteres.
+                        <ng-container *ngIf="f.usuario.errors.maxlength">
+                            No puede exceder los 10 caracteres.
                         </ng-container>
                     </small>
                 </div>
                 <div class="form-group col-lg-4 col-md-6 col-sm-12">
                     <label>Contraseña: <span class="text-danger"><b>*</b></span></label>
-                    <input type="number" class="form-control form-control-sm" formControlName="celular" [class.is-invalid]="f.celular.errors && f.celular.touched" autocomplete="no"/>
-                    <small *ngIf="f.celular.errors && f.celular.touched" class="text-danger">
-                        <ng-container *ngIf="f.celular.errors.required">
+                    <input type="password" class="form-control form-control-sm" formControlName="clave" [class.is-invalid]="f.clave.errors && f.clave.touched" autocomplete="no" value=""/>
+                    <small *ngIf="f.clave.errors && f.clave.touched" class="text-danger">
+                        <ng-container *ngIf="f.clave.errors.required">
                             El dato es obligatorio.
                         </ng-container>
-                        <ng-container *ngIf="f.celular.errors.pattern">
-                            Solo se permite números.
+                        <ng-container *ngIf="f.clave.errors.pattern">
+                            Caracter no válido.
+                        </ng-container>
+                        <ng-container *ngIf="f.clave.errors.maxlength">
+                            No puede exceder los 20 caracteres.
+                        </ng-container>
+                        <ng-container *ngIf="f.clave.errors.minlength">
+                            Debe tener 8 caracteres minimo.
                         </ng-container>
                     </small>
                 </div>
                 <div class="form-group col-lg-4 col-md-6 col-sm-12">
                     <label>Rol: <span class="text-danger"><b>*</b></span></label>
-                    <input type="number" class="form-control form-control-sm" formControlName="celular" [class.is-invalid]="f.celular.errors && f.celular.touched" autocomplete="no" hidden/>
-                    <select class="custom-select custom-select-sm" name="" id="" [class.is-invalid]="f.celular.errors && f.celular.touched">
-                        <option value="" selected>Seleccionar...</option>
+                    <select class="custom-select custom-select-sm" formControlName="idrol" [class.is-invalid]="f.idrol.errors && f.idrol.touched">
+                        <option *ngFor="let _itemp of rol" [value]="_itemp.idrol">{{ _itemp.nombrerol }}</option>
                     </select>
-                    <small *ngIf="f.celular.errors && f.celular.touched" class="text-danger">
-                        <ng-container *ngIf="f.celular.errors.required">
+                    <small *ngIf="f.idrol.errors && f.idrol.touched" class="text-danger">
+                        <ng-container *ngIf="f.idrol.errors.required">
                             El dato es obligatorio.
                         </ng-container>
                     </small>

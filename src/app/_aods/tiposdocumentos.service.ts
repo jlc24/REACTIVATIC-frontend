@@ -11,18 +11,25 @@ import swal from 'sweetalert2';
 })
 export class TiposdocumentosService {
 
-  ruta = `${RUTA}/apirest/tipodocumentos`;
+  ruta = `${RUTA}/apirest/tiposdocumentos`;
 
   constructor(private _httpClient: HttpClient) { }
 
-  listar(pagina: number, cantidad: number, buscar: string): Observable<Tiposdocumentos[]> {
+  listar(): Observable<Tiposdocumentos[]>{
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
-  }
-
-  datos(pagina: number, cantidad: number, buscar: string): Observable<Productos[]> {
-    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
-    return this._httpClient.get<Productos[]>(`${this.ruta}/?pagina=${pagina}&cantidad=${cantidad}&buscar=${buscar}`, {
+    return this._httpClient.get<Tiposdocumentos[]> (`${this.ruta}`, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
   }
+
+  // listar(pagina: number, cantidad: number, buscar: string): Observable<Tiposdocumentos[]> {
+  //   const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+  // }
+
+  // datos(pagina: number, cantidad: number, buscar: string): Observable<Productos[]> {
+  //   const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+  //   return this._httpClient.get<Productos[]>(`${this.ruta}/?pagina=${pagina}&cantidad=${cantidad}&buscar=${buscar}`, {
+  //     headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+  //   });
+  // }
 }

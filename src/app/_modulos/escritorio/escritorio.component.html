@@ -2,13 +2,14 @@
 </app-cabeceratitulos>
 
 <div class="row justify-content-center">
-    <div class="col-lg-3 col-md-6 col-sm-12 mt-1" *ngIf="esadmin">
+    <div class="col-lg-3 col-md-6 col-sm-12 mt-1" *ngIf="esadmin || esreactivatic || essddpi">
         <div class="card card-header-first">
             <div class="card-body">
                 <div class="row pb-2">
                     <div class="col-12 text-white align-content-center">
-                        <h2 class="card-title">55</h2>
-                        <h5 class="card-subtitle mb-2">Usuarios registrados</h5>
+                        <h2 class="card-title">{{ total }}</h2>
+                        <h5 class="card-subtitle mb-2" *ngIf="total == 1">Usuario registrado</h5>
+                        <h5 class="card-subtitle mb-2" *ngIf="total > 1">Usuarios registrados</h5>
                     </div>
                     <i class="small-box-icon fa fa-user-plus fa-5x"></i>                                
                 </div>
@@ -20,7 +21,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mt-1" *ngIf="esadmin">
+    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mt-1" *ngIf="esadmin || esreactivatic || essddpi">
         <div class="card card-header-second">
             <div class="card-body">
                 <div class="row pb-2">
@@ -38,7 +39,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mt-1" *ngIf="esadmin">
+    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mt-1" *ngIf="esadmin || esreactivatic || essddpi">
         <div class="card card-header-third">
             <div class="card-body">
                 <div class="row pb-2">
@@ -57,7 +58,7 @@
         </div>
     </div>
     
-    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mt-1" *ngIf="esadmin || esempresa">
+    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mt-1" *ngIf="esadmin || esreactivatic || essddpi || esempresa">
         <div class="card card-header-fourth">
             <div class="card-body">
                 <div class="row pb-2">

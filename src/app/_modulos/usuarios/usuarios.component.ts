@@ -1,3 +1,4 @@
+import { AccesoService } from 'src/app/_aods/acceso.service';
 import { PersonasService } from './../../_aods/personas.service';
 import { Personas } from './../../_entidades/personas';
 import { TiposdocumentosService } from 'src/app/_aods/tiposdocumentos.service';
@@ -6,6 +7,8 @@ import { TiposextensionesService } from 'src/app/_aods/tiposextensiones.service'
 import { Tiposextensiones } from 'src/app/_entidades/tiposextensiones';
 import { TiposgenerosService } from 'src/app/_aods/tiposgeneros.service';
 import { Tiposgeneros } from 'src/app/_entidades/tiposgeneros';
+import { RolesService } from 'src/app/_aods/roles.service';
+import { Roles } from 'src/app/_entidades/roles';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -22,8 +25,9 @@ export class UsuariosComponent implements OnInit {
   datos: Usuarios[];
   dato: Personas;
   documento: Tiposdocumentos[];
-  extensiones: Tiposextensiones[];
-  generos: Tiposgeneros[];
+  extension: Tiposextensiones[];
+  genero: Tiposgeneros[];
+  rol: Roles[];
 
   pagina: number = 0;
   numPaginas: number = 0;
@@ -35,12 +39,18 @@ export class UsuariosComponent implements OnInit {
   formulario: FormGroup;
   submitted: boolean = false;
 
+  esadmin: boolean = false;
+  essddpi: boolean = false;
+  esreactivatic: boolean = false;
+
   constructor(
     private _usuariosService: UsuariosService,
     private _personasService: PersonasService,
     private _documentoService: TiposdocumentosService,
     private _extensionesService: TiposextensionesService,
     private _generosService: TiposgenerosService,
+    private _accesoService: AccesoService,
+    private _rolService: RolesService,
     private _fb: FormBuilder,
     config: NgbModalConfig,
     private _modalService: NgbModal
@@ -51,16 +61,70 @@ export class UsuariosComponent implements OnInit {
 
   ngOnInit(): void {
     this.fdatos();
+    this.fdocumento();
+    this.fextension();
+    this.fgenero();
+    this.frol();
   }
 
   fdocumento() {
-    
+    this._documentoService.listar().subscribe( data => {
+      this.documento = data;
+    });
+  }
+
+  fextension() {
+    this._extensionesService.listar().subscribe( data => {
+      this.extension = data;
+    });
+  }
+
+  fgenero() {
+    this._generosService.listar().subscribe( data => {
+      this.genero = data;
+    });
+  }
+
+  frol(){
+    this.esadmin = this._accesoService.esRolAdmin();
+    this.essddpi = this._accesoService.esRolSddpi();
+    this.esreactivatic = this._accesoService.esRolReactivatic();
+    if (this.esadmin) {
+      this._rolService.listaradmin().subscribe( data => {
+        this.rol = data;
+      });
+    }
+    if (this.essddpi) {
+      this._rolService.listarsddpi().subscribe( data => {
+        this.rol = data;
+      });
+    }
+    if (this.esreactivatic) {
+      this._rolService.listarreactivatic().subscribe( data => {
+        this.rol = data;
+      })
+    }
   }
 
   fcantidad() {
-    this._usuariosService.cantidad(this.buscar).subscribe((data) => {
-      this.total = data;
-    });
+    this.esadmin = this._accesoService.esRolAdmin();
+    this.essddpi = this._accesoService.esRolSddpi();
+    this.esreactivatic = this._accesoService.esRolReactivatic();
+    if (this.esadmin) {
+      this._usuariosService.cantidad(this.buscar).subscribe((data) => {
+        this.total = data;
+      });
+    }
+    if (this.essddpi) {
+      this._usuariosService.cantidadsddpi(this.buscar).subscribe((data) => {
+        this.total = data;
+      });
+    }
+    if (this.esreactivatic) {
+      this._usuariosService.cantidadreactivatic(this.buscar).subscribe((data) => {
+        this.total = data;
+      });
+    }
   }
 
   fbuscar() {
@@ -69,12 +133,33 @@ export class UsuariosComponent implements OnInit {
   }
 
   fdatos() {
-    this._usuariosService
-      .datos(this.pagina, this.cantidad, this.buscar)
-      .subscribe((data) => {
-        this.fcantidad();
-        this.datos = data;
-      });
+    this.esadmin = this._accesoService.esRolAdmin();
+    this.essddpi = this._accesoService.esRolSddpi();
+    this.esreactivatic = this._accesoService.esRolReactivatic();
+    if (this.esadmin) {
+      this._usuariosService
+        .datos(this.pagina, this.cantidad, this.buscar)
+        .subscribe((data) => {
+          this.fcantidad();
+          this.datos = data;
+        });
+    }
+    if (this.essddpi) {
+      this._usuariosService
+        .datossddpi(this.pagina, this.cantidad, this.buscar)
+        .subscribe((data) => {
+          this.fcantidad();
+          this.datos = data;
+        });
+    }
+    if (this.esreactivatic) {
+      this._usuariosService
+        .datosreactivatic(this.pagina, this.cantidad, this.buscar)
+        .subscribe((data) => {
+          this.fcantidad();
+          this.datos = data;
+        });
+    }
   }
 
   limpiar() {
@@ -88,8 +173,9 @@ export class UsuariosComponent implements OnInit {
     this.fdatos();
   }
 
-  fformulario(dato: Personas) {
+  fformulario(dato: Personas, disabled: boolean = false) {
     this.formulario = this._fb.group({
+
       primerapellido: [
         dato.primerapellido, 
         [
@@ -113,9 +199,14 @@ export class UsuariosComponent implements OnInit {
           Validators.maxLength(50)
         ]
       ],
-      // segundonombre: [dato.segundonombre],
-      fechanacimiento: [
-        dato.fechanacimiento, 
+      idtipogenero: [
+        dato.idtipogenero,
+        [
+          Validators.required
+        ]
+      ],
+      idtipodocumento: [
+        dato.idtipodocumento,
         [
           Validators.required
         ]
@@ -128,25 +219,24 @@ export class UsuariosComponent implements OnInit {
           Validators.maxLength(15)
         ]
       ],
-      complemento:[
-        dato.numerocomplementario,
+      complementario:[
+        dato.complementario,
         [
           Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1]+$'),
           Validators.maxLength(5)
         ]
       ],
-      expedido:[
+      idtipoextension:[
         dato.idtipoextension,
         [
-          Validators.required,
-          Validators.pattern('^[a-zA-Z]+$'),
-          Validators.maxLength(5)
+          Validators.required
         ]
       ],
       direccion: [
         dato.direccion, 
         [
           Validators.required,
+          Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1\\s.,#-]+$'),
           Validators.maxLength(255)
         ]
       ],
@@ -174,7 +264,27 @@ export class UsuariosComponent implements OnInit {
         ],
       ],
       usuario: [
-        
+        { value: dato.usuario.usuario, disabled: disabled }, 
+        [
+          Validators.required,
+          Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1]+$'),
+          Validators.maxLength(10)
+        ]
+      ],
+      clave: [
+        { value: dato.usuario.clave ? '**********' : '', disabled: disabled},
+        [
+          Validators.required,
+          Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1]+$'),
+          Validators.minLength(8),
+          Validators.maxLength(20)
+        ]
+      ],
+      idrol: [
+        { value: dato.rol.idrol, disabled: disabled},
+        [
+          Validators.required
+        ]
       ]
     });
   }
@@ -183,7 +293,7 @@ export class UsuariosComponent implements OnInit {
     return this.formulario.controls;
   }
 
-  onInput(event: any, controlName: string, type: 'letras' | 'letrasyespacios' | 'numeros' | 'letrasynumerosguion'): void {
+  onInput(event: any, controlName: string, type: 'letras' | 'letrasyespacios' | 'numeros' | 'letrasynumerosguion' | 'direccion'): void {
     let input = event.target.value;
     switch (type) {
       case 'letras':
@@ -198,28 +308,42 @@ export class UsuariosComponent implements OnInit {
       case 'letrasynumerosguion':
         input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1]/g, '');
         break;
+      case 'direccion':
+        input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1\s.,#-]/g, '');
+        break;
     }
     this.formulario.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
   }
 
+  // onInputCorreo(event: any, controlName: string, type: 'correo'): void {
+  //   let input = event.target.value;
+  //   switch (type) {
+  //     case 'correo':
+  //       input = input.replace(/[^a-zA-Z0-9._%+-@]/g, '');
+  //       break;
+  //   }
+  // }
+
   fadicionar(content: any) {
     this.estado = 'Adicionar';
     this.dato = new Personas();
+    this.dato.usuario = new Usuarios();
+    this.dato.rol = new Roles();
     this.fformulario(this.dato);
     this._modalService.open(content, { size: 'lg' });
   }
 
   fmodificar(id: number, content: any) {
     this.estado = 'Modificar';
-    this._personasService.dato(id).subscribe((data) => {
+    this._personasService.persona(id).subscribe((data) => {
       this.dato = data;
-      this.fformulario(this.dato);
+      this.fformulario(this.dato, true);
       this._modalService.open(content, { size: 'lg' });
     });
   }
   fver(id: number, content: any) {
     this.estado = 'Ver';
-    this._personasService.dato(id).subscribe((data) => {
+    this._personasService.persona(id).subscribe((data) => {
       this.dato = data;
       this.fformulario(this.dato);
       this._modalService.open(content, { size: 'lg' });
@@ -245,16 +369,45 @@ export class UsuariosComponent implements OnInit {
       });
   }
 
+  fcambiarestado(idusuario: number, estado: boolean){
+    swal.fire({
+      title: !estado ? 'Estas seguro de deshabilitar?' : 'Estas seguro de habilitar?',
+      icon: 'warning',
+      text: estado ? 'El usuario no podra acceder al sistema.' : 'El usuario podrá acceder al sistema.',
+      showCancelButton: true,
+      cancelButtonText: 'cancelar',
+      confirmButtonText: 'Cambiar',
+    }).then((result) => {
+      if (result.value) {
+        this._usuariosService.cambiarestado({ idusuario, estado: !estado }).subscribe( response => {
+          this.fdatos();
+          swal.fire('Cambio realizado', 'El estado del usuario ha sido cambiado con exito.', 'success');
+        });
+      }
+    }); 
+  }
+
   faceptar(): void {
+    function toUpperCaseDefined(value: string | undefined): string {
+      return value ? value.toUpperCase() : '';
+    }
     this.submitted = true;
 
-    this.dato.primerapellido = this.formulario.value.primerapellido.toUpperCase();
-    this.dato.fechanacimiento = this.formulario.value.fechanacimiento;
+    this.dato.primerapellido = toUpperCaseDefined(this.formulario.value.primerapellido);
+    this.dato.segundoapellido = toUpperCaseDefined(this.formulario.value.segundoapellido);
+    this.dato.primernombre = toUpperCaseDefined(this.formulario.value.primernombre);
+    this.dato.idtipogenero = this.formulario.value.idtipogenero;
+    this.dato.idtipodocumento = this.formulario.value.idtipodocumento;
     this.dato.dip = this.formulario.value.dip;
-    this.dato.direccion = this.formulario.value.direccion.toUpperCase();
-    this.dato.telefono = this.formulario.value.telefono;
+    this.dato.complementario = toUpperCaseDefined(this.formulario.value.complementario);
+    this.dato.idtipoextension = this.formulario.value.idtipoextension;
+    this.dato.direccion = toUpperCaseDefined(this.formulario.value.direccion);
+    this.dato.telefono = this.formulario.value.celular;
     this.dato.celular = this.formulario.value.celular;
     this.dato.correo = this.formulario.value.correo;
+    this.dato.usuario.usuario = this.formulario.value.usuario;
+    this.dato.usuario.clave = this.formulario.value.clave;
+    this.dato.rol.idrol = this.formulario.value.idrol;
 
     if (this.estado === 'Modificar') {
       this._personasService.modificar(this.dato).subscribe((data) => {
@@ -266,7 +419,7 @@ export class UsuariosComponent implements OnInit {
       this._personasService.adicionar4(this.dato).subscribe((data) => {
         this.fdatos();
         this._modalService.dismissAll();
-        swal.fire('Dato adicionado', 'Dato modificado con exito', 'success');
+        swal.fire('Dato adicionado', 'Dato registrado con exito', 'success');
       });
     }
   }

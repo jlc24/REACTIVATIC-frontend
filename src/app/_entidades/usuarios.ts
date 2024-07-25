@@ -1,4 +1,5 @@
 import { Personas } from './personas';
+import { Roles } from './roles';
 export class Usuarios {
     idusuario: number;
     idpersona: number;
@@ -6,4 +7,5 @@ export class Usuarios {
     clave: string;
     estado: boolean;
     persona: Personas;
+    rol: Roles;
 }

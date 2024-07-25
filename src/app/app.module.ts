@@ -1,6 +1,7 @@
 import { E404Component } from './e404/e404.component';
 import { PlantillasModule } from './_plantillas/plantillas.module';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LOCALE_ID, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -29,6 +30,7 @@ registerLocaleData(localeEsBo,  'es-Bo');
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,

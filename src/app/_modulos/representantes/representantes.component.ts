@@ -74,7 +74,7 @@ export class RepresentantesComponent implements OnInit {
   fformulario(dato: Personas) {
     this.formulario = this._fb.group({
       primerapellido: [dato.primerapellido, [Validators.required]],
-      fechanacimiento: [dato.fechanacimiento, [Validators.required]],
+      //fechanacimiento: [dato.fechanacimiento, [Validators.required]],
       dip: [dato.dip, [Validators.required]]
     });
   }
@@ -101,7 +101,7 @@ export class RepresentantesComponent implements OnInit {
     this.submitted = true;
 
     this.dato.primerapellido = this.formulario.value.primerapellido.toUpperCase();
-    this.dato.fechanacimiento = this.formulario.value.fechanacimiento;
+    //this.dato.fechanacimiento = this.formulario.value.fechanacimiento;
     this.dato.dip = this.formulario.value.dip;
     if (this.estado === 'Modificar') {
       this._personasService.modificar(this.dato).subscribe((data) => {

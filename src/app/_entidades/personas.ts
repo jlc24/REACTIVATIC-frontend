@@ -1,6 +1,8 @@
 import { Tiposgeneros } from './tiposgeneros';
 import { Tiposdocumentos } from './tiposdocumentos';
 import { Tiposextensiones } from './tiposextensiones';
+import { Roles } from './roles';
+import { Usuarios } from './usuarios';
 
 export class Personas {
     idpersona: number;
@@ -8,10 +10,8 @@ export class Personas {
     primerapellido: string;
     segundoapellido: string;
     primernombre: string;
-    segundonombre: string;
-    fechanacimiento: Date;
     dip: string;
-    numerocomplementario: string;
+    complementario: string;
     idtipodocumento: number;
     idtipoextension: number;
     direccion: string;
@@ -22,4 +22,6 @@ export class Personas {
     tipogenero: Tiposgeneros;
     tipodocumento: Tiposdocumentos;
     tipoextension: Tiposextensiones;
+    usuario: Usuarios;
+    rol: Roles;
 }

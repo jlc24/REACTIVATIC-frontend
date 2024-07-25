@@ -45,7 +45,7 @@ export class PerfilesComponent implements OnInit {
 
   ngOnInit(): void {
     this.fdato();
-    this.fdescargar();
+    //this.fdescargar();
     this.esempresa = this._accesoService.esRolEmpresa();
     if (this.esempresa) {
       this._empresasService.perfilempresa().subscribe( data=> {

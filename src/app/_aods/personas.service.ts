@@ -22,16 +22,34 @@ export class PersonasService {
     });
   }
 
+  persona(id: number): Observable<Personas> {
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Personas>(`${this.ruta}/ver/${id}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+
   adicionar4(dato: Personas): Observable<any> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
     return this._httpClient.post<void>(`${this.ruta}`, dato, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     }).pipe(
       catchError(e => {
-        if (e.status === 400 ) {
-          return throwError(e);
+        // if (e.status === 400 ) {
+        //   return throwError(e);
+        // }
+        // swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
+        // return throwError(e);
+        if (e.status === 400) {
+          swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
+        } else if (e.status === 409) {
+          const errorMsg = e.error.mensaje || 'Conflicto en los datos';
+          swal.fire('Error de Conflicto', errorMsg, 'error');
+        } else if (e.status === 500) {
+          swal.fire('Error en el Servidor', 'Error al realizar la consulta en la Base de Datos', 'error');
+        } else {
+          swal.fire('Error', 'Ocurrió un error desconocido', 'error');
         }
-        swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
         return throwError(e);
       })
     );
@@ -43,10 +61,16 @@ export class PersonasService {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     }).pipe(
       catchError(e => {
-        if (e.status === 400 ) {
-          return throwError(e);
+        if (e.status === 400) {
+          swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
+        } else if (e.status === 409) {
+          const errorMsg = e.error.mensaje || 'Conflicto en los datos';
+          swal.fire('Error de Conflicto', errorMsg, 'error');
+        } else if (e.status === 500) {
+          swal.fire('Error en el Servidor', 'Error al realizar la consulta en la Base de Datos', 'error');
+        } else {
+          swal.fire('Error', 'Ocurrió un error desconocido', 'error');
         }
-        swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
         return throwError(e);
       })
     );
@@ -84,10 +108,16 @@ export class PersonasService {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     }).pipe(
       catchError(e => {
-        if (e.status === 400 ) {
-          return throwError(e);
+        if (e.status === 400) {
+          swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
+        } else if (e.status === 409) {
+          const errorMsg = e.error.mensaje || 'Conflicto en los datos';
+          swal.fire('Error de Conflicto', errorMsg, 'error');
+        } else if (e.status === 500) {
+          swal.fire('Error en el Servidor', 'Error al realizar la consulta en la Base de Datos', 'error');
+        } else {
+          swal.fire('Error', 'Ocurrió un error desconocido', 'error');
         }
-        swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
         return throwError(e);
       })
     );
