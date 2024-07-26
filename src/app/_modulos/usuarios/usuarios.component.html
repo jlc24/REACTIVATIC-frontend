@@ -82,9 +82,9 @@
                             <td>{{ _item.persona.telefono }}</td>
                             <td>{{ _item.persona.celular }}</td>
                             <td class="text-center">
-                                <span class="estado badge {{ _item.persona.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idusuario, _item.estado)">
+                                <span class="{{ _item.persona.rol.nombrerol == 'ADMINISTRADOR' ? '' : 'estado' }}  badge {{ _item.persona.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idusuario, _item.estado)">
                                     {{ _item.persona.estado ? 'HABILITADO' : 'INHABILITADO' }}
-                                  </span>
+                                </span>
                             </td>
                             <td class="text-center">
                                 <div class="btn-group" role="group" aria-label="First group">
