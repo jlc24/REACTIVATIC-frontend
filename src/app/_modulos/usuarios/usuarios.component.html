@@ -77,13 +77,13 @@
                         <tr *ngFor="let _item of datos; let i = index">
                             <td class="text-right">{{ i + 1 }}</td>
                             <td>{{ _item.persona.primerapellido}} {{_item.persona.segundoapellido}} {{_item.persona.primernombre}} {{_item.persona.segundonombre}}</td>
-                            <td>{{_item.persona.dip}}</td>
+                            <td>{{ _item.persona.dip }}</td>
                             <td>{{ _item.persona.direccion }}</td>
                             <td>{{ _item.persona.telefono }}</td>
                             <td>{{ _item.persona.celular }}</td>
                             <td class="text-center">
-                                <span class="{{ _item.persona.rol.nombrerol == 'ADMINISTRADOR' ? '' : 'estado' }}  badge {{ _item.persona.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idusuario, _item.estado)">
-                                    {{ _item.persona.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                                <span class="{{ _item.rol.nombrerol == 'ADMINISTRADOR' ? '' : 'estado' }}  badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idusuario, !_item.estado)">
+                                    {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
                                 </span>
                             </td>
                             <td class="text-center">
@@ -97,7 +97,7 @@
                                     <button class="btn btn-outline-danger btn-sm" title="Eliminar Usuario" (click)="feliminar(_item.idusuario)">
                                       <i class="fa fa-trash"></i>
                                     </button>
-                                  </div>
+                                </div>
                             </td>
                         </tr>
                         <tr *ngIf="total > cantidad">

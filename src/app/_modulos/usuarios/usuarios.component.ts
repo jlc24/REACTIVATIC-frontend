@@ -371,17 +371,17 @@ export class UsuariosComponent implements OnInit {
 
   fcambiarestado(idusuario: number, estado: boolean){
     swal.fire({
-      title: !estado ? 'Estas seguro de deshabilitar?' : 'Estas seguro de habilitar?',
+      title: estado ? 'Está seguro de deshabilitar?' : 'Está seguro de habilitar?',
       icon: 'warning',
-      text: estado ? 'El usuario no podra acceder al sistema.' : 'El usuario podrá acceder al sistema.',
+      text: estado ? 'El usuario no podrá acceder al sistema.' : 'El usuario podrá acceder al sistema.',
       showCancelButton: true,
       cancelButtonText: 'cancelar',
       confirmButtonText: 'Cambiar',
     }).then((result) => {
       if (result.value) {
-        this._usuariosService.cambiarestado({ idusuario, estado: !estado }).subscribe( response => {
+        this._usuariosService.cambiarestado({ idusuario, estado }).subscribe( response => {
           this.fdatos();
-          swal.fire('Cambio realizado', 'El estado del usuario ha sido cambiado con exito.', 'success');
+          swal.fire('Cambio realizado', 'El estado del usuario ha sido cambiado con éxito.', 'success');
         });
       }
     }); 
