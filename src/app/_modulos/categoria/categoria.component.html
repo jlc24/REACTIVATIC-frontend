@@ -1,0 +1,393 @@
+<app-cabeceratitulos [titulo]="'Categoría'" [descripcion]="'Lista de Categorías'" [icono]="'list'" [opcion]="'categorías'">
+</app-cabeceratitulos>
+
+<div class="row">
+  <div class="col-md-12">
+      <div class="tile">
+          <div class="row">
+              <div class="col-md-12 mb-2">
+                  <div class="input-group justify-content-end">
+                      <div class="input-group-prepend">
+                          <button class="btn btn-outline-success mr-2" type="button" (click)="fadicionar(am)"><i class="fa fa-plus"></i> Agregar Categoria</button>
+                          <div class="dropdown">
+                              <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="fa fa-bars"></i> Opciones
+                              </button>
+                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                  <button class="dropdown-item"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                                  <button class="dropdown-item"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="row justify-content-center">
+              <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
+                  <div class="input-group">
+                      <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Usuario a buscar..." (keyup.enter)="fbuscar()"/>
+                      <span class="input-group-prepend">
+                          <button class="btn btn-outline-danger mr-2 d-none d-md-inline" (click)="limpiar()">
+                              <i class="fa fa-times"></i> Limpiar
+                          </button>
+                          <button class="btn btn-outline-danger mr-2 d-inline d-md-none" (click)="limpiar()">
+                              <i class="fa fa-times"></i>
+                          </button>
+                          <button class="btn btn-outline-secondary d-none d-md-inline" [(ngModel)]="buscar" (click)="fbuscar()">
+                              <i class="fa fa-search"></i> Buscar
+                          </button>
+                          <button class="btn btn-outline-secondary d-inline d-md-none" [(ngModel)]="buscar" (click)="fbuscar()">
+                              <i class="fa fa-search"></i>
+                          </button>
+                      </span>
+                  </div>
+              </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6 mt-1" *ngIf="total > cantidad">
+                <ngb-pagination class="d-flex justify-content-end align-items-baseline pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)" size="sm"></ngb-pagination>
+            </div>
+          </div>
+
+          <div class="table-responsive" *ngIf="categorias?.length > 0">
+            <p class="text-right" *ngIf="total == 1">
+                Total: <b>{{ total }} registro</b>
+            </p>
+            <p class="text-right" *ngIf="total > 1">
+                Total: <b>{{ total }} registros</b>
+            </p>
+            <!-- Mostrando del registro {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de un total de {{total}} datos -->
+            <table class="table table-bordered table-striped table-hover table-sm tabla-categoria">
+                <thead>
+                    <tr class="table-info">
+                        <th class="text-center">Nro</th>
+                        <th class="text-center">Categoría</th>
+                        <th class="text-center">Ruta</th>
+                        <th class="text-center">Icono</th>
+                        <th class="text-center">Orden</th>
+                        <th class="text-center">estado</th>
+                        <th class="text-center">Fecha Creación</th>
+                        <th class="text-center">Operaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let _item of categorias; let i = index">
+                        <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
+                        <td>{{ _item.categoria }}</td>
+                        <td>{{ _item.ruta }}</td>
+                        <td>{{ _item.iconocategoria }}</td>
+                        <td>{{ _item.orden }}</td>
+                        <td class="text-center">
+                            <span class="estado badge badge-success" title="Cambiar estado" >
+                                HABILITADO
+                            </span>
+                        </td>
+                        <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group" aria-label="First group">
+                                <button class="btn btn-outline-info btn-sm" title="Ver Enlaces" (click)="fver(_item.idcategoria, ver)">
+                                  <i class="fa fa-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-warning btn-sm" title="Editar Usuario" (click)="fmodificar(_item.idcategoria, am)">
+                                  <i class="fa fa-edit"></i>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" title="Eliminar Usuario" (click)="feliminar(_item.idcategoria)">
+                                  <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr >
+                        <td colspan="8">
+                            <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive" *ngIf="total == 0">
+            <table class="table table-bordered table-striped table-sm">
+                <thead>
+                    <tr class="table-info">
+                      <th class="text-center">Nro</th>
+                      <th class="text-center">Categoría</th>
+                      <th class="text-center">Ruta</th>
+                      <th class="text-center">Icono</th>
+                      <th class="text-center">Orden</th>
+                      <th class="text-center">estado</th>
+                      <th class="text-center">Fecha Creación</th>
+                      <th class="text-center">Operaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="8" class="text-center">No se encontraron datos</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+  </div>
+</div>
+
+<ng-template #am>
+  <div class="modal-header">
+      <div class="row col-12">
+          <div class="col-lg-6 col-md-12 text-center">
+              <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Categoria</h4><br>
+          </div>
+          <div class="col-lg-6 col-md-12 alert-info p-3">
+              Estimado usuario, los campos remarcados con <b class="text-danger">*</b> son necesarios.
+          </div>
+      </div>
+  </div>
+  <div class="modal-body">
+      <form [formGroup]="formulario" (ngSubmit)="faceptar()">
+          <div class="row">
+              <div class="form-group col-sm-10">
+                  <label>Categoria: <span class="text-danger"><b>*</b></span></label>
+                  <input type="text" class="form-control form-control-sm" formControlName="categoria" [class.is-invalid]="f.categoria.errors && f.categoria.touched" (input)="onInput($event, 'categoria', 'letrasyespacios')" autocomplete="no" required/>
+                  <small *ngIf="f.categoria.errors&& f.categoria.touched" class="text-danger">
+                      <ng-container *ngIf="f.categoria.errors.required">
+                          El dato es obligatorio.
+                      </ng-container>
+                      <ng-container *ngIf="f.categoria.errors.pattern">
+                          Solo se permiten letras.
+                      </ng-container>
+                      <ng-container *ngIf="f.categoria.errors.minlength">
+                          Debe ser mas de 5 caracteres.
+                      </ng-container>
+                      <ng-container *ngIf="f.categoria.errors.maxlength">
+                          No puede exceder los 50 caracteres.
+                      </ng-container>
+                  </small>
+              </div>
+              <div class="form-group col-sm-2">
+                  <label>Ruta: <span class="text-danger"><b>*</b></span></label>
+                  <input type="text" class="form-control form-control-sm" formControlName="ruta" [class.is-invalid]="f.ruta.errors && f.ruta.touched" (input)="onInput($event, 'ruta', 'division')" autocomplete="no" />
+                  <small *ngIf="f.ruta.errors&& f.ruta.touched" class="text-danger">
+                      <ng-container *ngIf="f.ruta.errors.required">
+                          El dato es obligatorio.
+                      </ng-container>
+                      <ng-container *ngIf="f.ruta.errors.pattern">
+                          Solo se permiten letras.
+                      </ng-container>
+                      <ng-container *ngIf="f.ruta.errors.minlength">
+                          Debe ser mas de 5 caracteres.
+                      </ng-container>
+                      <ng-container *ngIf="f.ruta.errors.maxlength">
+                          No puede exceder los 50 caracteres.
+                      </ng-container>
+                  </small>
+              </div>
+              <div class="form-group col-md-6 col-sm-12">
+                <label>Icono: <span class="text-danger"><b>*</b></span></label>
+                <input type="text" class="form-control form-control-sm" formControlName="iconocategoria" [class.is-invalid]="f.iconocategoria.errors && f.iconocategoria.touched" (input)="onInput($event, 'iconocategoria', 'letrasyespacioguion')" autocomplete="no" required/>
+                <small *ngIf="f.iconocategoria.errors&& f.iconocategoria.touched" class="text-danger">
+                    <ng-container *ngIf="f.iconocategoria.errors.required">
+                        El dato es obligatorio.
+                    </ng-container>
+                    <ng-container *ngIf="f.iconocategoria.errors.pattern">
+                        Solo se permiten letras.
+                    </ng-container>
+                    <ng-container *ngIf="f.iconocategoria.errors.minlength">
+                        Debe ser mas de 7 caracteres.
+                    </ng-container>
+                    <ng-container *ngIf="f.iconocategoria.errors.maxlength">
+                        No puede exceder los 50 caracteres.
+                    </ng-container>
+                </small>
+            </div>
+              <div class="form-group col-md-6 col-sm-12">
+                <label>Orden: <span class="text-danger"><b>*</b></span></label>
+                <input type="text" class="form-control form-control-sm" formControlName="orden" [class.is-invalid]="f.orden.errors && f.orden.touched" (input)="onInput($event, 'orden', 'numeros')" autocomplete="no" required/>
+                <small *ngIf="f.orden.errors&& f.orden.touched" class="text-danger">
+                    <ng-container *ngIf="f.orden.errors.required">
+                        El dato es obligatorio.
+                    </ng-container>
+                    <ng-container *ngIf="f.orden.errors.pattern">
+                        Solo se permiten letras.
+                    </ng-container>
+                    <ng-container *ngIf="f.orden.errors.minlength">
+                        Debe ser mas de 2 caracteres.
+                    </ng-container>
+                    <ng-container *ngIf="f.orden.errors.maxlength">
+                        No puede exceder los 3 caracteres.
+                    </ng-container>
+                </small>
+            </div>
+          </div>
+          <div class="row">
+
+          </div>
+
+          <div class="text-center">
+              <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formulario.valid">
+                  <i class="fa fa-save"></i> Guardar
+              </button>
+              <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()">
+                  <i class="fa fa-times"></i> Cancelar
+              </button>
+          </div>
+      </form>
+  </div>
+</ng-template>
+
+<ng-template #ver>
+  <div class="modal-header">
+    <div class="row col-12">
+        <div class="col-lg-12 text-center">
+            <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Enlaces de la Categoria "{{ categoria.categoria }}"</h4><br>
+        </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="col-12 text-center">
+      <h3>ENLACES</h3>
+    </div>
+    <div class="col-12 text-right">
+      <button class="btn btn-sm btn-outline-success" (click)="fadicionarEnlace(ame, categoria)">
+        <i class="fa fa-plus"></i> Agregar Enlace
+      </button>
+    </div>
+    <div class="col-12 mt-2 table-responsive">
+      <table class="table table-bordered table-hover tabla-enlaces">
+        <thead class="table-info">
+          <tr>
+            <th class="text-center">Nro</th>
+            <th class="text-center">Enlace</th>
+            <th class="text-center">Ruta</th>
+            <th class="text-center">Icono</th>
+            <th class="text-center">Orden</th>
+            <th class="text-center">Estado</th>
+            <th class="text-center">Opcion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let _enlace of enlaces; let i = index">
+            <td class="text-right">{{ i + 1 }}</td>
+            <td>{{ _enlace.enlace }}</td>
+            <td>{{ _enlace.ruta }}</td>
+            <td>{{ _enlace.iconoenlace }}</td>
+            <td>{{ _enlace.orden }}</td>
+            <td>
+              <span class="estado badge {{ _enlace.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_enlace.idenlace, !_enlace.estado)" >
+                {{ _enlace.estado ? 'HABILITADO' : 'INHABILITADO' }}
+              </span>
+            </td>
+            <td class="text-center">
+              <div class="btn-group" role="group" aria-label="First group">
+                <button class="btn btn-outline-warning btn-sm" title="Editar Usuario" (click)="fmodificarEnlace(_enlace.idenlace, ame)">
+                  <i class="fa fa-edit"></i>
+                </button>
+                <button class="btn btn-outline-danger btn-sm" title="Eliminar Usuario" (click)="feliminarEnlace(_enlace.idenlace)">
+                  <i class="fa fa-trash"></i>
+                </button>
+            </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()">
+      <i class="fa fa-times"></i> Cerrar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #ame>
+  <div class="modal-header">
+    <div class="row col-12">
+        <div class="col-lg-6 col-md-12 text-center">
+            <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Enlace</h4><br>
+        </div>
+        <div class="col-lg-6 col-md-12 alert-info p-3">
+            Estimado usuario, los campos remarcados con <b class="text-danger">*</b> son necesarios.
+        </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="formEnlace" (ngSubmit)="faceptarEnlace()">
+      <div class="row">
+        <div class="form-group col-md-6 col-sm-12">
+            <label>Categoria: <span class="text-danger"><b>*</b></span></label>
+            <select class="form-control form-control-sm" formControlName="idcategoria" >
+              <option *ngFor="let _cat of categorias" [value]="_cat.idcategoria">
+                {{ _cat.categoria }}
+              </option>
+            </select>
+            <small *ngIf="fe.idcategoria.errors&& fe.idcategoria.touched" class="text-danger">
+                <ng-container *ngIf="fe.idcategoria.errors.required">
+                    El dato es obligatorio.
+                </ng-container>
+            </small>
+        </div>
+        <div class="form-group col-md-6 col-sm-12">
+            <label>Enlace: <span class="text-danger"><b>*</b></span></label>
+            <input type="text" class="form-control form-control-sm" formControlName="enlace" [class.is-invalid]="fe.enlace.errors && fe.enlace.touched" (input)="onInput($event, 'enlace', 'letrasyespacios')" autocomplete="no" required/>
+            <small *ngIf="fe.enlace.errors&& fe.enlace.touched" class="text-danger">
+                <ng-container *ngIf="fe.enlace.errors.required">
+                    El dato es obligatorio.
+                </ng-container>
+                <ng-container *ngIf="fe.enlace.errors.pattern">
+                  Solo se permiten letras.
+                </ng-container>
+                <ng-container *ngIf="fe.enlace.errors.minlength">
+                    Debe ser mas de 3 caracteres.
+                </ng-container>
+                <ng-container *ngIf="fe.enlace.errors.maxlength">
+                    No puede exceder los 20 caracteres.
+                </ng-container>
+            </small>
+        </div>
+        <div class="form-group col-md-6 col-sm-12">
+            <label>Ruta: <span class="text-danger"><b>*</b></span></label>
+            <input type="text" class="form-control form-control-sm" formControlName="ruta" [class.is-invalid]="fe.ruta.errors && fe.ruta.touched" (input)="onInput($event, 'ruta', 'letrasyespacios')" autocomplete="no" required/>
+            <small *ngIf="fe.ruta.errors&& fe.ruta.touched" class="text-danger">
+                <ng-container *ngIf="fe.ruta.errors.required">
+                    El dato es obligatorio.
+                </ng-container>
+                <ng-container *ngIf="fe.ruta.errors.pattern">
+                  Solo se permiten letras.
+                </ng-container>
+                <ng-container *ngIf="fe.ruta.errors.minlength">
+                    Debe ser mas de 3 caracteres.
+                </ng-container>
+                <ng-container *ngIf="fe.ruta.errors.maxlength">
+                    No puede exceder los 20 caracteres.
+                </ng-container>
+            </small>
+        </div>
+        <div class="form-group col-md-6 col-sm-12">
+            <label>Icono: <span class="text-danger"><b>*</b></span></label>
+            <input type="text" class="form-control form-control-sm" formControlName="iconoenlace" [class.is-invalid]="fe.iconoenlace.errors && fe.iconoenlace.touched" (input)="onInput($event, 'iconoenlace', 'letrasyespacioguion')" autocomplete="no" required/>
+            <small *ngIf="fe.iconoenlace.errors&& fe.iconoenlace.touched" class="text-danger">
+                <ng-container *ngIf="fe.iconoenlace.errors.required">
+                    El dato es obligatorio.
+                </ng-container>
+                <ng-container *ngIf="fe.iconoenlace.errors.pattern">
+                  Solo se permiten letras.
+                </ng-container>
+                <ng-container *ngIf="fe.iconoenlace.errors.minlength">
+                    Debe ser mas de 3 caracteres.
+                </ng-container>
+                <ng-container *ngIf="fe.iconoenlace.errors.maxlength">
+                    No puede exceder los 20 caracteres.
+                </ng-container>
+            </small>
+        </div>
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formEnlace.valid">
+            <i class="fa fa-save"></i> Guardar
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="fcancelarEnlace()">
+            <i class="fa fa-times"></i> Cancelar
+        </button>
+    </div>
+    </form>
+  </div>
+</ng-template>

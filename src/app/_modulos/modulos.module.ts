@@ -30,12 +30,25 @@ import { ClientesconmascomprasComponent } from './clientesconmascompras/clientes
 import { EmpresasmassolicitadasComponent } from './empresasmassolicitadas/empresasmassolicitadas.component';
 import { ChartModule, HIGHCHARTS_MODULES } from 'angular-highcharts';
 import * as highmaps from 'highcharts/modules/map.src';
+import { CategoriaComponent } from './categoria/categoria.component';
+import { BeneficiosComponent } from './beneficios/beneficios.component';
+import { ColoresComponent } from './colores/colores.component';
+import { ComentariosComponent } from './comentarios/comentarios.component';
+import { MaterialesComponent } from './materiales/materiales.component';
+import { OfertasComponent } from './ofertas/ofertas.component';
+import { PreciosComponent } from './precios/precios.component';
+import { TamanosComponent } from './tamanos/tamanos.component';
+import { DocumentosComponent } from './documentos/documentos.component';
+import { EnlacesComponent } from './enlaces/enlaces.component';
+import { ExtensionesComponent } from './extensiones/extensiones.component';
+import { GenerosComponent } from './generos/generos.component';
+import { RolesComponent } from './roles/roles.component';
 
 
 
 
 @NgModule({
-  declarations: [EscritorioComponent, PerfilesComponent, ConfiguracionesComponent, E401Component, RubrosComponent, MunicipiosComponent, LocalidadesComponent, SubrubrosComponent, AsociacionesComponent, UsuariosComponent, EmpresasComponent, RepresentantesComponent, ProductosComponent, SolicitudesventaComponent, SolicitudescompraComponent, ReportesComponent, SeguimientosComponent, ClientesnoregistradosComponent, ClientesregistradosComponent, ProductosmasvendidosComponent, ClientesconmascomprasComponent, EmpresasmassolicitadasComponent],
+  declarations: [EscritorioComponent, PerfilesComponent, ConfiguracionesComponent, E401Component, RubrosComponent, MunicipiosComponent, LocalidadesComponent, SubrubrosComponent, AsociacionesComponent, UsuariosComponent, EmpresasComponent, RepresentantesComponent, ProductosComponent, SolicitudesventaComponent, SolicitudescompraComponent, ReportesComponent, SeguimientosComponent, ClientesnoregistradosComponent, ClientesregistradosComponent, ProductosmasvendidosComponent, ClientesconmascomprasComponent, EmpresasmassolicitadasComponent, CategoriaComponent, BeneficiosComponent, ColoresComponent, ComentariosComponent, MaterialesComponent, OfertasComponent, PreciosComponent, TamanosComponent, DocumentosComponent, EnlacesComponent, ExtensionesComponent, GenerosComponent, RolesComponent],
   imports: [
     CommonModule,
     ModulosRoutingModule,

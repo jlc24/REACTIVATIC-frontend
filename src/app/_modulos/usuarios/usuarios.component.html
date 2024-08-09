@@ -1,4 +1,4 @@
-<app-cabeceratitulos [titulo]="'Usuarios'" [descripcion]="'Lista de usuarios para estadisticas'" [icono]="'users'" [opcion]="'usuarios'">
+<app-cabeceratitulos [titulo]="'Usuarios'" [descripcion]="'Lista de Usuarios'" [icono]="'users'" [opcion]="'usuarios'">
 </app-cabeceratitulos>
 
 <div class="row">
@@ -46,7 +46,7 @@
             </div>
 
             <div class="form-group row">
-                
+
                 <div class="col-md-6 mt-1" *ngIf="total > cantidad">
                     <ngb-pagination class="d-flex justify-content-end align-items-baseline pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)" size="sm"></ngb-pagination>
                 </div>
@@ -60,7 +60,7 @@
                     Total: <b>{{ total }} registros</b>
                 </p>
                 <!-- Mostrando del registro {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de un total de {{total}} datos -->
-                <table class="table table-bordered table-striped table-hover table-sm">
+                <table class="table table-bordered table-striped table-hover table-sm tabla-usuario">
                     <thead>
                         <tr class="table-info">
                             <th class="text-center">Nro</th>
@@ -75,14 +75,14 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let _item of datos; let i = index">
-                            <td class="text-right">{{ i + 1 }}</td>
+                            <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
                             <td>{{ _item.persona.primerapellido}} {{_item.persona.segundoapellido}} {{_item.persona.primernombre}} {{_item.persona.segundonombre}}</td>
                             <td>{{ _item.persona.dip }}</td>
                             <td>{{ _item.persona.direccion }}</td>
                             <td>{{ _item.persona.telefono }}</td>
                             <td>{{ _item.persona.celular }}</td>
                             <td class="text-center">
-                                <span class="{{ _item.rol.nombrerol == 'ADMINISTRADOR' ? '' : 'estado' }}  badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idusuario, !_item.estado)">
+                                <span class="{{ _item.rol.nombrerol == 'ADMINISTRADOR' ? '' : 'estado' }}  badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idusuario, !_item.estado)" >
                                     {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
                                 </span>
                             </td>
@@ -100,8 +100,8 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr *ngIf="total > cantidad">
-                            <td colspan="5">
+                        <tr>
+                            <td colspan="8">
                                 <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
                             </td>
                         </tr>
@@ -200,7 +200,7 @@
                         </ng-container>
                     </small>
                 </div>
-                
+
                 <div class="form-group col-lg-4 col-md-6 col-sm-12">
                     <label>Documento: <span class="text-danger"><b>*</b></span></label>
                     <select class="custom-select custom-select-sm" formControlName="idtipodocumento" >
@@ -347,9 +347,9 @@
                 </div>
             </div>
             <div class="row">
-                
+
             </div>
-            
+
             <div class="text-center">
                 <button type="submit" class="btn btn-success m-2" [disabled]="!formulario.valid">
                     <i class="fa fa-save"></i> Guardar

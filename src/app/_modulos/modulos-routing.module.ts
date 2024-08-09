@@ -20,6 +20,16 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { SolicitudescompraComponent } from './solicitudescompra/solicitudescompra.component';
 import { ClientesnoregistradosComponent } from './clientesnoregistrados/clientesnoregistrados.component';
+import { RolesComponent } from './roles/roles.component';
+import { BeneficiosComponent } from './beneficios/beneficios.component';
+import { EnlacesComponent } from './enlaces/enlaces.component';
+import { ExtensionesComponent } from './extensiones/extensiones.component';
+import { GenerosComponent } from './generos/generos.component';
+import { MaterialesComponent } from './materiales/materiales.component';
+import { OfertasComponent } from './ofertas/ofertas.component';
+import { PreciosComponent } from './precios/precios.component';
+import { TamanosComponent } from './tamanos/tamanos.component';
+import { CategoriaComponent } from './categoria/categoria.component';
 
 const routes: Routes = [
   {
@@ -29,14 +39,6 @@ const routes: Routes = [
   {
     path: 'escritorio',
     component: EscritorioComponent,
-    canActivate: [GuardianGuard],
-    data: {
-      rol: 'ROLE_TODOS'
-    }
-  },
-  {
-    path: 'e401',
-    component: E401Component,
     canActivate: [GuardianGuard],
     data: {
       rol: 'ROLE_TODOS'
@@ -59,24 +61,8 @@ const routes: Routes = [
     }
   },
   {
-    path: 'rubros',
-    component: RubrosComponent,
-    canActivate: [GuardianGuard],
-    data: {
-      rol: 'ROLE_TODOS'
-    }
-  },
-  {
-    path: 'municipios',
-    component: MunicipiosComponent,
-    canActivate: [GuardianGuard],
-    data: {
-      rol: 'ROLE_TODOS'
-    }
-  },
-  {
-    path: 'asociaciones',
-    component: AsociacionesComponent,
+    path: 'e401',
+    component: E401Component,
     canActivate: [GuardianGuard],
     data: {
       rol: 'ROLE_TODOS'
@@ -91,8 +77,48 @@ const routes: Routes = [
     }
   },
   {
-    path: 'empresas',
-    component: EmpresasComponent,
+    path: 'roles',
+    component: RolesComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
+    path: 'categorias',
+    component: CategoriaComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
+    path: 'enlaces',
+    component: EnlacesComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
+    path: 'municipios',
+    component: MunicipiosComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
+    path: 'rubros',
+    component: RubrosComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
+    path: 'asociaciones',
+    component: AsociacionesComponent,
     canActivate: [GuardianGuard],
     data: {
       rol: 'ROLE_TODOS'
@@ -107,6 +133,14 @@ const routes: Routes = [
     }
   },
   {
+    path: 'empresas',
+    component: EmpresasComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
     path: 'productos',
     component: ProductosComponent,
     canActivate: [GuardianGuard],
@@ -115,16 +149,24 @@ const routes: Routes = [
     }
   },
   {
-    path: 'solicitudescompra',
-    component: SolicitudescompraComponent,
+    path: 'solicitudesventa',
+    component: SolicitudesventaComponent,
     canActivate: [GuardianGuard],
     data: {
       rol: 'ROLE_TODOS'
     }
   },
   {
-    path: 'solicitudesventa',
-    component: SolicitudesventaComponent,
+    path: 'beneficios',
+    component: BeneficiosComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
+    path: 'solicitudescompra',
+    component: SolicitudescompraComponent,
     canActivate: [GuardianGuard],
     data: {
       rol: 'ROLE_TODOS'

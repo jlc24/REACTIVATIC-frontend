@@ -24,12 +24,13 @@ import swal from 'sweetalert2';
 export class UsuariosComponent implements OnInit {
   datos: Usuarios[];
   dato: Personas;
+  user: Usuarios;
   documento: Tiposdocumentos[];
   extension: Tiposextensiones[];
   genero: Tiposgeneros[];
   rol: Roles[];
 
-  pagina: number = 0;
+  pagina: number = 1;
   numPaginas: number = 0;
   cantidad: number = 10;
   buscar: string = '';
@@ -137,25 +138,19 @@ export class UsuariosComponent implements OnInit {
     this.essddpi = this._accesoService.esRolSddpi();
     this.esreactivatic = this._accesoService.esRolReactivatic();
     if (this.esadmin) {
-      this._usuariosService
-        .datos(this.pagina, this.cantidad, this.buscar)
-        .subscribe((data) => {
+      this._usuariosService.datos(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
           this.fcantidad();
           this.datos = data;
         });
     }
     if (this.essddpi) {
-      this._usuariosService
-        .datossddpi(this.pagina, this.cantidad, this.buscar)
-        .subscribe((data) => {
+      this._usuariosService.datossddpi(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
           this.fcantidad();
           this.datos = data;
         });
     }
     if (this.esreactivatic) {
-      this._usuariosService
-        .datosreactivatic(this.pagina, this.cantidad, this.buscar)
-        .subscribe((data) => {
+      this._usuariosService.datosreactivatic(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
           this.fcantidad();
           this.datos = data;
         });
@@ -173,11 +168,11 @@ export class UsuariosComponent implements OnInit {
     this.fdatos();
   }
 
-  fformulario(dato: Personas, disabled: boolean = false) {
+  fformulario(user: Usuarios, disabled: boolean = false) {
     this.formulario = this._fb.group({
 
       primerapellido: [
-        dato.primerapellido, 
+        user.persona.primerapellido,
         [
           Validators.required,
           Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$'),
@@ -185,14 +180,14 @@ export class UsuariosComponent implements OnInit {
         ],
       ],
       segundoapellido: [
-        dato.segundoapellido,
+        user.persona.segundoapellido,
         [
           Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$'),
           Validators.maxLength(50)
         ]
       ],
       primernombre: [
-        dato.primernombre, 
+        user.persona.primernombre,
         [
           Validators.required,
           Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$'),
@@ -200,19 +195,19 @@ export class UsuariosComponent implements OnInit {
         ]
       ],
       idtipogenero: [
-        dato.idtipogenero,
+        user.persona.idtipogenero,
         [
           Validators.required
         ]
       ],
       idtipodocumento: [
-        dato.idtipodocumento,
+        user.persona.idtipodocumento,
         [
           Validators.required
         ]
       ],
       dip: [
-        dato.dip, 
+        user.persona.dip,
         [
           Validators.required,
           Validators.pattern('^[0-9]+$'),
@@ -220,20 +215,20 @@ export class UsuariosComponent implements OnInit {
         ]
       ],
       complementario:[
-        dato.complementario,
+        user.persona.complementario,
         [
           Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1]+$'),
           Validators.maxLength(5)
         ]
       ],
       idtipoextension:[
-        dato.idtipoextension,
+        user.persona.idtipoextension,
         [
           Validators.required
         ]
       ],
       direccion: [
-        dato.direccion, 
+        user.persona.direccion,
         [
           Validators.required,
           Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1\\s.,#-]+$'),
@@ -241,22 +236,22 @@ export class UsuariosComponent implements OnInit {
         ]
       ],
       telefono: [
-        dato.telefono, 
+        user.persona.telefono,
         [
           Validators.pattern('^[0-9]+$'),
           Validators.maxLength(15)
         ],
       ],
       celular: [
-        dato.celular,
+        user.persona.celular,
         [
-          Validators.required, 
+          Validators.required,
           Validators.pattern('^[0-9]+$'),
           Validators.maxLength(15)
         ],
       ],
       correo: [
-        dato.correo,
+        user.persona.correo,
         [
           Validators.required,
           Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'),
@@ -264,7 +259,7 @@ export class UsuariosComponent implements OnInit {
         ],
       ],
       usuario: [
-        { value: dato.usuario.usuario, disabled: disabled }, 
+        { value: user.usuario, disabled: disabled },
         [
           Validators.required,
           Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1]+$'),
@@ -272,7 +267,7 @@ export class UsuariosComponent implements OnInit {
         ]
       ],
       clave: [
-        { value: dato.usuario.clave ? '**********' : '', disabled: disabled},
+        { value: user.clave ? '**********' : '', disabled: disabled},
         [
           Validators.required,
           Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1]+$'),
@@ -281,7 +276,7 @@ export class UsuariosComponent implements OnInit {
         ]
       ],
       idrol: [
-        { value: dato.rol.idrol, disabled: disabled},
+        { value: user.rol.idrol, disabled: disabled},
         [
           Validators.required
         ]
@@ -315,37 +310,28 @@ export class UsuariosComponent implements OnInit {
     this.formulario.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
   }
 
-  // onInputCorreo(event: any, controlName: string, type: 'correo'): void {
-  //   let input = event.target.value;
-  //   switch (type) {
-  //     case 'correo':
-  //       input = input.replace(/[^a-zA-Z0-9._%+-@]/g, '');
-  //       break;
-  //   }
-  // }
-
   fadicionar(content: any) {
     this.estado = 'Adicionar';
-    this.dato = new Personas();
-    this.dato.usuario = new Usuarios();
-    this.dato.rol = new Roles();
-    this.fformulario(this.dato);
+    this.user = new Usuarios();
+    this.user.persona = new Personas();
+    this.user.rol = new Roles();
+    this.fformulario(this.user);
     this._modalService.open(content, { size: 'lg' });
   }
 
   fmodificar(id: number, content: any) {
     this.estado = 'Modificar';
-    this._personasService.persona(id).subscribe((data) => {
-      this.dato = data;
-      this.fformulario(this.dato, true);
+    this._usuariosService.dato(id).subscribe((data) => {
+      this.user = data;
+      this.fformulario(this.user, true);
       this._modalService.open(content, { size: 'lg' });
     });
   }
   fver(id: number, content: any) {
     this.estado = 'Ver';
-    this._personasService.persona(id).subscribe((data) => {
-      this.dato = data;
-      this.fformulario(this.dato);
+    this._usuariosService.dato(id).subscribe((data) => {
+      this.user = data;
+      this.fformulario(this.user);
       this._modalService.open(content, { size: 'lg' });
     });
   }
@@ -384,7 +370,7 @@ export class UsuariosComponent implements OnInit {
           swal.fire('Cambio realizado', 'El estado del usuario ha sido cambiado con éxito.', 'success');
         });
       }
-    }); 
+    });
   }
 
   faceptar(): void {
