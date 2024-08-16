@@ -41,6 +41,11 @@ export class AccesoService {
     return token;
   }
 
+  rolLogueado(){
+    const token = sessionStorage.getItem(ROLES);
+    return token;
+  }
+
   estaLogeado() {
     const token = sessionStorage.getItem(TOKEN);
     return token;

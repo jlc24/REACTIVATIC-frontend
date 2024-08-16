@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { RUTA, TOKEN } from '../_config/application';
 import { Municipios } from '../_entidades/municipios';
 import swal from 'sweetalert2';
+import { Localidades } from '../_entidades/localidades';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,8 @@ export class MunicipiosService {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
   }
+
+  
 
   adicionar(dato: Municipios): Observable<any> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;

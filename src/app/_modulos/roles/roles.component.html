@@ -2,131 +2,125 @@
 </app-cabeceratitulos>
 
 <div class="row">
-    <div class="col-md-12">
-        <div class="tile">
-            <div class="row">
-                <div class="col-md-12 mb-2">
-                    <div class="input-group justify-content-end">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-outline-success mr-2" type="button" (click)="fadicionar(am)"><i class="fa fa-plus"></i> Agregar Usuario</button>
-                            <div class="dropdown">
-                                <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-bars"></i> Opciones
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <button class="dropdown-item"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
-                                    <button class="dropdown-item"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row justify-content-center">
-                <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
-                    <div class="input-group">
-                        <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Usuario a buscar..." (keyup.enter)="fbuscar()"/>
-                        <span class="input-group-prepend">
-                            <button class="btn btn-outline-danger mr-2 d-none d-md-inline" (click)="limpiar()">
-                                <i class="fa fa-times"></i> Limpiar
-                            </button>
-                            <button class="btn btn-outline-danger mr-2 d-inline d-md-none" (click)="limpiar()">
-                                <i class="fa fa-times"></i>
-                            </button>
-                            <button class="btn btn-outline-secondary d-none d-md-inline" (click)="fbuscar()">
-                                <i class="fa fa-search"></i> Buscar
-                            </button>
-                            <button class="btn btn-outline-secondary d-inline d-md-none" (click)="fbuscar()">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <!-- <div class="form-group row">
-
-              <div class="col-md-6 mt-1" *ngIf="total > cantidad">
-                  <ngb-pagination class="d-flex justify-content-end align-items-baseline pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)" size="sm"></ngb-pagination>
+  <div class="col-md-12">
+    <div class="tile">
+      <div class="row">
+        <div class="col-md-12 mb-2">
+          <div class="input-group justify-content-end">
+            <div class="input-group-prepend">
+              <button class="btn btn-outline-success mr-2" type="button" (click)="fadicionar(am)"><i class="fa fa-plus"></i> Agregar Usuario</button>
+              <div class="dropdown">
+                  <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-bars"></i> Opciones
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <button class="dropdown-item"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                    <button class="dropdown-item"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+                  </div>
               </div>
-          </div> -->
-
-          <div class="table-responsive" *ngIf="roles?.length > 0">
-              <p class="text-right" *ngIf="total == 1">
-                  Total: <b>{{ total }} registro</b>
-              </p>
-              <p class="text-right" *ngIf="total > 1">
-                  Total: <b>{{ total }} registros</b>
-              </p>
-              <!-- Mostrando del registro {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de un total de {{total}} datos -->
-              <table class="table table-bordered table-striped table-hover table-sm tabla-usuario">
-                  <thead>
-                      <tr class="table-info">
-                          <th class="text-center">Nro</th>
-                          <th class="text-center">Rol</th>
-                          <th class="text-center">Nombre Rol</th>
-                          <th class="text-center">Estado</th>
-                          <th class="text-center">Fecha Creación</th>
-                          <th class="text-center">Operaciones</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr *ngFor="let _item of roles; let i = index">
-                          <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
-                          <td>{{ _item.rol }}</td>
-                          <td>{{ _item.nombrerol }}</td>
-                          <td class="text-center">
-                              <span class="estado badge badge-success" title="Cambiar estado" >
-                                  HABILITADO
-                              </span>
-                          </td>
-                          <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
-                          <td class="text-center">
-                              <div class="btn-group" role="group" aria-label="First group">
-                                  <button class="btn btn-outline-info btn-sm" title="Ver Usuarios" (click)="fveruser(_item.idrol, verusers)">
-                                    <i class="fa fa-eye"></i>
-                                  </button>
-                                  <button class="btn btn-outline-primary btn-sm" title="Ver Enlaces" (click)="fverenlace(_item.idrol, verenlaces)">
-                                    <i class="fa fa-eye"></i>
-                                  </button>
-                                  <button class="btn btn-outline-warning btn-sm" title="Editar Usuario" (click)="fmodificar(_item.idrol, am)">
-                                    <i class="fa fa-edit"></i>
-                                  </button>
-                                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Usuario" (click)="feliminar(_item.idrol)">
-                                    <i class="fa fa-trash"></i>
-                                  </button>
-                              </div>
-                          </td>
-                      </tr>
-                      <tr >
-                          <td colspan="6">
-                              <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
-                          </td>
-                      </tr>
-                  </tbody>
-              </table>
-          </div>
-          <div class="table-responsive" *ngIf="total == 0">
-              <table class="table table-bordered table-striped table-sm">
-                  <thead>
-                      <tr class="table-info">
-                          <th class="text-center">Nro</th>
-                          <th class="text-center">Rol</th>
-                          <th class="text-center">Nombre Rol</th>
-                          <th class="text-center">Estado</th>
-                          <th class="text-center">Fecha Creación</th>
-                          <th class="text-center">Operaciones</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <td colspan="6" class="text-center">No se encontraron datos</td>
-                      </tr>
-                  </tbody>
-              </table>
+            </div>
           </div>
         </div>
+      </div>
+
+      <div class="row justify-content-center">
+          <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
+              <div class="input-group">
+                  <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Usuario a buscar..." (keyup)="fbuscar()"/>
+                  <span class="input-group-prepend">
+                      <button class="btn btn-outline-danger mr-2 d-none d-md-inline" (click)="limpiar()">
+                          <i class="fa fa-times"></i> Limpiar
+                      </button>
+                      <button class="btn btn-outline-danger mr-2 d-inline d-md-none" (click)="limpiar()">
+                          <i class="fa fa-times"></i>
+                      </button>
+                      <button class="btn btn-outline-secondary d-none d-md-inline" (click)="fbuscar()">
+                          <i class="fa fa-search"></i> Buscar
+                      </button>
+                      <button class="btn btn-outline-secondary d-inline d-md-none" (click)="fbuscar()">
+                          <i class="fa fa-search"></i>
+                      </button>
+                  </span>
+              </div>
+          </div>
+      </div>
+
+      <div class="table-responsive" *ngIf="roles?.length > 0">
+          <p class="text-right" *ngIf="total == 1">
+              Total: <b>{{ total }} registro</b>
+          </p>
+          <p class="text-right" *ngIf="total > 1">
+              Total: <b>{{ total }} registros</b>
+          </p>
+
+          <table class="table table-bordered table-striped table-hover table-sm tabla-usuario">
+              <thead>
+                  <tr class="table-info">
+                      <th class="text-center">Nro</th>
+                      <th>Rol</th>
+                      <th>Nombre Rol</th>
+                      <th class="text-center">Estado</th>
+                      <th class="text-center">Fecha Creación</th>
+                      <th class="text-center">Operaciones</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let _item of roles; let i = index">
+                      <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
+                      <td>{{ _item.rol }}</td>
+                      <td>{{ _item.nombrerol }}</td>
+                      <td class="text-center">
+                          <span class="estado badge badge-success" title="Cambiar estado" >
+                              HABILITADO
+                          </span>
+                      </td>
+                      <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+                      <td class="text-center">
+                          <div class="btn-group" role="group" aria-label="First group">
+                              <button class="btn btn-outline-info btn-sm" title="Ver Usuarios" (click)="fveruser(_item.idrol, verusers)">
+                                <i class="fa fa-eye"></i>
+                              </button>
+                              <button class="btn btn-outline-primary btn-sm" title="Ver Enlaces" (click)="fverenlace(_item.idrol, verenlaces)">
+                                <i class="fa fa-eye"></i>
+                              </button>
+                              <button class="btn btn-outline-warning btn-sm" title="Editar Usuario" (click)="fmodificar(_item.idrol, am)">
+                                <i class="fa fa-edit"></i>
+                              </button>
+                              <button class="btn btn-outline-danger btn-sm" title="Eliminar Usuario" (click)="feliminar(_item.idrol)">
+                                <i class="fa fa-trash"></i>
+                              </button>
+                          </div>
+                      </td>
+                  </tr>
+                  <tr >
+                      <td colspan="6">
+                          <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+      <div class="table-responsive" *ngIf="total == 0">
+          <table class="table table-bordered table-striped table-sm">
+              <thead>
+                  <tr class="table-info">
+                      <th class="text-center">Nro</th>
+                      <th class="text-center">Rol</th>
+                      <th class="text-center">Nombre Rol</th>
+                      <th class="text-center">Estado</th>
+                      <th class="text-center">Fecha Creación</th>
+                      <th class="text-center">Operaciones</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td colspan="6" class="text-center">No se encontraron datos</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
     </div>
+  </div>
 </div>
 
 <ng-template #am>
@@ -180,15 +174,12 @@
                   </small>
               </div>
           </div>
-          <div class="row">
-
-          </div>
 
           <div class="text-center">
-              <button type="submit" class="btn btn-success m-2" [disabled]="!formulario.valid">
+              <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formulario.valid">
                   <i class="fa fa-save"></i> Guardar
               </button>
-              <button type="button" class="btn btn-danger" (click)="fcancelar()">
+              <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()">
                   <i class="fa fa-times"></i> Cancelar
               </button>
           </div>
@@ -197,39 +188,59 @@
 </ng-template>
 
 <ng-template #verusers>
-  <div class="modal-header">
+  <div class="modal-header table-success">
     <div class="row col-12">
-        <div class="col-lg-6 col-md-12 text-center">
-            <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Usuarios</h4><br>
-        </div>
-        <div class="col-lg-6 col-md-12 alert-info p-3">
-            Estimado usuario, los campos remarcados con <b class="text-danger">*</b> son necesarios.
-        </div>
+      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Lista de Usuarios en ROL {{ rol.nombrerol }}</h4><br>
     </div>
+  </div>
+  <div class="modal-body">
+    <div class="row justify-content-center">
+      <h3>Lista de Personas</h3>
+    </div>
+    <div class="row table-responsive pl-3">
+      <table class="table table-sm table-bordered table-hover">
+        <thead class="table-info">
+          <tr>
+            <th class="text-center">Nro</th>
+            <th>Nombre</th>
+            <th>Apellido Paterno</th>
+            <th>Apellido Materno</th>
+            <th class="text-center">Carnet</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let _person of personas; let i = index">
+            <td class="text-right">{{ i + 1 }}</td>
+            <td>{{ _person.primernombre }}</td>
+            <td>{{ _person.primerapellido }}</td>
+            <td>{{ _person.segundoapellido }}</td>
+            <td class="text-center">{{ _person.dip }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar</button>
   </div>
 </ng-template>
 
 <ng-template #verenlaces>
   <div class="modal-header table-info">
-    <div class="row col-12">
-        <div class="col-lg-6 col-md-12 text-center">
-            <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Enlaces de ROL </h4><br>
+    <div class="row pl-2">
+      <h4><i class="fa fa-eye"></i> {{ estado }} Enlaces de ROL {{ rol.nombrerol }}</h4><br>
+        <div class="col-sm-12">
         </div>
     </div>
   </div>
   <div class="modal-body">
     <div *ngFor="let categoria of categorias">
-      <h4>{{ categoria.categoria.categoria }}</h4>
+      <h5>{{ categoria.categoria.categoria }}</h5>
       <div class="enlaces-grid">
         <div class="enlace-item" *ngFor="let enlace of categoria.enlaces">
           <div class="enlace-info">
             <p><strong>Enlace:</strong> {{ enlace.enlace }}</p>
-            <p>
-              <input
-                type="checkbox"
-                [checked]="enlace.estado"
-                [disabled]="false" (click)="faceptarenlace(enlace.idrol, enlace.idenlace, !enlace.estado)">
-            </p>
+            <p><input type="checkbox" [checked]="enlace.estado" [disabled]="false" (click)="faceptarenlace(rol.idrol, enlace.idenlace, enlace.estado)"> </p>
           </div>
         </div>
       </div>

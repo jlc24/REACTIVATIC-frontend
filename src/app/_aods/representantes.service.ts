@@ -19,6 +19,20 @@ export class RepresentantesService {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
   }
+  
+  dato(id: number): Observable<Representantes>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Representantes>(`${this.ruta}/${id}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+
+  buscar(buscar: string):Observable<Representantes[]>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Representantes[]>(`${this.ruta}/buscar?buscar=${buscar}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
 
   datosPDF(buscar: string) {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN))

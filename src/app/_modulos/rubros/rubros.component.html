@@ -9,95 +9,94 @@
                 <div class="col-md-12 mb-2">
                     <div class="input-group justify-content-end">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-primary mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Rubro</button>
-                            <!-- <div class="dropdown">
-                                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-bars"></i> Opciones
-                      </button>
+                            <button class="btn btn-outline-success mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Rubro</button>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="fa fa-bars"></i> Opciones
+                                </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
-                                    <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+                                    <button class="dropdown-item" ><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                                    <button class="dropdown-item" ><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- <div class="form-group row">
-                <div class="col-md-12">
-                    <div class="input-group">
-                        <span class="input-group-prepend">
-                          <button class="btn btn-primary mr-2" (click)="fadicionar(ab)">
-                              <i class="fa fa-plus"> Adicionar rubro</i>
+            <div class="row justify-content-center">
+              <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
+                  <div class="input-group">
+                      <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Usuario a buscar..." (keyup)="fbuscar()" />
+                      <span class="input-group-prepend">
+                          <button class="btn btn-outline-danger mr-2 d-none d-md-inline" (click)="limpiar()">
+                              <i class="fa fa-times"></i> Limpiar
                           </button>
-                      </span>
-                        <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Rubro a buscar..." (keyup.enter)="fbuscar()" />
-                        <span class="input-group-prepend">
-                          <button class="btn btn-primary mr-2" (click)="fbuscar()">
+                          <button class="btn btn-outline-danger mr-2 d-inline d-md-none" (click)="limpiar()">
+                              <i class="fa fa-times"></i>
+                          </button>
+                          <button class="btn btn-outline-secondary d-none d-md-inline" (click)="fbuscar()">
+                              <i class="fa fa-search"></i> Buscar
+                          </button>
+                          <button class="btn btn-outline-secondary d-inline d-md-none" (click)="fbuscar()">
                               <i class="fa fa-search"></i>
                           </button>
-                          <button class="btn btn-dark" (click)="limpiar()">
-                              <i class="fa fa-list"></i>
-                          </button>
                       </span>
-                    </div>
-                </div>
-            </div> -->
-
-            <div class="form-group row">
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Rubro a buscar..." (keyup.enter)="fbuscar()" />
-                        <span class="input-group-prepend">
-                      <button class="btn btn-outline-primary mr-2" (click)="fbuscar()">
-                          <i class="fa fa-search"></i> Buscar
-                      </button>
-                      <button class="btn btn-outline-dark" (click)="limpiar()">
-                          <i class="fa fa-list"></i> Limpiar
-                      </button>
-                  </span>
-                    </div>
-                </div>
-                <div class="col-md-6 mt-1" *ngIf="total > cantidad">
-                    <ngb-pagination class="d-flex justify-content-end align-items-baseline pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)" size="sm"></ngb-pagination>
-                </div>
+                  </div>
+              </div>
             </div>
 
-            <div class="table-responsive" *ngIf="datos?.length > 0">
-                <p class="text-right" *ngIf="total==1">Total: <b>{{total}} registro</b></p>
-                <p class="text-right" *ngIf="total>1">Total: <b>{{total}} registros</b></p>
-                <table class="table table-sm">
-                    <thead>
-                        <tr class="table-primary">
-                            <th class="text-left">Nro.</th>
-                            <th class="text-left">Rubros</th>
-                            <th class="text-right">Operaciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let _item of datos; let i = index">
-                            <td>{{i + 1}}</td>
-                            <td class="text-left">
-                                <b>{{ _item.rubro }}</b>
-                                <div>
-                                    <app-subrubros [idrubro]="_item.idrubro"></app-subrubros>
-                                </div>
-                            </td>
-                            <td class="text-right">
-                                <button class="btn btn-outline-dark btn-sm mr-2" (click)="fmodificar(_item.idrubro, ab)">
-                                  <i class="fa fa-edit"> Editar rubro</i>
-                              </button>
-                            </td>
-                        </tr>
+            <div class="row justify-content-center mt-2" >
+              <div class="col-md-8 col-sm-12">
+                <div class="table-responsive" *ngIf="datos?.length > 0">
+                    <p class="text-right" *ngIf="total==1">Total: <b>{{total}} registro</b></p>
+                    <p class="text-right" *ngIf="total>1">Total: <b>{{total}} registros</b></p>
+                    <table class="table table-sm table-bordered table-hover tabla-rubro">
+                        <thead>
+                            <tr class="table-primary">
+                                <th class="text-center">Nro.</th>
+                                <th class="text-left">Rubros</th>
+                                <th class="text-center">Estado</th>
+                                <th class="text-center">Fecha</th>
+                                <th class="text-center">Operaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let _item of datos; let i = index">
+                                <td class="text-right">{{i + 1}}</td>
+                                <td class="text-left">
+                                    <b>{{ _item.rubro }}</b>
+                                </td>
+                                <td class="text-center">
+                                  <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idrubro, !_item.estado)" >
+                                    {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                                  </span>
+                                </td>
+                                <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+                                <td class="text-center">
+                                  <div class="btn-group" role="group" aria-label="First group">
+                                    <button class="btn btn-outline-info btn-sm" title="Ver Subrubros" (click)="fversubrubro(_item.idrubro, ver)">
+                                      <i class="fa fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-outline-warning btn-sm" title="Editar Rubro" (click)="fmodificar(_item.idrubro, ab)">
+                                      <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm" title="Eliminar Rubro" (click)="feliminar(_item.idrubro)">
+                                      <i class="fa fa-trash"></i>
+                                    </button>
+                                  </div>
+                                </td>
+                            </tr>
 
-                        <tr *ngIf="total > cantidad">
-                            <td colspan="5">
-                                <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                            <tr>
+                                <td colspan="5">
+                                    <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+              </div>
             </div>
             <div class="table-responsive" *ngIf="total == 0">
                 <p class="text-center"><b>Sin rubros</b></p>
@@ -117,20 +116,139 @@
         <form [formGroup]="formulario" (ngSubmit)="faceptar()">
             <div class="form-group">
                 <label>Rubro <span class="text-danger"><b>*</b></span></label>
-                <input type="text" class="form-control" formControlName="rubro" [class.is-invalid]="f.rubro.errors && f.rubro.touched" />
+                <input type="text" class="form-control" formControlName="rubro" [class.is-invalid]="f.rubro.errors && f.rubro.touched" (input)="onInput($event, 'rubro', 'letrasyespacios')" autocomplete="no" required/>
                 <small *ngIf="f.rubro.errors&& f.rubro.touched" class="text-danger">
-                  El dato es obligatorio y solo permite letras
-              </small>
+                  <ng-container *ngIf="f.rubro.errors.required">
+                    El dato es obligatorio.
+                  </ng-container>
+                  <ng-container *ngIf="f.rubro.errors.pattern">
+                    Solo se permiten letras y espacio.
+                  </ng-container>
+                  <ng-container *ngIf="f.rubro.errors.minlength">
+                    Debe ser mas de 5 caracteres.
+                  </ng-container>
+                  <ng-container *ngIf="f.rubro.errors.maxlength">
+                    No puede exceder los 50 caracteres.
+                  </ng-container>
+                </small>
             </div>
 
             <div class="text-center">
-                <button type="submit" class="btn btn-success m-2" [disabled]="!formulario.valid">
+                <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formulario.valid">
                   <i class="fa fa-save"></i> Grabar
               </button>
-                <button type="button" class="btn btn-danger" (click)="fcancelar()">
+                <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()">
                   <i class="fa fa-times"></i> Cancelar
               </button>
             </div>
         </form>
     </div>
+</ng-template>
+
+<ng-template #ver>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} de SubRubros del Rubro "{{ dato.rubro }}"</h4>
+    </div>
+    <div class="modal-body">
+      <div class="col-12 text-center">
+        <h3>Subrubros</h3>
+      </div>
+      <div class="col-12 text-right">
+        <button class="btn btn-sm btn-outline-success" (click)="faddSubrubro(addSubrubro, dato)">
+          <i class="fa fa-plus"></i> Agregar Subrubro
+        </button>
+      </div>
+      <div class="col-12 table-responsive mt-2">
+        <table class="table table-sm table-bordered table-hover tabla-rubro">
+          <thead class="table-success">
+            <tr>
+              <th>Nro</th>
+              <th>Subrubro</th>
+              <th class="text-center">Estado</th>
+              <th class="text-center">Fecha</th>
+              <th class="text-center">Opcion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let _sub of subrubros; let i = index">
+              <td class="text-right">{{ i + 1 }}</td>
+              <td>{{ _sub.subrubro }}</td>
+              <td class="text-center">
+                <span class="estado badge {{ _sub.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_sub.idsubrubro, !_sub.estado)" >
+                  {{ _sub.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                </span>
+              </td>
+              <td class="text-center">{{ _sub.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="text-center">
+                <div class="btn-group" role="group" aria-label="First group">
+
+                  <button class="btn btn-outline-warning btn-sm" title="Editar Subrubro" (click)="fmodificarSub(_sub.idsubrubro, addSubrubro)">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm" title="Eliminar SubRubro" (click)="feliminar(_sub.idsubrubro)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar</button>
+    </div>
+</ng-template>
+
+<ng-template #addSubrubro>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Subrubro</h4>
+      <div class="alert alert-info" role="alert">
+          Estimado usuario Los campos remarcados con * son necesarios.
+      </div>
+  </div>
+  <div class="modal-body">
+      <form [formGroup]="formsubrubro" (ngSubmit)="faceptarSubrubro()">
+          <div class="form-group">
+              <label>Rubro: <span class="text-danger"><b>*</b></span></label>
+              <select class="form-control form-control-sm" formControlName="idrubro"  >
+                <option *ngFor="let _rub of datos" [value]="_rub.idrubro">
+                  {{ _rub.rubro }}
+                </option>
+              </select>
+              <small *ngIf="fS.idrubro.errors&& fS.idrubro.touched" class="text-danger">
+                  <ng-container *ngIf="fS.idrubro.errors.required">
+                      El dato es obligatorio.
+                  </ng-container>
+              </small>
+          </div>
+          <div class="form-group">
+              <label>Subrubro: <span class="text-danger"><b>*</b></span></label>
+              <input type="text" class="form-control" formControlName="subrubro" [class.is-invalid]="fS.subrubro.errors && fS.subrubro.touched" (input)="onInput($event, 'subrubro', 'letrasyespacios')" autocomplete="no" required/>
+              <small *ngIf="fS.subrubro.errors&& fS.subrubro.touched" class="text-danger">
+                <ng-container *ngIf="fS.subrubro.errors.required">
+                  El dato es obligatorio.
+                </ng-container>
+                <ng-container *ngIf="fS.subrubro.errors.pattern">
+                  Solo se permiten letras y espacio.
+                </ng-container>
+                <ng-container *ngIf="fS.subrubro.errors.minlength">
+                  Debe ser mas de 5 caracteres.
+                </ng-container>
+                <ng-container *ngIf="fS.subrubro.errors.maxlength">
+                  No puede exceder los 50 caracteres.
+                </ng-container>
+              </small>
+          </div>
+
+          <div class="text-center">
+              <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formsubrubro.valid">
+                <i class="fa fa-save"></i> Grabar
+            </button>
+              <button type="button" class="btn btn-outline-secondary" (click)="fcancelarSub()">
+                <i class="fa fa-times"></i> Cancelar
+            </button>
+          </div>
+      </form>
+  </div>
 </ng-template>

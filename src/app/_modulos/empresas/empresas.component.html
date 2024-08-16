@@ -9,11 +9,11 @@
                 <div class="col-md-12 mb-2">
                     <div class="input-group justify-content-end">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-primary mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Empresa</button>
+                            <button class="btn btn-outline-success mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Empresa</button>
                             <div class="dropdown">
-                                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="fa fa-bars"></i> Opciones
-                        </button>
+                                <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="fa fa-bars"></i> Opciones
+                                </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
                                     <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
@@ -24,23 +24,26 @@
                 </div>
             </div>
 
-            <div class="form-group row">
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Empresa a buscar..." (keyup.enter)="fbuscar()" />
-                        <span class="input-group-prepend">
-                      <button class="btn btn-outline-primary mr-2" (click)="fbuscar()">
-                          <i class="fa fa-search"></i> Buscar
-                      </button>
-                      <button class="btn btn-outline-dark" (click)="limpiar()">
-                          <i class="fa fa-list"></i> Limpiar
-                      </button>
-                  </span>
-                    </div>
-                </div>
-                <div class="col-md-6 mt-1" *ngIf="total > cantidad">
-                    <ngb-pagination class="d-flex justify-content-end align-items-baseline pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)" size="sm"></ngb-pagination>
-                </div>
+            <div class="row justify-content-center">
+              <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
+                  <div class="input-group">
+                      <input type="text" class="form-control mr-2" name="buscar" [(ngModel)]="buscar" placeholder="Usuario a buscar..." (keyup)="fbuscar()" (input)="onInputEmp($event)"/>
+                      <span class="input-group-prepend">
+                          <button class="btn btn-outline-danger mr-2 d-none d-md-inline" (click)="limpiar()">
+                              <i class="fa fa-times"></i> Limpiar
+                          </button>
+                          <button class="btn btn-outline-danger mr-2 d-inline d-md-none" (click)="limpiar()">
+                              <i class="fa fa-times"></i>
+                          </button>
+                          <button class="btn btn-outline-secondary d-none d-md-inline" (click)="fbuscar()">
+                              <i class="fa fa-search"></i> Buscar
+                          </button>
+                          <button class="btn btn-outline-secondary d-inline d-md-none" (click)="fbuscar()">
+                              <i class="fa fa-search"></i>
+                          </button>
+                      </span>
+                  </div>
+              </div>
             </div>
 
             <div class="table-responsive" *ngIf="datos?.length > 0">
@@ -51,66 +54,61 @@
                     Total: <b>{{ total }} registros</b>
                 </p>
                 <!-- Mostrando del registro {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de un total de {{total}} datos -->
-                <table class="table table-sm">
+                <table class="table table-sm table-bordered table-hover tabla-empresa">
                     <thead>
                         <tr class="table-primary">
                             <th class="text-center">Nro.</th>
-                            <th class="text-center">Tipo</th>
-                            <th class="text-center">Asociacion</th>
-                            <th class="text-center">Nombre de unidad productiva</th>
-                            <th class="text-center">Descrición</th>
-                            <th class="text-center">Nombre del representante legal</th>
-                            <th class="text-center">Carnet de identidad</th>
+                            <th class="text-center">Unidad Productiva</th>
+                            <th class="text-center">Logo</th>
+                            <th class="text-center">NIT</th>
                             <th class="text-center">Rubro</th>
-                            <th class="text-center">Subrubro</th>
                             <th class="text-center">Municipio</th>
                             <th class="text-center">Localidad</th>
                             <th class="text-center">Dirección</th>
-                            <th class="text-center">Telefono</th>
-                            <th class="text-center">Celular</th>
-                            <th class="text-center">Correo electrónico</th>
-                            <th class="text-center">Imagen</th>
+                            <th class="text-center">Estado</th>
                             <th class="text-center">Operaciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let _item of datos; let i = index">
-                            <td>{{ i + 1 + ((pagina-1)*10) }}</td>
-                            <td>{{ _item.tipo}}</td>
-                            <td>{{ _item.asociacion.asociacion}}</td>
+                            <td class="text-right">{{ pagina > 1 ? (i + 1 + ((pagina-1)*10)) : (i + 1) }}</td>
                             <td>{{ _item.empresa}}</td>
-                            <td>{{ _item.descripcion}}</td>
-                            <td>{{ _item.representante.persona.primerapellido}}</td>
-                            <td>{{ _item.representante.persona.dip}}</td>
-                            <td>{{ _item.subrubro.rubro.rubro}}</td>
-                            <td>{{ _item.subrubro.subrubro}}</td>
-                            <td>{{ _item.localidad.municipio.municipio}}</td>
-                            <td>{{ _item.localidad.localidad}}</td>
-                            <td>{{ _item.direccion }}</td>
-                            <td>{{ _item.telefono }}</td>
-                            <td>{{ _item.celular }}</td>
-                            <td>{{ _item.correo }}</td>
                             <td class="text-center">
                               <div class="main-img text-center">
-                                  <img
+                                  <!-- <img
                                     [src]="ruta+_item.idempresa"
                                     weight="100px"
                                     height="100px"
-                                  />
+                                  /> -->
                               </div>
-                          </td>
-                            <td class="text-right">
-                                <button class="btn btn-outline-dark btn-sm m-2" (click)="fmodificar(_item.idempresa, ab)">
-                                  <i class="fa fa-edit"> Editar empresa</i>
-                                </button>
-                                <button class="btn btn-outline-danger btn-sm" (click)="feliminar(_item.idempresa)">
-                                  <i class="fa fa-trash"> Eliminar empresa</i>
-                                </button>
+                            </td>
+                            <td class="text-center">{{ _item.nit}}</td>
+                            <td class="text-center">{{ _item.subrubro.rubro.rubro}}</td>
+                            <td class="text-center">{{ _item.localidad.municipio.municipio}}</td>
+                            <td class="text-center">{{ _item.localidad.localidad}}</td>
+                            <td>{{ _item.direccion }}</td>
+                            <td class="text-center">
+                              <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado"  >
+                                {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                            </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group" aria-label="First group">
+                                  <button class="btn btn-outline-info btn-sm" title="Ver Empresa" >
+                                    <i class="fa fa-eye"></i>
+                                  </button>
+                                  <button class="btn btn-outline-warning btn-sm" title="Editar Empresa" (click)="fmodificar(_item.idempresa, ab)">
+                                    <i class="fa fa-edit"></i>
+                                  </button>
+                                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Empresa" (click)="feliminar(_item.idempresa)">
+                                    <i class="fa fa-trash"></i>
+                                  </button>
+                              </div>
                             </td>
                         </tr>
 
-                        <tr *ngIf="total > cantidad">
-                            <td colspan="16">
+                        <tr>
+                            <td colspan="10">
                                 <ngb-pagination class="d-flex justify-content-center align-items-baseline pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)" size="sm"></ngb-pagination>
                             </td>
                         </tr>
@@ -126,151 +124,816 @@
 
 <ng-template #ab>
     <div class="modal-header">
-        <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Empresa</h4>
-        <div class="alert alert-info" role="alert">
-            Estimado usuario Los campos remarcados con * son necesarios.
-        </div>
+      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Empresa</h4>
+      <div class="alert alert-info" role="alert">
+          Estimado usuario Los campos remarcados con * son necesarios.
+      </div>
     </div>
     <div class="modal-body">
-        <form [formGroup]="formulario" (ngSubmit)="faceptar()">
-            <div class="form-group">
-                <label>Rubro<span class="text-danger"><b>*</b></span></label>
-                <select class="form-control" formControlName="idsubrubro">
-                  <option *ngFor="let _itemp of subrubros" [value]="_itemp.idsubrubro">
-                    {{ _itemp.subrubro }}
+          <div class="row">
+            <div class="col-sm-12 d-flex justify-content-center position-relative">
+              <div class="wizard-tabs">
+                <div class="wizard-step" [ngClass]="{'active-step': step === 1, 'completed-step': step > 1}" (click)="goToStep(1)">
+                  <div class="wizard-circle"><i class="bi bi-house"></i></div>
+                  <div class="wizard-label text-center">Datos <br> Representante</div>
+                </div>
+                <div class="wizard-line"></div>
+                <div class="wizard-step" [ngClass]="{'active-step': step === 2, 'completed-step': step > 2}" (click)="goToStep(2)">
+                  <div class="wizard-circle"><i class="bi bi-card-checklist"></i></div>
+                  <div class="wizard-label text-center">Datos <br>Empresa</div>
+                </div>
+                <div class="wizard-line"></div>
+                <div class="wizard-step" [ngClass]="{'active-step': step === 3, 'completed-step': step > 3}" (click)="goToStep(3)">
+                  <div class="wizard-circle"><i class="bi bi-diagram-3"></i></div>
+                  <div class="wizard-label text-center">Datos <br>Empresa</div>
+                </div>
+                <div class="wizard-line"></div>
+                <div class="wizard-step" [ngClass]="{'active-step': step === 4, 'completed-step': step > 4}" (click)="goToStep(4)">
+                  <div class="wizard-circle"><i class="bi bi-geo-alt"></i></div>
+                  <div class="wizard-label text-center">Datos <br>Empresa</div>
+                </div>
+                <div class="wizard-line"></div>
+                <div class="wizard-step" [ngClass]="{'active-step': step === 5, 'completed-step': step === 5}" (click)="goToStep(5)">
+                  <div class="wizard-circle"><i class="bi bi-check-circle"></i></div>
+                  <div class="wizard-label text-center">Finalizar <br>Registro</div>
+                </div>
+              </div>
+            </div>
+          </div><hr>
+          <div *ngIf="step === 1">
+            <div class="row pl-3">
+              <h5 class="card-title">I.- Datos del Representante</h5>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 col-md-2 text-right">
+                <label>Buscar: <span class="text-danger"><b>*</b></span></label>
+              </div>
+              <div class="col-md-6 col-sm-12">
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="buscarRep" name="buscarRep" (keyup)="fbuscarRep()" (input)="onInputRep($event)" (change)="onSelect($event.target.value)" autocomplete="no" list="listRep" placeholder="Buscar representante..." required/>
+                <datalist id="listRep">
+                  <option *ngFor="let _rep of representantes"
+                          [value]="_rep.persona.primerapellido + ' ' + _rep.persona.segundoapellido + ' ' + _rep.persona.primernombre">
+                  </option>
+                </datalist>
+              </div>
+              <div class="col-md-4 col-sm-12">
+                <button class="btn btn-sm btn-outline-info mr-2" type="button" (click)="fadicionRep(rep)"><i class="fa fa-plus"></i>Nuevo Representante</button>
+              </div>
+            </div>
+            <div class="row mt-2 justify-content-center" *ngIf="representante">
+              <div class="col-sm-10 border border-success">
+                <div class="row p-3">
+                  <div class="col-md-3 text-center">
+                    <img src="../../../assets/catalogo/img/avatar.jpg" class="img-fluid rounded-circle" alt="" width="150px">
+                  </div>
+                  <div class="col-md-9 " >
+                    <div class="row" hidden>
+                      <div class="col-md-3 text-right">
+                        <strong>ID:</strong>
+                      </div>
+                      <div class="col-md-6">
+                        {{ representante?.idrepresentante }}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-3 text-right">
+                        <Strong>Nombre: </Strong>
+                      </div>
+                      <div class="col-md-9">
+                        {{ representante?.persona?.primerapellido }}
+                        {{ representante?.persona?.segundoapellido }}
+                        {{ representante?.persona?.primernombre }}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-3 text-right">
+                        <strong>Carnet: </strong>
+                      </div>
+                      <div class="col-md-6">
+                        {{ representante?.persona?.dip }} {{ representante?.persona?.complementario }}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-3 text-right">
+                        <strong>Telf/Celular:</strong>
+                      </div>
+                      <div class="col-md-6">
+                        {{ representante?.persona?.celular }}
+                      </div>
+                    </div><br>
+                    <div class="row">
+                      <div class="col-md-5 text-right">
+                        <strong>Nivel de Educación:</strong>
+                      </div>
+                      <div class="col-md-5">
+                        {{ getFormacionDescription(representante?.persona?.formacion) }}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-5 text-right">
+                        <strong>Estado Civil:</strong>
+                      </div>
+                      <div class="col-md-5">
+                        {{ getEstadoDescription(representante?.persona?.estadocivil) }}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-5 text-right">
+                        <strong>Hijos:</strong>
+                      </div>
+                      <div class="col-md-5">
+                        {{ getHijosDescription(representante?.persona?.hijos) }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row justify-content-between p-3 mt-2">
+              <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+              <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+            </div>
+          </div>
+        <form [formGroup]="formEmpresa" (ngSubmit)="faceptar()">
+          <div *ngIf="step === 2">
+            <div class="row pl-3 justify-content-between">
+              <h5 class="card-title">II.- Datos de la Unidad Productiva</h5>
+            </div>
+            <div class="row pl-3 pr-3">
+              <div class="col-md-3 col-sm-7 mt-1 text-md-right text-sm-left">
+                <label class="form-label">Seleccionar Rep.:</label>
+              </div>
+              <div class="col-sm-1 mt-1 text-center">
+                <input type="checkbox" formControlName="copiarDatos" title="Seleccionar Representante">
+              </div>
+              <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">N° Form.:</label>
+              </div>
+              <div class="col-md-1 col-sm-12 m-0 p-0 ">
+                <input type="text" [maxLength]="4" class="form-control form-control-sm text-center" formControlName="nform" (input)="onInput($event, 'nform', 'numeros')" autocomplete="no">
+                <input type="text" class="form-control form-control-sm text-center" formControlName="idrepresentante" hidden>
+              </div>
+              <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">Fecha Registro:</label>
+              </div>
+              <div class="col-md-3 col-sm-12">
+                <input type="date" class="form-control form-control-sm" formControlName="fechareg">
+              </div>
+            </div>
+            <div class="row mt-1 pl-3 pr-3">
+              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">Nombre Comercial:</label>
+              </div>
+              <div class="col-md-5 col-sm-12">
+                <input type="text" class="form-control form-control-sm" formControlName="empresa" (input)="onInput($event, 'empresa', 'letrasynumerosguion')" autocomplete="no">
+              </div>
+              <div class="col-md-1 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">NIT:</label>
+              </div>
+              <div class="col-md-3 col-sm-12">
+                <input type="text" class="form-control form-control-sm" formControlName="nit" (input)="onInput($event, 'nit', 'numeros')" autocomplete="no">
+              </div>
+            </div>
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">Razón Social:</label>
+              </div>
+              <div class="col-md-5 col-sm-12">
+                <input type="text" class="form-control form-control-sm" formControlName="razonsocial" (input)="onInput($event, 'razonsocial', 'letrasynumerosguion')" autocomplete="no">
+              </div>
+              <div class="col-md-2 col-sm-7 mt-1 text-md-right text-sm-left">
+                <label for="">Banca Móvil:</label>
+              </div>
+              <div class="col-sm-2 mt-1">
+                <input type="checkbox" name="" id="" formControlName="bancamovil">
+              </div>
+            </div>
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">Descripción:</label>
+              </div>
+              <div class="col-md-9 col-sm-12">
+                <input type="text" class="form-control form-control-sm" formControlName="descripcion" (input)="onInput($event, 'descripcion', 'letrasyespacios')" autocomplete="no">
+              </div>
+            </div>
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">Asociación:</label>
+              </div>
+              <div class="col-md-3 col-sm-12">
+                <select class="custom-select custom-select-sm" formControlName="idasociacion">
+                  <option value="" [selected]>Seleccionar...</option>
+                  <option *ngFor="let _aso of asociaciones" [value]="_aso.idasociacion">
+                    {{ _aso.asociacion }}
                   </option>
                 </select>
-                <small *ngIf="f.idsubrubro.errors && f.idsubrubro.touched" class="text-danger">
-                  El dato es obligatorio
-                </small>
+              </div>
+              <div class="col-md-3 col-sm-7 mt-1 text-md-right text-sm-left">
+                <label for="">Teléfono/Celular:</label>
+              </div>
+              <div class="col-sm-3 mt-1">
+                <input type="text" class="form-control form-control-sm" formControlName="celular" (input)="onInput($event, 'celular', 'numeros')" autocomplete="no">
+              </div>
             </div>
-            <div class="form-group">
-                <label>Localidad<span class="text-danger"><b>*</b></span></label>
-                <select class="form-control" formControlName="idlocalidad">
-                  <option *ngFor="let _itemp of localidades" [value]="_itemp.idlocalidad">
-                    {{ _itemp.localidad }}
-                  </option>
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">Rubro:</label>
+              </div>
+              <div class="col-md-3 col-sm-12">
+                <select class="custom-select custom-select-sm" formControlName="idrubro" (change)="fsubrubros($event.target.value)">
+                  <option *ngFor="let _rubro of rubros" [value]="_rubro.idrubro">{{ _rubro.rubro }}</option>
                 </select>
-                <small *ngIf="f.idlocalidad.errors && f.idlocalidad.touched" class="text-danger">
-                  El dato es obligatorio
-                </small>
-            </div>
-            <div class="form-group">
-                <label>Representante<span class="text-danger"><b>*</b></span></label>
-                <select class="form-control" formControlName="idrepresentante">
-                  <option *ngFor="let _itemp of representantes" [value]="_itemp.idrepresentante">
-                    {{ _itemp.representante }}
-                  </option>
+              </div>
+              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">Subrubro:</label>
+              </div>
+              <div class="col-md-3 col-sm-12">
+                <select class="custom-select custom-select-sm" formControlName="idsubrubro">
+                  <option *ngFor="let _subr of subrubros" [value]="_subr.idsubrubro">{{ _subr.subrubro }}</option>
                 </select>
-                <small *ngIf="f.idrepresentante.errors && f.idrepresentante.touched" class="text-danger">
-                  El dato es obligatorio
-                </small>
+              </div>
             </div>
-            <div class="form-group">
-                <label>Asociacion<span class="text-danger"><b>*</b></span></label>
-                <select class="form-control" formControlName="idasociacion">
-                  <option *ngFor="let _itemp of asociaciones" [value]="_itemp.idasociacion">
-                    {{ _itemp.asociacion }}
-                  </option>
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">Productos o Servicios: </label>
+              </div>
+              <div class="col-md-9 col-sm-12">
+                <input type="text" class="form-control form-control-sm" formControlName="servicios" (input)="onInput($event, 'servicios', 'letrasyespacios')" autocomplete="no">
+              </div>
+            </div>
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">Capacidad de Producción:</label>
+              </div>
+              <div class="col-md-2 col-sm-12">
+                <select class="custom-select custom-select-sm" formControlName="capacidad">
+                  <option value="1">1 a 2</option>
+                  <option value="2">3 a 5</option>
+                  <option value="3">6 a 10</option>
+                  <option value="4">11 a 15</option>
+                  <option value="5">26 a 50</option>
+                  <option value="6">>50</option>
                 </select>
-                <small *ngIf="f.idasociacion.errors && f.idasociacion.touched" class="text-danger">
-                  El dato es obligatorio
-                </small>
+              </div>
+              <div class="col-md-1 mt-1 text-md-right text-sm-left">
+                <label for="">Medida:</label>
+              </div>
+              <div class="col-md-2">
+                <input type="text" class="form-control form-control-sm" formControlName="unidadmedida" (input)="onInput($event, 'unidadmedida', 'letras')" autocomplete="no">
+              </div>
+              <div class="col-md-1 mt-1 text-md-right text-sm-left">
+                <label for="">Apertura:</label>
+              </div>
+              <div class="col-md-3">
+                <input type="date" class="form-control form-control-sm" formControlName="fechaapertura">
+              </div>
             </div>
-            <div class="form-group">
-                <label>Empresa<span class="text-danger"><b>*</b></span></label>
-                <input type="text" class="form-control" formControlName="empresa" [class.is-invalid]="f.empresa.errors && f.empresa.touched" />
-                <small *ngIf="f.empresa.errors && f.empresa.touched" class="text-danger">
-                  El dato es obligatorio
-                </small>
-            </div>
-            <div class="form-group">
-                <label>Descrición<span class="text-danger"><b>*</b></span></label>
-                <input type="text" class="form-control" formControlName="descripcion" [class.is-invalid]="f.descripcion.errors && f.descripcion.touched" />
-                <small *ngIf="f.descripcion.errors && f.descripcion.touched" class="text-danger">
-                  El dato es obligatorio
-                </small>
-            </div>
-            <div class="form-group">
-                <label>Tipo<span class="text-danger"><b>*</b></span></label>
-                <select class="form-control" formControlName="tipo">
-                  <option value="PROVEEDOR">PROVEEDOR</option>
-                  <option value="EMPRESA">EMPRESA</option>
-                  <option value="EMPRESA MUNICIPAL">EMPRESA MUNICIPAL</option>
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">Motivo o Razón:</label>
+              </div>
+              <div class="col-md-4 col-sm-12">
+                <select class="custom-select custom-select-sm" formControlName="motivo" (change)="onMotivoChange($event)">
+                  <option value="1">Por Influencia Familiar</option>
+                  <option value="2">Por Experiencia Laboral</option>
+                  <option value="3">Por Despido de trabajo</option>
+                  <option value="4">Por la demanda laboral</option>
+                  <option value="5">Otro</option>
                 </select>
-                <small *ngIf="f.tipo.errors && f.tipo.touched" class="text-danger">
-                  El dato es obligatorio y solo permite letras
-                </small>
+              </div>
+              <div class="col-md-1 col-sm-12 mt-1 text-md-right text-sm-left" *ngIf="mostrarOtroCampo">
+                <label for="">Otro:</label>
+              </div>
+              <div class="col-md-4" *ngIf="mostrarOtroCampo">
+                <input type="text" class="form-control form-control-sm" formControlName="otromotivo" (input)="onInput($event, 'otromotivo', 'letrasyespacios')" autocomplete="no">
+              </div>
             </div>
-            <div class="form-group">
-                <label>Dirección<span class="text-danger"><b>*</b></span></label>
-                <input type="text" class="form-control" formControlName="direccion" [class.is-invalid]="f.direccion.errors && f.direccion.touched" />
-                <small *ngIf="f.direccion.errors && f.direccion.touched" class="text-danger">
-                  El dato es obligatorio
-                </small>
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">Familiar:</label>
+              </div>
+              <div class="col-md-1 mt-1">
+                <input type="checkbox" name="" id="" formControlName="familiar">
+              </div>
+              <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left" *ngIf="mostrarInvolucrados">
+                <label for="">Involucrados:</label>
+              </div>
+              <div class="col-md-2 mt-1" *ngIf="mostrarInvolucrados">
+                <select class="custom-select custom-select-sm" formControlName="involucrados" (change)="onInvolucradosChange($event)">
+                  <option value="1">Pareja</option>
+                  <option value="2">Hijos</option>
+                  <option value="3">Hermanos</option>
+                  <option value="4">Padres</option>
+                  <option value="5">Primos</option>
+                  <option value="6">Otro</option>
+                </select>
+              </div>
+              <div class="col-md-1 col-sm-12 mt-1 text-md-right text-sm-left" *ngIf="mostrarOtro">
+                <label for="">Otro:</label>
+              </div>
+              <div class="col-md-3" *ngIf="mostrarOtro">
+                <input type="text" class="form-control form-control-sm" formControlName="otrosinvolucrados" (input)="onInput($event, 'otrosinvolucrados', 'letrasyespacios')" autocomplete="no">
+              </div>
             </div>
-            <div class="form-group">
-                <label>Telefono<span class="text-danger"><b>*</b></span></label>
-                <input type="number" class="form-control" formControlName="telefono" [class.is-invalid]="f.telefono.errors && f.telefono.touched" />
-                <small *ngIf="f.telefono.errors && f.telefono.touched" class="text-danger">
-                  El dato es obligatorio y solo permite números
-                </small>
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">Trabajadores:</label>
+              </div>
+              <div class="col-md-3 mt-1">
+                <select class="custom-select custom-select-sm" formControlName="trabajadores">
+                  <option value="1">1 a 2</option>
+                  <option value="2">3 a 4</option>
+                  <option value="3">5 a 6</option>
+                  <option value="4">7 a 8</option>
+                  <option value="4">9 a 10</option>
+                  <option value="5">10 a 11</option>
+                </select>
+              </div>
+              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">Participación:</label>
+              </div>
+              <div class="col-md-3 mt-1">
+                <select class="custom-select custom-select-sm" formControlName="participacion">
+                  <option value="1">Local</option>
+                  <option value="2">Nacional</option>
+                  <option value="3">Municipal</option>
+                  <option value="4">Internacional</option>
+                </select>
+              </div>
             </div>
-            <div class="form-group">
-                <label>Celular<span class="text-danger"><b>*</b></span></label>
-                <input type="number" class="form-control" formControlName="celular" [class.is-invalid]="f.celular.errors && f.celular.touched" />
-                <small *ngIf="f.celular.errors && f.celular.touched" class="text-danger">
-                  El dato es obligatorio y solo permite números
-                </small>
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">Capacitación:</label>
+              </div>
+              <div class="col-md-9 col-sm-12">
+                <input type="text" class="form-control form-control-sm" formControlName="capacitacion" (input)="onInput($event, 'capacitacion', 'letrasyespacios')" autocomplete="no">
+              </div>
             </div>
-            <div class="form-group">
-                <label>Correo<span class="text-danger"><b>*</b></span></label>
-                <input type="email" class="form-control" formControlName="correo" [class.is-invalid]="f.correo.errors && f.correo.touched" />
-                <small *ngIf="f.correo.errors && f.correo.touched" class="text-danger">
-                  El dato es obligatorio
-                </small>
+            <div class="row justify-content-between p-3 mt-2">
+              <div class="div">
+                <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+                <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+              </div>
+              <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
             </div>
-            <div class="form-group">
-                <label>Facebook</label>
-                <input type="text" class="form-control" formControlName="facebook" />
+          </div>
+
+          <div *ngIf="step === 3">
+            <div class="row pl-3 pr-3">
+              <h5 class="card-title">III.- Ubicación de la Unidad Productiva</h5>
             </div>
-            <div class="form-group">
-                <label>Twitter</label>
-                <input type="text" class="form-control" formControlName="twitter" />
+            <div class="row pl-3 pr-3">
+              <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">Municipio:</label>
+              </div>
+              <div class="col-md-4 col-sm-12">
+                <select class="custom-select custom-select-sm" (change)="flocalidades($event.target.value)">
+                  <option *ngFor="let _mun of municipios" [value]="_mun.idmunicipio">{{ _mun.municipio }}</option>
+                </select>
+              </div>
+              <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left">
+                <label for="">Localidad:</label>
+              </div>
+              <div class="col-md-4 col-sm-12">
+                <select class="custom-select custom-select-sm" formControlName="idlocalidad">
+                  <option *ngFor="let _local of localidades" [value]="_local.idlocalidad">{{ _local.localidad }}</option>
+                </select>
+              </div>
             </div>
-            <div class="form-group">
-                <label>Instagram</label>
-                <input type="text" class="form-control" formControlName="instagram" />
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-2 col-sm-12 text-md-right text-sm-left">
+                <label for="">Zona:</label>
+              </div>
+              <div class="col-md-2 col-sm-12">
+                <input type="text" class="form-control form-control-sm" formControlName="zona" (input)="onInput($event, 'zona', 'letrasyespacios')">
+              </div>
+              <div class="col-md-2 col-sm-12 text-md-right text-sm-left">
+                <label for="">Dirección:</label>
+              </div>
+              <div class="col-md-6 col-sm-12">
+                <input type="text" class="form-control form-control-sm" formControlName="direccion" (input)="onInput($event, 'direccion', 'direccion')">
+              </div>
             </div>
-            <div class="form-group">
-                <label>Pagina Web</label>
-                <input type="text" class="form-control" formControlName="paginaweb" />
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-2 col-sm-12 text-md-right text-sm-left">
+                <label for="">Referencia:</label>
+              </div>
+              <div class="col-md-4 col-sm-12">
+                <input type="text" class="form-control form-control-sm" formControlName="referencia" (input)="onInput($event, 'referencia', 'direccion')">
+              </div>
+              <div class="col-md-2 col-sm-12 text-md-right text-sm-left">
+                <label for="">Transporte:</label>
+              </div>
+              <div class="col-md-4 col-sm-12">
+                <input type="text" class="form-control form-control-sm" formControlName="transporte" (input)="onInput($event, 'transporte', 'direccion')">
+              </div>
             </div>
-            <div class="form-group">
-                <label>Otros</label>
-                <input type="text" class="form-control" formControlName="otro" />
+            <div class="row pl-3 pr-3 mt-1">
             </div>
-            <div class="form-group">
-                <label>Registro SENASAG <span class="text-danger"><b>*</b></span></label>
-                <input type="number" class="form-control" formControlName="registrosenasag" [class.is-invalid]="f.registrosenasag.errors && f.registrosenasag.touched" />
-                <small *ngIf="f.registrosenasag.errors && f.registrosenasag.touched" class="text-danger">
-                  El dato es obligatorio y solo permite números
-                </small>
+            <div class="row pl-3 pr-3 mt-2">
+              <h5 class="card-title">IV.- Datos de Contacto de la Unidad Productiva</h5>
             </div>
-            <div class="form-group">
-              <label>Logo <span class="text-danger"><b>*</b></span></label>
-              <input type="file" class="form-control" (change)="fseleccionarArchivo($event)" />
-              <hr>
-              <img [src]="imageSrc" *ngIf="imageSrc" class="img-fluid mx-auto d-block" height="150px" width="150px" />
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-3 col-sm-12 text-md-right text-sm-left">
+                <label for="">Correo:</label>
+              </div>
+              <div class="col-md-9 col-sm-12">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-envelope-at"></i></span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" formControlName="correo">
+                </div>
+              </div>
             </div>
-            <div class="text-center">
-                <button type="submit" class="btn btn-success m-2" [disabled]="!formulario.valid">
-          <i class="fa fa-save"></i> Grabar
-        </button>
-                <button type="button" class="btn btn-danger" (click)="fcancelar()">
-          <i class="fa fa-times"></i> Cancelar
-        </button>
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-3 col-sm-12 text-md-right text-sm-left">
+                <label for="">Facebook:</label>
+              </div>
+              <div class="col-md-9 col-sm-12">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-facebook"></i></span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" formControlName="facebook">
+                </div>
+              </div>
             </div>
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-3 col-sm-12 text-md-right text-sm-left">
+                <label for="">Twitter:</label>
+              </div>
+              <div class="col-md-9 col-sm-12">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-twitter-x"></i></span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" formControlName="twitter">
+                </div>
+              </div>
+            </div>
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-3 col-sm-12 text-md-right text-sm-left">
+                <label for="">Instagram:</label>
+              </div>
+              <div class="col-md-9 col-sm-12">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-instagram"></i></span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" formControlName="instagram">
+                </div>
+              </div>
+            </div>
+            <div class="row pl-3 pr-3 mt-1">
+              <div class="col-md-3 col-sm-12 text-md-right text-sm-left">
+                <label for="">Pagina WEB:</label>
+              </div>
+              <div class="col-md-9 col-sm-12">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-globe2"></i></span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" formControlName="paginaweb">
+                </div>
+              </div>
+            </div>
+            <div class="row justify-content-between p-3 mt-2">
+              <div class="div">
+                <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+                <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+              </div>
+              <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+            </div>
+          </div>
+
+          <div *ngIf="step === 4">
+            <div class="row pl-3 pr-3 mt-2">
+              <h5 class="card-title">V.- Croquis de la Unidad Productiva</h5>
+            </div>
+            <div class="row pl-3 pr-3">
+              <div class="col-md-8 col-sm-12">
+
+              </div>
+              <div class="col-md-4 col-sm-12">
+                <div class="row">
+                  <div class="col-sm-4 mt-1">
+                    <label for="">Latitud: </label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control form-control-sm" formControlName="latitud">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-4 mt-1">
+                    <label for="">Longitud: </label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control form-control-sm" formControlName="longitud">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row justify-content-between p-3 mt-2">
+              <div class="div">
+                <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+                <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+              </div>
+              <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+            </div>
+          </div>
+          <div *ngIf="step === 5">
+            <div class="row pl-3 pr-3">
+              <h5 class="card-title">VI.- Resumen de datos a guardar</h5>
+            </div>
+            <table class="table table-sm table-bordered">
+              <tbody>
+                <tr>
+                  <td colspan="10"><strong>DATOS REPRESENTANTE</strong></td>
+                </tr>
+                <tr>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Nombre:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i>
+                    <ng-template #noData>
+                      <i class="fa fa-times-circle fa-2x text-danger"></i>
+                    </ng-template>
+                  </td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Carnet:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Celular:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Fomacion:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Estado Civil:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                </tr>
+                <tr>
+                  <td colspan="10"><strong>DATOS UNIDAD PRODUCTIVA</strong></td>
+                </tr>
+                <tr>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Formulario:</td><td width="50px"><i *ngIf="this.formEmpresa.value.nform; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Fecha Registro:</td><td width="50px"><i *ngIf="this.formEmpresa.value.fechareg; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Nombre Comercial:</td><td width="50px"><i *ngIf="this.formEmpresa.value.empresa; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Razon Social:</td><td width="50px"><i *ngIf="this.formEmpresa.value.razonsocial; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Descripción:</td><td width="50px"><i *ngIf="this.formEmpresa.value.descripcion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                </tr>
+                <tr>
+                  <td class="text-right">NIT:</td><td width="50px"><i *ngIf="this.formEmpresa.value.nit; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Banca Movil:</td><td width="50px"><i *ngIf="this.formEmpresa.value.bancamovil; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Celular:</td><td width="50px"><i *ngIf="this.formEmpresa.value.celular; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Rubro:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrubro; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Subrubro:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idsubrubro; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                </tr>
+                <tr>
+                  <td class="text-right">Servicios:</td><td width="50px"><i *ngIf="this.formEmpresa.value.servicios; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Capacidad:</td><td width="50px"><i *ngIf="this.formEmpresa.value.capacidad; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Fecha Apertura:</td><td width="50px"><i *ngIf="this.formEmpresa.value.fechaapertura; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Motivo:</td><td width="50px"><i *ngIf="this.formEmpresa.value.motivo; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Familiar:</td><td width="50px"><i *ngIf="this.formEmpresa.value.familiar; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                </tr>
+                <tr>
+                  <td class="text-right">Involucrados:</td><td width="50px"><i *ngIf="this.formEmpresa.value.involucrados; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Trabajadores:</td><td width="50px"><i *ngIf="this.formEmpresa.value.trabajadores; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Participación:</td><td width="50px"><i *ngIf="this.formEmpresa.value.participacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Capacitación:</td><td width="50px"><i *ngIf="this.formEmpresa.value.capacitacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Municipio:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idmunicipio; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                </tr>
+                <tr>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Localidad:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idlocalidad; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Zona:</td><td width="50px"><i *ngIf="this.formEmpresa.value.zona; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Direccion:</td><td width="50px"><i *ngIf="this.formEmpresa.value.direccion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Referencia:</td><td width="50px"><i *ngIf="this.formEmpresa.value.referencia; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Transporte:</td><td width="50px"><i *ngIf="this.formEmpresa.value.transporte; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="row justify-content-between p-3 mt-2">
+              <div class="div">
+                <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+                <button class="btn btn-sm btn-outline-success" (click)="faceptar()">Guardar <i class="bi bi-floppy"></i></button>
+              </div>
+              <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+            </div>
+          </div>
         </form>
     </div>
+</ng-template>
+
+<ng-template #rep>
+  <div class="modal-header">
+      <div class="row col-12">
+          <div class="col-lg-6 col-md-12 text-center">
+              <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Representante</h4><br>
+          </div>
+          <div class="col-lg-6 col-md-12 alert-info p-3">
+              Estimado usuario, los campos remarcados con <b class="text-danger">*</b> son necesarios.
+          </div>
+      </div>
+  </div>
+  <div class="modal-body">
+      <form [formGroup]="formRep" (ngSubmit)="faceptarRep()">
+          <div class="row">
+              <div class="form-group col-lg-4 col-md-6 col-sm-12">
+                  <label>Apellido Paterno: <span class="text-danger"><b>*</b></span></label>
+                  <input type="text" class="form-control form-control-sm" formControlName="primerapellido" [class.is-invalid]="fR.primerapellido.errors && fR.primerapellido.touched" (input)="onInput($event, 'primerapellido', 'letrasyespacios')" autocomplete="no" required/>
+                  <small *ngIf="fR.primerapellido.errors&& fR.primerapellido.touched" class="text-danger">
+                      <ng-container *ngIf="fR.primerapellido.errors.required">
+                          El dato es obligatorio.
+                      </ng-container>
+                      <ng-container *ngIf="fR.primerapellido.errors.pattern">
+                          Solo se permiten letras.
+                      </ng-container>
+                      <ng-container *ngIf="fR.primerapellido.errors.maxlength">
+                          No puede exceder los 50 caracteres.
+                      </ng-container>
+                  </small>
+              </div>
+              <div class="form-group col-lg-4 col-md-6 col-sm-12">
+                  <label>Apellido Materno: </label>
+                  <input type="text" class="form-control form-control-sm" formControlName="segundoapellido" [class.is-invalid]="fR.segundoapellido.errors && fR.segundoapellido.touched" (input)="onInput($event, 'segundoapellido', 'letrasyespacios')" autocomplete="no" />
+                  <small *ngIf="fR.segundoapellido.errors&& fR.segundoapellido.touched" class="text-danger">
+                      <ng-container *ngIf="fR.segundoapellido.errors.pattern">
+                          Solo se permiten letras.
+                      </ng-container>
+                      <ng-container *ngIf="fR.segundoapellido.errors.maxlength">
+                          No puede exceder los 50 caracteres.
+                      </ng-container>
+                  </small>
+              </div>
+              <div class="form-group col-lg-4 col-md-6 col-sm-12">
+                  <label>Nombres: <span class="text-danger"><b>*</b></span></label>
+                  <input type="text" class="form-control form-control-sm" formControlName="primernombre" [class.is-invalid]="fR.primernombre.errors && fR.primernombre.touched" (input)="onInput($event, 'primernombre', 'letrasyespacios')" autocomplete="no" required/>
+                  <small *ngIf="fR.primernombre.errors&& fR.primernombre.touched" class="text-danger">
+                      <ng-container *ngIf="fR.primernombre.errors.required">
+                          El dato es obligatorio.
+                      </ng-container>
+                      <ng-container *ngIf="fR.primernombre.errors.pattern">
+                          Solo se permiten letras.
+                      </ng-container>
+                      <ng-container *ngIf="fR.primernombre.errors.maxlength">
+                          No puede exceder los 50 caracteres.
+                      </ng-container>
+                  </small>
+              </div>
+              <div class="form-group col-lg-4 col-md-6 col-sm-12">
+                  <label>Genero: <span class="text-danger"><b>*</b></span></label>
+                  <select class="custom-select custom-select-sm" formControlName="idtipogenero">
+                      <option *ngFor="let _itemp of genero" [value]="_itemp.idtipogenero">{{ _itemp.tipogenero }}</option>
+                  </select>
+                  <small *ngIf="fR.idtipogenero.errors&& fR.idtipogenero.touched" class="text-danger">
+                      <ng-container *ngIf="fR.idtipogenero.errors.required">
+                          El dato es obligatorio.
+                      </ng-container>
+                  </small>
+              </div>
+
+              <div class="form-group col-lg-4 col-md-6 col-sm-12">
+                  <label>Documento: <span class="text-danger"><b>*</b></span></label>
+                  <select class="custom-select custom-select-sm" formControlName="idtipodocumento" >
+                      <option *ngFor="let _itemp of documento" [value]="_itemp.idtipodocumento">{{ _itemp.tipodocumento }}</option>
+                  </select>
+                  <small *ngIf="fR.idtipodocumento.errors&& fR.idtipodocumento.touched" class="text-danger">
+                      <ng-container *ngIf="fR.dip.errors.required">
+                          Obligatorio.
+                      </ng-container>
+                  </small>
+              </div>
+              <div class="form-group col-lg-4 col-md-6 col-sm-12">
+                  <label>DIP: <span class="text-danger"><b>*</b></span></label>
+                  <input type="text" class="form-control form-control-sm" formControlName="dip" [class.is-invalid]="fR.dip.errors && fR.dip.touched" (input)="onInput($event, 'dip', 'numeros')" autocomplete="no" required/>
+                  <small *ngIf="fR.dip.errors&& fR.dip.touched" class="text-danger">
+                      <ng-container *ngIf="fR.dip.errors.required">
+                          El dato es obligatorio.
+                      </ng-container>
+                      <ng-container *ngIf="fR.dip.errors.pattern">
+                          Solo se permite números.
+                      </ng-container>
+                      <ng-container *ngIf="fR.dip.errors.maxlength">
+                          No puede exceder los 15 caracteres.
+                      </ng-container>
+                  </small>
+              </div>
+              <div class="form-group col-lg-4 col-md-6 col-sm-12">
+                  <label>Complemento: </label>
+                  <input type="text" class="form-control form-control-sm" formControlName="complementario" [class.is-invalid]="fR.complementario.errors && fR.complementario.touched" (input)="onInput($event, 'complementario', 'letrasynumerosguion')" autocomplete="no" />
+                  <small *ngIf="fR.complementario.errors && fR.complementario.touched" class="text-danger">
+                      <ng-container *ngIf="fR.complementario.errors.pattern">
+                          Caracter no permitido.
+                      </ng-container>
+                      <ng-container *ngIf="fR.complementario.errors.maxlength">
+                          No puede exceder los 5 caracteres.
+                      </ng-container>
+                  </small>
+              </div>
+              <div class="form-group col-lg-4 col-md-6 col-sm-12">
+                  <label for="">Expedido: <span class="text-danger"><b>*</b></span></label>
+                  <select class="custom-select custom-select-sm" formControlName="idtipoextension" [class.is-invalid]="fR.idtipoextension.errors && fR.idtipoextension.touched">
+                      <option *ngFor="let _itemp of extension" [value]="_itemp.idtipoextension">{{ _itemp.tipoextension }}</option>
+                  </select>
+                  <small *ngIf="fR.idtipoextension.errors && fR.idtipoextension.touched" class="text-danger">
+                      <ng-container *ngIf="fR.idtipoextension.errors.required">
+                          Obligatorio.
+                      </ng-container>
+                  </small>
+              </div>
+              <div class="form-group col-lg-4 col-md-6 col-sm-12">
+                  <label>Teléfono/Celular: <span class="text-danger"><b>*</b></span></label>
+                  <input type="number" class="form-control form-control-sm" formControlName="celular" [class.is-invalid]="fR.celular.errors && fR.celular.touched" autocomplete="no"/>
+                  <small *ngIf="fR.celular.errors && fR.celular.touched" class="text-danger">
+                      <ng-container *ngIf="fR.celular.errors.required">
+                          El dato es obligatorio.
+                      </ng-container>
+                      <ng-container *ngIf="fR.celular.errors.pattern">
+                          Solo se permite números.
+                      </ng-container>
+                  </small>
+              </div>
+              <div class="form-group col-lg-4 col-md-4 col-sm-12">
+                  <label>Nivel Educacion: <span class="text-danger"><b>*</b></span></label>
+                  <select class="custom-select custom-select-sm" formControlName="formacion" >
+                    <option value="1">Inicial</option>
+                    <option value="2">Primaria</option>
+                    <option value="3">Secundaria</option>
+                    <option value="4">Técnico</option>
+                    <option value="5">Licenciatura</option>
+                </select>
+                  <small *ngIf="fR.formacion.errors && fR.formacion.touched" class="text-danger">
+                      <ng-container *ngIf="fR.formacion.errors.required">
+                          El dato es obligatorio.
+                      </ng-container>
+                  </small>
+              </div>
+              <div class="form-group col-lg-4 col-md-4 col-sm-12">
+                  <label>Estado Civil: <span class="text-danger"><b>*</b></span></label>
+                  <select class="custom-select custom-select-sm" formControlName="estadocivil" >
+                    <option value="1">Soltero(a)</option>
+                    <option value="2">Casado(a)</option>
+                    <option value="3">Viudo(a)</option>
+                    <option value="4">Conviviente</option>
+                    <option value="5">Separado(a)</option>
+                </select>
+                  <small *ngIf="fR.estadocivil.errors && fR.estadocivil.touched" class="text-danger">
+                      <ng-container *ngIf="fR.estadocivil.errors.required">
+                          El dato es obligatorio.
+                      </ng-container>
+                  </small>
+              </div>
+              <div class="form-group col-lg-4 col-md-4 col-sm-12">
+                  <label>Hijos: <span class="text-danger"><b>*</b></span></label>
+                  <select class="custom-select custom-select-sm" formControlName="hijos" >
+                    <option value="0">Sin Hijos</option>
+                    <option value="1">1 Hijo</option>
+                    <option value="2">2 Hijos</option>
+                    <option value="3">3 Hijos</option>
+                    <option value="4">4 Hijos</option>
+                    <option value="5">5 a mas hijos</option>
+                </select>
+                  <small *ngIf="fR.hijos.errors && fR.hijos.touched" class="text-danger">
+                      <ng-container *ngIf="fR.hijos.errors.required">
+                          El dato es obligatorio.
+                      </ng-container>
+                  </small>
+              </div>
+
+              <div class="form-group col-lg-4 col-md-6 col-sm-12">
+                  <label>Usuario: <span class="text-danger"><b>*</b></span></label>
+                  <input type="text" class="form-control form-control-sm" formControlName="usuario" [class.is-invalid]="fR.usuario.errors && fR.usuario.touched" autocomplete="no" readonly/>
+                  <small *ngIf="fR.usuario.errors && fR.usuario.touched" class="text-danger">
+                      <ng-container *ngIf="fR.usuario.errors.required">
+                          El dato es obligatorio.
+                      </ng-container>
+                      <ng-container *ngIf="fR.usuario.errors.pattern">
+                          Caracter no permitido.
+                      </ng-container>
+                      <ng-container *ngIf="fR.usuario.errors.maxlength">
+                          No puede exceder los 10 caracteres.
+                      </ng-container>
+                  </small>
+              </div>
+              <div class="form-group col-lg-4 col-md-6 col-sm-12">
+                  <label>Contraseña: <span class="text-danger"><b>*</b></span></label>
+                  <input type="password" class="form-control form-control-sm" formControlName="clave" [class.is-invalid]="fR.clave.errors && fR.clave.touched" autocomplete="no" readonly/>
+                  <small *ngIf="fR.clave.errors && fR.clave.touched" class="text-danger">
+                      <ng-container *ngIf="fR.clave.errors.required">
+                          El dato es obligatorio.
+                      </ng-container>
+                      <ng-container *ngIf="fR.clave.errors.maxlength">
+                          No puede exceder los 20 caracteres.
+                      </ng-container>
+                      <ng-container *ngIf="fR.clave.errors.minlength">
+                          Debe tener 8 caracteres minimo.
+                      </ng-container>
+                  </small>
+              </div>
+          </div>
+          <div *ngIf="formRep.invalid && formRep.touched" class="alert alert-danger">
+            Por favor, completa todos los campos obligatorios.
+          </div>
+          <div class="text-center">
+              <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formRep.valid">
+                  <i class="fa fa-save"></i> Guardar
+              </button>
+              <button type="button" class="btn btn-outline-secondary" (click)="fcancelarRep()">
+                  <i class="fa fa-times"></i> Cancelar
+              </button>
+          </div>
+      </form>
+  </div>
 </ng-template>

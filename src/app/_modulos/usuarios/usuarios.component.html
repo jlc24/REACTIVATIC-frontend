@@ -26,7 +26,7 @@
             <div class="row justify-content-center">
                 <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                     <div class="input-group">
-                        <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Usuario a buscar..." (keyup.enter)="fbuscar()" />
+                        <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Usuario a buscar..." (keyup)="fbuscar()" />
                         <span class="input-group-prepend">
                             <button class="btn btn-outline-danger mr-2 d-none d-md-inline" (click)="limpiar()">
                                 <i class="fa fa-times"></i> Limpiar
@@ -46,7 +46,6 @@
             </div>
 
             <div class="form-group row">
-
                 <div class="col-md-6 mt-1" *ngIf="total > cantidad">
                     <ngb-pagination class="d-flex justify-content-end align-items-baseline pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)" size="sm"></ngb-pagination>
                 </div>
@@ -303,7 +302,7 @@
                 </div>
                 <div class="form-group col-lg-4 col-md-6 col-sm-12">
                     <label>Usuario: <span class="text-danger"><b>*</b></span></label>
-                    <input type="text" class="form-control form-control-sm" formControlName="usuario" [class.is-invalid]="f.usuario.errors && f.usuario.touched" autocomplete="no"/>
+                    <input type="text" class="form-control form-control-sm" formControlName="usuario" [class.is-invalid]="f.usuario.errors && f.usuario.touched" autocomplete="no" readonly/>
                     <small *ngIf="f.usuario.errors && f.usuario.touched" class="text-danger">
                         <ng-container *ngIf="f.usuario.errors.required">
                             El dato es obligatorio.
@@ -318,13 +317,10 @@
                 </div>
                 <div class="form-group col-lg-4 col-md-6 col-sm-12">
                     <label>Contraseña: <span class="text-danger"><b>*</b></span></label>
-                    <input type="password" class="form-control form-control-sm" formControlName="clave" [class.is-invalid]="f.clave.errors && f.clave.touched" autocomplete="no" value=""/>
+                    <input type="password" class="form-control form-control-sm" formControlName="clave" [class.is-invalid]="f.clave.errors && f.clave.touched" autocomplete="no" readonly/>
                     <small *ngIf="f.clave.errors && f.clave.touched" class="text-danger">
                         <ng-container *ngIf="f.clave.errors.required">
                             El dato es obligatorio.
-                        </ng-container>
-                        <ng-container *ngIf="f.clave.errors.pattern">
-                            Caracter no válido.
                         </ng-container>
                         <ng-container *ngIf="f.clave.errors.maxlength">
                             No puede exceder los 20 caracteres.
@@ -361,6 +357,7 @@
         </form>
     </div>
 </ng-template>
+
 <ng-template #ver>
     <div class="modal-header">
         <div class="col-lg-12 col-md-12 text-center">

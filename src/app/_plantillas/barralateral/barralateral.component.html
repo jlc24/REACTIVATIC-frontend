@@ -1,29 +1,29 @@
 <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
 <aside class="app-sidebar">
   <div class="app-sidebar__user">
-    <div class="app-sidebar__user-avatar">
-      <i class="fa fa-user-circle-o fa-2x"></i>
-    </div>
-    <div class="col-md-12">
+
+    <div class="col-md-12 text-center">
+      <i class="bi bi-person-circle fa-5x"></i>
       <p class="app-sidebar__user-name">Bienvenido</p>
       <p class="app-sidebar__user-designation">{{nombre}}</p>
+      <p class="app-sidebar__user-designation">{{rol}}</p>
     </div>
   </div>
   <ul class="app-menu">
     <li>
-      <a class="app-menu__item" href="#" [routerLink]="[ '/escritorio' ]">
+      <a class="app-menu__item" href="#" [routerLink]="[ '/escritorio' ]" routerLinkActive="active">
         <i class="app-menu__icon fa fa-dashboard"></i>
         <span class="app-menu__label">Escritorio</span>
       </a>
     </li>
-    <li class="treeview" *ngFor="let menu of menus">
+    <li class="treeview" *ngFor="let menu of menus" routerLinkActive="is-expanded" [routerLinkActiveOptions]="{exact: false}">
       <a class="app-menu__item" href="#" data-toggle="treeview">
         <i class="app-menu__icon {{ menu.icono }}"></i>
         <span class="app-menu__label">{{ menu.nombre }}</span>
         <i class="treeview-indicator fa fa-angle-right"></i>
       </a>
       <ul class="treeview-menu">
-        <li *ngFor="let submenu of menu.submenu">
+        <li *ngFor="let submenu of menu.submenu" routerLinkActive="active">
           <a class="treeview-item" href="#" [routerLink]="[ '/'+submenu.ruta ]">
             <i class="icon {{ submenu.icono }}"></i> {{ submenu.nombre }}
           </a>

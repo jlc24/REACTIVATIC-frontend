@@ -9,3 +9,13 @@
     width: 7px;
     cursor: pointer;
 }
+.estado:hover{
+  cursor: pointer;
+}
+
+.tabla-municipio{
+  box-shadow: 2px 2px 18px 2px #a2a2a2;
+}
+.tabla-localidad{
+  box-shadow: 2px 2px 18px 2px #a2a2a2;
+}

@@ -323,13 +323,13 @@ export class CategoriaComponent implements OnInit {
     if (this.estado === 'Modificar') {
       this._categriasService.modificar(this.categoria).subscribe((data) => {
         this.fdatos();
-        this._modalService.dismissAll();
+        this.modalRefCategoria.dismiss()
         Swal.fire('Dato Modificado', 'Categoría modificada con éxito', 'success');
       });
     }else{
       this._categriasService.adicionar(this.categoria).subscribe((data) => {
         this.fdatos();
-        this._modalService.dismissAll();
+        this.modalRefCategoria.dismiss()
         Swal.fire('Dato aAicionado', 'Categoría registrada con éxito', 'success');
       });
     }

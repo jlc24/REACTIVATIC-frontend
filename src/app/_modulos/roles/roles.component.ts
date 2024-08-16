@@ -3,9 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { EnlacesService } from 'src/app/_aods/enlaces.service';
 import { EnlacesrolesService } from 'src/app/_aods/enlacesroles.service';
+import { PersonasService } from 'src/app/_aods/personas.service';
 import { RolesService } from 'src/app/_aods/roles.service';
 import { Enlaces } from 'src/app/_entidades/enlaces';
 import { Enlacesroles } from 'src/app/_entidades/enlacesroles';
+import { Personas } from 'src/app/_entidades/personas';
 import { Roles } from 'src/app/_entidades/roles';
 
 @Component({
@@ -19,6 +21,8 @@ export class RolesComponent implements OnInit {
 
   enlaces: Enlaces[];
   enlacerol: Enlacesroles;
+  enlace: Enlaces;
+  personas: Personas[];
 
   categorias: any[] = [];
 
@@ -38,6 +42,7 @@ export class RolesComponent implements OnInit {
     private _rolesService: RolesService,
     private _enlacesService: EnlacesService,
     private _enlacesrolesService: EnlacesrolesService,
+    private _personasService: PersonasService,
     private _fb: FormBuilder,
     config: NgbModalConfig,
     private _modalService: NgbModal
@@ -135,22 +140,32 @@ export class RolesComponent implements OnInit {
     this._modalService.open(content);
   }
 
+  flistusser(id: number){
+    this._personasService.obtenerpersonasRol(id).subscribe((data) => {
+      this.personas = data;
+    })
+  }
+
   fveruser(id: number, content: any){
     this.estado = 'Ver';
-    // this._enlacesService.listarEnlaces(id).subscribe((data) => {
-    //   this.enlaces = data;
-    //   this._modalService.open(content, { size: 'lg'});
-    // })
+    this._rolesService.dato(id).subscribe((data) => {
+      this.rol = data;
+      this.flistusser(id);
+      this._modalService.open(content, { size: 'lg'});
+    })
+  }
+
+  fenlaces(id:number){
+    this._enlacesService.listarEnlaces(id).subscribe(enlaces => {
+      this.categorias = this.groupByCategoria(enlaces);
+    });
   }
 
   fverenlace(id: number, content: any){
     this.estado = 'Ver';
-    // this._enlacesService.listarEnlaces(id).subscribe((data) => {
-    //   this.enlaces = data;
-    //   this._modalService.open(content, { size: 'lg'});
-    // })
-    this._enlacesService.listarEnlaces(id).subscribe(enlaces => {
-      this.categorias = this.groupByCategoria(enlaces);
+    this._rolesService.dato(id).subscribe((data) => {
+      this.rol = data;
+      this.fenlaces(id);
       this._modalService.open(content, { size: 'lg'});
     });
   }

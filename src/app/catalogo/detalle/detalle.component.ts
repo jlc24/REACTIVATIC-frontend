@@ -12,6 +12,7 @@ import { Empresas } from 'src/app/_entidades/empresas';
 import { Procesar } from 'src/app/_entidades/procesar';
 import { Productos } from 'src/app/_entidades/productos';
 import { Rubros } from 'src/app/_entidades/rubros';
+import Swal from 'sweetalert2';
 import swal from 'sweetalert2';
 
 @Component({
@@ -47,6 +48,8 @@ export class DetalleComponent implements OnInit {
 
   totalencarrito = 0;
   encarrito = "";
+
+  cantProd: number = 1;
 
   imagen: any;
 
@@ -103,7 +106,7 @@ export class DetalleComponent implements OnInit {
   }
 
   frubros() {
-    this._catalogosService.cantidadporrubros().subscribe(data => {
+    this._catalogosService.rubros().subscribe(data => {
       this.rubros = data;
     });
   }
@@ -120,16 +123,43 @@ export class DetalleComponent implements OnInit {
     });
   }
 
-  fadicionar(idproducto: number, cantidad: number, content: any) {
+  fmas(){
+    this.cantProd++;
+  }
+
+  fmenos(){
+    if (this.cantProd > 1) {
+      this.cantProd--;
+    }
+  }
+
+  fadicionar(idproducto: number, cantidad: number) {
     let idcliente = JSON.parse(localStorage.getItem('idcliente'));
     let nuevoproducto = new Carritos();
     nuevoproducto.idcliente = idcliente;
     nuevoproducto.idproducto = idproducto;
     nuevoproducto.cantidad = cantidad;
-    this._carritosService.adicionar(nuevoproducto).subscribe(data => {
-      this.fcantidadcarrito();
-      this.fsolicitarproductoinit();
-      this._modalService.open(content);
+
+    // this._carritosService.adicionar(nuevoproducto).subscribe(data => {
+    //   this.fcantidadcarrito();
+    //   this.fsolicitarproductoinit();
+    //   this._modalService.open(content);
+    // });
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¿Quieres agregar este producto al carrito?",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, agregar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._carritosService.adicionar(nuevoproducto).subscribe(data => {
+          this.fcantidadcarrito();
+          this.fsolicitarproductoinit();
+          Swal.fire( 'Agregado', 'El producto ha sido agregado al carrito.', 'success' );
+        });
+      }
     });
   }
 
@@ -151,7 +181,7 @@ export class DetalleComponent implements OnInit {
     let idcliente = JSON.parse(localStorage.getItem('idcliente'));
     this._carritosService.datosl(idcliente).subscribe(data => {
       this.carritos = data;
-      this._modalService.open(content);
+      this._modalService.open(content, { size: 'lg' });
     });
   };
 

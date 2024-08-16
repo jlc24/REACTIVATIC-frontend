@@ -13,6 +13,8 @@ import { Rubros } from '../_entidades/rubros';
 import { Empresas } from '../_entidades/empresas';
 import { ToastrService } from 'ngx-toastr';
 import { RUTA } from '../_config/application';
+import { Subrubros } from '../_entidades/subrubros';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-catalogo',
@@ -33,6 +35,7 @@ export class CatalogoComponent implements OnInit {
   cantidadcarrito: Carritos;
   carritos: Carritos[];
   rubros: Rubros[];
+  subrubros: Subrubros[];
   estalogueado: Boolean = false;
 
   datosempresa: Empresas;
@@ -46,6 +49,8 @@ export class CatalogoComponent implements OnInit {
 
   totalencarrito = 0;
   encarrito = "";
+
+  cantProd: number = 1;
 
   imagen: any;
 
@@ -89,6 +94,7 @@ export class CatalogoComponent implements OnInit {
   ngOnInit(): void {
     this.fdatos();
     this.frubros();
+    this.flistasubrubro();
     this.fcantidadcarrito();
     this.fsolicitarproductoinit();
   }
@@ -104,6 +110,17 @@ export class CatalogoComponent implements OnInit {
     this._catalogosService.cantidadporrubros().subscribe(data => {
       this.rubros = data;
     });
+  }
+
+  fsubrubro(id: number){
+    this._catalogosService.subrubros(id).subscribe(data => {
+      this.subrubros = data;
+    })
+  }
+  flistasubrubro(){
+    this._catalogosService.listaSubrubros().subscribe(data => {
+      this.subrubros = data;
+    })
   }
 
   fcantidad() {
@@ -123,11 +140,27 @@ export class CatalogoComponent implements OnInit {
     this.fdatos();
   }
 
+  fbuscarsubrubro(buscar: string){
+    this.pagina = 0;
+    this.buscar = buscar;
+    this.fdatos();
+  }
+
   fdatos() {
     this._catalogosService.datos(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
       this.fcantidad();
       this.datos = data;
     });
+  }
+
+  fmas(){
+    this.cantProd++;
+  }
+
+  fmenos(){
+    if (this.cantProd > 1) {
+      this.cantProd--;
+    }
   }
 
   limpiar() {
@@ -141,16 +174,33 @@ export class CatalogoComponent implements OnInit {
     this.fdatos();
   }
 
-  fadicionar(idproducto: number, cantidad: number, content: any) {
+  fadicionar(idproducto: number, cantidad: number) {
     let idcliente = JSON.parse(localStorage.getItem('idcliente'));
     let nuevoproducto = new Carritos();
     nuevoproducto.idcliente = idcliente;
     nuevoproducto.idproducto = idproducto;
     nuevoproducto.cantidad = cantidad;
-    this._carritosService.adicionar(nuevoproducto).subscribe(data => {
-      this.fcantidadcarrito();
-      this.fsolicitarproductoinit();
-      this._modalService.open(content);
+
+    // this._carritosService.adicionar(nuevoproducto).subscribe(data => {
+    //   this.fcantidadcarrito();
+    //   this.fsolicitarproductoinit();
+    //   this._modalService.open(content, { size: 'lg' });
+    // });
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¿Quieres agregar este producto al carrito?",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, agregar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._carritosService.adicionar(nuevoproducto).subscribe(data => {
+          this.fcantidadcarrito();
+          this.fsolicitarproductoinit();
+          Swal.fire( 'Agregado', 'El producto ha sido agregado al carrito.', 'success' );
+        });
+      }
     });
   }
 
@@ -172,7 +222,7 @@ export class CatalogoComponent implements OnInit {
     let idcliente = JSON.parse(localStorage.getItem('idcliente'));
     this._carritosService.datosl(idcliente).subscribe(data => {
       this.carritos = data;
-      this._modalService.open(content);
+      this._modalService.open(content, { size: 'lg' });
     });
   };
 

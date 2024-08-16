@@ -29,6 +29,13 @@ export class LocalidadesService {
     });
   }
 
+  localidades(id: number): Observable<Localidades[]>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Localidades[]>(`${this.ruta}/municipio/${id}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+
   adicionar(dato: Localidades): Observable<any> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
     return this._httpClient.post<void>(`${this.ruta}`, dato, {

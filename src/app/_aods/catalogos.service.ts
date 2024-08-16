@@ -7,6 +7,7 @@ import { Observable, throwError } from 'rxjs';
 import { RUTA, TOKEN } from '../_config/application';
 import { Productos } from '../_entidades/productos';
 import swal from 'sweetalert2';
+import { Subrubros } from '../_entidades/subrubros';
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +30,19 @@ export class CatalogosService {
     return this._httpClient.get<Productos>(`${this.ruta}/${id}`);
   }
 
+  rubros(): Observable<Rubros[]> {
+    return this._httpClient.get<Rubros[]>(`${this.ruta}/rubros`);
+  }
+
+  subrubros(id: number): Observable<Subrubros[]> {
+    return this._httpClient.get<Subrubros[]>(`${this.ruta}/subrubros/${id}`);
+  }
+  listaSubrubros(): Observable<Subrubros[]>{
+    return this._httpClient.get<Subrubros[]>(`${this.ruta}/listasubrubros`);
+  }
+
   cantidadporrubros(): Observable<Rubros[]> {
-    return this._httpClient.get<Rubros[]>(`${this.ruta}/cantidadporrubros`);
+    return this._httpClient.get<Rubros[]>(`${this.ruta}/rubros`);
   }
 
   procesar(dato: Procesar): Observable<any> {

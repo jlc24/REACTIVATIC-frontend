@@ -18,6 +18,9 @@ export class Personas {
     telefono: string;
     celular: string;
     correo: string;
+    formacion: number;
+    estadocivil: number;
+    hijos: number;
     estado: boolean;
     tipogenero: Tiposgeneros;
     tipodocumento: Tiposdocumentos;

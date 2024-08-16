@@ -9,85 +9,84 @@
                 <div class="col-md-12 mb-2">
                     <div class="input-group justify-content-end">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-primary mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Municipio</button>
-                            <!-- <div class="dropdown">
-                            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-bars"></i> Opciones
-                      </button>
+                            <button class="btn btn-outline-success mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Municipio</button>
+                            <div class="dropdown">
+                            <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="fa fa-bars"></i> Opciones
+                            </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
-                                <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+                                <button class="dropdown-item" ><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                                <button class="dropdown-item" ><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
                             </div>
-                        </div> -->
+                        </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- <div class="form-group row">
-                <div class="col-md-12">
-                    <div class="input-group">
-                        <span class="input-group-prepend">
-                            <button class="btn btn-primary mr-2" (click)="fadicionar(ab)">
-                                <i class="fa fa-plus"> Adicionar municipio</i>
-                            </button>
-                        </span>
-                        <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Municipio a buscar..." (keyup.enter)="fbuscar()" />
-                        <span class="input-group-prepend">
-                            <button class="btn btn-primary mr-2" (click)="fbuscar()">
-                                <i class="fa fa-search"></i>
-                            </button>
-                            <button class="btn btn-dark" (click)="limpiar()">
-                                <i class="fa fa-list"></i>
-                            </button>
-                        </span>
-                    </div>
-                </div>
-            </div> -->
-
-            <div class="form-group row">
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Municipio a buscar..." (keyup.enter)="fbuscar()" />
-                        <span class="input-group-prepend">
-                      <button class="btn btn-outline-primary mr-2" (click)="fbuscar()">
-                          <i class="fa fa-search"></i> Buscar
-                      </button>
-                      <button class="btn btn-outline-dark" (click)="limpiar()">
-                          <i class="fa fa-list"></i> Limpiar
-                      </button>
-                  </span>
-                    </div>
-                </div>
-                <div class="col-md-6 mt-1" *ngIf="total > cantidad">
-                    <ngb-pagination class="d-flex justify-content-end align-items-baseline pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)" size="sm"></ngb-pagination>
-                </div>
+            <div class="row justify-content-center">
+              <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
+                  <div class="input-group">
+                      <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Usuario a buscar..." (keyup)="fbuscar()" />
+                      <span class="input-group-prepend">
+                          <button class="btn btn-outline-danger mr-2 d-none d-md-inline" (click)="limpiar()">
+                              <i class="fa fa-times"></i> Limpiar
+                          </button>
+                          <button class="btn btn-outline-danger mr-2 d-inline d-md-none" (click)="limpiar()">
+                              <i class="fa fa-times"></i>
+                          </button>
+                          <button class="btn btn-outline-secondary d-none d-md-inline" (click)="fbuscar()">
+                              <i class="fa fa-search"></i> Buscar
+                          </button>
+                          <button class="btn btn-outline-secondary d-inline d-md-none" (click)="fbuscar()">
+                              <i class="fa fa-search"></i>
+                          </button>
+                      </span>
+                  </div>
+              </div>
             </div>
 
-            <div class="table-responsive" *ngIf="datos?.length > 0">
+          <div class="row justify-content-center mt-2">
+            <div class="col-md-8 col-sm-12">
+              <div class="table-responsive" *ngIf="datos?.length > 0">
                 <p class="text-right" *ngIf="total==1">Total: <b>{{total}} registro</b></p>
                 <p class="text-right" *ngIf="total>1">Total: <b>{{total}} registros</b></p>
-                <table class="table table-sm">
+                <table class="table table-bordered table-striped table-hover table-sm tabla-municipio">
                     <thead>
                         <tr class="table-primary">
-                            <th class="text-left">Nro.</th>
+                            <th class="text-center">Nro.</th>
                             <th class="text-left">Municipio</th>
-                            <th class="text-right">Operaciones</th>
+                            <th class="text-center">Estado</th>
+                            <th class="text-center">Fecha</th>
+                            <th class="text-center">Operaciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let _item of datos; let i = index">
-                            <td>{{ i + 1 }}</td>
+                            <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
                             <td class="text-left">
                                 <b>{{ _item.municipio }}</b>
-                                <div *ngIf="!sw">
+                                <!-- <div *ngIf="!sw">
                                     <app-localidades [idmunicipio]="_item.idmunicipio"></app-localidades>
-                                </div>
+                                </div> -->
                             </td>
-                            <td class="text-right">
-                                <button class="btn btn-outline-dark btn-sm mr-2" (click)="fmodificar(_item.idmunicipio, ab)">
-                                    <i class="fa fa-edit"> Editar municipio</i>
-                                </button>
+                            <td class="text-center">
+                              <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idmunicipio, !_item.estado)" >
+                                  {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                              </span>
+                            </td>
+                            <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group" aria-label="First group">
+                                  <button class="btn btn-outline-info btn-sm" title="Ver Localidades" (click)="fverlocalidades(_item.idmunicipio, ver)">
+                                    <i class="fa fa-eye"></i>
+                                  </button>
+                                  <button class="btn btn-outline-warning btn-sm" title="Editar Municipio" (click)="fmodificar(_item.idmunicipio, ab)">
+                                    <i class="fa fa-edit"></i>
+                                  </button>
+                                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Municipio" (click)="feliminar(_item.idmunicipio)">
+                                    <i class="fa fa-trash"></i>
+                                  </button>
+                              </div>
                             </td>
                         </tr>
 
@@ -98,10 +97,30 @@
                         </tr>
                     </tbody>
                 </table>
+              </div>
             </div>
-            <div class="table-responsive" *ngIf="total == 0">
+          </div>
+
+          <div class="row justify-content-center mt-2">
+            <div class="col-md-8">
+              <div class="table-responsive" *ngIf="total == 0">
+                <table class="table table-bordered table-striped table-hover table-sm">
+                  <thead>
+                      <tr class="table-primary">
+                          <th class="text-left">Nro.</th>
+                          <th class="text-left">Municipio</th>
+                          <th class="text-center">Estado</th>
+                          <th class="text-center">Fecha</th>
+                          <th class="text-center">Operaciones</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td colspan="5" class="text-center">No se encontraron datos.</td></tr>
+                  </tbody>
+                </table>
                 <p class="text-center"><b>Sin municipios</b></p>
-            </div>
+              </div>
+          </div>
         </div>
     </div>
 </div>
@@ -117,21 +136,141 @@
         <form [formGroup]="formulario" (ngSubmit)="faceptar()">
             <div class="form-group">
                 <label>Municipio <span class="text-danger"><b>*</b></span></label>
-                <input type="text" class="form-control" formControlName="municipio" [class.is-invalid]="f.municipio.errors && f.municipio.touched" />
+                <input type="text" class="form-control" formControlName="municipio" [class.is-invalid]="f.municipio.errors && f.municipio.touched" (input)="onInput($event, 'municipio', 'letrasyespacios')" autocomplete="no" required/>
                 <small *ngIf="f.municipio.errors&& f.municipio.touched" class="text-danger">
-                    El dato es obligatorio
+                  <ng-container *ngIf="f.municipio.errors.required">
+                    El dato es obligatorio.
+                  </ng-container>
+                  <ng-container *ngIf="f.municipio.errors.pattern">
+                    Solo se permiten letras y espacio.
+                  </ng-container>
+                  <ng-container *ngIf="f.municipio.errors.minlength">
+                    Debe ser mas de 5 caracteres.
+                  </ng-container>
+                  <ng-container *ngIf="f.municipio.errors.maxlength">
+                    No puede exceder los 50 caracteres.
+                  </ng-container>
                 </small>
             </div>
             <!-- <div id="mapa" class="map-container"> </div> -->
 
             <div class="text-center">
-                <button type="submit" class="btn btn-success m-2" [disabled]="!formulario.valid">
+                <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formulario.valid">
                     <i class="fa fa-save"></i> Grabar
                 </button>
-                <button type="button" class="btn btn-danger" (click)="fcancelar()">
+                <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()">
                     <i class="fa fa-times"></i> Cancelar
                 </button>
             </div>
         </form>
     </div>
+</ng-template>
+
+<ng-template #ver>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} de Localidades del Municipio "{{ dato.municipio }}"</h4>
+    </div>
+    <div class="modal-body">
+      <div class="col-12 text-center">
+        <h3>Localidades</h3>
+      </div>
+      <div class="col-12 text-right">
+        <button class="btn btn-sm btn-outline-success" (click)="faddlocal(addlocal, dato)">
+          <i class="fa fa-plus"></i> Agregar Localidad
+        </button>
+      </div>
+      <div class="col-12 mt-2 table-responsive">
+        <table class="table table-sm table-bordered table-hover tabla-localidad">
+          <thead class="table-success">
+            <tr>
+              <th>Nro</th>
+              <th>Localidad</th>
+              <th class="text-center">Estado</th>
+              <th class="text-center">Fecha</th>
+              <th class="text-center">Opcion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let _local of localidades; let i = index">
+              <td class="text-right">{{ i + 1 }}</td>
+              <td>{{ _local.localidad }}</td>
+              <td class="text-center">
+                <span class="estado badge {{ _local.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_local.idlocalidad, !_local.estado)" >
+                  {{ _local.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                </span>
+              </td>
+              <td class="text-center">{{ _local.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="text-center">
+                <div class="btn-group" role="group" aria-label="First group">
+                  
+                  <button class="btn btn-outline-warning btn-sm" title="Editar Localidad" (click)="fmodLocal(_local.idlocalidad, addlocal)">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Localidad">
+                    <i class="fa fa-trash"></i>
+                  </button>
+              </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar</button>
+    </div>
+</ng-template>
+
+<ng-template #addlocal>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Localidad</h4>
+      <div class="alert alert-info" role="alert">
+          Estimado usuario Los campos remarcados con * son necesarios.
+      </div>
+  </div>
+  <div class="modal-body">
+      <form [formGroup]="formlocalidad" (ngSubmit)="faceptarLocal()">
+          <div class="form-group">
+              <label>Municipio: <span class="text-danger"><b>*</b></span></label>
+              <select class="form-control form-control-sm" formControlName="idmunicipio" >
+                <option *ngFor="let _mun of datos" [value]="_mun.idmunicipio">
+                  {{ _mun.municipio }}
+                </option>
+              </select>
+              <small *ngIf="fl.idmunicipio.errors&& fl.idmunicipio.touched" class="text-danger">
+                  <ng-container *ngIf="fl.idmunicipio.errors.required">
+                      El dato es obligatorio.
+                  </ng-container>
+              </small>
+          </div>
+          <div class="form-group">
+              <label>Localidad: <span class="text-danger"><b>*</b></span></label>
+              <input type="text" class="form-control" formControlName="localidad" [class.is-invalid]="fl.localidad.errors && fl.localidad.touched" (input)="onInput($event, 'localidad', 'letrasyespacios')" autocomplete="no" required/>
+              <small *ngIf="fl.localidad.errors&& fl.localidad.touched" class="text-danger">
+                <ng-container *ngIf="fl.localidad.errors.required">
+                  El dato es obligatorio.
+                </ng-container>
+                <ng-container *ngIf="fl.localidad.errors.pattern">
+                  Solo se permiten letras y espacio.
+                </ng-container>
+                <ng-container *ngIf="fl.localidad.errors.minlength">
+                  Debe ser mas de 5 caracteres.
+                </ng-container>
+                <ng-container *ngIf="fl.localidad.errors.maxlength">
+                  No puede exceder los 50 caracteres.
+                </ng-container>
+              </small>
+          </div>
+          <!-- <div id="mapa" class="map-container"> </div> -->
+
+          <div class="text-center">
+              <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formlocalidad.valid">
+                  <i class="fa fa-save"></i> Grabar
+              </button>
+              <button type="button" class="btn btn-outline-secondary" (click)="fcancelarLocal()">
+                  <i class="fa fa-times"></i> Cancelar
+              </button>
+          </div>
+      </form>
+  </div>
 </ng-template>

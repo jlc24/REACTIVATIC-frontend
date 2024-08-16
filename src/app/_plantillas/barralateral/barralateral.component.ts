@@ -2,6 +2,7 @@ import { AccesoService } from 'src/app/_aods/acceso.service';
 import { MenusService } from './../../_aods/menus.service';
 import { Menus } from 'src/app/_entidades/menus';
 import { Component, OnInit } from '@angular/core';
+import { Roles } from 'src/app/_entidades/roles';
 
 @Component({
   selector: 'app-barralateral',
@@ -12,6 +13,7 @@ export class BarralateralComponent implements OnInit {
 
   menus: Menus[];
   nombre: string;
+  rol: string;
 
   constructor(
     private _menusService: MenusService,
@@ -31,6 +33,7 @@ export class BarralateralComponent implements OnInit {
 
   fdatosusuario() {
     this.nombre=this._accesoService.nombreLogueado();
+    this.rol = this._accesoService.rolLogueado();
   }
 
 }

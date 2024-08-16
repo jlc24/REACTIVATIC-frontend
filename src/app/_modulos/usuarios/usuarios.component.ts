@@ -259,7 +259,7 @@ export class UsuariosComponent implements OnInit {
         ],
       ],
       usuario: [
-        { value: user.usuario, disabled: disabled },
+        user.usuario,
         [
           Validators.required,
           Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1]+$'),
@@ -267,20 +267,42 @@ export class UsuariosComponent implements OnInit {
         ]
       ],
       clave: [
-        { value: user.clave ? '**********' : '', disabled: disabled},
+        user.clave ? '**********' : '',
         [
           Validators.required,
-          Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1]+$'),
           Validators.minLength(8),
           Validators.maxLength(20)
         ]
       ],
       idrol: [
-        { value: user.rol.idrol, disabled: disabled},
+        { value: user.rol.idrol, disabled: disabled },
         [
           Validators.required
         ]
       ]
+    });
+    this.formulario.get('primerapellido')?.valueChanges.subscribe(() => this.generateUserAndPassword());
+    this.formulario.get('segundoapellido')?.valueChanges.subscribe(() => this.generateUserAndPassword());
+    this.formulario.get('primernombre')?.valueChanges.subscribe(() => this.generateUserAndPassword());
+    this.formulario.get('dip')?.valueChanges.subscribe(() => this.generateUserAndPassword());
+  }
+
+  generateUserAndPassword() {
+    const primerApellido = this.formulario.get('primerapellido')?.value || '';
+    const segundoApellido = this.formulario.get('segundoapellido')?.value || '';
+    const primerNombre = this.formulario.get('primernombre')?.value || '';
+    const dip = this.formulario.get('dip')?.value || '';
+
+    const parteUsuario = primerApellido.slice(0, 2) + segundoApellido.slice(0, 2) + primerNombre.slice(0, 2);
+
+    const parteDIP = dip.slice(-3);
+
+    const usuario = parteUsuario.toLowerCase() + parteDIP;
+    const clave = parteUsuario.toLowerCase() + parteDIP;
+
+    this.formulario.patchValue({
+      usuario: usuario,
+      clave: clave
     });
   }
 
@@ -378,6 +400,10 @@ export class UsuariosComponent implements OnInit {
       return value ? value.toUpperCase() : '';
     }
     this.submitted = true;
+
+    this.dato = new Personas();
+    this.dato.usuario = new Usuarios();
+    this.dato.rol = new Roles();
 
     this.dato.primerapellido = toUpperCaseDefined(this.formulario.value.primerapellido);
     this.dato.segundoapellido = toUpperCaseDefined(this.formulario.value.segundoapellido);
