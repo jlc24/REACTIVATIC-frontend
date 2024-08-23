@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { AccesoService } from 'src/app/_aods/acceso.service';
 import { EnlacesService } from 'src/app/_aods/enlaces.service';
 import { EnlacesrolesService } from 'src/app/_aods/enlacesroles.service';
 import { PersonasService } from 'src/app/_aods/personas.service';
@@ -9,6 +10,7 @@ import { Enlaces } from 'src/app/_entidades/enlaces';
 import { Enlacesroles } from 'src/app/_entidades/enlacesroles';
 import { Personas } from 'src/app/_entidades/personas';
 import { Roles } from 'src/app/_entidades/roles';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-roles',
@@ -38,11 +40,26 @@ export class RolesComponent implements OnInit {
 
   existe: boolean;
 
+  esCargoAdministrador: boolean = false;
+  esCargoSecretario: boolean = false;
+  esCargoDirector: boolean = false;
+  esCargoApoyo: boolean = false;
+  esCargoEncargado: boolean = false;
+  esCargomonitoreo: boolean = false;
+  esCargoTecnologia: boolean = false;
+  esCargoMarketing: boolean = false;
+  esCargoTextil: boolean = false;
+  esCargoArtesania: boolean = false;
+  esCargoAlimento: boolean = false;
+  esCargoChofer: boolean = false;
+  esCargoPasante: boolean = false;
+
   constructor(
     private _rolesService: RolesService,
     private _enlacesService: EnlacesService,
     private _enlacesrolesService: EnlacesrolesService,
     private _personasService: PersonasService,
+    private _accesoService: AccesoService,
     private _fb: FormBuilder,
     config: NgbModalConfig,
     private _modalService: NgbModal
@@ -53,6 +70,18 @@ export class RolesComponent implements OnInit {
 
   ngOnInit(): void {
     this.fdatos();
+    this.esCargoAdministrador = this._accesoService.esCargoAdministrador();
+    this.esCargoSecretario = this._accesoService.esCargoSecretario();
+    this.esCargoDirector = this._accesoService.esCargoDirector();
+    this.esCargoApoyo = this._accesoService.esCargoApoyo();
+    this.esCargoEncargado = this._accesoService.esCargoEncargado();
+    this.esCargomonitoreo = this._accesoService.esCargoMonitoreo();
+    this.esCargoTecnologia = this._accesoService.esCargoTecnologia();
+    this.esCargoMarketing = this._accesoService.esCargoMarketing();
+    this.esCargoTextil = this._accesoService.esCargoTextil();
+    this.esCargoArtesania = this._accesoService.esCargoArtesania();
+    this.esCargoAlimento = this._accesoService.esCargoAlimentos();
+    this.esCargoChofer = this._accesoService.esCargoChofer();
   }
 
   fbuscar() {
@@ -193,25 +222,70 @@ export class RolesComponent implements OnInit {
   }
 
   feliminar(id: number){
-
+    Swal.fire({
+      title: 'Estás seguro?',
+      icon: 'warning',
+      text: 'No podrás revertir el borrado de este dato!',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Borrar',
+    })
+    .then((result) => {
+      if (result.value) {
+        Swal.fire('Error', 'Procedimiento NO autorizado, por favor contacte al Administrador', 'error');
+      }
+    });
   }
 
-  fverificar(idrol: number, idenlace: number){
-    // this.enlacerol.idenlace = idenlace;
-    // this.enlacerol.idrol = idrol;
-    // this._enlacesrolesService.verificar(idrol, idenlace).subscribe(existe => {
-    //   if (existe) {
-    //     this._enlacesrolesService.modificar(this.enlacerol).subscribe;
-    //   }
-    // })
+  faceptar(): void{
+    this.submitted = true;
+    this.rol.rol = this.formulario.value.rol;
+    this.rol.nombrerol = this.formulario.value.nombrerol;
+
+    if (this.estado === 'Modificar') {
+      this._rolesService.modificar(this.rol).subscribe(data => {
+        this.fdatos();
+        this._modalService.dismissAll();
+        Swal.fire('Exito', 'Rol modificado correctamente', 'success');
+      });
+    }else{
+      this._rolesService.adicionar(this.rol).subscribe(data => {
+        this.fdatos();
+        this._modalService.dismissAll();
+        Swal.fire('Exito', 'Rol adicionado correctamente', 'success');
+      });
+    }
   }
 
-  faceptar(){
 
-  }
+  faceptarenlace(idrol: number, idenlace: number, event: Event) {
+    const estado = (event.target as HTMLInputElement).checked;
+    this.enlacerol = new Enlacesroles();
 
-  faceptarenlace(idrol: number, idenlace: number, estado: boolean){
-    alert(idrol + ' ' + idenlace + ' ' + !estado);
+    this.enlacerol.idenlace = idenlace;
+    this.enlacerol.idrol = idrol;
+
+    if (estado) {
+      this._enlacesrolesService.adicionar(this.enlacerol).subscribe({
+        next: () => {
+          this.fenlaces(idrol);
+          Swal.fire('Exito', 'Enlace adicionado exitosamente', 'success');
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo adicionar el enlace-rol', 'error');
+        }
+      });
+    } else {
+      this._enlacesrolesService.eliminar(this.enlacerol).subscribe({
+        next: () => {
+          this.fenlaces(idrol);
+          Swal.fire('Exito', 'Enlace eliminado exitosamente', 'success');
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo eliminar el enlace-rol', 'error');
+        }
+      });
+    }
   }
 
   fcancelar() {

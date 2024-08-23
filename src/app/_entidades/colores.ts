@@ -6,5 +6,6 @@ export class Colores {
   color: string;
   estado: boolean;
   created_at: Date;
+  
   productos: Productos;
 }

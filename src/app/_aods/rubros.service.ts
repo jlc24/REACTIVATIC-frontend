@@ -73,6 +73,13 @@ export class RubrosService {
     });
   }
 
+  datoslrubro(rubro: string): Observable<Rubros[]>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Rubros[]>(`${this.ruta}/l/rubro?rubro=${rubro}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+
   cambiarestado(dato: { idrubro: number, estado: boolean}): Observable<any>{
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
     return this._httpClient.put<void>(`${this.ruta}/cambiarestado`, dato, {

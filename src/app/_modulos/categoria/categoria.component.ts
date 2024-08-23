@@ -34,6 +34,7 @@ export class CategoriaComponent implements OnInit {
 
   esadmin: boolean = false;
   essddpi: boolean = false;
+  esdpeic: boolean = false;
   esreactivatic: boolean = false;
 
   modalRefCategoria: NgbModalRef;
@@ -66,6 +67,7 @@ export class CategoriaComponent implements OnInit {
     this.fdatos();
     this.esadmin = this._accesoService.esRolAdmin();
     this.essddpi = this._accesoService.esRolSddpi();
+    this.esdpeic = this._accesoService.esRolDpeic();
     this.esreactivatic = this._accesoService.esRolReactivatic();
   }
 
@@ -151,7 +153,7 @@ export class CategoriaComponent implements OnInit {
   fformEnlace(enlace: Enlaces, disabled:boolean = false){
     this.formEnlace = this._fbe.group({
       idcategoria: [
-        { value: enlace.idcategoria, disabled: disabled },
+        enlace.idcategoria,
         [
           Validators.required
         ]
@@ -218,7 +220,7 @@ export class CategoriaComponent implements OnInit {
         input = input.replace(/[^a-z\s\-]/g, '');
         break;
       case 'division':
-        input = input.replace(/[^/]/g, '');
+        input = input.replace(/[^a-zA-Z/]/g, '');
         break;
     }
     // this.formulario.get(controlName)?.setValue(input, { emitEvent: false });
@@ -230,6 +232,10 @@ export class CategoriaComponent implements OnInit {
     if (this.formEnlace.get(controlName)) {
       this.formEnlace.get(controlName)?.setValue(input, { emitEvent: false });
     }
+  }
+
+  getFormControls(): string[] {
+    return Object.keys(this.formEnlace.controls);
   }
 
   fadicionar(content: any) {

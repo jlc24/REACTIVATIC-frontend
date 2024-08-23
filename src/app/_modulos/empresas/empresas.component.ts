@@ -5,7 +5,7 @@ import { Asociaciones } from './../../_entidades/asociaciones';
 import { LocalidadesService } from 'src/app/_aods/localidades.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NgbModal, NgbModalConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { EmpresasService } from 'src/app/_aods/empresas.service';
 import { Empresas } from 'src/app/_entidades/empresas';
 import swal from 'sweetalert2';
@@ -65,6 +65,7 @@ export class EmpresasComponent implements OnInit {
   numPaginas:number = 0;
   cantidad:number = 10;
   buscar:string = '';
+  rubro: string = '';
   buscarRep:string = '';
   total:number = 0;
   estado:string = '';
@@ -81,6 +82,7 @@ export class EmpresasComponent implements OnInit {
   modalRefPersona: NgbModalRef;
 
   step: number = 1;
+  stepRep: number = 1;
 
   formacionMap: { [key: number]: string } = {
     1: 'Inicial',
@@ -106,13 +108,70 @@ export class EmpresasComponent implements OnInit {
     4: '4 Hijos',
     5: '5 a mas Hijos'
   }
+  capacidadMap: { [key: number]: string} = {
+    1: '1 A 2',
+    2: '3 A 5',
+    3: '6 A 10',
+    4: '11 A 15',
+    5: '16 A 25',
+    6: '26 A 50',
+    7: '> 50'
+  }
+
+  motivoMap: { [key: number]: string } = {
+    1: 'POR INFLUENCIA FAMILIAR',
+    2: 'POR EXPERIENCIA LABORAL',
+    3: 'POR DESPIDO DE TRABAJO',
+    4: 'POR LA DEMANDA DEL MERCADO',
+    5: 'OTRO'
+  }
+
+  involucradosMap: { [key: number]: string } = {
+    1: 'PAREJA',
+    2: 'HIJOS',
+    3: 'HERMANOS',
+    4: 'PADRES',
+    5: 'PRIMOS',
+    6: 'OTROS'
+  }
+
+  trabajadoresMap: { [key: number]: string } = {
+    1: '1 A 2',
+    2: '3 A 4',
+    3: '7 A 8',
+    4: '9 A 10',
+    5: '10 A 11',
+    6: '12 A  MAS'
+  }
+
+  feriasMap: { [key: number]: string } = {
+    1: 'LOCAL',
+    2: 'NACIONAL',
+    3: 'MUNICIPAL',
+    4: 'INTERNACIONAL'
+  }
 
   //copiarDatos: boolean = false;
   mostrarOtroCampo = false;
   mostrarInvolucrados = false;
   mostrarOtro = false;
 
+  esCargoAdministrador: boolean = false;
+  esCargoSecretario: boolean = false;
+  esCargoDirector: boolean = false;
+  esCargoApoyo: boolean = false;
+  esCargoEncargado: boolean = false;
+  esCargomonitoreo: boolean = false;
+  esCargoTecnologia: boolean = false;
+  esCargoMarketing: boolean = false;
+  esCargoTextil: boolean = false;
+  esCargoArtesania: boolean = false;
+  esCargoAlimento: boolean = false;
+  esCargoChofer: boolean = false;
+  esCargoPasante: boolean = false;
+
   constructor(
+    private _accesoService: AccesoService,
     private _usuariosService: UsuariosService,
     private _personasService: PersonasService,
     private _documentoService: TiposdocumentosService,
@@ -188,18 +247,31 @@ export class EmpresasComponent implements OnInit {
       estadocivil: [''],
       hijos: [''],
       celular: [''],
+      telefono: [''],
+      direccion: [''],
+      correo: [''],
       usuario: [''],
       clave: ['']
 
     });
-    // this.formEmpresa.get('copiarDatos')?.valueChanges.subscribe((value) => {
-    //   this.copiarDatosRepresentante(value);
-    // });
     this.fdatos();
     this.frubros();
     this.fmunicipios();
     this.fasociaciones();
     this.frepresentantes();
+
+    this.esCargoAdministrador = this._accesoService.esCargoAdministrador();
+    this.esCargoSecretario = this._accesoService.esCargoSecretario();
+    this.esCargoDirector = this._accesoService.esCargoDirector();
+    this.esCargoApoyo = this._accesoService.esCargoApoyo();
+    this.esCargoEncargado = this._accesoService.esCargoEncargado();
+    this.esCargomonitoreo = this._accesoService.esCargoMonitoreo();
+    this.esCargoTecnologia = this._accesoService.esCargoTecnologia();
+    this.esCargoMarketing = this._accesoService.esCargoMarketing();
+    this.esCargoTextil = this._accesoService.esCargoTextil();
+    this.esCargoArtesania = this._accesoService.esCargoArtesania();
+    this.esCargoAlimento = this._accesoService.esCargoAlimentos();
+    this.esCargoChofer = this._accesoService.esCargoChofer();
   }
 
   copiarDatosRepresentante(copiar: boolean) {
@@ -244,6 +316,21 @@ export class EmpresasComponent implements OnInit {
   getHijosDescription(value: number): string {
     return this.hijosMap[value] || 'Desconocido';
   }
+  getCapacidadDescription(value: number): string{
+    return this.capacidadMap[value] || 'Desconocido';
+  }
+  getMotivoDescription(value: number): string{
+    return this.motivoMap[value] || 'Desconocido';
+  }
+  getInvolucradosDescription(value: number): string{
+    return this.involucradosMap[value] || 'Desconocido';
+  }
+  getTrabajadoresDescription(value: number): string{
+    return this.trabajadoresMap[value] || 'Desconocido';
+  }
+  getFeriasDescription(value: number): string{
+    return this.feriasMap[value] || 'Desconocido';
+  }
 
   nextStep() {
     if (this.step < 5) {
@@ -261,6 +348,29 @@ export class EmpresasComponent implements OnInit {
     this.step = step;
   }
 
+  nextStepRep() {
+    if (this.stepRep < 5) {
+      this.stepRep++;
+    }
+  }
+
+  prevStepRep() {
+    if (this.stepRep > 1) {
+      this.stepRep--;
+    }
+  }
+
+  goToStepRep(stepRep: number) {
+    this.stepRep = stepRep;
+  }
+
+  getFormControls(): string[] {
+    return Object.keys(this.formEmpresa.controls);
+  }
+  getFormControlsRep(): string[] {
+    return Object.keys(this.formRep.controls);
+  }
+
   finish() {
     alert('Wizard completed!');
   }
@@ -272,19 +382,37 @@ export class EmpresasComponent implements OnInit {
   }
 
   flocalidades(id: number) {
-    this._localidadesService.localidades(id).subscribe( data => {
+    this._localidadesService.datosl(id).subscribe( data => {
       this.localidades = data;
     });
   }
 
   frubros(){
-    this._rubrosService.datosl().subscribe((data) => {
-      this.rubros = data;
-    })
+    this.esCargoTextil = this._accesoService.esCargoTextil();
+    this.esCargoArtesania = this._accesoService.esCargoArtesania();
+    this.esCargoAlimento = this._accesoService.esCargoAlimentos();
+
+    if (this.esCargoTextil) {
+      this._rubrosService.datoslrubro('TEXTIL').subscribe((data) => {
+        this.rubros = data;
+      });
+    }else if (this.esCargoArtesania) {
+      this._rubrosService.datoslrubro('ARTESANIAS').subscribe((data) => {
+        this.rubros = data;
+      });
+    }else if (this.esCargoAlimento) {
+      this._rubrosService.datoslrubro('ALIMENTOS').subscribe((data) => {
+        this.rubros = data;
+      })
+    }else{
+      this._rubrosService.datosl().subscribe((data) => {
+        this.rubros = data;
+      })
+    }
   }
 
   fsubrubros(id: number) {
-    this._subrubrosService.subrubros(id).subscribe( data => {
+    this._subrubrosService.datosl(id).subscribe( data => {
       this.subrubros = data;
     });
   }
@@ -334,7 +462,7 @@ export class EmpresasComponent implements OnInit {
   }
 
   fcantidad() {
-    this._empresasService.cantidad(this.buscar).subscribe((data) => {
+    this._empresasService.cantidad(this.buscar, this.rubro).subscribe((data) => {
       this.total = data;
     });
   }
@@ -345,10 +473,25 @@ export class EmpresasComponent implements OnInit {
   }
 
   fdatos() {
-    this._empresasService.datos(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
-        this.fcantidad();
-        this.datos = data;
-      });
+    this.esCargoTextil = this._accesoService.esCargoTextil();
+    this.esCargoArtesania = this._accesoService.esCargoArtesania();
+    this.esCargoAlimento = this._accesoService.esCargoAlimentos();
+    this.esCargoTecnologia = this._accesoService.esCargoTecnologia();
+    this.esCargoEncargado = this._accesoService.esCargoEncargado();
+    this.esCargoAdministrador = this._accesoService.esCargoAdministrador();
+    if (this.esCargoTextil) {
+      this.rubro = 'TEXTIL';
+    }else if (this.esCargoArtesania) {
+      this.rubro = 'ARTESANIA';
+    }else if(this.esCargoAlimento){
+      this.rubro = 'ALIMENTOS';
+    }else{
+      this.rubro = ''
+    }
+    this._empresasService.datos(this.pagina, this.cantidad, this.buscar, this.rubro).subscribe((data) => {
+      this.fcantidad();
+      this.datos = data;
+    });
   }
 
   limpiar() {
@@ -404,6 +547,7 @@ export class EmpresasComponent implements OnInit {
         [
           Validators.required,
           Validators.pattern('^[0-9]+$'),
+          Validators.minLength(5),
           Validators.maxLength(15)
         ]
       ],
@@ -441,9 +585,33 @@ export class EmpresasComponent implements OnInit {
       celular: [
         dato.celular,
         [
-          Validators.required,
+          //Validators.required,
           Validators.pattern('^[0-9]+$'),
           Validators.maxLength(15)
+        ],
+      ],
+      telefono: [
+        dato.telefono,
+        [
+          Validators.pattern('^[0-9]+$'),
+          Validators.maxLength(15)
+        ],
+      ],
+      direccion: [
+        dato.direccion,
+        [
+          //Validators.required,
+          Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1\\s.,#-]+$'),
+          Validators.minLength(5),
+          Validators.maxLength(255)
+        ],
+      ],
+      correo: [
+        dato.correo,
+        [
+          Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'),
+          Validators.minLength(5),
+          Validators.maxLength(255)
         ],
       ],
       usuario: [
@@ -511,7 +679,7 @@ export class EmpresasComponent implements OnInit {
       fechareg: [
         dato.fechareg,
         [
-          Validators.required,
+          //Validators.required,
         ]
       ],
       empresa: [
@@ -535,7 +703,6 @@ export class EmpresasComponent implements OnInit {
       nit: [
         dato.nit,
         [
-          Validators.required,
           Validators.pattern('^[0-9]+$'),
           Validators.minLength(5),
           Validators.maxLength(20)
@@ -554,20 +721,28 @@ export class EmpresasComponent implements OnInit {
         ]
       ],
       idasociacion: [
-        dato.idasociacion
+        dato.asociacion?.idasociacion
       ],
       celular: [
         dato.celular,
         [
-          Validators.required,
-          Validators.pattern('^[0-9]+$')
+          //Validators.required,
+          Validators.pattern('^[0-9]+$'),
+          Validators.maxLength(20)
+        ]
+      ],
+      telefono: [
+        dato.telefono,
+        [
+          Validators.pattern('^[0-9]+$'),
+          Validators.maxLength(20)
         ]
       ],
       idrubro: [
         dato.subrubro?.idrubro
       ],
       idsubrubro: [
-        dato.idsubrubro,
+        dato.subrubro?.idsubrubro,
         [
           Validators.required
         ]
@@ -612,7 +787,7 @@ export class EmpresasComponent implements OnInit {
         dato.localidad?.idmunicipio
       ],
       idlocalidad:[
-        dato.idlocalidad,
+        dato.localidad?.idlocalidad,
         [
           Validators.required
         ]
@@ -621,7 +796,10 @@ export class EmpresasComponent implements OnInit {
         dato.zona
       ],
       direccion:[
-        dato.direccion
+        dato.direccion,
+        [
+          Validators.required
+        ]
       ],
       referencia:[
         dato.referencia
@@ -661,6 +839,7 @@ export class EmpresasComponent implements OnInit {
       this.mostrarOtroCampo = value === '5';
       if (!this.mostrarOtroCampo) {
         this.formEmpresa.get('otromotivo').setValue('');
+        this.mostrarOtroCampo = false;
       }
     });
 
@@ -672,11 +851,11 @@ export class EmpresasComponent implements OnInit {
       }
     });
 
-    // Escuchar cambios en el select "Involucrados"
     this.formEmpresa.get('involucrados').valueChanges.subscribe(value => {
       this.mostrarOtro = value === '6';
       if (!this.mostrarOtro) {
         this.formEmpresa.get('otrosinvolucrados').setValue('');
+        this.mostrarOtro = false;
       }
     });
   }
@@ -775,6 +954,7 @@ export class EmpresasComponent implements OnInit {
     this.estado = 'Adicionar';
     this.persona = new Personas();
     this.persona.usuario = new Usuarios();
+    this.goToStepRep(1);
     this.fformRep(this.persona);
     this.modalRefPersona = this._modalService.open(content, {
       backdrop: 'static',
@@ -788,8 +968,10 @@ export class EmpresasComponent implements OnInit {
     this.goToStep(1);
     this._empresasService.dato(id).subscribe((data) => {
       this.dato = data;
-      this.fselrepresentante(this.dato.idrepresentante);
       this.fformEmpresa(this.dato);
+      this.fselrepresentante(this.dato.idrepresentante);
+      this.fsubrubros(data.subrubro?.idrubro);
+      this.flocalidades(data.localidad?.idmunicipio);
       this.modalRefEmpresa = this._modalService.open(content, {
         backdrop: 'static',
         keyboard: false,
@@ -798,10 +980,21 @@ export class EmpresasComponent implements OnInit {
     });
   }
 
+  fver(id: number, content: any) {
+    this.estado = 'Ver';
+    this._empresasService.dato(id).subscribe((data) => {
+      this.dato = data;
+      this.modalRefEmpresa = this._modalService.open(content, {
+        backdrop: 'static',
+        keyboard: false,
+        size: 'xl',
+        scrollable: true
+      })
+    })
+  }
+
   faceptar(): void {
     this.submitted = true;
-
-    console.log('Formulario Valores:', this.formEmpresa.value);
 
     this.dato.idsubrubro = this.formEmpresa.value.idsubrubro;
     this.dato.idlocalidad = this.formEmpresa.value.idlocalidad;
@@ -840,26 +1033,23 @@ export class EmpresasComponent implements OnInit {
     this.dato.transporte = this.formEmpresa.value.transporte;
     this.dato.fechareg = this.formEmpresa.value.fechareg;
     this.dato.razonsocial = this.formEmpresa.value.razonsocial;
+    this.dato.registrosenasag = this.formEmpresa.value.registrosenasag;
 
-    //this.dato.registrosenasag = this.formEmpresa.value.registrosenasag;
-    // if (this.estado === 'Modificar') {
-    //   this._empresasService.modificar(this.dato).subscribe((data) => {
-    //     this.fcargar(this.dato.idempresa);
-    //     this.fdatos();
-    //     this.modalRefEmpresa.dismiss();
-    //     swal.fire('Dato modificado', 'Dato modificado con exito', 'success');
-    //   });
-    // } else {
-    //   this._empresasService.adicionar(this.dato).subscribe((data) => {
-    //     this.fcargar(this.dato.idempresa);
-    //     this.fdatos();
-    //     this.modalRefEmpresa.dismiss();
-    //     swal.fire('Dato adicionado', 'Dato modificado con exito', 'success');
-    //   });
-    // }
-
-    console.log(this.dato);
-
+    if (this.estado === 'Modificar') {
+      this._empresasService.modificar(this.dato).subscribe((data) => {
+        //this.fcargar(this.dato.idempresa);
+        this.fdatos();
+        this.modalRefEmpresa.dismiss();
+        swal.fire('Dato modificado', 'Dato modificado con exito', 'success');
+      });
+    } else {
+      this._empresasService.adicionar(this.dato).subscribe((data) => {
+        //this.fcargar(this.dato.idempresa);
+        this.fdatos();
+        this.modalRefEmpresa.dismiss();
+        swal.fire('Dato adicionado', 'Dato modificado con exito', 'success');
+      });
+    }
   }
 
   faceptarRep(): void {
@@ -892,24 +1082,24 @@ export class EmpresasComponent implements OnInit {
     }
   }
 
-  // fseleccionarArchivo(event) {
-  //   const reader = new FileReader();
-  //   this.archivoseleccionado = event.target.files[0];
-  //   if (event.target.files[0] && event.target.files.length) {
-  //     const file = event.target.files[0];
-  //     reader.readAsDataURL(file);
-  //     reader.onload = () => {
-  //       this.imageSrc = reader.result as string;
-  //     };
-  //   }
+  fseleccionarArchivo(event) {
+    const reader = new FileReader();
+    this.archivoseleccionado = event.target.files[0];
+    if (event.target.files[0] && event.target.files.length) {
+      const file = event.target.files[0];
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.imageSrc = reader.result as string;
+      };
+    }
 
-  // }
+  }
 
-  // fcargar(id: number) {
-  //   this._empresasService.cargarImagene(this.archivoseleccionado, id).subscribe((data) => {
-  //     this.fdatos();
-  //   });
-  // }
+  fcargar(id: number) {
+    this._empresasService.cargarImagene(this.archivoseleccionado, id).subscribe((data) => {
+      this.fdatos();
+    });
+  }
 
   fcancelar() {
     if (this.modalRefEmpresa) {
@@ -936,11 +1126,31 @@ export class EmpresasComponent implements OnInit {
       })
       .then((result) => {
         if (result.value) {
-          this._empresasService.eliminar(id).subscribe((data) => {
-            this.fdatos();
-          });
+          // this._empresasService.eliminar(id).subscribe((data) => {
+          //   this.fdatos();
+          // });
+          swal.fire('Error', 'Procedimiento NO autorizado, por favor contacte al Administrador', 'error');
         }
       });
+  }
+
+  fcambiarestado(idempresa: number, estado: boolean){
+    swal.fire({
+      title: !estado ? '¿Está seguro de deshabilitar?' : '¿Está seguro de habilitar?',
+      icon: 'warning',
+      text: !estado ? 'La localidad NO se podrá utilizar para registros.' : 'La localidad se podrá utilizar para registros.',
+      showCancelButton: true,
+      cancelButtonText: 'cancelar',
+      confirmButtonText: 'Cambiar',
+    }).then((result) => {
+      if (result.value) {
+        // this._localicadesService.cambiarestado({ idlocalidad, estado }).subscribe( response => {
+        //   this.fdatos();
+        //   swal.fire('Cambio realizado', 'El estado de la localidad ha sido cambiado con éxito.', 'success');
+        // });
+        swal.fire('Error', 'Procedimiento NO autorizado, por favor contacte al Administrador', 'error');
+      }
+    });
   }
 
   fdatosXLS() {
@@ -968,5 +1178,15 @@ export class EmpresasComponent implements OnInit {
       return url;
     });
   }
+
+  fcambiarimagen(contenido: any) {
+    this.estado = 'Actualizar';
+    this.modalRefPersona =  this._modalService.open(contenido, {
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+
 }
 

@@ -1,652 +1,700 @@
-<app-cabeceratitulos [titulo]="'Empresas'" [descripcion]="'Lista de empresas'" [icono]="'industry'" [opcion]="'empresas'">
+<app-cabeceratitulos [titulo]="'Unidades Productivas'" [descripcion]="'Lista de Unidades Productivas'" [icono]="'industry'" [opcion]="'empresas'">
 </app-cabeceratitulos>
 
 <div class="row">
-    <div class="col-md-12">
-        <div class="tile">
-
-            <div class="row">
-                <div class="col-md-12 mb-2">
-                    <div class="input-group justify-content-end">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-outline-success mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Empresa</button>
-                            <div class="dropdown">
-                                <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <i class="fa fa-bars"></i> Opciones
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
-                                    <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  <div class="col-md-12">
+    <div class="tile">
+      <div class="row justify-content-center">
+        <h4>LISTA DE UNIDADES PRODUCTIVAS</h4>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mb-2">
+          <div class="input-group justify-content-first">
+            <div class="input-group-prepend">
+              <button class="btn btn-sm btn-outline-success mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Empresa</button>
+              <div class="dropdown">
+                <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-bars"></i> Opciones
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                  <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
                 </div>
-            </div>
-
-            <div class="row justify-content-center">
-              <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
-                  <div class="input-group">
-                      <input type="text" class="form-control mr-2" name="buscar" [(ngModel)]="buscar" placeholder="Usuario a buscar..." (keyup)="fbuscar()" (input)="onInputEmp($event)"/>
-                      <span class="input-group-prepend">
-                          <button class="btn btn-outline-danger mr-2 d-none d-md-inline" (click)="limpiar()">
-                              <i class="fa fa-times"></i> Limpiar
-                          </button>
-                          <button class="btn btn-outline-danger mr-2 d-inline d-md-none" (click)="limpiar()">
-                              <i class="fa fa-times"></i>
-                          </button>
-                          <button class="btn btn-outline-secondary d-none d-md-inline" (click)="fbuscar()">
-                              <i class="fa fa-search"></i> Buscar
-                          </button>
-                          <button class="btn btn-outline-secondary d-inline d-md-none" (click)="fbuscar()">
-                              <i class="fa fa-search"></i>
-                          </button>
-                      </span>
-                  </div>
               </div>
             </div>
-
-            <div class="table-responsive" *ngIf="datos?.length > 0">
-                <p class="text-right" *ngIf="total == 1">
-                    Total: <b>{{ total }} registro</b>
-                </p>
-                <p class="text-right" *ngIf="total > 1">
-                    Total: <b>{{ total }} registros</b>
-                </p>
-                <!-- Mostrando del registro {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de un total de {{total}} datos -->
-                <table class="table table-sm table-bordered table-hover tabla-empresa">
-                    <thead>
-                        <tr class="table-primary">
-                            <th class="text-center">Nro.</th>
-                            <th class="text-center">Unidad Productiva</th>
-                            <th class="text-center">Logo</th>
-                            <th class="text-center">NIT</th>
-                            <th class="text-center">Rubro</th>
-                            <th class="text-center">Municipio</th>
-                            <th class="text-center">Localidad</th>
-                            <th class="text-center">Dirección</th>
-                            <th class="text-center">Estado</th>
-                            <th class="text-center">Operaciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let _item of datos; let i = index">
-                            <td class="text-right">{{ pagina > 1 ? (i + 1 + ((pagina-1)*10)) : (i + 1) }}</td>
-                            <td>{{ _item.empresa}}</td>
-                            <td class="text-center">
-                              <div class="main-img text-center">
-                                  <!-- <img
-                                    [src]="ruta+_item.idempresa"
-                                    weight="100px"
-                                    height="100px"
-                                  /> -->
-                              </div>
-                            </td>
-                            <td class="text-center">{{ _item.nit}}</td>
-                            <td class="text-center">{{ _item.subrubro.rubro.rubro}}</td>
-                            <td class="text-center">{{ _item.localidad.municipio.municipio}}</td>
-                            <td class="text-center">{{ _item.localidad.localidad}}</td>
-                            <td>{{ _item.direccion }}</td>
-                            <td class="text-center">
-                              <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado"  >
-                                {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
-                            </span>
-                            </td>
-                            <td class="text-center">
-                                <div class="btn-group" role="group" aria-label="First group">
-                                  <button class="btn btn-outline-info btn-sm" title="Ver Empresa" >
-                                    <i class="fa fa-eye"></i>
-                                  </button>
-                                  <button class="btn btn-outline-warning btn-sm" title="Editar Empresa" (click)="fmodificar(_item.idempresa, ab)">
-                                    <i class="fa fa-edit"></i>
-                                  </button>
-                                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Empresa" (click)="feliminar(_item.idempresa)">
-                                    <i class="fa fa-trash"></i>
-                                  </button>
-                              </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="10">
-                                <ngb-pagination class="d-flex justify-content-center align-items-baseline pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)" size="sm"></ngb-pagination>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="table-responsive" *ngIf="total == 0">
-                <p class="text-center"><b>Sin empresas</b></p>
-            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6 mt-1">
+          <p *ngIf="total == 0">
+            Total: <b>{{ total }} registros</b>
+          </p>
+          <p *ngIf="total == 1">
+            Total: <b>{{ total }} registro</b>
+          </p>
+          <p *ngIf="total > 1">
+            Total: <b>{{ total }} registros</b>
+          </p>
+        </div>
+        <div class="col-sm-6">
+          <div class="row justify-content-end">
+            <div class="col-sm-2 text-md-right text-sm-left mt-1">
+              <label for="">Buscar: </label>
+            </div>
+            <div class="col-sm-10">
+              <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                </div>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Empresa a buscar ..." (keyup)="fbuscar()" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive" *ngIf="datos?.length > 0">
+        <table class="table table-sm table-bordered table-hover table-striped tabla-empresa">
+          <thead>
+            <tr class="table-primary">
+              <th class="text-center">Nro.</th>
+              <th class="text-center">Unidad Productiva</th>
+              <th class="text-center">Logo</th>
+              <th class="text-center">NIT</th>
+              <th class="text-center">Rubro</th>
+              <th class="text-center">Municipio</th>
+              <th class="text-center">Localidad</th>
+              <th class="text-center">Dirección</th>
+              <th class="text-center">Estado</th>
+              <th class="text-center">Operaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let _item of datos; let i = index">
+              <td class="text-right">{{ pagina > 1 ? (i + 1 + ((pagina-1)*10)) : (i + 1) }}</td>
+              <td>{{ _item.empresa}}</td>
+              <td class="text-center">
+                <div class="main-img text-center">
+                  <img
+                    [src]="ruta+_item.idempresa"
+                    weight="100px"
+                    height="100px"
+                    (error)="$event.target.src='../../../assets/imagenes/images/default/404.png'"
+                  />
+                </div>
+              </td>
+              <td class="text-center">{{ _item.nit}}</td>
+              <td class="text-center">{{ _item.subrubro.rubro.rubro}}</td>
+              <td class="text-center">{{ _item.localidad.municipio.municipio}}</td>
+              <td class="text-center">{{ _item.localidad.localidad}}</td>
+              <td>{{ _item.direccion }}</td>
+              <td class="text-center">
+                <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idempresa, !_item.estado)" >
+                  {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                </span>
+              </td>
+              <td class="text-center">
+                <div class="btn-group" role="group" aria-label="First group">
+                  <button class="btn btn-outline-info btn-sm" title="Ver Empresa" (click)="fver(_item.idempresa, ver)">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                  <button class="btn btn-outline-warning btn-sm" title="Editar Empresa" (click)="fmodificar(_item.idempresa, ab)">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Empresa" (click)="feliminar(_item.idempresa)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                  <button class="btn btn-outline-dark btn-sm" title="Imrpimir">
+                    <i class="fa fa-print"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-responsive" *ngIf="total == 0">
+        <table class="table table-sm table-bordered table-hover tabla-empresa">
+          <thead>
+            <tr class="table-primary">
+              <th class="text-center">Nro.</th>
+              <th class="text-center">Unidad Productiva</th>
+              <th class="text-center">Logo</th>
+              <th class="text-center">NIT</th>
+              <th class="text-center">Rubro</th>
+              <th class="text-center">Municipio</th>
+              <th class="text-center">Localidad</th>
+              <th class="text-center">Dirección</th>
+              <th class="text-center">Estado</th>
+              <th class="text-center">Operaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="10" class="text-center">No se encontraron registros.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row mt-2">
+        <div class="col-sm-6">
+          <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+        </div>
+        <div class="col-sm-6">
+          <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <ng-template #ab>
     <div class="modal-header">
-      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Empresa</h4>
+      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Unidad Productiva</h4>
       <div class="alert alert-info" role="alert">
-          Estimado usuario Los campos remarcados con * son necesarios.
+          Estimado usuario Los campos remarcados con <b class="text-danger">*</b> son necesarios.
       </div>
     </div>
     <div class="modal-body">
-          <div class="row">
-            <div class="col-sm-12 d-flex justify-content-center position-relative">
-              <div class="wizard-tabs">
-                <div class="wizard-step" [ngClass]="{'active-step': step === 1, 'completed-step': step > 1}" (click)="goToStep(1)">
-                  <div class="wizard-circle"><i class="bi bi-house"></i></div>
-                  <div class="wizard-label text-center">Datos <br> Representante</div>
-                </div>
-                <div class="wizard-line"></div>
-                <div class="wizard-step" [ngClass]="{'active-step': step === 2, 'completed-step': step > 2}" (click)="goToStep(2)">
-                  <div class="wizard-circle"><i class="bi bi-card-checklist"></i></div>
-                  <div class="wizard-label text-center">Datos <br>Empresa</div>
-                </div>
-                <div class="wizard-line"></div>
-                <div class="wizard-step" [ngClass]="{'active-step': step === 3, 'completed-step': step > 3}" (click)="goToStep(3)">
-                  <div class="wizard-circle"><i class="bi bi-diagram-3"></i></div>
-                  <div class="wizard-label text-center">Datos <br>Empresa</div>
-                </div>
-                <div class="wizard-line"></div>
-                <div class="wizard-step" [ngClass]="{'active-step': step === 4, 'completed-step': step > 4}" (click)="goToStep(4)">
-                  <div class="wizard-circle"><i class="bi bi-geo-alt"></i></div>
-                  <div class="wizard-label text-center">Datos <br>Empresa</div>
-                </div>
-                <div class="wizard-line"></div>
-                <div class="wizard-step" [ngClass]="{'active-step': step === 5, 'completed-step': step === 5}" (click)="goToStep(5)">
-                  <div class="wizard-circle"><i class="bi bi-check-circle"></i></div>
-                  <div class="wizard-label text-center">Finalizar <br>Registro</div>
-                </div>
-              </div>
+      <div class="row">
+        <div class="col-sm-12 d-flex justify-content-center position-relative">
+          <div class="wizard-tabs">
+            <div class="wizard-step" [ngClass]="{'active-step': step === 1, 'completed-step': step > 1}" (click)="goToStep(1)">
+              <div class="wizard-circle"><i class="bi bi-house"></i></div>
+              <div class="wizard-label text-center">Datos <br> Representante</div>
             </div>
-          </div><hr>
-          <div *ngIf="step === 1">
-            <div class="row pl-3">
-              <h5 class="card-title">I.- Datos del Representante</h5>
+            <div class="wizard-line"></div>
+            <div class="wizard-step" [ngClass]="{'active-step': step === 2, 'completed-step': step > 2}" (click)="goToStep(2)">
+              <div class="wizard-circle"><i class="bi bi-card-checklist"></i></div>
+              <div class="wizard-label text-center">Datos <br>Empresa</div>
             </div>
-            <div class="row">
-              <div class="col-sm-12 col-md-2 text-right">
-                <label>Buscar: <span class="text-danger"><b>*</b></span></label>
-              </div>
-              <div class="col-md-6 col-sm-12">
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="buscarRep" name="buscarRep" (keyup)="fbuscarRep()" (input)="onInputRep($event)" (change)="onSelect($event.target.value)" autocomplete="no" list="listRep" placeholder="Buscar representante..." required/>
-                <datalist id="listRep">
-                  <option *ngFor="let _rep of representantes"
-                          [value]="_rep.persona.primerapellido + ' ' + _rep.persona.segundoapellido + ' ' + _rep.persona.primernombre">
-                  </option>
-                </datalist>
-              </div>
-              <div class="col-md-4 col-sm-12">
-                <button class="btn btn-sm btn-outline-info mr-2" type="button" (click)="fadicionRep(rep)"><i class="fa fa-plus"></i>Nuevo Representante</button>
-              </div>
+            <div class="wizard-line"></div>
+            <div class="wizard-step" [ngClass]="{'active-step': step === 3, 'completed-step': step > 3}" (click)="goToStep(3)">
+              <div class="wizard-circle"><i class="bi bi-diagram-3"></i></div>
+              <div class="wizard-label text-center">Datos <br>Empresa</div>
             </div>
-            <div class="row mt-2 justify-content-center" *ngIf="representante">
-              <div class="col-sm-10 border border-success">
-                <div class="row p-3">
-                  <div class="col-md-3 text-center">
-                    <img src="../../../assets/catalogo/img/avatar.jpg" class="img-fluid rounded-circle" alt="" width="150px">
+            <div class="wizard-line"></div>
+            <div class="wizard-step" [ngClass]="{'active-step': step === 4, 'completed-step': step > 4}" (click)="goToStep(4)">
+              <div class="wizard-circle"><i class="bi bi-geo-alt"></i></div>
+              <div class="wizard-label text-center">Datos <br>Empresa</div>
+            </div>
+            <div class="wizard-line"></div>
+            <div class="wizard-step" [ngClass]="{'active-step': step === 5, 'completed-step': step === 5}" (click)="goToStep(5)">
+              <div class="wizard-circle"><i class="bi bi-check-circle"></i></div>
+              <div class="wizard-label text-center">Finalizar <br>Registro</div>
+            </div>
+          </div>
+        </div>
+      </div><hr>
+      <div *ngIf="step === 1">
+        <div class="row pl-3">
+          <h5 class="card-title">I.- Datos del Representante</h5>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-2 text-right">
+            <label>Buscar: <span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="buscarRep" name="buscarRep" (keyup)="fbuscarRep()" (input)="onInputRep($event)" (change)="onSelect($event.target.value)" autocomplete="no" list="listRep" placeholder="Buscar representante..." required/>
+            <datalist id="listRep">
+              <option *ngFor="let _rep of representantes"
+                      [value]="_rep.persona.primerapellido + ' ' + _rep.persona.segundoapellido + ' ' + _rep.persona.primernombre">
+              </option>
+            </datalist>
+          </div>
+          <div class="col-md-4 col-sm-12">
+            <button class="btn btn-sm btn-outline-info mr-2" type="button" (click)="fadicionRep(rep)"><i class="fa fa-plus"></i>Nuevo Representante</button>
+          </div>
+        </div>
+        <div class="row mt-2 justify-content-center" *ngIf="representante">
+          <div class="col-sm-10 border border-success">
+            <div class="row p-3">
+              <div class="col-md-3 text-center">
+                <img src="../../../assets/catalogo/img/avatar.jpg" class="img-fluid rounded-circle" alt="" width="150px">
+              </div>
+              <div class="col-md-9 " >
+                <div class="row" hidden>
+                  <div class="col-md-3 text-right">
+                    <strong>ID:</strong>
                   </div>
-                  <div class="col-md-9 " >
-                    <div class="row" hidden>
-                      <div class="col-md-3 text-right">
-                        <strong>ID:</strong>
-                      </div>
-                      <div class="col-md-6">
-                        {{ representante?.idrepresentante }}
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-3 text-right">
-                        <Strong>Nombre: </Strong>
-                      </div>
-                      <div class="col-md-9">
-                        {{ representante?.persona?.primerapellido }}
-                        {{ representante?.persona?.segundoapellido }}
-                        {{ representante?.persona?.primernombre }}
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-3 text-right">
-                        <strong>Carnet: </strong>
-                      </div>
-                      <div class="col-md-6">
-                        {{ representante?.persona?.dip }} {{ representante?.persona?.complementario }}
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-3 text-right">
-                        <strong>Telf/Celular:</strong>
-                      </div>
-                      <div class="col-md-6">
-                        {{ representante?.persona?.celular }}
-                      </div>
-                    </div><br>
-                    <div class="row">
-                      <div class="col-md-5 text-right">
-                        <strong>Nivel de Educación:</strong>
-                      </div>
-                      <div class="col-md-5">
-                        {{ getFormacionDescription(representante?.persona?.formacion) }}
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-5 text-right">
-                        <strong>Estado Civil:</strong>
-                      </div>
-                      <div class="col-md-5">
-                        {{ getEstadoDescription(representante?.persona?.estadocivil) }}
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-5 text-right">
-                        <strong>Hijos:</strong>
-                      </div>
-                      <div class="col-md-5">
-                        {{ getHijosDescription(representante?.persona?.hijos) }}
-                      </div>
-                    </div>
+                  <div class="col-md-6">
+                    {{ representante?.idrepresentante }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3 text-right">
+                    <Strong>Nombre: </Strong>
+                  </div>
+                  <div class="col-md-9">
+                    {{ representante?.persona?.primerapellido }}
+                    {{ representante?.persona?.segundoapellido }}
+                    {{ representante?.persona?.primernombre }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3 text-right">
+                    <strong>Carnet: </strong>
+                  </div>
+                  <div class="col-md-6">
+                    {{ representante?.persona?.dip }} {{ representante?.persona?.complementario }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3 text-right">
+                    <strong>Telf/Celular:</strong>
+                  </div>
+                  <div class="col-md-6">
+                    {{ representante?.persona?.celular }}
+                  </div>
+                </div><br>
+                <div class="row">
+                  <div class="col-md-5 text-right">
+                    <strong>Nivel de Educación:</strong>
+                  </div>
+                  <div class="col-md-5">
+                    {{ getFormacionDescription(representante?.persona?.formacion) }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-5 text-right">
+                    <strong>Estado Civil:</strong>
+                  </div>
+                  <div class="col-md-5">
+                    {{ getEstadoDescription(representante?.persona?.estadocivil) }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-5 text-right">
+                    <strong>Hijos:</strong>
+                  </div>
+                  <div class="col-md-5">
+                    {{ getHijosDescription(representante?.persona?.hijos) }}
                   </div>
                 </div>
               </div>
             </div>
-            <div class="row justify-content-between p-3 mt-2">
+          </div>
+        </div>
+        <div class="row justify-content-between p-3 mt-2">
+          <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+        </div>
+      </div>
+      <form [formGroup]="formEmpresa" (ngSubmit)="faceptar()">
+        <div *ngIf="step === 2">
+          <div class="row pl-3 justify-content-between">
+            <h5 class="card-title">II.- Datos de la Unidad Productiva</h5>
+          </div>
+          <div class="row pl-3 pr-3">
+            <div class="col-md-3 col-sm-6 mt-1 text-md-right text-sm-left">
+              <label class="form-label">Seleccionar Rep.:</label>
+            </div>
+            <div class="col-sm-1">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <input type="checkbox" aria-label="Checkbox for following text input" formControlName="copiarDatos" title="Seleccionar Representante">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-1 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Form.:</label>
+            </div>
+            <div class="col-md-2 col-sm-12  ">
+              <input type="text" [maxLength]="4" class="form-control form-control-sm text-center" formControlName="nform" (input)="onInput($event, 'nform', 'numeros')" autocomplete="no">
+              <input type="text" class="form-control form-control-sm text-center" formControlName="idrepresentante" hidden>
+            </div>
+            <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Fecha Registro:</label>
+            </div>
+            <div class="col-md-3 col-sm-12">
+              <input type="date" class="form-control form-control-sm" formControlName="fechareg">
+            </div>
+          </div>
+          <div class="row mt-1 pl-3 pr-3">
+            <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Nombre Comercial:</label>
+            </div>
+            <div class="col-md-5 col-sm-12">
+              <input type="text" class="form-control form-control-sm" formControlName="empresa" (input)="onInput($event, 'empresa', 'letrasynumerosguion')" autocomplete="no">
+            </div>
+            <div class="col-md-1 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">NIT:</label>
+            </div>
+            <div class="col-md-3 col-sm-12">
+              <input type="text" class="form-control form-control-sm" formControlName="nit" (input)="onInput($event, 'nit', 'numeros')" autocomplete="no">
+            </div>
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Razón Social:</label>
+            </div>
+            <div class="col-md-5 col-sm-12">
+              <input type="text" class="form-control form-control-sm" formControlName="razonsocial" (input)="onInput($event, 'razonsocial', 'letrasynumerosguion')" autocomplete="no">
+            </div>
+            <div class="col-md-2 col-sm-7 mt-1 text-md-right text-sm-left">
+              <label for="">Banca Móvil:</label>
+            </div>
+            <div class="col-sm-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <input type="checkbox" aria-label="Checkbox for following text input" formControlName="bancamovil">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Descripción:</label>
+            </div>
+            <div class="col-md-9 col-sm-12">
+              <input type="text" class="form-control form-control-sm" formControlName="descripcion" (input)="onInput($event, 'descripcion', 'letrasyespacios')" autocomplete="no">
+            </div>
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Asociación:</label>
+            </div>
+            <div class="col-md-3 col-sm-12">
+              <select class="custom-select custom-select-sm" formControlName="idasociacion">
+                <option value="" [selected]>Seleccionar...</option>
+                <option *ngFor="let _aso of asociaciones" [value]="_aso.idasociacion">
+                  {{ _aso.asociacion }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Fecha Apertura:</label>
+            </div>
+            <div class="col-md-3 col-sm-12">
+              <input type="date" class="form-control form-control-sm" formControlName="fechaapertura">
+            </div>
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Rubro:</label>
+            </div>
+            <div class="col-md-3 col-sm-12">
+              <select class="custom-select custom-select-sm" formControlName="idrubro" (change)="fsubrubros($event.target.value)">
+                <option *ngFor="let _rubro of rubros" [value]="_rubro.idrubro">{{ _rubro.rubro }}</option>
+              </select>
+            </div>
+            <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Subrubro:</label>
+            </div>
+            <div class="col-md-3 col-sm-12">
+              <select class="custom-select custom-select-sm" formControlName="idsubrubro">
+                <option *ngFor="let _subr of subrubros" [value]="_subr.idsubrubro">{{ _subr.subrubro }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Productos o Servicios: </label>
+            </div>
+            <div class="col-md-9 col-sm-12">
+              <input type="text" class="form-control form-control-sm" formControlName="servicios" (input)="onInput($event, 'servicios', 'letrasyespacios')" autocomplete="no">
+            </div>
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Capacidad de Producción:</label>
+            </div>
+            <div class="col-md-3 col-sm-12">
+              <select class="custom-select custom-select-sm" formControlName="capacidad">
+                <option value="1">1 a 2</option>
+                <option value="2">3 a 5</option>
+                <option value="3">6 a 10</option>
+                <option value="4">11 a 15</option>
+                <option value="5">16 a 25</option>
+                <option value="6">26 a 50</option>
+                <option value="7">>50</option>
+              </select>
+            </div>
+            <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Medida:</label>
+            </div>
+            <div class="col-md-4 col-sm-12">
+              <input type="text" class="form-control form-control-sm" formControlName="unidadmedida" (input)="onInput($event, 'unidadmedida', 'letrasyespacios')" autocomplete="no">
+            </div>
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Motivo o Razón:</label>
+            </div>
+            <div class="col-md-4 col-sm-12">
+              <select class="custom-select custom-select-sm" formControlName="motivo" (change)="onMotivoChange($event)">
+                <option value="1">Por Influencia Familiar</option>
+                <option value="2">Por Experiencia Laboral</option>
+                <option value="3">Por Despido de trabajo</option>
+                <option value="4">Por la demanda laboral</option>
+                <option value="5">Otro</option>
+              </select>
+            </div>
+            <div class="col-md-1 col-sm-12 mt-1 text-md-right text-sm-left" *ngIf="mostrarOtroCampo">
+              <label for="">Otro:</label>
+            </div>
+            <div class="col-md-4" *ngIf="mostrarOtroCampo">
+              <input type="text" class="form-control form-control-sm" formControlName="otromotivo" (input)="onInput($event, 'otromotivo', 'letrasyespacios')" autocomplete="no">
+            </div>
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-3 col-sm-6 mt-1 text-md-right text-sm-left">
+              <label for="">Familiar:</label>
+            </div>
+            <div class="col-sm-1">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <input type="checkbox" aria-label="Checkbox for following text input" formControlName="familiar">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left" *ngIf="mostrarInvolucrados">
+              <label for="">Involucrados:</label>
+            </div>
+            <div class="col-md-2 col-sm-12 mt-1" *ngIf="mostrarInvolucrados">
+              <select class="custom-select custom-select-sm" formControlName="involucrados" (change)="onInvolucradosChange($event)">
+                <option value="1">Pareja</option>
+                <option value="2">Hijos</option>
+                <option value="3">Hermanos</option>
+                <option value="4">Padres</option>
+                <option value="5">Primos</option>
+                <option value="6">Otro</option>
+              </select>
+            </div>
+            <div class="col-md-1 col-sm-12 mt-1 text-md-right text-sm-left" *ngIf="mostrarOtro">
+              <label for="">Otro:</label>
+            </div>
+            <div class="col-md-3 col-sm-12" *ngIf="mostrarOtro">
+              <input type="text" class="form-control form-control-sm" formControlName="otrosinvolucrados" (input)="onInput($event, 'otrosinvolucrados', 'letrasyespacios')" autocomplete="no">
+            </div>
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Trabajadores:</label>
+            </div>
+            <div class="col-md-3 col-sm-12 mt-1">
+              <select class="custom-select custom-select-sm" formControlName="trabajadores">
+                <option value="1">1 a 2</option>
+                <option value="2">3 a 4</option>
+                <option value="3">5 a 6</option>
+                <option value="4">7 a 8</option>
+                <option value="5">9 a 10</option>
+                <option value="6">10 a 11</option>
+              </select>
+            </div>
+            <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Ferias:</label>
+            </div>
+            <div class="col-md-3 col-sm-12 mt-1">
+              <select class="custom-select custom-select-sm" formControlName="participacion">
+                <option value="1">Local</option>
+                <option value="2">Nacional</option>
+                <option value="3">Municipal</option>
+                <option value="4">Internacional</option>
+              </select>
+            </div>
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Capacitación:</label>
+            </div>
+            <div class="col-md-9 col-sm-12">
+              <input type="text" class="form-control form-control-sm" formControlName="capacitacion" (input)="onInput($event, 'capacitacion', 'letrasyespacios')" autocomplete="no">
+            </div>
+          </div>
+          <div class="row justify-content-between p-3 mt-2">
+            <div class="div">
+              <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
               <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
-              <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+          </div>
+        </div>
+
+        <div *ngIf="step === 3">
+          <div class="row pl-3 pr-3">
+            <h5 class="card-title">III.- Ubicación de la Unidad Productiva</h5>
+          </div>
+          <div class="row pl-3 pr-3">
+            <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Municipio:</label>
+            </div>
+            <div class="col-md-4 col-sm-12">
+              <select class="custom-select custom-select-sm" (change)="flocalidades($event.target.value)" formControlName="idmunicipio">
+                <option *ngFor="let _mun of municipios" [value]="_mun.idmunicipio">{{ _mun.municipio }}</option>
+              </select>
+            </div>
+            <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Localidad:</label>
+            </div>
+            <div class="col-md-4 col-sm-12">
+              <select class="custom-select custom-select-sm" formControlName="idlocalidad">
+                <option *ngFor="let _local of localidades" [value]="_local.idlocalidad">{{ _local.localidad }}</option>
+              </select>
             </div>
           </div>
-        <form [formGroup]="formEmpresa" (ngSubmit)="faceptar()">
-          <div *ngIf="step === 2">
-            <div class="row pl-3 justify-content-between">
-              <h5 class="card-title">II.- Datos de la Unidad Productiva</h5>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-2 col-sm-12 text-md-right text-sm-left">
+              <label for="">Zona:</label>
             </div>
-            <div class="row pl-3 pr-3">
-              <div class="col-md-3 col-sm-7 mt-1 text-md-right text-sm-left">
-                <label class="form-label">Seleccionar Rep.:</label>
-              </div>
-              <div class="col-sm-1 mt-1 text-center">
-                <input type="checkbox" formControlName="copiarDatos" title="Seleccionar Representante">
-              </div>
-              <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">N° Form.:</label>
-              </div>
-              <div class="col-md-1 col-sm-12 m-0 p-0 ">
-                <input type="text" [maxLength]="4" class="form-control form-control-sm text-center" formControlName="nform" (input)="onInput($event, 'nform', 'numeros')" autocomplete="no">
-                <input type="text" class="form-control form-control-sm text-center" formControlName="idrepresentante" hidden>
-              </div>
-              <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">Fecha Registro:</label>
-              </div>
-              <div class="col-md-3 col-sm-12">
-                <input type="date" class="form-control form-control-sm" formControlName="fechareg">
-              </div>
+            <div class="col-md-2 col-sm-12">
+              <input type="text" class="form-control form-control-sm" formControlName="zona" (input)="onInput($event, 'zona', 'letrasyespacios')">
             </div>
-            <div class="row mt-1 pl-3 pr-3">
-              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">Nombre Comercial:</label>
-              </div>
-              <div class="col-md-5 col-sm-12">
-                <input type="text" class="form-control form-control-sm" formControlName="empresa" (input)="onInput($event, 'empresa', 'letrasynumerosguion')" autocomplete="no">
-              </div>
-              <div class="col-md-1 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">NIT:</label>
-              </div>
-              <div class="col-md-3 col-sm-12">
-                <input type="text" class="form-control form-control-sm" formControlName="nit" (input)="onInput($event, 'nit', 'numeros')" autocomplete="no">
-              </div>
+            <div class="col-md-2 col-sm-12 text-md-right text-sm-left">
+              <label for="">Dirección:</label>
             </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">Razón Social:</label>
-              </div>
-              <div class="col-md-5 col-sm-12">
-                <input type="text" class="form-control form-control-sm" formControlName="razonsocial" (input)="onInput($event, 'razonsocial', 'letrasynumerosguion')" autocomplete="no">
-              </div>
-              <div class="col-md-2 col-sm-7 mt-1 text-md-right text-sm-left">
-                <label for="">Banca Móvil:</label>
-              </div>
-              <div class="col-sm-2 mt-1">
-                <input type="checkbox" name="" id="" formControlName="bancamovil">
-              </div>
+            <div class="col-md-6 col-sm-12">
+              <input type="text" class="form-control form-control-sm" formControlName="direccion" (input)="onInput($event, 'direccion', 'direccion')">
             </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">Descripción:</label>
-              </div>
-              <div class="col-md-9 col-sm-12">
-                <input type="text" class="form-control form-control-sm" formControlName="descripcion" (input)="onInput($event, 'descripcion', 'letrasyespacios')" autocomplete="no">
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-2 col-sm-12 text-md-right text-sm-left">
+              <label for="">Referencia:</label>
+            </div>
+            <div class="col-md-4 col-sm-12">
+              <input type="text" class="form-control form-control-sm" formControlName="referencia" (input)="onInput($event, 'referencia', 'direccion')">
+            </div>
+            <div class="col-md-2 col-sm-12 text-md-right text-sm-left">
+              <label for="">Transporte:</label>
+            </div>
+            <div class="col-md-4 col-sm-12">
+              <input type="text" class="form-control form-control-sm" formControlName="transporte" (input)="onInput($event, 'transporte', 'direccion')">
+            </div>
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Celular:</label>
+            </div>
+            <div class="col-md-4 col-sm-12 mt-1">
+              <input type="text" class="form-control form-control-sm text-center" formControlName="celular" (input)="onInput($event, 'celular', 'numeros')" autocomplete="no">
+            </div>
+            <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label for="">Teléfono:</label>
+            </div>
+            <div class="col-md-4 col-sm-12 mt-1">
+              <input type="text" class="form-control form-control-sm text-center" formControlName="telefono" (input)="onInput($event, 'telefono', 'numeros')" autocomplete="no">
+            </div>
+          </div>
+          <div class="row pl-3 pr-3 mt-2">
+            <h5 class="card-title">IV.- Datos de Contacto de la Unidad Productiva</h5>
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-3 col-sm-12 text-md-right text-sm-left">
+              <label for="">Correo:</label>
+            </div>
+            <div class="col-md-9 col-sm-12">
+              <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-envelope-at"></i></span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" formControlName="correo">
               </div>
             </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">Asociación:</label>
-              </div>
-              <div class="col-md-3 col-sm-12">
-                <select class="custom-select custom-select-sm" formControlName="idasociacion">
-                  <option value="" [selected]>Seleccionar...</option>
-                  <option *ngFor="let _aso of asociaciones" [value]="_aso.idasociacion">
-                    {{ _aso.asociacion }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-md-3 col-sm-7 mt-1 text-md-right text-sm-left">
-                <label for="">Teléfono/Celular:</label>
-              </div>
-              <div class="col-sm-3 mt-1">
-                <input type="text" class="form-control form-control-sm" formControlName="celular" (input)="onInput($event, 'celular', 'numeros')" autocomplete="no">
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-3 col-sm-12 text-md-right text-sm-left">
+              <label for="">Facebook:</label>
+            </div>
+            <div class="col-md-9 col-sm-12">
+              <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-facebook"></i></span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" formControlName="facebook">
               </div>
             </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">Rubro:</label>
-              </div>
-              <div class="col-md-3 col-sm-12">
-                <select class="custom-select custom-select-sm" formControlName="idrubro" (change)="fsubrubros($event.target.value)">
-                  <option *ngFor="let _rubro of rubros" [value]="_rubro.idrubro">{{ _rubro.rubro }}</option>
-                </select>
-              </div>
-              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">Subrubro:</label>
-              </div>
-              <div class="col-md-3 col-sm-12">
-                <select class="custom-select custom-select-sm" formControlName="idsubrubro">
-                  <option *ngFor="let _subr of subrubros" [value]="_subr.idsubrubro">{{ _subr.subrubro }}</option>
-                </select>
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-3 col-sm-12 text-md-right text-sm-left">
+              <label for="">Twitter:</label>
+            </div>
+            <div class="col-md-9 col-sm-12">
+              <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-twitter-x"></i></span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" formControlName="twitter">
               </div>
             </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">Productos o Servicios: </label>
-              </div>
-              <div class="col-md-9 col-sm-12">
-                <input type="text" class="form-control form-control-sm" formControlName="servicios" (input)="onInput($event, 'servicios', 'letrasyespacios')" autocomplete="no">
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-3 col-sm-12 text-md-right text-sm-left">
+              <label for="">Instagram:</label>
+            </div>
+            <div class="col-md-9 col-sm-12">
+              <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-instagram"></i></span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" formControlName="instagram">
               </div>
             </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">Capacidad de Producción:</label>
-              </div>
-              <div class="col-md-2 col-sm-12">
-                <select class="custom-select custom-select-sm" formControlName="capacidad">
-                  <option value="1">1 a 2</option>
-                  <option value="2">3 a 5</option>
-                  <option value="3">6 a 10</option>
-                  <option value="4">11 a 15</option>
-                  <option value="5">26 a 50</option>
-                  <option value="6">>50</option>
-                </select>
-              </div>
-              <div class="col-md-1 mt-1 text-md-right text-sm-left">
-                <label for="">Medida:</label>
-              </div>
-              <div class="col-md-2">
-                <input type="text" class="form-control form-control-sm" formControlName="unidadmedida" (input)="onInput($event, 'unidadmedida', 'letras')" autocomplete="no">
-              </div>
-              <div class="col-md-1 mt-1 text-md-right text-sm-left">
-                <label for="">Apertura:</label>
-              </div>
-              <div class="col-md-3">
-                <input type="date" class="form-control form-control-sm" formControlName="fechaapertura">
+          </div>
+          <div class="row pl-3 pr-3 mt-1">
+            <div class="col-md-3 col-sm-12 text-md-right text-sm-left">
+              <label for="">Pagina WEB:</label>
+            </div>
+            <div class="col-md-9 col-sm-12">
+              <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-globe2"></i></span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" formControlName="paginaweb">
               </div>
             </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">Motivo o Razón:</label>
-              </div>
-              <div class="col-md-4 col-sm-12">
-                <select class="custom-select custom-select-sm" formControlName="motivo" (change)="onMotivoChange($event)">
-                  <option value="1">Por Influencia Familiar</option>
-                  <option value="2">Por Experiencia Laboral</option>
-                  <option value="3">Por Despido de trabajo</option>
-                  <option value="4">Por la demanda laboral</option>
-                  <option value="5">Otro</option>
-                </select>
-              </div>
-              <div class="col-md-1 col-sm-12 mt-1 text-md-right text-sm-left" *ngIf="mostrarOtroCampo">
-                <label for="">Otro:</label>
-              </div>
-              <div class="col-md-4" *ngIf="mostrarOtroCampo">
-                <input type="text" class="form-control form-control-sm" formControlName="otromotivo" (input)="onInput($event, 'otromotivo', 'letrasyespacios')" autocomplete="no">
-              </div>
+          </div>
+          <div class="row justify-content-between p-3 mt-2">
+            <div class="div">
+              <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+              <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
             </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">Familiar:</label>
-              </div>
-              <div class="col-md-1 mt-1">
-                <input type="checkbox" name="" id="" formControlName="familiar">
-              </div>
-              <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left" *ngIf="mostrarInvolucrados">
-                <label for="">Involucrados:</label>
-              </div>
-              <div class="col-md-2 mt-1" *ngIf="mostrarInvolucrados">
-                <select class="custom-select custom-select-sm" formControlName="involucrados" (change)="onInvolucradosChange($event)">
-                  <option value="1">Pareja</option>
-                  <option value="2">Hijos</option>
-                  <option value="3">Hermanos</option>
-                  <option value="4">Padres</option>
-                  <option value="5">Primos</option>
-                  <option value="6">Otro</option>
-                </select>
-              </div>
-              <div class="col-md-1 col-sm-12 mt-1 text-md-right text-sm-left" *ngIf="mostrarOtro">
-                <label for="">Otro:</label>
-              </div>
-              <div class="col-md-3" *ngIf="mostrarOtro">
-                <input type="text" class="form-control form-control-sm" formControlName="otrosinvolucrados" (input)="onInput($event, 'otrosinvolucrados', 'letrasyespacios')" autocomplete="no">
-              </div>
+            <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+          </div>
+        </div>
+
+        <div *ngIf="step === 4">
+          <div class="row pl-3 pr-3 mt-2">
+            <h5 class="card-title">V.- Croquis de la Unidad Productiva</h5>
+          </div>
+          <div class="row pl-3 pr-3">
+            <div class="col-md-8 col-sm-12">
+
             </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">Trabajadores:</label>
+            <div class="col-md-4 col-sm-12">
+              <div class="row">
+                <div class="col-sm-4 mt-1">
+                  <label for="">Latitud: </label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control form-control-sm" formControlName="latitud">
+                </div>
               </div>
-              <div class="col-md-3 mt-1">
-                <select class="custom-select custom-select-sm" formControlName="trabajadores">
-                  <option value="1">1 a 2</option>
-                  <option value="2">3 a 4</option>
-                  <option value="3">5 a 6</option>
-                  <option value="4">7 a 8</option>
-                  <option value="4">9 a 10</option>
-                  <option value="5">10 a 11</option>
-                </select>
+              <div class="row">
+                <div class="col-sm-4 mt-1">
+                  <label for="">Longitud: </label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control form-control-sm" formControlName="longitud">
+                </div>
               </div>
-              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">Participación:</label>
-              </div>
-              <div class="col-md-3 mt-1">
-                <select class="custom-select custom-select-sm" formControlName="participacion">
-                  <option value="1">Local</option>
-                  <option value="2">Nacional</option>
-                  <option value="3">Municipal</option>
-                  <option value="4">Internacional</option>
-                </select>
-              </div>
-            </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">Capacitación:</label>
-              </div>
-              <div class="col-md-9 col-sm-12">
-                <input type="text" class="form-control form-control-sm" formControlName="capacitacion" (input)="onInput($event, 'capacitacion', 'letrasyespacios')" autocomplete="no">
-              </div>
-            </div>
-            <div class="row justify-content-between p-3 mt-2">
-              <div class="div">
-                <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
-                <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
-              </div>
-              <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
             </div>
           </div>
 
-          <div *ngIf="step === 3">
-            <div class="row pl-3 pr-3">
-              <h5 class="card-title">III.- Ubicación de la Unidad Productiva</h5>
+          <div class="row justify-content-between p-3 mt-2">
+            <div class="div">
+              <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+              <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
             </div>
-            <div class="row pl-3 pr-3">
-              <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">Municipio:</label>
-              </div>
-              <div class="col-md-4 col-sm-12">
-                <select class="custom-select custom-select-sm" (change)="flocalidades($event.target.value)">
-                  <option *ngFor="let _mun of municipios" [value]="_mun.idmunicipio">{{ _mun.municipio }}</option>
-                </select>
-              </div>
-              <div class="col-md-2 col-sm-12 mt-1 text-md-right text-sm-left">
-                <label for="">Localidad:</label>
-              </div>
-              <div class="col-md-4 col-sm-12">
-                <select class="custom-select custom-select-sm" formControlName="idlocalidad">
-                  <option *ngFor="let _local of localidades" [value]="_local.idlocalidad">{{ _local.localidad }}</option>
-                </select>
-              </div>
-            </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-2 col-sm-12 text-md-right text-sm-left">
-                <label for="">Zona:</label>
-              </div>
-              <div class="col-md-2 col-sm-12">
-                <input type="text" class="form-control form-control-sm" formControlName="zona" (input)="onInput($event, 'zona', 'letrasyespacios')">
-              </div>
-              <div class="col-md-2 col-sm-12 text-md-right text-sm-left">
-                <label for="">Dirección:</label>
-              </div>
-              <div class="col-md-6 col-sm-12">
-                <input type="text" class="form-control form-control-sm" formControlName="direccion" (input)="onInput($event, 'direccion', 'direccion')">
-              </div>
-            </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-2 col-sm-12 text-md-right text-sm-left">
-                <label for="">Referencia:</label>
-              </div>
-              <div class="col-md-4 col-sm-12">
-                <input type="text" class="form-control form-control-sm" formControlName="referencia" (input)="onInput($event, 'referencia', 'direccion')">
-              </div>
-              <div class="col-md-2 col-sm-12 text-md-right text-sm-left">
-                <label for="">Transporte:</label>
-              </div>
-              <div class="col-md-4 col-sm-12">
-                <input type="text" class="form-control form-control-sm" formControlName="transporte" (input)="onInput($event, 'transporte', 'direccion')">
-              </div>
-            </div>
-            <div class="row pl-3 pr-3 mt-1">
-            </div>
-            <div class="row pl-3 pr-3 mt-2">
-              <h5 class="card-title">IV.- Datos de Contacto de la Unidad Productiva</h5>
-            </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-3 col-sm-12 text-md-right text-sm-left">
-                <label for="">Correo:</label>
-              </div>
-              <div class="col-md-9 col-sm-12">
-                <div class="input-group input-group-sm">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-envelope-at"></i></span>
-                  </div>
-                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" formControlName="correo">
-                </div>
-              </div>
-            </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-3 col-sm-12 text-md-right text-sm-left">
-                <label for="">Facebook:</label>
-              </div>
-              <div class="col-md-9 col-sm-12">
-                <div class="input-group input-group-sm">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-facebook"></i></span>
-                  </div>
-                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" formControlName="facebook">
-                </div>
-              </div>
-            </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-3 col-sm-12 text-md-right text-sm-left">
-                <label for="">Twitter:</label>
-              </div>
-              <div class="col-md-9 col-sm-12">
-                <div class="input-group input-group-sm">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-twitter-x"></i></span>
-                  </div>
-                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" formControlName="twitter">
-                </div>
-              </div>
-            </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-3 col-sm-12 text-md-right text-sm-left">
-                <label for="">Instagram:</label>
-              </div>
-              <div class="col-md-9 col-sm-12">
-                <div class="input-group input-group-sm">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-instagram"></i></span>
-                  </div>
-                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" formControlName="instagram">
-                </div>
-              </div>
-            </div>
-            <div class="row pl-3 pr-3 mt-1">
-              <div class="col-md-3 col-sm-12 text-md-right text-sm-left">
-                <label for="">Pagina WEB:</label>
-              </div>
-              <div class="col-md-9 col-sm-12">
-                <div class="input-group input-group-sm">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-globe2"></i></span>
-                  </div>
-                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" formControlName="paginaweb">
-                </div>
-              </div>
-            </div>
-            <div class="row justify-content-between p-3 mt-2">
-              <div class="div">
-                <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
-                <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
-              </div>
-              <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
-            </div>
+            <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
           </div>
-
-          <div *ngIf="step === 4">
-            <div class="row pl-3 pr-3 mt-2">
-              <h5 class="card-title">V.- Croquis de la Unidad Productiva</h5>
-            </div>
-            <div class="row pl-3 pr-3">
-              <div class="col-md-8 col-sm-12">
-
-              </div>
-              <div class="col-md-4 col-sm-12">
-                <div class="row">
-                  <div class="col-sm-4 mt-1">
-                    <label for="">Latitud: </label>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control form-control-sm" formControlName="latitud">
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-4 mt-1">
-                    <label for="">Longitud: </label>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control form-control-sm" formControlName="longitud">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row justify-content-between p-3 mt-2">
-              <div class="div">
-                <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
-                <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
-              </div>
-              <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
-            </div>
+        </div>
+        <div *ngIf="step === 5">
+          <div class="row pl-3 pr-3">
+            <h5 class="card-title">VI.- Resumen de datos a guardar</h5>
           </div>
-          <div *ngIf="step === 5">
-            <div class="row pl-3 pr-3">
-              <h5 class="card-title">VI.- Resumen de datos a guardar</h5>
-            </div>
+          <div class="row table-responsive pl-3">
             <table class="table table-sm table-bordered">
               <tbody>
                 <tr>
@@ -661,14 +709,14 @@
                   <td class="text-right"><span class="text-danger"><b>*</b></span>Carnet:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right"><span class="text-danger"><b>*</b></span>Celular:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right"><span class="text-danger"><b>*</b></span>Fomacion:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Estado Civil:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Est. Civil:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                 </tr>
                 <tr>
                   <td colspan="10"><strong>DATOS UNIDAD PRODUCTIVA</strong></td>
                 </tr>
                 <tr>
                   <td class="text-right"><span class="text-danger"><b>*</b></span>Formulario:</td><td width="50px"><i *ngIf="this.formEmpresa.value.nform; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Fecha Registro:</td><td width="50px"><i *ngIf="this.formEmpresa.value.fechareg; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Fecha Reg.:</td><td width="50px"><i *ngIf="this.formEmpresa.value.fechareg; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right"><span class="text-danger"><b>*</b></span>Nombre Comercial:</td><td width="50px"><i *ngIf="this.formEmpresa.value.empresa; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right"><span class="text-danger"><b>*</b></span>Razon Social:</td><td width="50px"><i *ngIf="this.formEmpresa.value.razonsocial; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Descripción:</td><td width="50px"><i *ngIf="this.formEmpresa.value.descripcion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
@@ -677,13 +725,13 @@
                   <td class="text-right">NIT:</td><td width="50px"><i *ngIf="this.formEmpresa.value.nit; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Banca Movil:</td><td width="50px"><i *ngIf="this.formEmpresa.value.bancamovil; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right"><span class="text-danger"><b>*</b></span>Celular:</td><td width="50px"><i *ngIf="this.formEmpresa.value.celular; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Rubro:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrubro; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Rubro:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrubro; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right"><span class="text-danger"><b>*</b></span>Subrubro:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idsubrubro; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                 </tr>
                 <tr>
                   <td class="text-right">Servicios:</td><td width="50px"><i *ngIf="this.formEmpresa.value.servicios; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Capacidad:</td><td width="50px"><i *ngIf="this.formEmpresa.value.capacidad; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right">Fecha Apertura:</td><td width="50px"><i *ngIf="this.formEmpresa.value.fechaapertura; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Fecha Ap.:</td><td width="50px"><i *ngIf="this.formEmpresa.value.fechaapertura; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Motivo:</td><td width="50px"><i *ngIf="this.formEmpresa.value.motivo; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Familiar:</td><td width="50px"><i *ngIf="this.formEmpresa.value.familiar; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                 </tr>
@@ -692,7 +740,7 @@
                   <td class="text-right">Trabajadores:</td><td width="50px"><i *ngIf="this.formEmpresa.value.trabajadores; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Participación:</td><td width="50px"><i *ngIf="this.formEmpresa.value.participacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Capacitación:</td><td width="50px"><i *ngIf="this.formEmpresa.value.capacitacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Municipio:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idmunicipio; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Municipio:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idmunicipio; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                 </tr>
                 <tr>
                   <td class="text-right"><span class="text-danger"><b>*</b></span>Localidad:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idlocalidad; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
@@ -703,16 +751,31 @@
                 </tr>
               </tbody>
             </table>
-
-            <div class="row justify-content-between p-3 mt-2">
-              <div class="div">
-                <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
-                <button class="btn btn-sm btn-outline-success" (click)="faceptar()">Guardar <i class="bi bi-floppy"></i></button>
-              </div>
-              <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
-            </div>
           </div>
-        </form>
+          <div *ngIf="formEmpresa.invalid && formEmpresa.touched" class="alert alert-danger">
+            <small>Por favor, completa todos los campos obligatorios.</small>
+          </div>
+          <ng-container *ngFor="let field of getFormControls()">
+            <div *ngIf="formEmpresa.get(field).invalid && formEmpresa.get(field).touched" class="alert alert-danger">
+              <small><strong>El campo {{ field }} no es válido:</strong></small>
+              <ul>
+                <small><li *ngIf="formEmpresa.get(field).errors?.required">Este campo es obligatorio.</li></small>
+                <small><li *ngIf="formEmpresa.get(field).errors?.minlength">Debe tener al menos {{ formEmpresa.get(field).errors?.minlength.requiredLength }} caracteres.</li></small>
+                <small><li *ngIf="formEmpresa.get(field).errors?.maxlength">No debe tener más de {{ formEmpresa.get(field).errors?.maxlength.requiredLength }} caracteres.</li></small>
+                <small><li *ngIf="formEmpresa.get(field).errors?.pattern">El formato no es válido.</li></small>
+              </ul>
+            </div>
+          </ng-container>
+
+          <div class="row justify-content-between p-3 mt-2">
+            <div class="div">
+              <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+              <button type="submit" class="btn btn-sm btn-outline-success" [disabled]="!formEmpresa.valid">Guardar <i class="bi bi-floppy"></i></button>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+          </div>
+        </div>
+      </form>
     </div>
 </ng-template>
 
@@ -728,212 +791,585 @@
       </div>
   </div>
   <div class="modal-body">
-      <form [formGroup]="formRep" (ngSubmit)="faceptarRep()">
-          <div class="row">
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Apellido Paterno: <span class="text-danger"><b>*</b></span></label>
-                  <input type="text" class="form-control form-control-sm" formControlName="primerapellido" [class.is-invalid]="fR.primerapellido.errors && fR.primerapellido.touched" (input)="onInput($event, 'primerapellido', 'letrasyespacios')" autocomplete="no" required/>
-                  <small *ngIf="fR.primerapellido.errors&& fR.primerapellido.touched" class="text-danger">
-                      <ng-container *ngIf="fR.primerapellido.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="fR.primerapellido.errors.pattern">
-                          Solo se permiten letras.
-                      </ng-container>
-                      <ng-container *ngIf="fR.primerapellido.errors.maxlength">
-                          No puede exceder los 50 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Apellido Materno: </label>
-                  <input type="text" class="form-control form-control-sm" formControlName="segundoapellido" [class.is-invalid]="fR.segundoapellido.errors && fR.segundoapellido.touched" (input)="onInput($event, 'segundoapellido', 'letrasyespacios')" autocomplete="no" />
-                  <small *ngIf="fR.segundoapellido.errors&& fR.segundoapellido.touched" class="text-danger">
-                      <ng-container *ngIf="fR.segundoapellido.errors.pattern">
-                          Solo se permiten letras.
-                      </ng-container>
-                      <ng-container *ngIf="fR.segundoapellido.errors.maxlength">
-                          No puede exceder los 50 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Nombres: <span class="text-danger"><b>*</b></span></label>
-                  <input type="text" class="form-control form-control-sm" formControlName="primernombre" [class.is-invalid]="fR.primernombre.errors && fR.primernombre.touched" (input)="onInput($event, 'primernombre', 'letrasyespacios')" autocomplete="no" required/>
-                  <small *ngIf="fR.primernombre.errors&& fR.primernombre.touched" class="text-danger">
-                      <ng-container *ngIf="fR.primernombre.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="fR.primernombre.errors.pattern">
-                          Solo se permiten letras.
-                      </ng-container>
-                      <ng-container *ngIf="fR.primernombre.errors.maxlength">
-                          No puede exceder los 50 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Genero: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="idtipogenero">
-                      <option *ngFor="let _itemp of genero" [value]="_itemp.idtipogenero">{{ _itemp.tipogenero }}</option>
-                  </select>
-                  <small *ngIf="fR.idtipogenero.errors&& fR.idtipogenero.touched" class="text-danger">
-                      <ng-container *ngIf="fR.idtipogenero.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
+    <div class="row">
+      <div class="col-sm-12 d-flex justify-content-center position-relative">
+        <div class="wizard-tabs">
+          <div class="wizard-step" [ngClass]="{'active-step': stepRep === 1, 'completed-step': stepRep > 1}" (click)="goToStepRep(1)">
+            <div class="wizard-circle"><i class="bi bi-card-checklist"></i></div>
+            <div class="wizard-label text-center">Datos<br>Personales</div>
+          </div>
+          <div class="wizard-line"></div>
+          <div class="wizard-step" [ngClass]="{'active-step': stepRep === 2, 'completed-step': stepRep > 2}" (click)="goToStepRep(2)">
+            <div class="wizard-circle"><i class="bi bi-telephone"></i></div>
+            <div class="wizard-label text-center">Datos<br>Contacto</div>
+          </div>
+          <div class="wizard-line"></div>
+          <div class="wizard-step" [ngClass]="{'active-step': stepRep === 3, 'completed-step': stepRep > 3}" (click)="goToStepRep(3)">
+            <div class="wizard-circle"><i class="bi bi-person-circle"></i></div>
+            <div class="wizard-label text-center">Datos<br>Usuario</div>
+          </div>
+          <div class="wizard-line"></div>
+          <div class="wizard-step" [ngClass]="{'active-step': stepRep === 4, 'completed-step': stepRep === 4}" (click)="goToStepRep(4)">
+            <div class="wizard-circle"><i class="bi bi-check-circle"></i></div>
+            <div class="wizard-label text-center">Finalizar<br>Registro</div>
+          </div>
+        </div>
+      </div>
+    </div><hr>
+    <form [formGroup]="formRep" (ngSubmit)="faceptarRep()">
+      <div *ngIf="stepRep === 1">
+        <div class="row pl-3 justify-content-between">
+          <h5 class="card-title">I.- Datos Personales</h5>
+        </div>
+        <div class="row">
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Apellido Paterno:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="primerapellido" [class.is-invalid]="fR.primerapellido.errors && fR.primerapellido.touched" (input)="onInput($event, 'primerapellido', 'letrasyespacios')" autocomplete="no" required/>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Apellido Materno:</label>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="segundoapellido" [class.is-invalid]="fR.segundoapellido.errors && fR.segundoapellido.touched" (input)="onInput($event, 'segundoapellido', 'letrasyespacios')" autocomplete="no" />
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left" >
+            <label>Nombres:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="primernombre" [class.is-invalid]="fR.primernombre.errors && fR.primernombre.touched" (input)="onInput($event, 'primernombre', 'letrasyespacios')" autocomplete="no" required/>
+          </div>
+          <div class="col-lg-2 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Genero:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+            <select class="custom-select custom-select-sm" formControlName="idtipogenero" [class.is-invalid]="fR.idtipogenero.errors && fR.idtipogenero.touched" required>
+              <option *ngFor="let _itemp of genero" [value]="_itemp.idtipogenero">{{ _itemp.tipogenero }}</option>
+            </select>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Documento:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12 mt-1">
+            <select class="custom-select custom-select-sm" formControlName="idtipodocumento" [class.is-invalid]="fR.idtipodocumento.errors && fR.idtipodocumento.touched">
+              <option *ngFor="let _itemp of documento" [value]="_itemp.idtipodocumento">{{ _itemp.tipodocumento }}</option>
+            </select>
+          </div>
+          <div class="col-lg-2 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>DIP:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="dip" [class.is-invalid]="fR.dip.errors && fR.dip.touched" (input)="onInput($event, 'dip', 'numeros')" autocomplete="no" required/>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Complemento:</label>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+            <input type="text" [maxlength]="5" class="form-control form-control-sm" formControlName="complementario" [class.is-invalid]="fR.complementario.errors && fR.complementario.touched" (input)="onInput($event, 'complementario', 'letrasynumerosguion')" autocomplete="no" />
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+              <label for="">Expedido:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+            <select class="custom-select custom-select-sm" formControlName="idtipoextension" [class.is-invalid]="fR.idtipoextension.errors && fR.idtipoextension.touched" required>
+              <option *ngFor="let _itemp of extension" [value]="_itemp.idtipoextension">{{ _itemp.tipoextension }}</option>
+            </select>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Nivel Educacion:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-2 col-md-6 col-sm-12 mt-1">
+            <select class="custom-select custom-select-sm" formControlName="formacion" [class.is-invalid]="fR.formacion.errors && fR.formacion.touched" required>
+              <option value="1">INICIAL</option>
+              <option value="2">PRIMARIA</option>
+              <option value="3">SECUNDARIA</option>
+              <option value="4">TECNICO</option>
+              <option value="5">LICENCIATURA</option>
+            </select>
+          </div>
+          <div class="col-lg-2 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Estado Civil:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-2 col-md-6 col-sm-12 mt-1">
+            <select class="custom-select custom-select-sm" formControlName="estadocivil" [class.is-invalid]="fR.estadocivil.errors && fR.estadocivil.touched" required>
+              <option value="1">SOLTERO(A)</option>
+              <option value="2">CASADO(A)</option>
+              <option value="3">VIUDO(A)</option>
+              <option value="4">CONVIVIENTE</option>
+              <option value="5">SEPARADO(A)</option>
+            </select>
+          </div>
+          <div class="col-lg-1 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Hijos:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-2 col-md-6 col-sm-12 mt-1">
+            <select class="custom-select custom-select-sm" formControlName="hijos" [class.is-invalid]="fR.hijos.errors && fR.hijos.touched" required>
+              <option value="0">SIN HIJOS</option>
+              <option value="1">1 HIJO</option>
+              <option value="2">2 HIJOS</option>
+              <option value="3">3 HIJOS</option>
+              <option value="4">4 HIJOS</option>
+              <option value="5">5 A MAS HIJOS</option>
+            </select>
+          </div>
+        </div>
+        <div class="row justify-content-between p-3 mt-2">
+          <button class="btn btn-sm btn-outline-primary" (click)="nextStepRep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelarRep()">Cerrar <i class="bi bi-x-lg"></i></button>
+        </div>
+      </div>
+      <div *ngIf="stepRep === 2">
+        <div class="row pl-3 justify-content-between">
+          <h5 class="card-title">II.- Datos de Contacto</h5>
+        </div>
+        <div class="row">
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
+            <label>Celular:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="celular" [class.is-invalid]="fR.celular.errors && fR.celular.touched" (input)="onInput($event, 'celular', 'numeros')" autocomplete="no" required/>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
+            <label>Teléfono:</label>
+          </div>
+          <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="telefono" [class.is-invalid]="fR.telefono.errors && fR.telefono.touched" (input)="onInput($event, 'telefono', 'numeros')" autocomplete="no"/>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
+            <label>Dirección:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="direccion" [class.is-invalid]="fR.direccion.errors && fR.direccion.touched" (input)="onInput($event, 'direccion', 'direccion')" autocomplete="no"/>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
+            <label>Correo:</label>
+          </div>
+          <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="correo" [class.is-invalid]="fR.correo.errors && fR.correo.touched" autocomplete="no"/>
+          </div>
+        </div>
+        <div class="row justify-content-between p-3 mt-2">
+          <div class="div">
+            <button class="btn btn-sm btn-outline-secondary" (click)="prevStepRep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+            <button class="btn btn-sm btn-outline-primary" (click)="nextStepRep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+          </div>
+          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelarRep()">Cerrar <i class="bi bi-x-lg"></i></button>
+        </div>
+      </div>
+      <div *ngIf="stepRep === 3">
+        <div class="row pl-3 justify-content-between">
+          <h5 class="card-title">III.- Datos de Usuario</h5>
+        </div>
+        <div class="row">
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Usuario:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="usuario" [class.is-invalid]="fR.usuario.errors && fR.usuario.touched" autocomplete="no" readonly required/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Contraseña:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 mt-1">
+            <input type="password" class="form-control form-control-sm" formControlName="clave" [class.is-invalid]="fR.clave.errors && fR.clave.touched" autocomplete="no" readonly required/>
+          </div>
+        </div>
+        <div class="row justify-content-between p-3 mt-2">
+          <div class="div">
+            <button class="btn btn-sm btn-outline-secondary" (click)="prevStepRep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+            <button class="btn btn-sm btn-outline-primary" (click)="nextStepRep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+          </div>
+          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelarRep()">Cerrar <i class="bi bi-x-lg"></i></button>
+        </div>
+      </div>
+      <div *ngIf="stepRep === 4">
+        <div class="row pl-3 justify-content-between">
+          <h5 class="card-title">IV.- Resumen de datos a guardar</h5>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-sm table-bordered">
+            <tbody>
+              <tr>
+                <td colspan="10"><strong>DATOS PERSONALES</strong></td>
+              </tr>
+              <tr>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Apellido Paterno:</td><td width="50px"><i *ngIf="this.formRep.value.primerapellido; else noData" class="fa fa-check-circle fa-2x text-success"></i>
+                  <ng-template #noData>
+                    <i class="fa fa-times-circle fa-2x text-danger"></i>
+                  </ng-template>
+                </td>
+                <td class="text-right">Apellido Paterno:</td><td width="50px"><i *ngIf="this.formRep.value.segundoapellido; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Nombre:</td><td width="50px"><i *ngIf="this.formRep.value.primernombre; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Genero:</td><td width="50px"><i *ngIf="this.formRep.value.idtipogenero; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+              </tr>
+              <tr>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Documento:</td><td width="50px"><i *ngIf="this.formRep.value.idtipodocumento; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>DIP:</td><td width="50px"><i *ngIf="this.formRep.value.dip; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right">Complemento:</td><td width="50px"><i *ngIf="this.formRep.value.complementario; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Expedido:</td><td width="50px"><i *ngIf="this.formRep.value.idtipoextension; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+              </tr>
+              <tr>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Formación:</td><td width="50px"><i *ngIf="this.formRep.value.formacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Estado Civil:</td><td width="50px"><i *ngIf="this.formRep.value.estadocivil; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Hijos:</td><td width="50px"><i *ngIf="this.formRep.value.hijos; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"></td><td width="50px"></td>
+              </tr>
+              <tr>
+                <td colspan="10"><strong>DATOS DE CONTACTO</strong></td>
+              </tr>
+              <tr>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Celular:</td><td width="50px"><i *ngIf="this.formRep.value.celular; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right">Teléfono:</td><td width="50px"><i *ngIf="this.formRep.value.telefono; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Direccion:</td><td width="50px"><i *ngIf="this.formRep.value.direccion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right">Correo:</td><td width="50px"><i *ngIf="this.formRep.value.correo; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+              </tr>
+              <tr>
+                <td colspan="10"><strong>DATOS DE USUARIO</strong></td>
+              </tr>
+              <tr>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Usuario:</td><td width="50px"><i *ngIf="this.formRep.value.usuario; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Contraseña:</td><td width="50px"><i *ngIf="this.formRep.value.clave; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"></td><td width="50px"></td>
+                <td class="text-right"></td><td width="50px"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="formRep.invalid && formRep.touched" class="alert alert-danger">
+          Por favor, completa todos los campos obligatorios.
+        </div>
+        <ng-container *ngFor="let field of getFormControlsRep()">
+          <div *ngIf="formRep.get(field).invalid && formRep.get(field).touched" class="alert alert-danger">
+            <small><strong>El campo {{ field }} no es válido:</strong></small>
+            <ul>
+              <small><li *ngIf="formRep.get(field).errors?.required">Este campo es obligatorio.</li></small>
+              <small><li *ngIf="formRep.get(field).errors?.minlength">Debe tener al menos {{ formRep.get(field).errors?.minlength.requiredLength }} caracteres.</li></small>
+              <small><li *ngIf="formRep.get(field).errors?.maxlength">No debe tener más de {{ formRep.get(field).errors?.maxlength.requiredLength }} caracteres.</li></small>
+              <small><li *ngIf="formRep.get(field).errors?.pattern">El formato no es válido.</li></small>
+            </ul>
+          </div>
+        </ng-container>
+        <div class="row justify-content-between p-3 mt-2">
+          <div class="div">
+            <button class="btn btn-sm btn-outline-secondary" (click)="prevStepRep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+            <button type="submit" class="btn btn-sm btn-outline-success" [disabled]="!formRep.valid">Guardar <i class="bi bi-floppy"></i></button>
+          </div>
+          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelarRep()">Cerrar <i class="bi bi-x-lg"></i></button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
 
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Documento: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="idtipodocumento" >
-                      <option *ngFor="let _itemp of documento" [value]="_itemp.idtipodocumento">{{ _itemp.tipodocumento }}</option>
-                  </select>
-                  <small *ngIf="fR.idtipodocumento.errors&& fR.idtipodocumento.touched" class="text-danger">
-                      <ng-container *ngIf="fR.dip.errors.required">
-                          Obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>DIP: <span class="text-danger"><b>*</b></span></label>
-                  <input type="text" class="form-control form-control-sm" formControlName="dip" [class.is-invalid]="fR.dip.errors && fR.dip.touched" (input)="onInput($event, 'dip', 'numeros')" autocomplete="no" required/>
-                  <small *ngIf="fR.dip.errors&& fR.dip.touched" class="text-danger">
-                      <ng-container *ngIf="fR.dip.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="fR.dip.errors.pattern">
-                          Solo se permite números.
-                      </ng-container>
-                      <ng-container *ngIf="fR.dip.errors.maxlength">
-                          No puede exceder los 15 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Complemento: </label>
-                  <input type="text" class="form-control form-control-sm" formControlName="complementario" [class.is-invalid]="fR.complementario.errors && fR.complementario.touched" (input)="onInput($event, 'complementario', 'letrasynumerosguion')" autocomplete="no" />
-                  <small *ngIf="fR.complementario.errors && fR.complementario.touched" class="text-danger">
-                      <ng-container *ngIf="fR.complementario.errors.pattern">
-                          Caracter no permitido.
-                      </ng-container>
-                      <ng-container *ngIf="fR.complementario.errors.maxlength">
-                          No puede exceder los 5 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label for="">Expedido: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="idtipoextension" [class.is-invalid]="fR.idtipoextension.errors && fR.idtipoextension.touched">
-                      <option *ngFor="let _itemp of extension" [value]="_itemp.idtipoextension">{{ _itemp.tipoextension }}</option>
-                  </select>
-                  <small *ngIf="fR.idtipoextension.errors && fR.idtipoextension.touched" class="text-danger">
-                      <ng-container *ngIf="fR.idtipoextension.errors.required">
-                          Obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Teléfono/Celular: <span class="text-danger"><b>*</b></span></label>
-                  <input type="number" class="form-control form-control-sm" formControlName="celular" [class.is-invalid]="fR.celular.errors && fR.celular.touched" autocomplete="no"/>
-                  <small *ngIf="fR.celular.errors && fR.celular.touched" class="text-danger">
-                      <ng-container *ngIf="fR.celular.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="fR.celular.errors.pattern">
-                          Solo se permite números.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-4 col-sm-12">
-                  <label>Nivel Educacion: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="formacion" >
-                    <option value="1">Inicial</option>
-                    <option value="2">Primaria</option>
-                    <option value="3">Secundaria</option>
-                    <option value="4">Técnico</option>
-                    <option value="5">Licenciatura</option>
-                </select>
-                  <small *ngIf="fR.formacion.errors && fR.formacion.touched" class="text-danger">
-                      <ng-container *ngIf="fR.formacion.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-4 col-sm-12">
-                  <label>Estado Civil: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="estadocivil" >
-                    <option value="1">Soltero(a)</option>
-                    <option value="2">Casado(a)</option>
-                    <option value="3">Viudo(a)</option>
-                    <option value="4">Conviviente</option>
-                    <option value="5">Separado(a)</option>
-                </select>
-                  <small *ngIf="fR.estadocivil.errors && fR.estadocivil.touched" class="text-danger">
-                      <ng-container *ngIf="fR.estadocivil.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-4 col-sm-12">
-                  <label>Hijos: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="hijos" >
-                    <option value="0">Sin Hijos</option>
-                    <option value="1">1 Hijo</option>
-                    <option value="2">2 Hijos</option>
-                    <option value="3">3 Hijos</option>
-                    <option value="4">4 Hijos</option>
-                    <option value="5">5 a mas hijos</option>
-                </select>
-                  <small *ngIf="fR.hijos.errors && fR.hijos.touched" class="text-danger">
-                      <ng-container *ngIf="fR.hijos.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
+<ng-template #ver>
+  <div class="modal-header alert-info">
+    <div class="col-lg-12 col-md-12 text-center ">
+        <h4 class="modal-title pull-left"><i class="fa fa-eye"></i> {{ estado }} Informacion de la Empresa "{{ dato.empresa }}"</h4><br>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="row pl-3 pr-3">
+      <div class="col-lg-4 col-sm-12 pt-3">
+        <div class="row align-content-center justify-content-center mt-2">
+          <img class="usuario-img" [src]="imagen" />
+          <img [src]="imagen" width="300px" (error)="$event.target.src='../../../assets/catalogo/img/avatar.jpg'" />
+        </div>
+        <div class="row justify-content-center mt-4">
+          <button class="btn btn-outline-info" (click)="fcambiarimagen(cargarimagen)">
+            <i class="fa fa-picture-o"></i> Cambiar Logo
+          </button>
+        </div>
+      </div>
+      <div class="col-lg-8 col-sm-12 mt-2">
+        <div class="row mt-2">
+          <div class="col-sm-12 text-sm-left">
+            <h5>DATOS DE REGISTRO:</h5>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>N° Formulario:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.nform }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Fecha Registro:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.fechareg | date:'dd/MM/yyyy' }}</label>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-sm-12 text-sm-left">
+            <h5>DATOS DE LA UNIDAD PRODUCTIVA:</h5>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Nombre Comercial:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.empresa }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Razon Social:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.razonsocial }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Descripción:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.descripcion }}</label>
+          </div>
+        </div>
+        <div class="row" *ngIf="dato?.nit">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>NIT:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.nit }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Banca Movil:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.bancamovil ? 'SI' : 'NO' }}</label>
+          </div>
+        </div>
+        <div class="row" *ngIf="dato?.fechaapertura">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Fecha Apertura:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.fechaapertura | date:'dd/MM/yyyy' }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Rubro:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.subrubro.rubro.rubro }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Subrubro:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.subrubro.subrubro }}</label>
+          </div>
+        </div>
+        <div class="row" *ngIf="dato?.servicios">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Servicios:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.servicios }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Produccion:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ getCapacidadDescription(dato?.capacidad) }} {{ dato?.unidadmedida }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Motivo:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ getMotivoDescription(dato?.motivo) }} {{ dato?.otromotivo }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Familiar:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.familiar ? 'SI' : 'NO' }}</label>
+          </div>
+        </div>
+        <div class="row" *ngIf="dato?.familiar">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Involucrados:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ getInvolucradosDescription(dato?.involucrados) }} {{ dato?.otrosinvolucrados }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Trabajadores:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ getTrabajadoresDescription(dato?.trabajadores) }}</label>
+          </div>
+        </div>
+        <div class="row" *ngIf="dato?.familiar">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Ferias:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ getFeriasDescription(dato?.participacion) }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Capacitación:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.capacitacion != null ? dato?.capacitacion : 'SIN CAPACITACION' }}</label>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-sm-12 text-sm-left">
+            <h5>DATOS DE CONTACTO:</h5>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Municipio:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.localidad.municipio.municipio }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Localidad:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.localidad.localidad }}</label>
+          </div>
+        </div>
+        <div class="row" *ngIf="dato?.zona">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Zona:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.zona }}</label>
+          </div>
+        </div>
+        <div class="row" *ngIf="dato?.direccion">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Dirección:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.direccion }}</label>
+          </div>
+        </div>
+        <div class="row" *ngIf="dato?.referencia">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Referencia:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.referencia }}</label>
+          </div>
+        </div>
+        <div class="row" *ngIf="dato?.transporte">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Transporte:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.transporte }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-4 text-sm-right" *ngIf="dato?.celular">
+            <strong>Celular:</strong>
+          </div>
+          <div class="col-md-3 col-sm-8" *ngIf="dato?.celular">
+            <label for="">{{ dato?.celular }}</label>
+          </div>
+          <div class="col-md-2 col-sm-4 text-sm-right" *ngIf="dato?.telefono">
+            <strong>Teléfono:</strong>
+          </div>
+          <div class="col-md-3 col-sm-8" *ngIf="dato?.telefono">
+            <label for="">{{ dato?.telefono }}</label>
+          </div>
+        </div>
+        <div class="row" *ngIf="dato?.correo">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Correo:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.correo }}</label>
+          </div>
+        </div>
+        <div class="row" *ngIf="dato?.facebook">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Facebook:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.facebook }}</label>
+          </div>
+        </div>
+        <div class="row" *ngIf="dato?.twitter">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Twitter:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.twitter }}</label>
+          </div>
+        </div>
+        <div class="row" *ngIf="dato?.instagram">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Instagram:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.instagram }}</label>
+          </div>
+        </div>
+        <div class="row" *ngIf="dato?.paginaweb">
+          <div class="col-md-4 col-sm-4 text-sm-right">
+            <strong>Página WEB:</strong>
+          </div>
+          <div class="col-md-8 col-sm-8">
+            <label for="">{{ dato?.paginaweb }}</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar</button>
+  </div>
+</ng-template>
 
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Usuario: <span class="text-danger"><b>*</b></span></label>
-                  <input type="text" class="form-control form-control-sm" formControlName="usuario" [class.is-invalid]="fR.usuario.errors && fR.usuario.touched" autocomplete="no" readonly/>
-                  <small *ngIf="fR.usuario.errors && fR.usuario.touched" class="text-danger">
-                      <ng-container *ngIf="fR.usuario.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="fR.usuario.errors.pattern">
-                          Caracter no permitido.
-                      </ng-container>
-                      <ng-container *ngIf="fR.usuario.errors.maxlength">
-                          No puede exceder los 10 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Contraseña: <span class="text-danger"><b>*</b></span></label>
-                  <input type="password" class="form-control form-control-sm" formControlName="clave" [class.is-invalid]="fR.clave.errors && fR.clave.touched" autocomplete="no" readonly/>
-                  <small *ngIf="fR.clave.errors && fR.clave.touched" class="text-danger">
-                      <ng-container *ngIf="fR.clave.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="fR.clave.errors.maxlength">
-                          No puede exceder los 20 caracteres.
-                      </ng-container>
-                      <ng-container *ngIf="fR.clave.errors.minlength">
-                          Debe tener 8 caracteres minimo.
-                      </ng-container>
-                  </small>
-              </div>
-          </div>
-          <div *ngIf="formRep.invalid && formRep.touched" class="alert alert-danger">
-            Por favor, completa todos los campos obligatorios.
-          </div>
-          <div class="text-center">
-              <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formRep.valid">
-                  <i class="fa fa-save"></i> Guardar
-              </button>
-              <button type="button" class="btn btn-outline-secondary" (click)="fcancelarRep()">
-                  <i class="fa fa-times"></i> Cancelar
-              </button>
-          </div>
-      </form>
+<ng-template #cargarimagen>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left">{{ estado }} Imagen</h4>
+  </div>
+  <div class="modal-body">
+      <div class="form-group">
+          <label>Fotografía</label>
+          <input class="form-control" type="file" (change)="fseleccionarArchivo($event)" />
+      </div>
+
+      <div class="text-center">
+          <button type="button" class="btn btn-outline-success m-2">
+      <i class="fa fa-save"></i> Grabar
+    </button>
+          <button type="button" class="btn btn-outline-secondary" (click)="fcancelarRep()">
+      <i class="fa fa-times"></i> Cancelar
+    </button>
+      </div>
   </div>
 </ng-template>

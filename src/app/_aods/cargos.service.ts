@@ -2,41 +2,48 @@ import { Injectable } from '@angular/core';
 import { RUTA, TOKEN } from '../_config/application';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { Enlacesroles } from '../_entidades/enlacesroles';
+import { Cargos } from '../_entidades/cargos';
 import { catchError } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EnlacesrolesService {
+export class CargosService {
 
-  ruta = `${RUTA}/apirest/enlacesroles`;
+  ruta = `${RUTA}/apirest/cargos`;
 
-  constructor( private _httpClient: HttpClient) { }
+  constructor( private _httpClient: HttpClient ) { }
 
-  listarRoles(id: number): Observable<Enlacesroles[]>{
+  datos(pagina: number, cantidad: number, buscar: string): Observable<Cargos[]>{
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
-    return this._httpClient.get<Enlacesroles[]>(`${this.ruta}/roles/${id}`, {
+    return this._httpClient.get<Cargos[]>(`${this.ruta}?pagina=${pagina}&cantidad=${cantidad}&buscar=${buscar}`, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
   }
 
-  // listarEnlaces(id: number): Observable<Enlacesroles[]>{
-  //   const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
-  //   return this._httpClient.get<Enlacesroles[]>(`${this.ruta}/enlaces/${id}`, {
-  //     headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
-  //   });
-  // }
-
-  verificar(idrol: number, idenlace: number): Observable<boolean>{
+  cantidad(buscar: string): Observable<number>{
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
-    return this._httpClient.get<boolean>(`${this.ruta}/roles/${idrol}/${idenlace}`, {
+    return this._httpClient.get<number>(`${this.ruta}/cantidad?buscar=${buscar}`, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
   }
 
-  adicionar(dato: Enlacesroles): Observable<any>{
+  dato(id: number): Observable<Cargos>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Cargos>(`${this.ruta}/${id}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+
+  listar(id: number): Observable<Cargos[]>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Cargos[]>(`${this.ruta}/rol/${id}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+
+  adicionar(dato: Cargos): Observable<any>{
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
     return this._httpClient.post<void>(`${this.ruta}`, dato, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
@@ -57,7 +64,7 @@ export class EnlacesrolesService {
     );
   }
 
-  modificar(dato: Enlacesroles): Observable<any>{
+  modificar(dato: Cargos): Observable<any>{
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
     return this._httpClient.put<void>(`${this.ruta}`, dato, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
@@ -72,34 +79,6 @@ export class EnlacesrolesService {
           Swal.fire('Error en el Servidor', 'Error al realizar la consulta en la Base de Datos', 'error');
         } else {
           Swal.fire('Error', 'Ocurrió un error desconocido', 'error');
-        }
-        return throwError(e);
-      })
-    );
-  }
-
-  // eliminar(enlacerol: Enlacesroles): Observable<any>{
-  //   const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
-  //   return this._httpClient.delete<void>(`${this.ruta}`, enlacerol, {
-  //     headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
-  //   });
-  // }
-
-  eliminar(enlaceRol: Enlacesroles): Observable<void> {
-    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
-    return this._httpClient.request<void>('delete', `${this.ruta}`, {
-      body: enlaceRol,
-      headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${access_token}`)
-        .set('Content-Type', 'application/json')
-    }).pipe(
-      catchError(e => {
-        if (e.status === 404) {
-          Swal.fire('Error', 'El Enlace-Rol no existe', 'error');
-        } else if (e.status === 400) {
-          Swal.fire('Error de validación', 'Revisa los campos enviados', 'error');
-        } else {
-          Swal.fire('Error', 'Ocurrió un error al intentar eliminar el Enlace-Rol', 'error');
         }
         return throwError(e);
       })

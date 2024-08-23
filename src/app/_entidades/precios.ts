@@ -9,6 +9,7 @@ export class Precios {
   cantidad: number;
   estado: boolean;
   created_at: Date;
+  
   productos: Productos;
   tamanos: Tamanos;
 }

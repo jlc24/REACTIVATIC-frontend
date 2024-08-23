@@ -2,127 +2,128 @@
 </app-cabeceratitulos>
 
 <div class="row">
-    <div class="col-md-12">
-        <div class="tile">
-
-            <div class="row">
-                <div class="col-md-12 mb-2">
-                    <div class="input-group justify-content-end">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-outline-success mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Municipio</button>
-                            <div class="dropdown">
-                            <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <i class="fa fa-bars"></i> Opciones
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <button class="dropdown-item" ><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
-                                <button class="dropdown-item" ><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
+  <div class="col-md-12">
+    <div class="tile">
+      <div class="row justify-content-center">
+        <h4>LISTA DE MUNICIPIOS y LOCALIDADES</h4>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mb-2">
+          <div class="input-group justify-content-first">
+            <div class="input-group-prepend">
+              <button class="btn btn-sm btn-outline-success mr-2" type="button" (click)="fadicionar(ab)" *ngIf="esCargoAdministrador || esCargoTecnologia || esCargoEncargado"><i class="fa fa-plus"></i> Agregar Municipio</button>
+              <div class="dropdown">
+                <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-bars"></i> Opciones
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <button class="dropdown-item" ><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                  <button class="dropdown-item" ><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
                 </div>
-            </div>
-            <div class="row justify-content-center">
-              <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
-                  <div class="input-group">
-                      <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Usuario a buscar..." (keyup)="fbuscar()" />
-                      <span class="input-group-prepend">
-                          <button class="btn btn-outline-danger mr-2 d-none d-md-inline" (click)="limpiar()">
-                              <i class="fa fa-times"></i> Limpiar
-                          </button>
-                          <button class="btn btn-outline-danger mr-2 d-inline d-md-none" (click)="limpiar()">
-                              <i class="fa fa-times"></i>
-                          </button>
-                          <button class="btn btn-outline-secondary d-none d-md-inline" (click)="fbuscar()">
-                              <i class="fa fa-search"></i> Buscar
-                          </button>
-                          <button class="btn btn-outline-secondary d-inline d-md-none" (click)="fbuscar()">
-                              <i class="fa fa-search"></i>
-                          </button>
-                      </span>
-                  </div>
               </div>
             </div>
-
-          <div class="row justify-content-center mt-2">
-            <div class="col-md-8 col-sm-12">
-              <div class="table-responsive" *ngIf="datos?.length > 0">
-                <p class="text-right" *ngIf="total==1">Total: <b>{{total}} registro</b></p>
-                <p class="text-right" *ngIf="total>1">Total: <b>{{total}} registros</b></p>
-                <table class="table table-bordered table-striped table-hover table-sm tabla-municipio">
-                    <thead>
-                        <tr class="table-primary">
-                            <th class="text-center">Nro.</th>
-                            <th class="text-left">Municipio</th>
-                            <th class="text-center">Estado</th>
-                            <th class="text-center">Fecha</th>
-                            <th class="text-center">Operaciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let _item of datos; let i = index">
-                            <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
-                            <td class="text-left">
-                                <b>{{ _item.municipio }}</b>
-                                <!-- <div *ngIf="!sw">
-                                    <app-localidades [idmunicipio]="_item.idmunicipio"></app-localidades>
-                                </div> -->
-                            </td>
-                            <td class="text-center">
-                              <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idmunicipio, !_item.estado)" >
-                                  {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
-                              </span>
-                            </td>
-                            <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
-                            <td class="text-center">
-                                <div class="btn-group" role="group" aria-label="First group">
-                                  <button class="btn btn-outline-info btn-sm" title="Ver Localidades" (click)="fverlocalidades(_item.idmunicipio, ver)">
-                                    <i class="fa fa-eye"></i>
-                                  </button>
-                                  <button class="btn btn-outline-warning btn-sm" title="Editar Municipio" (click)="fmodificar(_item.idmunicipio, ab)">
-                                    <i class="fa fa-edit"></i>
-                                  </button>
-                                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Municipio" (click)="feliminar(_item.idmunicipio)">
-                                    <i class="fa fa-trash"></i>
-                                  </button>
-                              </div>
-                            </td>
-                        </tr>
-
-                        <tr *ngIf="total > cantidad">
-                            <td colspan="5">
-                                <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <div class="row justify-content-center mt-2">
-            <div class="col-md-8">
-              <div class="table-responsive" *ngIf="total == 0">
-                <table class="table table-bordered table-striped table-hover table-sm">
-                  <thead>
-                      <tr class="table-primary">
-                          <th class="text-left">Nro.</th>
-                          <th class="text-left">Municipio</th>
-                          <th class="text-center">Estado</th>
-                          <th class="text-center">Fecha</th>
-                          <th class="text-center">Operaciones</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td colspan="5" class="text-center">No se encontraron datos.</td></tr>
-                  </tbody>
-                </table>
-                <p class="text-center"><b>Sin municipios</b></p>
-              </div>
           </div>
         </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6 mt-1">
+          <p *ngIf="total == 0">
+            Total: <b>{{ total }} registros</b>
+          </p>
+          <p *ngIf="total == 1">
+            Total: <b>{{ total }} registro</b>
+          </p>
+          <p *ngIf="total > 1">
+            Total: <b>{{ total }} registros</b>
+          </p>
+        </div>
+        <div class="col-sm-6">
+          <div class="row justify-content-end">
+            <div class="col-sm-2 text-md-right text-sm-left mt-1">
+              <label for="">Buscar: </label>
+            </div>
+            <div class="col-sm-10">
+              <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                </div>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Municipio a buscar ..." (keyup)="fbuscar()" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive" *ngIf="datos?.length > 0">
+        <table class="table table-bordered table-striped table-hover table-sm tabla-municipio">
+          <thead>
+              <tr class="table-primary">
+                  <th class="text-center">Nro.</th>
+                  <th class="text-left">Municipio</th>
+                  <th class="text-center">Estado</th>
+                  <th class="text-center">Fecha Registro</th>
+                  <th class="text-center">Operaciones</th>
+              </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let _item of datos; let i = index">
+              <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
+              <td class="text-left">
+                <b>{{ _item.municipio }}</b>
+              </td>
+              <td class="text-center">
+                <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestadoMuni(_item.idmunicipio, !_item.estado)" *ngIf="esCargoAdministrador || esCargoEncargado || esCargoTecnologia">
+                  {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                </span>
+                <span class="badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" *ngIf="!esCargoAdministrador && !esCargoEncargado && !esCargoTecnologia">
+                  {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                </span>
+              </td>
+              <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="text-center">
+                <div class="btn-group" role="group" aria-label="First group">
+                  <button class="btn btn-outline-info btn-sm" title="Ver Localidades" (click)="fverlocalidades(_item.idmunicipio, ver)">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                  <button class="btn btn-outline-warning btn-sm" title="Editar Municipio" (click)="fmodificar(_item.idmunicipio, ab)" [disabled]="!esCargoAdministrador && !esCargoTecnologia && !esCargoEncargado">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Municipio" (click)="feliminar(_item.idmunicipio)" [disabled]="!esCargoAdministrador && !esCargoTecnologia">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-responsive" *ngIf="total == 0">
+        <table class="table table-bordered table-striped table-hover table-sm">
+          <thead>
+              <tr class="table-primary">
+                  <th class="text-left">Nro.</th>
+                  <th class="text-left">Municipio</th>
+                  <th class="text-center">Estado</th>
+                  <th class="text-center">Fecha</th>
+                  <th class="text-center">Operaciones</th>
+              </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="5" class="text-center">No se encontraron registros.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row mt-2">
+        <div class="col-sm-6">
+          <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+        </div>
+        <div class="col-sm-6">
+          <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <ng-template #ab>
@@ -167,7 +168,7 @@
 </ng-template>
 
 <ng-template #ver>
-    <div class="modal-header">
+    <div class="modal-header alert-info">
         <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} de Localidades del Municipio "{{ dato.municipio }}"</h4>
     </div>
     <div class="modal-body">
@@ -175,7 +176,7 @@
         <h3>Localidades</h3>
       </div>
       <div class="col-12 text-right">
-        <button class="btn btn-sm btn-outline-success" (click)="faddlocal(addlocal, dato)">
+        <button class="btn btn-sm btn-outline-success" (click)="faddlocal(addlocal, dato)" *ngIf="esCargoAdministrador || esCargoTecnologia || esCargoEncargado">
           <i class="fa fa-plus"></i> Agregar Localidad
         </button>
       </div>
@@ -195,18 +196,21 @@
               <td class="text-right">{{ i + 1 }}</td>
               <td>{{ _local.localidad }}</td>
               <td class="text-center">
-                <span class="estado badge {{ _local.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_local.idlocalidad, !_local.estado)" >
+                <span class="estado badge {{ _local.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestadoLocal(_local.idlocalidad, !_local.estado)" *ngIf="esCargoAdministrador || esCargoEncargado || esCargoTecnologia">
+                  {{ _local.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                </span>
+                <span class="badge {{ _local.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" *ngIf="!esCargoAdministrador && !esCargoEncargado && !esCargoTecnologia">
                   {{ _local.estado ? 'HABILITADO' : 'INHABILITADO' }}
                 </span>
               </td>
               <td class="text-center">{{ _local.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
               <td class="text-center">
                 <div class="btn-group" role="group" aria-label="First group">
-                  
-                  <button class="btn btn-outline-warning btn-sm" title="Editar Localidad" (click)="fmodLocal(_local.idlocalidad, addlocal)">
+
+                  <button class="btn btn-outline-warning btn-sm" title="Editar Localidad" (click)="fmodLocal(_local.idlocalidad, addlocal)" [disabled]="!esCargoAdministrador && !esCargoTecnologia && !esCargoEncargado">
                     <i class="fa fa-edit"></i>
                   </button>
-                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Localidad">
+                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Localidad" [disabled]="!esCargoAdministrador && !esCargoTecnologia">
                     <i class="fa fa-trash"></i>
                   </button>
               </div>

@@ -43,12 +43,13 @@ import { EnlacesComponent } from './enlaces/enlaces.component';
 import { ExtensionesComponent } from './extensiones/extensiones.component';
 import { GenerosComponent } from './generos/generos.component';
 import { RolesComponent } from './roles/roles.component';
+import { CargosComponent } from './cargos/cargos.component';
 
 
 
 
 @NgModule({
-  declarations: [EscritorioComponent, PerfilesComponent, ConfiguracionesComponent, E401Component, RubrosComponent, MunicipiosComponent, LocalidadesComponent, SubrubrosComponent, AsociacionesComponent, UsuariosComponent, EmpresasComponent, RepresentantesComponent, ProductosComponent, SolicitudesventaComponent, SolicitudescompraComponent, ReportesComponent, SeguimientosComponent, ClientesnoregistradosComponent, ClientesregistradosComponent, ProductosmasvendidosComponent, ClientesconmascomprasComponent, EmpresasmassolicitadasComponent, CategoriaComponent, BeneficiosComponent, ColoresComponent, ComentariosComponent, MaterialesComponent, OfertasComponent, PreciosComponent, TamanosComponent, DocumentosComponent, EnlacesComponent, ExtensionesComponent, GenerosComponent, RolesComponent],
+  declarations: [EscritorioComponent, PerfilesComponent, ConfiguracionesComponent, E401Component, RubrosComponent, MunicipiosComponent, LocalidadesComponent, SubrubrosComponent, AsociacionesComponent, UsuariosComponent, EmpresasComponent, RepresentantesComponent, ProductosComponent, SolicitudesventaComponent, SolicitudescompraComponent, ReportesComponent, SeguimientosComponent, ClientesnoregistradosComponent, ClientesregistradosComponent, ProductosmasvendidosComponent, ClientesconmascomprasComponent, EmpresasmassolicitadasComponent, CategoriaComponent, BeneficiosComponent, ColoresComponent, ComentariosComponent, MaterialesComponent, OfertasComponent, PreciosComponent, TamanosComponent, DocumentosComponent, EnlacesComponent, ExtensionesComponent, GenerosComponent, RolesComponent, CargosComponent],
   imports: [
     CommonModule,
     ModulosRoutingModule,

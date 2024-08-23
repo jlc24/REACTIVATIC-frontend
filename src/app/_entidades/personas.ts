@@ -22,6 +22,8 @@ export class Personas {
     estadocivil: number;
     hijos: number;
     estado: boolean;
+    created_at: Date;
+    
     tipogenero: Tiposgeneros;
     tipodocumento: Tiposdocumentos;
     tipoextension: Tiposextensiones;

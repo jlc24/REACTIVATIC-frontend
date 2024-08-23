@@ -3,131 +3,132 @@
 
 <div class="row">
   <div class="col-md-12">
-      <div class="tile">
-          <div class="row">
-              <div class="col-md-12 mb-2">
-                  <div class="input-group justify-content-end">
-                      <div class="input-group-prepend">
-                          <button class="btn btn-outline-success mr-2" type="button" (click)="fadicionar(am)"><i class="fa fa-plus"></i> Agregar Categoria</button>
-                          <div class="dropdown">
-                              <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <i class="fa fa-bars"></i> Opciones
-                              </button>
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                  <button class="dropdown-item"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
-                                  <button class="dropdown-item"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
-                              </div>
+    <div class="tile">
+      <div class="row justify-content-center">
+        <h4>LISTA DE CATEGORIAS</h4>
+      </div>
+      <div class="row">
+          <div class="col-md-12 mb-2">
+              <div class="input-group justify-content-first">
+                  <div class="input-group-prepend">
+                      <button class="btn btn-sm btn-outline-success mr-2" type="button" (click)="fadicionar(am)"><i class="fa fa-plus"></i> Agregar Categoria</button>
+                      <div class="dropdown">
+                          <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="fa fa-bars"></i> Opciones
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <button class="dropdown-item"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                              <button class="dropdown-item"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
                           </div>
                       </div>
                   </div>
               </div>
           </div>
+      </div>
 
-          <div class="row justify-content-center">
-              <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
-                  <div class="input-group">
-                      <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Usuario a buscar..." (keyup.enter)="fbuscar()"/>
-                      <span class="input-group-prepend">
-                          <button class="btn btn-outline-danger mr-2 d-none d-md-inline" (click)="limpiar()">
-                              <i class="fa fa-times"></i> Limpiar
-                          </button>
-                          <button class="btn btn-outline-danger mr-2 d-inline d-md-none" (click)="limpiar()">
-                              <i class="fa fa-times"></i>
-                          </button>
-                          <button class="btn btn-outline-secondary d-none d-md-inline" [(ngModel)]="buscar" (click)="fbuscar()">
-                              <i class="fa fa-search"></i> Buscar
-                          </button>
-                          <button class="btn btn-outline-secondary d-inline d-md-none" [(ngModel)]="buscar" (click)="fbuscar()">
-                              <i class="fa fa-search"></i>
-                          </button>
-                      </span>
-                  </div>
+      <div class="row">
+        <div class="col-sm-6 mt-1">
+          <p *ngIf="total == 0">
+            Total: <b>{{ total }} registros</b>
+          </p>
+          <p *ngIf="total == 1">
+            Total: <b>{{ total }} registro</b>
+          </p>
+          <p *ngIf="total > 1">
+            Total: <b>{{ total }} registros</b>
+          </p>
+        </div>
+        <div class="col-sm-6">
+          <div class="row justify-content-end">
+            <div class="col-sm-2 text-md-right text-sm-left mt-1">
+              <label for="">Buscar: </label>
+            </div>
+            <div class="col-sm-10">
+              <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                </div>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Categoria a buscar ..." (keyup)="fbuscar()" />
               </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-md-6 mt-1" *ngIf="total > cantidad">
-                <ngb-pagination class="d-flex justify-content-end align-items-baseline pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)" size="sm"></ngb-pagination>
             </div>
           </div>
-
-          <div class="table-responsive" *ngIf="categorias?.length > 0">
-            <p class="text-right" *ngIf="total == 1">
-                Total: <b>{{ total }} registro</b>
-            </p>
-            <p class="text-right" *ngIf="total > 1">
-                Total: <b>{{ total }} registros</b>
-            </p>
-            <!-- Mostrando del registro {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de un total de {{total}} datos -->
-            <table class="table table-bordered table-striped table-hover table-sm tabla-categoria">
-                <thead>
-                    <tr class="table-info">
-                        <th class="text-center">Nro</th>
-                        <th class="text-center">Categoría</th>
-                        <th class="text-center">Ruta</th>
-                        <th class="text-center">Icono</th>
-                        <th class="text-center">Orden</th>
-                        <th class="text-center">estado</th>
-                        <th class="text-center">Fecha Creación</th>
-                        <th class="text-center">Operaciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let _item of categorias; let i = index">
-                        <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
-                        <td>{{ _item.categoria }}</td>
-                        <td>{{ _item.ruta }}</td>
-                        <td>{{ _item.iconocategoria }}</td>
-                        <td>{{ _item.orden }}</td>
-                        <td class="text-center">
-                            <span class="estado badge badge-success" title="Cambiar estado" >
-                                HABILITADO
-                            </span>
-                        </td>
-                        <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
-                        <td class="text-center">
-                            <div class="btn-group" role="group" aria-label="First group">
-                                <button class="btn btn-outline-info btn-sm" title="Ver Enlaces" (click)="fver(_item.idcategoria, ver)">
-                                  <i class="fa fa-eye"></i>
-                                </button>
-                                <button class="btn btn-outline-warning btn-sm" title="Editar Usuario" (click)="fmodificar(_item.idcategoria, am)">
-                                  <i class="fa fa-edit"></i>
-                                </button>
-                                <button class="btn btn-outline-danger btn-sm" title="Eliminar Usuario" (click)="feliminar(_item.idcategoria)">
-                                  <i class="fa fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr >
-                        <td colspan="8">
-                            <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="table-responsive" *ngIf="total == 0">
-            <table class="table table-bordered table-striped table-sm">
-                <thead>
-                    <tr class="table-info">
-                      <th class="text-center">Nro</th>
-                      <th class="text-center">Categoría</th>
-                      <th class="text-center">Ruta</th>
-                      <th class="text-center">Icono</th>
-                      <th class="text-center">Orden</th>
-                      <th class="text-center">estado</th>
-                      <th class="text-center">Fecha Creación</th>
-                      <th class="text-center">Operaciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="8" class="text-center">No se encontraron datos</td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
       </div>
+
+      <div class="table-responsive" *ngIf="categorias?.length > 0">
+        <table class="table table-bordered table-striped table-hover table-sm tabla-categoria">
+          <thead>
+            <tr class="table-info">
+              <th class="text-center">Nro</th>
+              <th class="text-center">Categoría</th>
+              <th class="text-center">Ruta</th>
+              <th class="text-center">Icono</th>
+              <th class="text-center">Orden</th>
+              <th class="text-center">estado</th>
+              <th class="text-center">Fecha Creación</th>
+              <th class="text-center">Operaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let _item of categorias; let i = index">
+              <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
+              <td>{{ _item.categoria }}</td>
+              <td>{{ _item.ruta }}</td>
+              <td>{{ _item.iconocategoria }}</td>
+              <td>{{ _item.orden }}</td>
+              <td class="text-center">
+                <span class="estado badge badge-success" title="Cambiar estado" >
+                  HABILITADO
+                </span>
+              </td>
+              <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="text-center">
+                <div class="btn-group" role="group" aria-label="First group">
+                  <button class="btn btn-outline-info btn-sm" title="Ver Enlaces" (click)="fver(_item.idcategoria, ver)">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                  <button class="btn btn-outline-warning btn-sm" title="Editar Usuario" (click)="fmodificar(_item.idcategoria, am)">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Usuario" (click)="feliminar(_item.idcategoria)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-responsive" *ngIf="total == 0">
+        <table class="table table-bordered table-striped table-sm tabla-categoria">
+          <thead>
+            <tr class="table-info">
+              <th class="text-center">Nro</th>
+              <th class="text-center">Categoría</th>
+              <th class="text-center">Ruta</th>
+              <th class="text-center">Icono</th>
+              <th class="text-center">Orden</th>
+              <th class="text-center">estado</th>
+              <th class="text-center">Fecha Creación</th>
+              <th class="text-center">Operaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="8" class="text-center">No se encontraron registros.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row mt-2">
+        <div class="col-sm-6">
+          <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+        </div>
+        <div class="col-sm-6">
+          <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -218,15 +219,15 @@
                 </small>
             </div>
           </div>
-          <div class="row">
-
+          <div *ngIf="formulario.invalid && formulario.touched" class="alert alert-danger">
+            Por favor, completa todos los campos obligatorios.
           </div>
 
           <div class="text-center">
-              <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formulario.valid">
+              <button type="submit" class="btn btn-sm btn-outline-success m-2" [disabled]="!formulario.valid">
                   <i class="fa fa-save"></i> Guardar
               </button>
-              <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()">
+              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">
                   <i class="fa fa-times"></i> Cancelar
               </button>
           </div>
@@ -292,7 +293,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()">
+    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">
       <i class="fa fa-times"></i> Cerrar
     </button>
   </div>
@@ -345,7 +346,7 @@
         </div>
         <div class="form-group col-md-6 col-sm-12">
             <label>Ruta: <span class="text-danger"><b>*</b></span></label>
-            <input type="text" class="form-control form-control-sm" formControlName="ruta" [class.is-invalid]="fe.ruta.errors && fe.ruta.touched" (input)="onInput($event, 'ruta', 'letrasyespacios')" autocomplete="no" required/>
+            <input type="text" class="form-control form-control-sm" formControlName="ruta" [class.is-invalid]="fe.ruta.errors && fe.ruta.touched" (input)="onInput($event, 'ruta', 'division')" autocomplete="no" required/>
             <small *ngIf="fe.ruta.errors&& fe.ruta.touched" class="text-danger">
                 <ng-container *ngIf="fe.ruta.errors.required">
                     El dato es obligatorio.
@@ -379,12 +380,44 @@
                 </ng-container>
             </small>
         </div>
+        <div class="form-group col-md-6 col-sm-12">
+            <label>Orden: <span class="text-danger"><b>*</b></span></label>
+            <input type="text" [maxlength]="3" class="form-control form-control-sm" formControlName="orden" [class.is-invalid]="fe.orden.errors && fe.orden.touched" (input)="onInput($event, 'orden', 'numeros')" autocomplete="no" required/>
+            <small *ngIf="fe.orden.errors&& fe.orden.touched" class="text-danger">
+                <ng-container *ngIf="fe.orden.errors.required">
+                    El dato es obligatorio.
+                </ng-container>
+                <ng-container *ngIf="fe.orden.errors.pattern">
+                  Solo se permiten letras.
+                </ng-container>
+                <ng-container *ngIf="fe.orden.errors.minlength">
+                    Debe ser mas de 3 caracteres.
+                </ng-container>
+                <ng-container *ngIf="fe.orden.errors.maxlength">
+                    No puede exceder los 20 caracteres.
+                </ng-container>
+            </small>
+        </div>
       </div>
+      <div *ngIf="formEnlace.invalid && formEnlace.touched" class="alert alert-danger">
+        Por favor, completa todos los campos obligatorios.
+      </div>
+      <ng-container *ngFor="let field of getFormControls()">
+        <div *ngIf="formEnlace.get(field).invalid && formEnlace.get(field).touched" class="alert alert-danger">
+          <small><strong>El campo {{ field }} no es válido:</strong></small>
+          <ul>
+            <small><li *ngIf="formEnlace.get(field).errors?.required">Este campo es obligatorio.</li></small>
+            <small><li *ngIf="formEnlace.get(field).errors?.minlength">Debe tener al menos {{ formEnlace.get(field).errors?.minlength.requiredLength }} caracteres.</li></small>
+            <small><li *ngIf="formEnlace.get(field).errors?.maxlength">No debe tener más de {{ formEnlace.get(field).errors?.maxlength.requiredLength }} caracteres.</li></small>
+            <small><li *ngIf="formEnlace.get(field).errors?.pattern">El formato no es válido.</li></small>
+          </ul>
+        </div>
+      </ng-container>
       <div class="text-center">
-        <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formEnlace.valid">
+        <button type="submit" class="btn btn-sm btn-outline-success m-2" [disabled]="!formEnlace.valid">
             <i class="fa fa-save"></i> Guardar
         </button>
-        <button type="button" class="btn btn-outline-secondary" (click)="fcancelarEnlace()">
+        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarEnlace()">
             <i class="fa fa-times"></i> Cancelar
         </button>
     </div>

@@ -15,7 +15,7 @@ import Swal from 'sweetalert2';
 })
 export class EnlacesComponent implements OnInit {
 
-  ruta = `${RUTA}/apirest/enlaces`;
+  ruta: string = '';
 
   enlaces: Enlaces[];
   enlace: Enlaces;

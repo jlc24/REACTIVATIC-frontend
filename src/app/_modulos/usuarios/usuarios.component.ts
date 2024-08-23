@@ -15,6 +15,9 @@ import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { UsuariosService } from 'src/app/_aods/usuarios.service';
 import { Usuarios } from 'src/app/_entidades/usuarios';
 import swal from 'sweetalert2';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Cargos } from 'src/app/_entidades/cargos';
+import { CargosService } from 'src/app/_aods/cargos.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -29,6 +32,7 @@ export class UsuariosComponent implements OnInit {
   extension: Tiposextensiones[];
   genero: Tiposgeneros[];
   rol: Roles[];
+  cargos: Cargos[];
 
   pagina: number = 1;
   numPaginas: number = 0;
@@ -42,7 +46,27 @@ export class UsuariosComponent implements OnInit {
 
   esadmin: boolean = false;
   essddpi: boolean = false;
+  esdpeic: boolean = false;
   esreactivatic: boolean = false;
+
+  esCargoAdministrador: boolean = false;
+  esCargoSecretario: boolean = false;
+  esCargoDirector: boolean = false;
+  esCargoApoyo: boolean = false;
+  esCargoEncargado: boolean = false;
+  esCargomonitoreo: boolean = false;
+  esCargoTecnologia: boolean = false;
+  esCargoMarketing: boolean = false;
+  esCargoTextil: boolean = false;
+  esCargoArtesania: boolean = false;
+  esCargoAlimento: boolean = false;
+  esCargoChofer: boolean = false;
+  esCargoPasante: boolean = false;
+
+  archivoseleccionado: File;
+  imagen: any;
+
+  step: number = 1;
 
   constructor(
     private _usuariosService: UsuariosService,
@@ -52,6 +76,8 @@ export class UsuariosComponent implements OnInit {
     private _generosService: TiposgenerosService,
     private _accesoService: AccesoService,
     private _rolService: RolesService,
+    private _cargosService: CargosService,
+    private _sanitizer: DomSanitizer,
     private _fb: FormBuilder,
     config: NgbModalConfig,
     private _modalService: NgbModal
@@ -66,6 +92,35 @@ export class UsuariosComponent implements OnInit {
     this.fextension();
     this.fgenero();
     this.frol();
+
+    this.esCargoAdministrador = this._accesoService.esCargoAdministrador();
+    this.esCargoSecretario = this._accesoService.esCargoSecretario();
+    this.esCargoDirector = this._accesoService.esCargoDirector();
+    this.esCargoApoyo = this._accesoService.esCargoApoyo();
+    this.esCargoEncargado = this._accesoService.esCargoEncargado();
+    this.esCargomonitoreo = this._accesoService.esCargoMonitoreo();
+    this.esCargoTecnologia = this._accesoService.esCargoTecnologia();
+    this.esCargoMarketing = this._accesoService.esCargoMarketing();
+    this.esCargoTextil = this._accesoService.esCargoTextil();
+    this.esCargoArtesania = this._accesoService.esCargoArtesania();
+    this.esCargoAlimento = this._accesoService.esCargoAlimentos();
+    this.esCargoChofer = this._accesoService.esCargoChofer();
+  }
+
+  nextStep() {
+    if (this.step < 4) {
+      this.step++;
+    }
+  }
+
+  prevStep() {
+    if (this.step > 1) {
+      this.step--;
+    }
+  }
+
+  goToStep(step: number) {
+    this.step = step;
   }
 
   fdocumento() {
@@ -89,6 +144,7 @@ export class UsuariosComponent implements OnInit {
   frol(){
     this.esadmin = this._accesoService.esRolAdmin();
     this.essddpi = this._accesoService.esRolSddpi();
+    this.esdpeic = this._accesoService.esRolDpeic();
     this.esreactivatic = this._accesoService.esRolReactivatic();
     if (this.esadmin) {
       this._rolService.listaradmin().subscribe( data => {
@@ -100,6 +156,11 @@ export class UsuariosComponent implements OnInit {
         this.rol = data;
       });
     }
+    if (this.esdpeic) {
+      // this._rolService.listar().subscribe( data => {
+      //   this.rol = data;
+      // });
+    }
     if (this.esreactivatic) {
       this._rolService.listarreactivatic().subscribe( data => {
         this.rol = data;
@@ -107,9 +168,17 @@ export class UsuariosComponent implements OnInit {
     }
   }
 
+  fcargo(id: number){
+    this._cargosService.listar(id).subscribe((data) => {
+      this.cargos = data;
+
+    })
+  }
+
   fcantidad() {
     this.esadmin = this._accesoService.esRolAdmin();
     this.essddpi = this._accesoService.esRolSddpi();
+    this.esdpeic = this._accesoService.esRolDpeic();
     this.esreactivatic = this._accesoService.esRolReactivatic();
     if (this.esadmin) {
       this._usuariosService.cantidad(this.buscar).subscribe((data) => {
@@ -120,6 +189,11 @@ export class UsuariosComponent implements OnInit {
       this._usuariosService.cantidadsddpi(this.buscar).subscribe((data) => {
         this.total = data;
       });
+    }
+    if (this.esdpeic) {
+      // this._rolService.listar().subscribe( data => {
+      //   this.rol = data;
+      // });
     }
     if (this.esreactivatic) {
       this._usuariosService.cantidadreactivatic(this.buscar).subscribe((data) => {
@@ -136,6 +210,7 @@ export class UsuariosComponent implements OnInit {
   fdatos() {
     this.esadmin = this._accesoService.esRolAdmin();
     this.essddpi = this._accesoService.esRolSddpi();
+    this.esdpeic = this._accesoService.esRolDpeic();
     this.esreactivatic = this._accesoService.esRolReactivatic();
     if (this.esadmin) {
       this._usuariosService.datos(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
@@ -148,6 +223,12 @@ export class UsuariosComponent implements OnInit {
           this.fcantidad();
           this.datos = data;
         });
+    }
+    if (this.esdpeic) {
+      // this._usuariosService.datossddpi(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
+      //     this.fcantidad();
+      //     this.datos = data;
+      //   });
     }
     if (this.esreactivatic) {
       this._usuariosService.datosreactivatic(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
@@ -166,6 +247,10 @@ export class UsuariosComponent implements OnInit {
   mostrarMas(evento: any) {
     this.pagina = evento;
     this.fdatos();
+  }
+
+  getFormControls(): string[] {
+    return Object.keys(this.formulario.controls);
   }
 
   fformulario(user: Usuarios, disabled: boolean = false) {
@@ -195,13 +280,13 @@ export class UsuariosComponent implements OnInit {
         ]
       ],
       idtipogenero: [
-        user.persona.idtipogenero,
+        user.persona.tipogenero?.idtipogenero,
         [
           Validators.required
         ]
       ],
       idtipodocumento: [
-        user.persona.idtipodocumento,
+        user.persona.tipodocumento?.idtipodocumento,
         [
           Validators.required
         ]
@@ -222,7 +307,7 @@ export class UsuariosComponent implements OnInit {
         ]
       ],
       idtipoextension:[
-        user.persona.idtipoextension,
+        user.persona.tipoextension?.idtipoextension,
         [
           Validators.required
         ]
@@ -275,7 +360,13 @@ export class UsuariosComponent implements OnInit {
         ]
       ],
       idrol: [
-        { value: user.rol.idrol, disabled: disabled },
+        user.rol.idrol,
+        [
+          Validators.required
+        ]
+      ],
+      idcargo: [
+        user.cargo?.idcargo,
         [
           Validators.required
         ]
@@ -337,15 +428,18 @@ export class UsuariosComponent implements OnInit {
     this.user = new Usuarios();
     this.user.persona = new Personas();
     this.user.rol = new Roles();
+    this.goToStep(1);
     this.fformulario(this.user);
     this._modalService.open(content, { size: 'lg' });
   }
 
   fmodificar(id: number, content: any) {
     this.estado = 'Modificar';
+    this.goToStep(1);
     this._usuariosService.dato(id).subscribe((data) => {
       this.user = data;
       this.fformulario(this.user, true);
+      this.fcargo(data.rol.idrol);
       this._modalService.open(content, { size: 'lg' });
     });
   }
@@ -370,9 +464,10 @@ export class UsuariosComponent implements OnInit {
       })
       .then((result) => {
         if (result.value) {
-          this._usuariosService.eliminar(id).subscribe((data) => {
-            this.fdatos();
-          });
+          // this._usuariosService.eliminar(id).subscribe((data) => {
+          //   this.fdatos();
+          // });
+          swal.fire('Error', 'Procedimiento NO autorizado, por favor contacte al Administrador', 'error');
         }
       });
   }
@@ -463,5 +558,25 @@ export class UsuariosComponent implements OnInit {
       a.click();
       return url;
     });
+  }
+
+  fseleccionarArchivo(event) {
+    this.archivoseleccionado = event.target.files[0];
+  }
+
+  fcargar() {
+    this._personasService.cargarImagen(this.archivoseleccionado).subscribe(data => {
+      this._modalService.dismissAll();
+      this.fdescargar()
+      swal.fire('Archivo cargado', 'Archivo cargado con exito', 'success')
+    })
+  }
+
+  fdescargar() {
+    this.imagen = null;
+    this._personasService.descargarImagen().subscribe(data=>{
+      const objectURL = window.URL.createObjectURL(data);
+      this.imagen = this._sanitizer.bypassSecurityTrustUrl(objectURL);
+    })
   }
 }

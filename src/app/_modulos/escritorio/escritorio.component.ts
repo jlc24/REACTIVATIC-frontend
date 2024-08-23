@@ -20,11 +20,26 @@ export class EscritorioComponent implements OnInit {
   essddpi: boolean =false;
   esadmin: boolean =false;
   buscar: string = '';
+  rubro: string = '';
   totalusuarios: number = 0;
   totalempresas: number = 0;
   totalmunicipios: number = 0;
   totalproductos: number = 0;
   totalsolicitudesventa: number = 0;
+
+  esCargoAdministrador: boolean = false;
+  esCargoSecretario: boolean = false;
+  esCargoDirector: boolean = false;
+  esCargoApoyo: boolean = false;
+  esCargoEncargado: boolean = false;
+  esCargomonitoreo: boolean = false;
+  esCargoTecnologia: boolean = false;
+  esCargoMarketing: boolean = false;
+  esCargoTextil: boolean = false;
+  esCargoArtesania: boolean = false;
+  esCargoAlimento: boolean = false;
+  esCargoChofer: boolean = false;
+  esCargoPasante: boolean = false;
 
   constructor(
     private _usuariosService: UsuariosService,
@@ -47,6 +62,19 @@ export class EscritorioComponent implements OnInit {
     this.fcantidadmunicipios();
     this.fcantidadproductos();
     this.fcantidadsventa();
+
+    this.esCargoAdministrador = this._accesoService.esCargoAdministrador();
+    this.esCargoSecretario = this._accesoService.esCargoSecretario();
+    this.esCargoDirector = this._accesoService.esCargoDirector();
+    this.esCargoApoyo = this._accesoService.esCargoApoyo();
+    this.esCargoEncargado = this._accesoService.esCargoEncargado();
+    this.esCargomonitoreo = this._accesoService.esCargoMonitoreo();
+    this.esCargoTecnologia = this._accesoService.esCargoTecnologia();
+    this.esCargoMarketing = this._accesoService.esCargoMarketing();
+    this.esCargoTextil = this._accesoService.esCargoTextil();
+    this.esCargoArtesania = this._accesoService.esCargoArtesania();
+    this.esCargoAlimento = this._accesoService.esCargoAlimentos();
+    this.esCargoChofer = this._accesoService.esCargoChofer();
   }
 
   fmiscompras() {
@@ -92,7 +120,22 @@ export class EscritorioComponent implements OnInit {
   }
 
   fcantidadempresas() {
-    this._empresasService.cantidad(this.buscar).subscribe((data) => {
+    this.esCargoTextil = this._accesoService.esCargoTextil();
+    this.esCargoArtesania = this._accesoService.esCargoArtesania();
+    this.esCargoAlimento = this._accesoService.esCargoAlimentos();
+    this.esCargoTecnologia = this._accesoService.esCargoTecnologia();
+    this.esCargoEncargado = this._accesoService.esCargoEncargado();
+    this.esCargoAdministrador = this._accesoService.esCargoAdministrador();
+    if (this.esCargoTextil) {
+      this.rubro = 'TEXTIL';
+    }else if (this.esCargoArtesania) {
+      this.rubro = 'ARTESANIA';
+    }else if(this.esCargoAlimento){
+      this.rubro = 'ALIMENTOS';
+    }else{
+      this.rubro = ''
+    }
+    this._empresasService.cantidad(this.buscar, this.rubro).subscribe((data) => {
       this.totalempresas = data;
     })
   }

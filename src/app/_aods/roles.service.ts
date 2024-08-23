@@ -62,4 +62,48 @@ export class RolesService {
         });
     }
 
+    adicionar(rol: Roles): Observable<any>{
+      const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+      return this._httpClient.post<void>(`${this.ruta}`, rol, {
+        headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+      }).pipe(
+        catchError(e => {
+          if (e.status === 400 && e.error?.errores) {
+            const errores = e.error.errores.join(', ');
+            Swal.fire('Errores de Validación', `Errores: ${errores}`, 'error');
+          }
+          else if (e.status === 500) {
+            const mensajeError = e.error?.mensaje || 'Error en el servidor';
+            const detalleError = e.error?.error || '';
+            Swal.fire('Error en el servidor', `${mensajeError}\n${detalleError}`, 'error');
+          }
+          else {
+            Swal.fire('Error', 'Ha ocurrido un error inesperado.', 'error');
+          }
+          return throwError(e);
+        })
+      );
+    }
+
+    modificar(rol: Roles): Observable<any> {
+      const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+      return this._httpClient.put<void>(`${this.ruta}`, rol, {
+        headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+      }).pipe(
+        catchError(e => {
+          if (e.status === 400 && e.error?.errores) {
+            const errores = e.error.errores.join(', ');
+            Swal.fire('Errores de Validación', `Errores: ${errores}`, 'error');
+          } else if (e.status === 500) {
+            const mensajeError = e.error?.mensaje || 'Error en el servidor';
+            const detalleError = e.error?.error || '';
+            Swal.fire('Error en el servidor', `${mensajeError}\n${detalleError}`, 'error');
+          } else {
+            Swal.fire('Error', 'Ha ocurrido un error inesperado.', 'error');
+          }
+          return throwError(e);
+        })
+      );
+    }
+
 }

@@ -42,10 +42,16 @@ export class LocalidadesService {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     }).pipe(
       catchError(e => {
-        if (e.status === 400 ) {
-          return throwError(e);
+        if (e.status === 400) {
+          swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
+        } else if (e.status === 409) {
+          const errorMsg = e.error.mensaje || 'Conflicto en los datos';
+          swal.fire('Error de Conflicto', errorMsg, 'error');
+        } else if (e.status === 500) {
+          swal.fire('Error en el Servidor', 'Error al realizar la consulta en la Base de Datos', 'error');
+        } else {
+          swal.fire('Error', 'Ocurrió un error desconocido', 'error');
         }
-        swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
         return throwError(e);
       })
     );
@@ -57,19 +63,32 @@ export class LocalidadesService {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     }).pipe(
       catchError(e => {
-        if (e.status === 400 ) {
-          return throwError(e);
+        if (e.status === 400) {
+          swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
+        } else if (e.status === 409) {
+          const errorMsg = e.error.mensaje || 'Conflicto en los datos';
+          swal.fire('Error de Conflicto', errorMsg, 'error');
+        } else if (e.status === 500) {
+          swal.fire('Error en el Servidor', 'Error al realizar la consulta en la Base de Datos', 'error');
+        } else {
+          swal.fire('Error', 'Ocurrió un error desconocido', 'error');
         }
-        swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
         return throwError(e);
       })
     );
   }
 
-  datosl(): Observable<Localidades[]> {
+  datosl(id: number): Observable<Localidades[]> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
-    return this._httpClient.get<Localidades[]>(`${this.ruta}/l`, {
+    return this._httpClient.get<Localidades[]>(`${this.ruta}/l/${id}`, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
+  }
+
+  cambiarestado(dato: { idlocalidad: number, estado: boolean }): Observable<any>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.put<void>(`${this.ruta}/cambiarestado`, dato, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    })
   }
 }

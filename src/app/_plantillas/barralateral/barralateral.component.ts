@@ -13,7 +13,9 @@ export class BarralateralComponent implements OnInit {
 
   menus: Menus[];
   nombre: string;
+  nombrecliente: string;
   rol: string;
+  cargo: string;
 
   constructor(
     private _menusService: MenusService,
@@ -32,8 +34,10 @@ export class BarralateralComponent implements OnInit {
   }
 
   fdatosusuario() {
-    this.nombre=this._accesoService.nombreLogueado();
+    this.nombre = this._accesoService.nombreLogueado();
+    this.nombrecliente = this._accesoService.nombreclienteLogueado();
     this.rol = this._accesoService.rolLogueado();
+    this.cargo = this._accesoService.cargoLogueado();
   }
 
 }

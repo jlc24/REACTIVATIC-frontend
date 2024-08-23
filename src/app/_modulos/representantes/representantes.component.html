@@ -2,114 +2,139 @@
 </app-cabeceratitulos>
 
 <div class="row">
-    <div class="col-md-12">
-        <div class="tile">
-
-            <div class="row">
-                <div class="col-md-12 mb-2">
-                    <div class="input-group justify-content-end">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-outline-success mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Representante</button>
-                            <div class="dropdown">
-                                <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-bars"></i> Opciones
-                      </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
-                                    <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row justify-content-center">
-              <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
-                  <div class="input-group">
-                      <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Usuario a buscar..." (keyup)="fbuscar()" />
-                      <span class="input-group-prepend">
-                          <button class="btn btn-outline-danger mr-2 d-none d-md-inline" (click)="limpiar()">
-                              <i class="fa fa-times"></i> Limpiar
-                          </button>
-                          <button class="btn btn-outline-danger mr-2 d-inline d-md-none" (click)="limpiar()">
-                              <i class="fa fa-times"></i>
-                          </button>
-                          <button class="btn btn-outline-secondary d-none d-md-inline" (click)="fbuscar()">
-                              <i class="fa fa-search"></i> Buscar
-                          </button>
-                          <button class="btn btn-outline-secondary d-inline d-md-none" (click)="fbuscar()">
-                              <i class="fa fa-search"></i>
-                          </button>
-                      </span>
-                  </div>
-              </div>
-            </div>
-
-            <div class="row mt-2 justify-content-center">
-              <div class="col-md-10 col-sm-12">
-                <div class="table-responsive" *ngIf="datos?.length > 0">
-                    <p class="text-right" *ngIf="total == 1">
-                        Total: <b>{{ total }} registro</b>
-                    </p>
-                    <p class="text-right" *ngIf="total > 1">
-                        Total: <b>{{ total }} registros</b>
-                    </p>
-                    <table class="table table-sm table-bordered table-hover tabla-representante">
-                        <thead>
-                            <tr class="table-primary">
-                                <th class="text-center">Nro</th>
-                                <th class="text-center">Nombre</th>
-                                <th class="text-center">Carnet de Identidad</th>
-                                <th class="text-center">Genero</th>
-                                <th class="text-center">Estado</th>
-                                <th class="text-center">Fecha Registro</th>
-                                <th class="text-center">Operaciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let _item of datos; let i = index">
-                                <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
-                                <td>
-                                  {{ _item.persona.primerapellido }} {{ _item.persona.segundoapellido }} {{ _item.persona.primernombre }}
-                                </td>
-                                <td class="text-center">{{ _item.persona.dip }}</td>
-                                <td class="text-center">{{ _item.persona.tipogenero?.tipogenero }}</td>
-                                <td>
-                                  <span class="estado badge {{ _item.persona.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" >
-                                    {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
-                                </span>
-                                </td>
-                                <td>{{ _item.persona.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
-                                <td class="text-center">
-                                    <div class="btn-group" role="group" aria-label="First group">
-                                      <button class="btn btn-outline-info btn-sm" title="Ver Subrubros" >
-                                        <i class="fa fa-eye"></i>
-                                      </button>
-                                      <button class="btn btn-outline-warning btn-sm" title="Editar Rubro" (click)="fmodificar(_item.idusuario, ab)">
-                                        <i class="fa fa-edit"></i>
-                                      </button>
-                                      <button class="btn btn-outline-danger btn-sm" title="Eliminar Rubro" (click)="feliminar(_item.idusuario)">
-                                        <i class="fa fa-trash"></i>
-                                      </button>
-                                  </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="7">
-                                    <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+  <div class="col-md-12">
+    <div class="tile">
+      <div class="row justify-content-center">
+        <h4>LISTA DE REPRESENTANTES</h4>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mb-2">
+          <div class="input-group justify-content-first">
+            <div class="input-group-prepend">
+              <button class="btn btn-sm btn-outline-success mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Representante</button>
+              <div class="dropdown">
+                <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-bars"></i> Opciones
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                  <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
                 </div>
               </div>
             </div>
-            <div class="table-responsive" *ngIf="total == 0">
-                <p class="text-center"><b>Sin usuarios</b></p>
-            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6 mt-1">
+          <p *ngIf="total == 0">
+            Total: <b>{{ total }} registros</b>
+          </p>
+          <p *ngIf="total == 1">
+            Total: <b>{{ total }} registro</b>
+          </p>
+          <p *ngIf="total > 1">
+            Total: <b>{{ total }} registros</b>
+          </p>
+        </div>
+        <div class="col-sm-6">
+          <div class="row justify-content-end">
+            <div class="col-sm-2 text-md-right text-sm-left mt-1">
+              <label for="">Buscar: </label>
+            </div>
+            <div class="col-sm-10">
+              <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                </div>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Representante a buscar ..." (keyup)="fbuscar()" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive" *ngIf="datos?.length > 0">
+        <table class="table table-sm table-bordered table-hover table-striped tabla-representante">
+          <thead>
+            <tr class="table-primary">
+              <th class="text-center">Nro</th>
+              <th class="text-center">Nombre</th>
+              <th class="text-center">Carnet de Identidad</th>
+              <th class="text-center">Genero</th>
+              <th class="text-center">Teléfono/Celular</th>
+              <th class="text-center">Estado</th>
+              <th class="text-center">Fecha Registro</th>
+              <th class="text-center">Operaciones</th>
+            </tr>
+          </thead>
+            <tbody>
+              <tr *ngFor="let _item of datos; let i = index">
+                <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
+                <td>
+                  {{ _item.persona.primerapellido }} {{ _item.persona.segundoapellido }} {{ _item.persona.primernombre }}
+                </td>
+                <td class="text-center">{{ _item.persona.dip }}</td>
+                <td class="text-center">{{ _item.persona.tipogenero?.tipogenero }}</td>
+                <td class="text-center">{{ _item.persona.celular }} <a href="#"><i class="bi bi-whatsapp text-success"></i></a> </td>
+                <td class="text-center">
+                  <span class="estado badge {{ _item.persona.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.persona.idpersona, _item.persona.estado)">
+                    {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                  </span>
+                </td>
+                <td>{{ _item.persona.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td class="text-center">
+                  <div class="btn-group" role="group" aria-label="First group">
+                    <button class="btn btn-outline-info btn-sm" title="Ver Representante" (click)="fverrep(_item.idusuario, ver)">
+                      <i class="fa fa-eye"></i>
+                    </button>
+                    <button class="btn btn-outline-warning btn-sm" title="Editar Representante" (click)="fmodificar(_item.idusuario, ab)">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" title="Eliminar Representante" (click)="feliminar(_item.idusuario)" [disabled]="!esCargoAdministrador && !esCargoTecnologia">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                    <button class="btn btn-outline-dark btn-sm" title="Imrpimir">
+                      <i class="fa fa-print"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+        </table>
+      </div>
+      <div class="table-responsive" *ngIf="total == 0">
+        <table class="table table-sm table-bordered table-hover tabla-representante">
+          <thead>
+            <tr class="table-primary">
+              <th class="text-center">Nro</th>
+              <th class="text-center">Nombre</th>
+              <th class="text-center">Carnet de Identidad</th>
+              <th class="text-center">Genero</th>
+              <th class="text-center">Teléfono/Celular</th>
+              <th class="text-center">Estado</th>
+              <th class="text-center">Fecha Registro</th>
+              <th class="text-center">Operaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="8" class="text-center">No se encontraron registros.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row mt-2">
+        <div class="col-sm-6">
+          <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+        </div>
+        <div class="col-sm-6">
+          <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <ng-template #ab>
@@ -124,219 +149,472 @@
       </div>
   </div>
   <div class="modal-body">
-      <form [formGroup]="formulario" (ngSubmit)="faceptar()">
-          <div class="row">
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Apellido Paterno: <span class="text-danger"><b>*</b></span></label>
-                  <input type="text" class="form-control form-control-sm" formControlName="primerapellido" [class.is-invalid]="f.primerapellido.errors && f.primerapellido.touched" (input)="onInput($event, 'primerapellido', 'letrasyespacios')" autocomplete="no" required/>
-                  <small *ngIf="f.primerapellido.errors&& f.primerapellido.touched" class="text-danger">
-                      <ng-container *ngIf="f.primerapellido.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="f.primerapellido.errors.pattern">
-                          Solo se permiten letras.
-                      </ng-container>
-                      <ng-container *ngIf="f.primerapellido.errors.maxlength">
-                          No puede exceder los 50 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Apellido Materno: </label>
-                  <input type="text" class="form-control form-control-sm" formControlName="segundoapellido" [class.is-invalid]="f.segundoapellido.errors && f.segundoapellido.touched" (input)="onInput($event, 'segundoapellido', 'letrasyespacios')" autocomplete="no" />
-                  <small *ngIf="f.segundoapellido.errors&& f.segundoapellido.touched" class="text-danger">
-                      <ng-container *ngIf="f.segundoapellido.errors.pattern">
-                          Solo se permiten letras.
-                      </ng-container>
-                      <ng-container *ngIf="f.segundoapellido.errors.maxlength">
-                          No puede exceder los 50 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Nombres: <span class="text-danger"><b>*</b></span></label>
-                  <input type="text" class="form-control form-control-sm" formControlName="primernombre" [class.is-invalid]="f.primernombre.errors && f.primernombre.touched" (input)="onInput($event, 'primernombre', 'letrasyespacios')" autocomplete="no" required/>
-                  <small *ngIf="f.primernombre.errors&& f.primernombre.touched" class="text-danger">
-                      <ng-container *ngIf="f.primernombre.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="f.primernombre.errors.pattern">
-                          Solo se permiten letras.
-                      </ng-container>
-                      <ng-container *ngIf="f.primernombre.errors.maxlength">
-                          No puede exceder los 50 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Genero: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="idtipogenero">
-                      <option *ngFor="let _itemp of genero" [value]="_itemp.idtipogenero">{{ _itemp.tipogenero }}</option>
-                  </select>
-                  <small *ngIf="f.idtipogenero.errors&& f.idtipogenero.touched" class="text-danger">
-                      <ng-container *ngIf="f.idtipogenero.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
-
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Documento: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="idtipodocumento" >
-                      <option *ngFor="let _itemp of documento" [value]="_itemp.idtipodocumento">{{ _itemp.tipodocumento }}</option>
-                  </select>
-                  <small *ngIf="f.idtipodocumento.errors&& f.idtipodocumento.touched" class="text-danger">
-                      <ng-container *ngIf="f.dip.errors.required">
-                          Obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>DIP: <span class="text-danger"><b>*</b></span></label>
-                  <input type="text" class="form-control form-control-sm" formControlName="dip" [class.is-invalid]="f.dip.errors && f.dip.touched" (input)="onInput($event, 'dip', 'numeros')" autocomplete="no" required/>
-                  <small *ngIf="f.dip.errors&& f.dip.touched" class="text-danger">
-                      <ng-container *ngIf="f.dip.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="f.dip.errors.pattern">
-                          Solo se permite números.
-                      </ng-container>
-                      <ng-container *ngIf="f.dip.errors.maxlength">
-                          No puede exceder los 15 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Complemento: </label>
-                  <input type="text" class="form-control form-control-sm" formControlName="complementario" [class.is-invalid]="f.complementario.errors && f.complementario.touched" (input)="onInput($event, 'complementario', 'letrasynumerosguion')" autocomplete="no" />
-                  <small *ngIf="f.complementario.errors && f.complementario.touched" class="text-danger">
-                      <ng-container *ngIf="f.complementario.errors.pattern">
-                          Caracter no permitido.
-                      </ng-container>
-                      <ng-container *ngIf="f.complementario.errors.maxlength">
-                          No puede exceder los 5 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label for="">Expedido: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="idtipoextension" [class.is-invalid]="f.idtipoextension.errors && f.idtipoextension.touched">
-                      <option *ngFor="let _itemp of extension" [value]="_itemp.idtipoextension">{{ _itemp.tipoextension }}</option>
-                  </select>
-                  <small *ngIf="f.idtipoextension.errors && f.idtipoextension.touched" class="text-danger">
-                      <ng-container *ngIf="f.idtipoextension.errors.required">
-                          Obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Teléfono/Celular: <span class="text-danger"><b>*</b></span></label>
-                  <input type="number" class="form-control form-control-sm" formControlName="celular" [class.is-invalid]="f.celular.errors && f.celular.touched" autocomplete="no"/>
-                  <small *ngIf="f.celular.errors && f.celular.touched" class="text-danger">
-                      <ng-container *ngIf="f.celular.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="f.celular.errors.pattern">
-                          Solo se permite números.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-4 col-sm-12">
-                  <label>Nivel Educacion: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="formacion" >
-                    <option value="1">Inicial</option>
-                    <option value="2">Primaria</option>
-                    <option value="3">Secundaria</option>
-                    <option value="4">Técnico</option>
-                    <option value="5">Licenciatura</option>
-                </select>
-                  <small *ngIf="f.formacion.errors && f.formacion.touched" class="text-danger">
-                      <ng-container *ngIf="f.formacion.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-4 col-sm-12">
-                  <label>Estado Civil: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="estadocivil" >
-                    <option value="1">Soltero(a)</option>
-                    <option value="2">Casado(a)</option>
-                    <option value="3">Viudo(a)</option>
-                    <option value="4">Conviviente</option>
-                    <option value="5">Separado(a)</option>
-                </select>
-                  <small *ngIf="f.estadocivil.errors && f.estadocivil.touched" class="text-danger">
-                      <ng-container *ngIf="f.estadocivil.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-4 col-sm-12">
-                  <label>Hijos: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="hijos" >
-                    <option value="0">Sin Hijos</option>
-                    <option value="1">1 Hijo</option>
-                    <option value="2">2 Hijos</option>
-                    <option value="3">3 Hijos</option>
-                    <option value="4">4 Hijos</option>
-                    <option value="5">5 a mas hijos</option>
-                </select>
-                  <small *ngIf="f.hijos.errors && f.hijos.touched" class="text-danger">
-                      <ng-container *ngIf="f.hijos.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
-
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Usuario: <span class="text-danger"><b>*</b></span></label>
-                  <input type="text" class="form-control form-control-sm" formControlName="usuario" [class.is-invalid]="f.usuario.errors && f.usuario.touched" autocomplete="no" readonly/>
-                  <small *ngIf="f.usuario.errors && f.usuario.touched" class="text-danger">
-                      <ng-container *ngIf="f.usuario.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="f.usuario.errors.pattern">
-                          Caracter no permitido.
-                      </ng-container>
-                      <ng-container *ngIf="f.usuario.errors.maxlength">
-                          No puede exceder los 20 caracteres.
-                      </ng-container>
-                      <ng-container *ngIf="f.usuario.errors.minlength">
-                        Debe tener 5 caracteres minimo.
-                    </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Contraseña: <span class="text-danger"><b>*</b></span></label>
-                  <input type="password" class="form-control form-control-sm" formControlName="clave" [class.is-invalid]="f.clave.errors && f.clave.touched" autocomplete="no" readonly/>
-                  <small *ngIf="f.clave.errors && f.clave.touched" class="text-danger">
-                      <ng-container *ngIf="f.clave.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="f.clave.errors.pattern">
-                          Caracter no válido.
-                      </ng-container>
-                      <ng-container *ngIf="f.clave.errors.maxlength">
-                          No puede exceder los 20 caracteres.
-                      </ng-container>
-                      <ng-container *ngIf="f.clave.errors.minlength">
-                          Debe tener 8 caracteres minimo.
-                      </ng-container>
-                  </small>
-              </div>
+    <div class="row">
+      <div class="col-sm-12 d-flex justify-content-center position-relative">
+        <div class="wizard-tabs">
+          <div class="wizard-step" [ngClass]="{'active-step': step === 1, 'completed-step': step > 1}" (click)="goToStep(1)">
+            <div class="wizard-circle"><i class="bi bi-card-checklist"></i></div>
+            <div class="wizard-label text-center">Datos<br>Personales</div>
           </div>
+          <div class="wizard-line"></div>
+          <div class="wizard-step" [ngClass]="{'active-step': step === 2, 'completed-step': step > 2}" (click)="goToStep(2)">
+            <div class="wizard-circle"><i class="bi bi-telephone"></i></div>
+            <div class="wizard-label text-center">Datos<br>Contacto</div>
+          </div>
+          <div class="wizard-line"></div>
+          <div class="wizard-step" [ngClass]="{'active-step': step === 3, 'completed-step': step > 3}" (click)="goToStep(3)">
+            <div class="wizard-circle"><i class="bi bi-person-circle"></i></div>
+            <div class="wizard-label text-center">Datos<br>Usuario</div>
+          </div>
+          <div class="wizard-line"></div>
+          <div class="wizard-step" [ngClass]="{'active-step': step === 4, 'completed-step': step === 4}" (click)="goToStep(4)">
+            <div class="wizard-circle"><i class="bi bi-check-circle"></i></div>
+            <div class="wizard-label text-center">Finalizar<br>Registro</div>
+          </div>
+        </div>
+      </div>
+    </div><hr>
+    <form [formGroup]="formulario" (ngSubmit)="faceptar()">
+      <div *ngIf="step === 1">
+        <div class="row pl-3 justify-content-between">
+          <h5 class="card-title">I.- Datos Personales</h5>
+        </div>
+        <div class="row">
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Apellido Paterno:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="primerapellido" [class.is-invalid]="f.primerapellido.errors && f.primerapellido.touched" (input)="onInput($event, 'primerapellido', 'letrasyespacios')" autocomplete="no" required/>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Apellido Materno:</label>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="segundoapellido" [class.is-invalid]="f.segundoapellido.errors && f.segundoapellido.touched" (input)="onInput($event, 'segundoapellido', 'letrasyespacios')" autocomplete="no" />
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left" >
+            <label>Nombres:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="primernombre" [class.is-invalid]="f.primernombre.errors && f.primernombre.touched" (input)="onInput($event, 'primernombre', 'letrasyespacios')" autocomplete="no" required/>
+          </div>
+          <div class="col-lg-2 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Genero:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+            <select class="custom-select custom-select-sm" formControlName="idtipogenero" [class.is-invalid]="f.idtipogenero.errors && f.idtipogenero.touched" required>
+              <option *ngFor="let _itemp of genero" [value]="_itemp.idtipogenero">{{ _itemp.tipogenero }}</option>
+            </select>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Documento:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12 mt-1">
+            <select class="custom-select custom-select-sm" formControlName="idtipodocumento" [class.is-invalid]="f.idtipodocumento.errors && f.idtipodocumento.touched">
+              <option *ngFor="let _itemp of documento" [value]="_itemp.idtipodocumento">{{ _itemp.tipodocumento }}</option>
+            </select>
+          </div>
+          <div class="col-lg-2 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>DIP:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="dip" [class.is-invalid]="f.dip.errors && f.dip.touched" (input)="onInput($event, 'dip', 'numeros')" autocomplete="no" required/>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Complemento:</label>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+            <input type="text" [maxlength]="5" class="form-control form-control-sm" formControlName="complementario" [class.is-invalid]="f.complementario.errors && f.complementario.touched" (input)="onInput($event, 'complementario', 'letrasynumerosguion')" autocomplete="no" />
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+              <label for="">Expedido:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+            <select class="custom-select custom-select-sm" formControlName="idtipoextension" [class.is-invalid]="f.idtipoextension.errors && f.idtipoextension.touched" required>
+              <option *ngFor="let _itemp of extension" [value]="_itemp.idtipoextension">{{ _itemp.tipoextension }}</option>
+            </select>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Nivel Educacion:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-2 col-md-6 col-sm-12 mt-1">
+            <select class="custom-select custom-select-sm" formControlName="formacion" [class.is-invalid]="f.formacion.errors && f.formacion.touched" required>
+              <option value="1">INICIAL</option>
+              <option value="2">PRIMARIA</option>
+              <option value="3">SECUNDARIA</option>
+              <option value="4">TECNICO</option>
+              <option value="5">LICENCIATURA</option>
+            </select>
+          </div>
+          <div class="col-lg-2 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Estado Civil:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-2 col-md-6 col-sm-12 mt-1">
+            <select class="custom-select custom-select-sm" formControlName="estadocivil" [class.is-invalid]="f.estadocivil.errors && f.estadocivil.touched" required>
+              <option value="1">SOLTERO(A)</option>
+              <option value="2">CASADO(A)</option>
+              <option value="3">VIUDO(A)</option>
+              <option value="4">CONVIVIENTE</option>
+              <option value="5">SEPARADO(A)</option>
+            </select>
+          </div>
+          <div class="col-lg-1 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Hijos:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-2 col-md-6 col-sm-12 mt-1">
+            <select class="custom-select custom-select-sm" formControlName="hijos" [class.is-invalid]="f.hijos.errors && f.hijos.touched" required>
+              <option value="0">SIN HIJOS</option>
+              <option value="1">1 HIJO</option>
+              <option value="2">2 HIJOS</option>
+              <option value="3">3 HIJOS</option>
+              <option value="4">4 HIJOS</option>
+              <option value="5">5 A MAS HIJOS</option>
+            </select>
+          </div>
+        </div>
+        <div class="row justify-content-between p-3 mt-2">
+          <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+        </div>
+      </div>
+      <div *ngIf="step === 2">
+        <div class="row pl-3 justify-content-between">
+          <h5 class="card-title">II.- Datos de Contacto</h5>
+        </div>
+        <div class="row">
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
+            <label>Celular:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="celular" [class.is-invalid]="f.celular.errors && f.celular.touched" (input)="onInput($event, 'celular', 'numeros')" autocomplete="no" required/>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
+            <label>Teléfono:</label>
+          </div>
+          <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="telefono" [class.is-invalid]="f.telefono.errors && f.telefono.touched" (input)="onInput($event, 'telefono', 'numeros')" autocomplete="no"/>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
+            <label>Dirección:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="direccion" [class.is-invalid]="f.direccion.errors && f.direccion.touched" (input)="onInput($event, 'direccion', 'direccion')" autocomplete="no"/>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
+            <label>Correo:</label>
+          </div>
+          <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="correo" [class.is-invalid]="f.correo.errors && f.correo.touched" autocomplete="no"/>
+          </div>
+        </div>
+        <div class="row justify-content-between p-3 mt-2">
+          <div class="div">
+            <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+            <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+          </div>
+          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+        </div>
+      </div>
+      <div *ngIf="step === 3">
+        <div class="row pl-3 justify-content-between">
+          <h5 class="card-title">III.- Datos de Usuario</h5>
+        </div>
+        <div class="row">
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Usuario:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 mt-1">
+            <input type="text" class="form-control form-control-sm" formControlName="usuario" [class.is-invalid]="f.usuario.errors && f.usuario.touched" autocomplete="no" readonly required/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+            <label>Contraseña:<span class="text-danger"><b>*</b></span></label>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 mt-1">
+            <input type="password" class="form-control form-control-sm" formControlName="clave" [class.is-invalid]="f.clave.errors && f.clave.touched" autocomplete="no" readonly required/>
+          </div>
+        </div>
+        <div class="row justify-content-between p-3 mt-2">
+          <div class="div">
+            <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+            <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+          </div>
+          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+        </div>
+      </div>
+      <div *ngIf="step === 4">
+        <div class="row pl-3 justify-content-between">
+          <h5 class="card-title">IV.- Resumen de datos a guardar</h5>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-sm table-bordered">
+            <tbody>
+              <tr>
+                <td colspan="10"><strong>DATOS PERSONALES</strong></td>
+              </tr>
+              <tr>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Apellido Paterno:</td><td width="50px"><i *ngIf="this.formulario.value.primerapellido; else noData" class="fa fa-check-circle fa-2x text-success"></i>
+                  <ng-template #noData>
+                    <i class="fa fa-times-circle fa-2x text-danger"></i>
+                  </ng-template>
+                </td>
+                <td class="text-right">Apellido Paterno:</td><td width="50px"><i *ngIf="this.formulario.value.segundoapellido; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Nombre:</td><td width="50px"><i *ngIf="this.formulario.value.primernombre; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Genero:</td><td width="50px"><i *ngIf="this.formulario.value.idtipogenero; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+              </tr>
+              <tr>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Documento:</td><td width="50px"><i *ngIf="this.formulario.value.idtipodocumento; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>DIP:</td><td width="50px"><i *ngIf="this.formulario.value.dip; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right">Complemento:</td><td width="50px"><i *ngIf="this.formulario.value.complementario; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Expedido:</td><td width="50px"><i *ngIf="this.formulario.value.idtipoextension; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+              </tr>
+              <tr>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Formación:</td><td width="50px"><i *ngIf="this.formulario.value.formacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Estado Civil:</td><td width="50px"><i *ngIf="this.formulario.value.estadocivil; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Hijos:</td><td width="50px"><i *ngIf="this.formulario.value.hijos; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"></td><td width="50px"></td>
+              </tr>
+              <tr>
+                <td colspan="10"><strong>DATOS DE CONTACTO</strong></td>
+              </tr>
+              <tr>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Celular:</td><td width="50px"><i *ngIf="this.formulario.value.celular; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right">Teléfono:</td><td width="50px"><i *ngIf="this.formulario.value.telefono; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Direccion:</td><td width="50px"><i *ngIf="this.formulario.value.direccion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right">Correo:</td><td width="50px"><i *ngIf="this.formulario.value.correo; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+              </tr>
+              <tr>
+                <td colspan="10"><strong>DATOS DE USUARIO</strong></td>
+              </tr>
+              <tr>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Usuario:</td><td width="50px"><i *ngIf="this.formulario.value.usuario; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"><span class="text-danger"><b>*</b></span>Contraseña:</td><td width="50px"><i *ngIf="this.formulario.value.clave; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                <td class="text-right"></td><td width="50px"></td>
+                <td class="text-right"></td><td width="50px"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="formulario.invalid && formulario.touched" class="alert alert-danger">
+          Por favor, completa todos los campos obligatorios.
+        </div>
+        <ng-container *ngFor="let field of getFormControls()">
+          <div *ngIf="formulario.get(field).invalid && formulario.get(field).touched" class="alert alert-danger">
+            <small><strong>El campo {{ field }} no es válido:</strong></small>
+            <ul>
+              <small><li *ngIf="formulario.get(field).errors?.required">Este campo es obligatorio.</li></small>
+              <small><li *ngIf="formulario.get(field).errors?.minlength">Debe tener al menos {{ formulario.get(field).errors?.minlength.requiredLength }} caracteres.</li></small>
+              <small><li *ngIf="formulario.get(field).errors?.maxlength">No debe tener más de {{ formulario.get(field).errors?.maxlength.requiredLength }} caracteres.</li></small>
+              <small><li *ngIf="formulario.get(field).errors?.pattern">El formato no es válido.</li></small>
+            </ul>
+          </div>
+        </ng-container>
+        <div class="row justify-content-between p-3 mt-2">
+          <div class="div">
+            <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+            <button type="submit" class="btn btn-sm btn-outline-success" [disabled]="!formulario.valid">Guardar <i class="bi bi-floppy"></i></button>
+          </div>
+          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
 
-          <div *ngIf="formulario.invalid && formulario.touched" class="alert alert-danger">
-            Por favor, completa todos los campos obligatorios.
+<ng-template #ver>
+  <div class="modal-header table-info">
+      <div class="row col-12">
+        <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Datos de Representante</h4><br>
+      </div>
+  </div>
+  <div class="modal-body">
+    <div class="row pl-3 pr-3">
+      <div class="col-md-5 col-sm-12 border pt-3">
+        <div class="row justify-content-center" >
+          <img src="../../../assets/catalogo/img/carnet1.png" alt="" class="img-fluid puntero" width="200px">
+        </div>
+        <div class="row justify-content-center">
+          <img src="../../../assets/catalogo/img/carnet2.png" alt="" class="img-fluid puntero" width="200px">
+        </div>
+        <div class="row justify-content-center mt-3">
+          <button class="btn btn-sm btn-outline-info" (click)="fcambiarimagen(cargarimagen)">
+            <i class="fa fa-picture-o"></i> Cambiar imagen
+          </button>
+        </div>
+      </div>
+      <div class="col-md-7 col-sm-12 border pt-3">
+        <div class="row">
+          <div class="col-md-4 text-md-right text-sm-left">
+            <strong>Nombre:</strong>
           </div>
-          <div class="text-center">
-              <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formulario.valid">
-                  <i class="fa fa-save"></i> Guardar
-              </button>
-              <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()">
-                  <i class="fa fa-times"></i> Cancelar
-              </button>
+          <div class="col-md-8">
+            <label for="">{{ user.persona.primerapellido }} {{ user.persona.segundoapellido }} {{ user.persona.primernombre }}</label>
           </div>
-      </form>
+        </div>
+        <div class="row">
+          <div class="col-md-4 text-md-right text-sm-left">
+            <strong>Género:</strong>
+          </div>
+          <div class="col-md-8">
+            <label for="">{{ user.persona?.tipogenero?.tipogenero }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 text-md-right text-sm-left">
+            <strong>Documento:</strong>
+          </div>
+          <div class="col-md-8">
+            <label for="">{{ user.persona?.tipodocumento?.tipodocumento }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 text-md-right text-sm-left">
+            <strong>DIP:</strong>
+          </div>
+          <div class="col-md-3">
+            <label for="">{{ user.persona?.dip }}{{ user.persona.complementario ? '-'+user.persona.complementario : '' }}</label>
+          </div>
+          <div class="col-md-2 text-md-right text-sm-left">
+            <strong>Exp.:</strong>
+          </div>
+          <div class="col-md-2">
+            <label for="">{{ user.persona?.tipoextension.sigla }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 text-md-right text-sm-left">
+            <strong>Teléfono/Celular:</strong>
+          </div>
+          <div class="col-md-8">
+            <label for="">{{ user.persona?.celular }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 text-md-right text-sm-left">
+            <strong>Formación:</strong>
+          </div>
+          <div class="col-md-8">
+            <label for="">{{ getFormacionDescription(user.persona.formacion) }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 text-md-right text-sm-left">
+            <strong>Estado Civil:</strong>
+          </div>
+          <div class="col-md-8">
+            <label for="">{{ getEstadoDescription(user.persona.estadocivil) }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 text-md-right text-sm-left">
+            <strong>Hijos:</strong>
+          </div>
+          <div class="col-md-8">
+            <label for="">{{ getHijosDescription(user.persona.hijos) }}</label>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-md-4 text-md-right text-sm-left">
+            <strong>Usuario:</strong>
+          </div>
+          <div class="col-md-8">
+            <label for="">{{ user.usuario }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 text-md-right text-sm-left">
+            <strong>Clave:</strong>
+          </div>
+          <div class="col-md-4">
+            <label for="">{{ user.clave ? '************' : '' }}</label>
+          </div>
+          <div class="col-md-4">
+          </div>
+        </div>
+        <div class="row justify-content-center mt-2 mb-2">
+          <button class="btn btn-sm btn-outline-info" (click)="fcambiarclave(cambiarclave)">
+            <i class="fa fa-key"></i> Cambiar clave
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar</button>
+  </div>
+</ng-template>
+
+<ng-template #cargarimagen>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{ estado }} Imagen</h4>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label>Carnet Anverso:</label>
+      <input class="form-control" type="file" (change)="fseleccionarArchivo($event)" />
+    </div>
+    <div class="form-group">
+      <label>Carnet Reverso:</label>
+      <input class="form-control" type="file" (change)="fseleccionarArchivo($event)" />
+    </div>
+    <div class="text-center">
+      <button type="button" class="btn btn-sm btn-outline-success m-2" (click)="fcargar()">
+        <i class="fa fa-save"></i> Grabar
+      </button>
+      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarImagen()">
+        <i class="fa fa-times"></i> Cancelar
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #cambiarclave>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{ estado }} Contraseña de acceso</h4>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="formClave" (ngSubmit)="faceptarcambiarclave()">
+      <div class="form-group">
+        <label><strong>Nueva contraseña:</strong></label>
+        <input type="password" class="form-control form-control-sm" formControlName="clave" [class.is-invalid]="fC.clave.errors && fC.clave.touched" />
+        <small *ngIf="fC.clave.errors && fC.clave.touched" class="text-danger">
+          <ng-container *ngIf="fC.clave.errors.required">
+            El dato es obligatorio.
+          </ng-container>
+          <ng-container *ngIf="fC.clave.errors.maxlength">
+            No puede exceder los 50 caracteres.
+          </ng-container>
+          <ng-container *ngIf="fC.clave.errors.minlength">
+            Debe tener 8 caracteres minimo.
+          </ng-container>
+        </small>
+      </div>
+      <div class="form-group">
+        <label><strong>Confirmar nueva contraseña:</strong></label>
+        <input type="password" class="form-control form-control-sm" formControlName="cclave" [class.is-invalid]="fC.cclave.errors && fC.cclave.touched" />
+        <small *ngIf="fC.cclave.errors && fC.cclave.touched" class="text-danger">
+          <ng-container *ngIf="fC.cclave.errors.required">
+            El dato es obligatorio.
+          </ng-container>
+          <ng-container *ngIf="fC.cclave.errors.maxlength">
+              No puede exceder los 50 caracteres.
+          </ng-container>
+          <ng-container *ngIf="fC.cclave.errors.minlength">
+              Debe tener 8 caracteres minimo.
+          </ng-container>
+        </small>
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn btn-sm btn-outline-success m-2" [disabled]="!formClave.valid">
+          <i class="fa fa-save"></i> Cambiar clave
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarClave()">
+          <i class="fa fa-times"></i> Cancelar
+        </button>
+      </div>
+    </form>
   </div>
 </ng-template>

@@ -11,12 +11,13 @@
                         <h5 class="card-subtitle mb-2" *ngIf="totalusuarios == 1">Usuario registrado</h5>
                         <h5 class="card-subtitle mb-2" *ngIf="totalusuarios > 1">Usuarios registrados</h5>
                     </div>
-                    <i class="small-box-icon fa fa-user-plus fa-5x"></i>                                
+                    <i class="small-box-icon fa fa-user-plus fa-5x"></i>
                 </div>
             </div>
             <div class="card-footer m-0 p-1">
                 <div class="col-12 text-white text-right align-content-center">
-                    <i class="fa fa-arrow-circle-o-right fa-3x boton-info" title="Ver mas" (click)="fusuario()"></i>
+                    <i class="fa fa-arrow-circle-o-right fa-3x boton-info" title="Ver mas" *ngIf="esCargoPasante || esCargoChofer || esCargomonitoreo"></i>
+                    <i class="fa fa-arrow-circle-o-right fa-3x boton-info" title="Ver mas" (click)="fusuario()" *ngIf="!esCargoPasante && !esCargoChofer && !esCargomonitoreo"></i>
                 </div>
             </div>
         </div>
@@ -59,7 +60,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mt-1" *ngIf="esadmin || esreactivatic || essddpi || esempresa">
         <div class="card card-header-fourth">
             <div class="card-body">
@@ -116,7 +117,7 @@
                 <h3 class="card-title"><i class="fa fa-calendar"></i> Calendario</h3>
             </div>
             <div class="card-body">
-                
+
             </div>
         </div>
     </div>

@@ -7,5 +7,6 @@ export class Atributos {
   detalle: string;
   estado: boolean;
   created_at: Date;
+  
   productos: Productos;
 }

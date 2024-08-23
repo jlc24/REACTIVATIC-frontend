@@ -80,7 +80,7 @@ export class ProductosComponent implements OnInit {
   fformulario(dato: Productos) {
     this.formulario = this._fb.group({
       producto: [
-        dato.producto, 
+        dato.producto,
         [
           Validators.required,
           Validators.pattern('^[a-zA-Z\u00f1\u00d1\\s]+$'),
@@ -88,22 +88,22 @@ export class ProductosComponent implements OnInit {
         ]
       ],
       descripcion: [
-        dato.descripcion, 
+        dato.descripcion,
         [
           Validators.required,
           Validators.pattern('^[a-zA-Z0-9.,\u00f1\u00d1\\s]+$'),
           Validators.maxLength(255)
         ]
       ],
-      preciocompra: [dato.preciocompra, [ Validators.pattern('[0-9.]*')]],
+      //preciocompra: [dato.preciocompra, [ Validators.pattern('[0-9.]*')]],
       precioventa: [
-        dato.precioventa, 
+        dato.precioventa,
         [
-          Validators.required, 
+          Validators.required,
           Validators.pattern('^[0-9.,]+$')
         ]
       ],
-      cantidad: [dato.cantidad, [ Validators.pattern('[0-9]*')]],
+      //cantidad: [dato.cantidad, [ Validators.pattern('[0-9]*')]],
     });
   }
 
@@ -150,9 +150,9 @@ export class ProductosComponent implements OnInit {
     this.submitted = true;
     this.dato.producto = this.formulario.value.producto.toUpperCase();
     this.dato.descripcion = this.formulario.value.descripcion;
-    this.dato.preciocompra = this.formulario.value.preciocompra;
+    //this.dato.preciocompra = this.formulario.value.preciocompra;
     this.dato.precioventa = this.formulario.value.precioventa;
-    this.dato.cantidad = this.formulario.value.cantidad;
+    //this.dato.cantidad = this.formulario.value.cantidad;
     if (this.estado === 'Modificar') {
       this._productosService.modificar(this.dato).subscribe((data) => {
         this.fcargar(this.dato.idproducto);

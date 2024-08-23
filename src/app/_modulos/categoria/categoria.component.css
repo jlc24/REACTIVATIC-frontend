@@ -2,7 +2,7 @@
   cursor: pointer;
 }
 
-.tabla-categoria:hover{
+.tabla-categoria{
   box-shadow: 2px 2px 18px 2px #a2a2a2;
 }
 .tabla-enlaces{

@@ -59,9 +59,9 @@ export class SubrubrosService {
     );
   }
 
-  datosl(): Observable<Subrubros[]> {
+  datosl(id: number): Observable<Subrubros[]> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
-    return this._httpClient.get<Subrubros[]>(`${this.ruta}/l`, {
+    return this._httpClient.get<Subrubros[]>(`${this.ruta}/l/${id}`, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
   }

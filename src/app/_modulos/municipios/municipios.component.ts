@@ -7,6 +7,7 @@ import swal from 'sweetalert2';
 import * as Mapboxgl from 'mapbox-gl';
 import { Localidades } from 'src/app/_entidades/localidades';
 import { LocalidadesService } from 'src/app/_aods/localidades.service';
+import { AccesoService } from 'src/app/_aods/acceso.service';
 
 @Component({
   selector: 'app-municipios',
@@ -39,9 +40,24 @@ export class MunicipiosComponent implements OnInit {
   modalRefMunicipio: NgbModalRef;
   modalRefLocalidad: NgbModalRef;
 
+  esCargoAdministrador: boolean = false;
+  esCargoSecretario: boolean = false;
+  esCargoDirector: boolean = false;
+  esCargoApoyo: boolean = false;
+  esCargoEncargado: boolean = false;
+  esCargomonitoreo: boolean = false;
+  esCargoTecnologia: boolean = false;
+  esCargoMarketing: boolean = false;
+  esCargoTextil: boolean = false;
+  esCargoArtesania: boolean = false;
+  esCargoAlimento: boolean = false;
+  esCargoChofer: boolean = false;
+  esCargoPasante: boolean = false;
+
   constructor(
     private _municipiosService: MunicipiosService,
     private _localicadesService: LocalidadesService,
+    private _accesoService: AccesoService,
     private _fb: FormBuilder,
     private _fbl: FormBuilder,
     private _modalService: NgbModal
@@ -59,6 +75,18 @@ export class MunicipiosComponent implements OnInit {
 
     });
     this.fdatos();
+    this.esCargoAdministrador = this._accesoService.esCargoAdministrador();
+    this.esCargoSecretario = this._accesoService.esCargoSecretario();
+    this.esCargoDirector = this._accesoService.esCargoDirector();
+    this.esCargoApoyo = this._accesoService.esCargoApoyo();
+    this.esCargoEncargado = this._accesoService.esCargoEncargado();
+    this.esCargomonitoreo = this._accesoService.esCargoMonitoreo();
+    this.esCargoTecnologia = this._accesoService.esCargoTecnologia();
+    this.esCargoMarketing = this._accesoService.esCargoMarketing();
+    this.esCargoTextil = this._accesoService.esCargoTextil();
+    this.esCargoArtesania = this._accesoService.esCargoArtesania();
+    this.esCargoAlimento = this._accesoService.esCargoAlimentos();
+    this.esCargoChofer = this._accesoService.esCargoChofer();
   }
 
   fcantidad() {
@@ -113,7 +141,7 @@ export class MunicipiosComponent implements OnInit {
   fformlocalidad(local: Localidades, disabled: boolean = false){
     this.formlocalidad = this._fbl.group({
       idmunicipio: [
-        { value: local.idmunicipio, disabled: disabled },
+        local.idmunicipio,
         [
           Validators.required
         ]
@@ -234,8 +262,40 @@ export class MunicipiosComponent implements OnInit {
       });
   }
 
-  fcambiarestado(id: number, estado: boolean){
+  fcambiarestadoMuni(idmunicipio: number, estado: boolean){
+    swal.fire({
+      title: !estado ? '¿Está seguro de deshabilitar?' : '¿Está seguro de habilitar?',
+      icon: 'warning',
+      text: !estado ? 'El rubro NO se podrá utilizar para registros.' : 'El rubro se podrá utilizar para registros.',
+      showCancelButton: true,
+      cancelButtonText: 'cancelar',
+      confirmButtonText: 'Cambiar',
+    }).then((result) => {
+      if (result.value) {
+        this._municipiosService.cambiarestado({ idmunicipio, estado }).subscribe( response => {
+          this.fdatos();
+          swal.fire('Cambio realizado', 'El estado del rubro ha sido cambiado con éxito.', 'success');
+        });
+      }
+    });
+  }
 
+  fcambiarestadoLocal(idlocalidad: number, estado: boolean){
+    swal.fire({
+      title: !estado ? '¿Está seguro de deshabilitar?' : '¿Está seguro de habilitar?',
+      icon: 'warning',
+      text: !estado ? 'La localidad NO se podrá utilizar para registros.' : 'La localidad se podrá utilizar para registros.',
+      showCancelButton: true,
+      cancelButtonText: 'cancelar',
+      confirmButtonText: 'Cambiar',
+    }).then((result) => {
+      if (result.value) {
+        this._localicadesService.cambiarestado({ idlocalidad, estado }).subscribe( response => {
+          this.fdatos();
+          swal.fire('Cambio realizado', 'El estado de la localidad ha sido cambiado con éxito.', 'success');
+        });
+      }
+    });
   }
 
   faceptar(): void {
@@ -281,7 +341,6 @@ export class MunicipiosComponent implements OnInit {
     if (this.modalRefLocalidad) {
       this.modalRefLocalidad.dismiss();
     }
-    //this._modalService.dismissAll();
   }
   fcancelarLocal(){
     if (this.modalRefLocalidad) {

@@ -5,7 +5,7 @@
     <div class="logo">
         <a href="https://desarrolla.oruro.gob.bo"><img src="assets/imagenes/logo.png" class="img-fluid" /></a>
     </div>
-    <div class="login-box">
+    <!-- <div class="login-box">
         <form class="login-form" [formGroup]="formulario" (ngSubmit)="faceptar()">
             <h4 class="login-head">Acceso al Sistema</h4>
             <div class="form-group">
@@ -26,5 +26,26 @@
                 </p>
             </div>
         </form>
+    </div> -->
+    <div class="login-container">
+      <h3>Acceso al Sistema</h3>
+      <form [formGroup]="formulario" (ngSubmit)="faceptar()">
+          <div class="form-group">
+              <input type="text" class="form-control" placeholder="Usuario" required autofocus formControlName="usuario" [class.is-invalid]="f.usuario.errors && f.usuario.touched">
+          </div>
+          <div class="form-group">
+              <input type="password" class="form-control"  placeholder="Contraseña" required formControlName="clave" [class.is-invalid]="f.clave.errors && f.clave.touched">
+          </div>
+          <button type="submit" class="btn btn-primary" [ngClass]="{ 'btn-outline-success': !estado }" [disabled]="!formulario.valid">
+            <span *ngIf="!estado"><i class="fa fa-sign-in fa-lg fa-fw"></i> Iniciar sesion</span>
+            <span *ngIf="estado"><i class="fa fa-refresh fa-spin"></i> Verificando</span>
+          </button>
+          <hr>
+          <p class="text-center">
+            <small>&copy; 2022-{{ gestion }} SDDPI - REACTIVA TIC</small>
+        </p>
+      </form>
     </div>
 </section>
+
+

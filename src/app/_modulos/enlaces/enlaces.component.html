@@ -3,131 +3,132 @@
 
 <div class="row">
   <div class="col-md-12">
-      <div class="tile">
-          <div class="row">
-              <div class="col-md-12 mb-2">
-                  <div class="input-group justify-content-end">
-                      <div class="input-group-prepend">
-                          <button class="btn btn-outline-success mr-2" type="button" (click)="fadicionar(am)"><i class="fa fa-plus"></i> Agregar Enlace</button>
-                          <div class="dropdown">
-                              <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <i class="fa fa-bars"></i> Opciones
-                              </button>
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                  <button class="dropdown-item"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
-                                  <button class="dropdown-item"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
+    <div class="tile">
+      <div class="row justify-content-center">
+        <h4>LISTA DE ENLACES</h4>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mb-2">
+          <div class="input-group justify-content-first">
+            <div class="input-group-prepend">
+              <button class="btn btn-sm btn-outline-success mr-2" type="button" (click)="fadicionar(am)"><i class="fa fa-plus"></i> Agregar Enlace</button>
+              <div class="dropdown">
+                <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-bars"></i> Opciones
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <button class="dropdown-item"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                  <button class="dropdown-item"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+                </div>
               </div>
-          </div>
-
-          <div class="row justify-content-center">
-              <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
-                  <div class="input-group">
-                      <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Enlace a buscar..." (keyup.enter)="fbuscar()"/>
-                      <span class="input-group-prepend">
-                          <button class="btn btn-outline-danger mr-2 d-none d-md-inline" (click)="limpiar()">
-                              <i class="fa fa-times"></i> Limpiar
-                          </button>
-                          <button class="btn btn-outline-danger mr-2 d-inline d-md-none" (click)="limpiar()">
-                              <i class="fa fa-times"></i>
-                          </button>
-                          <button class="btn btn-outline-secondary d-none d-md-inline" [(ngModel)]="buscar" (click)="fbuscar()">
-                              <i class="fa fa-search"></i> Buscar
-                          </button>
-                          <button class="btn btn-outline-secondary d-inline d-md-none" [(ngModel)]="buscar" (click)="fbuscar()">
-                              <i class="fa fa-search"></i>
-                          </button>
-                      </span>
-                  </div>
-              </div>
-          </div>
-          <!-- <div class="form-group row">
-            <div class="col-md-6 mt-1" *ngIf="total > cantidad">
-                <ngb-pagination class="d-flex justify-content-end align-items-baseline pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)" size="sm"></ngb-pagination>
             </div>
-          </div> -->
-
-          <div class="table-responsive" *ngIf="enlaces?.length > 0">
-            <p class="text-right" *ngIf="total == 1">
-                Total: <b>{{ total }} registro</b>
-            </p>
-            <p class="text-right" *ngIf="total > 1">
-                Total: <b>{{ total }} registros</b>
-            </p>
-            <!-- Mostrando del registro {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de un total de {{total}} datos -->
-            <table class="table table-bordered table-striped table-hover table-sm tabla-enlace">
-                <thead>
-                    <tr class="table-info">
-                        <th class="text-center">Nro</th>
-                        <th class="text-center">Enlace</th>
-                        <th class="text-center">Ruta</th>
-                        <th class="text-center">Icono</th>
-                        <th class="text-center">Orden</th>
-                        <th class="text-center">estado</th>
-                        <th class="text-center">Fecha Creación</th>
-                        <th class="text-center">Operaciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let _item of enlaces; let i = index">
-                        <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
-                        <td>{{ _item.enlace }}</td>
-                        <td>{{ _item.ruta }}</td>
-                        <td>{{ _item.iconoenlace }}</td>
-                        <td>{{ _item.orden }}</td>
-                        <td class="text-center">
-                            <span class="estado badge badge-success" title="Cambiar estado" >
-                                HABILITADO
-                            </span>
-                        </td>
-                        <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
-                        <td class="text-center">
-                            <div class="btn-group" role="group" aria-label="First group">
-                                <button class="btn btn-outline-info btn-sm" title="Ver roles" (click)="fver(_item.idenlace, ver)">
-                                  <i class="fa fa-eye"></i>
-                                </button>
-                                <button class="btn btn-outline-warning btn-sm" title="Editar Usuario" (click)="fmodificar(_item.idenlace, am)">
-                                  <i class="fa fa-edit"></i>
-                                </button>
-                                <button class="btn btn-outline-danger btn-sm" title="Eliminar Usuario" (click)="feliminar(_item.idenlace)">
-                                  <i class="fa fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr *ngIf="total > cantidad">
-                        <td colspan="8">
-                            <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="table-responsive" *ngIf="total == 0">
-            <table class="table table-bordered table-striped table-sm tabla-enlace">
-                <thead>
-                    <tr class="table-info">
-                      <th class="text-center">Nro</th>
-                      <th class="text-center">Categoría</th>
-                      <th class="text-center">Ruta</th>
-                      <th class="text-center">Icono</th>
-                      <th class="text-center">Orden</th>
-                      <th class="text-center">estado</th>
-                      <th class="text-center">Fecha Creación</th>
-                      <th class="text-center">Operaciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="8" class="text-center">No se encontraron datos</td>
-                    </tr>
-                </tbody>
-            </table>
+          </div>
         </div>
       </div>
+
+      <div class="row">
+        <div class="col-sm-6 mt-1">
+          <p *ngIf="total == 0">
+            Total: <b>{{ total }} registros</b>
+          </p>
+          <p *ngIf="total == 1">
+            Total: <b>{{ total }} registro</b>
+          </p>
+          <p *ngIf="total > 1">
+            Total: <b>{{ total }} registros</b>
+          </p>
+        </div>
+        <div class="col-sm-6">
+          <div class="row justify-content-end">
+            <div class="col-sm-2 text-md-right text-sm-left mt-1">
+              <label for="">Buscar: </label>
+            </div>
+            <div class="col-sm-10">
+              <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                </div>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Enlace a buscar..." (keyup)="fbuscar()" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive" *ngIf="enlaces?.length > 0">
+        <table class="table table-bordered table-striped table-hover table-sm tabla-enlace">
+          <thead>
+            <tr class="table-info">
+              <th class="text-center">Nro</th>
+              <th class="text-center">Enlace</th>
+              <th class="text-center">Ruta</th>
+              <th class="text-center">Icono</th>
+              <th class="text-center">Orden</th>
+              <th class="text-center">estado</th>
+              <th class="text-center">Fecha Creación</th>
+              <th class="text-center">Operaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let _item of enlaces; let i = index">
+              <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
+              <td>{{ _item.enlace }}</td>
+              <td>{{ _item.ruta }}</td>
+              <td>{{ _item.iconoenlace }}</td>
+              <td>{{ _item.orden }}</td>
+              <td class="text-center">
+                <span class="estado badge badge-success" title="Cambiar estado" >
+                    HABILITADO
+                </span>
+              </td>
+              <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="text-center">
+                <div class="btn-group" role="group" aria-label="First group">
+                  <button class="btn btn-outline-info btn-sm" title="Ver roles" (click)="fver(_item.idenlace, ver)">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                  <button class="btn btn-outline-warning btn-sm" title="Editar enlace" (click)="fmodificar(_item.idenlace, am)">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Enlace" (click)="feliminar(_item.idenlace)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-responsive" *ngIf="total == 0">
+        <table class="table table-bordered table-striped table-sm tabla-enlace">
+          <thead>
+            <tr class="table-info">
+              <th class="text-center">Nro</th>
+              <th class="text-center">Categoría</th>
+              <th class="text-center">Ruta</th>
+              <th class="text-center">Icono</th>
+              <th class="text-center">Orden</th>
+              <th class="text-center">estado</th>
+              <th class="text-center">Fecha Creación</th>
+              <th class="text-center">Operaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="8" class="text-center">No se encontraron registros.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row mt-2">
+        <div class="col-sm-6">
+          <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+        </div>
+        <div class="col-sm-6">
+          <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -220,7 +221,7 @@
         <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()">
             <i class="fa fa-times"></i> Cancelar
         </button>
-    </div>
+      </div>
     </form>
   </div>
 </ng-template>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AccesoService } from 'src/app/_aods/acceso.service';
 import { AsociacionesService } from 'src/app/_aods/asociaciones.service';
 import { Asociaciones } from 'src/app/_entidades/asociaciones';
 import swal from 'sweetalert2';
@@ -25,15 +26,41 @@ export class AsociacionesComponent implements OnInit {
   formulario: FormGroup;
   submitted:boolean = false;
 
+  esCargoAdministrador: boolean = false;
+  esCargoSecretario: boolean = false;
+  esCargoDirector: boolean = false;
+  esCargoApoyo: boolean = false;
+  esCargoEncargado: boolean = false;
+  esCargomonitoreo: boolean = false;
+  esCargoTecnologia: boolean = false;
+  esCargoMarketing: boolean = false;
+  esCargoTextil: boolean = false;
+  esCargoArtesania: boolean = false;
+  esCargoAlimento: boolean = false;
+  esCargoChofer: boolean = false;
+  esCargoPasante: boolean = false;
 
   constructor(
     private _asociacionesService: AsociacionesService,
+    private _accesoService: AccesoService,
     private _fb: FormBuilder,
     private _modalService: NgbModal
   ) { }
 
   ngOnInit(): void {
     this.fdatos();
+    this.esCargoAdministrador = this._accesoService.esCargoAdministrador();
+    this.esCargoSecretario = this._accesoService.esCargoSecretario();
+    this.esCargoDirector = this._accesoService.esCargoDirector();
+    this.esCargoApoyo = this._accesoService.esCargoApoyo();
+    this.esCargoEncargado = this._accesoService.esCargoEncargado();
+    this.esCargomonitoreo = this._accesoService.esCargoMonitoreo();
+    this.esCargoTecnologia = this._accesoService.esCargoTecnologia();
+    this.esCargoMarketing = this._accesoService.esCargoMarketing();
+    this.esCargoTextil = this._accesoService.esCargoTextil();
+    this.esCargoArtesania = this._accesoService.esCargoArtesania();
+    this.esCargoAlimento = this._accesoService.esCargoAlimentos();
+    this.esCargoChofer = this._accesoService.esCargoChofer();
   }
 
   fcantidad() {
@@ -93,6 +120,22 @@ export class AsociacionesComponent implements OnInit {
       this.dato = data;
       this.fformulario(this.dato);
       this._modalService.open(content);
+    });
+  }
+
+  feliminar(id: number){
+    swal.fire({
+      title: 'Estás seguro?',
+      icon: 'warning',
+      text: 'No podrás revertir el borrado de este dato!',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Borrar',
+    })
+    .then((result) => {
+      if (result.value) {
+        swal.fire('Error', 'Procedimiento NO autorizado, por favor contacte al administrador', 'error');
+      }
     });
   }
 

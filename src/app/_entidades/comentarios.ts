@@ -9,6 +9,7 @@ export class Comentarios {
   idproducto: number;
   estado: boolean;
   created_at: Date;
+  
   clientes: Clientes;
   productos: Productos;
 }

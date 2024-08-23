@@ -30,6 +30,7 @@ import { OfertasComponent } from './ofertas/ofertas.component';
 import { PreciosComponent } from './precios/precios.component';
 import { TamanosComponent } from './tamanos/tamanos.component';
 import { CategoriaComponent } from './categoria/categoria.component';
+import { CargosComponent } from './cargos/cargos.component';
 
 const routes: Routes = [
   {
@@ -79,6 +80,14 @@ const routes: Routes = [
   {
     path: 'roles',
     component: RolesComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
+    path: 'cargos',
+    component: CargosComponent,
     canActivate: [GuardianGuard],
     data: {
       rol: 'ROLE_TODOS'

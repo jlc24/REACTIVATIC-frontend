@@ -1,4 +1,4 @@
-import { ROLES, NOMBRE, NOMBRECLIENTE } from './../_config/application';
+import { ROLES, NOMBRE, NOMBRECLIENTE, CARGO } from './../_config/application';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -56,6 +56,7 @@ export class AccesoComponent implements OnInit {
             sessionStorage.setItem(ROLES, decoded['authorities']);
             sessionStorage.setItem(NOMBRE, decoded['nombre']);
             sessionStorage.setItem(NOMBRECLIENTE, decoded['nombrecliente']);
+            sessionStorage.setItem(CARGO, decoded['cargo']);
             sessionStorage.setItem(TOKEN, token);
             this._ruta.navigateByUrl('/escritorio');
             this._mensajes.success(decoded['nombrecliente'], 'Bienvenido');

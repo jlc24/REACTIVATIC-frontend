@@ -6,5 +6,6 @@ export class Materiales {
   material: string;
   estado: boolean;
   created_at: Date;
+  
   productos: Productos;
 }

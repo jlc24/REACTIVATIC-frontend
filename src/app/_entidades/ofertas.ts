@@ -7,5 +7,6 @@ export class Ofertas {
   duracion: Date;
   estado: boolean;
   created_at: Date;
+  
   productos: Productos;
 }

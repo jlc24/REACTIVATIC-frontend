@@ -15,16 +15,16 @@ export class EmpresasService {
 
   constructor(private _httpClient: HttpClient) { }
 
-  datos(pagina: number, cantidad: number, buscar: string): Observable<Empresas[]> {
+  datos(pagina: number, cantidad: number, buscar: string, rubro: string): Observable<Empresas[]> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
-    return this._httpClient.get<Empresas[]>(`${this.ruta}/?pagina=${pagina}&cantidad=${cantidad}&buscar=${buscar}`, {
+    return this._httpClient.get<Empresas[]>(`${this.ruta}/?pagina=${pagina}&cantidad=${cantidad}&buscar=${buscar}&rubro=${rubro}`, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
   }
 
-  cantidad(buscar: string): Observable<number> {
+  cantidad(buscar: string, rubro: string): Observable<number> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
-    return this._httpClient.get<number>(`${this.ruta}/cantidad?buscar=${buscar}`, {
+    return this._httpClient.get<number>(`${this.ruta}/cantidad?buscar=${buscar}&rubro=${rubro}`, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
   }

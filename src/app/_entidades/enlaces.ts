@@ -9,6 +9,7 @@ export class Enlaces {
   orden: number;
   estado: boolean;
   created_at: Date;
+
   categoria: Categorias;
 
 }

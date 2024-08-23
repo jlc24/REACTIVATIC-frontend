@@ -5,6 +5,7 @@ export class Enlacesroles{
   idenlacerol: number;
   idenlace: number;
   idrol: number;
+  
   enlaces: Enlaces;
   rol: Roles;
 }

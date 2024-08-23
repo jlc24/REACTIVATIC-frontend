@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import swal from 'sweetalert2';
 import { Subrubros } from 'src/app/_entidades/subrubros';
 import { SubrubrosService } from 'src/app/_aods/subrubros.service';
+import { AccesoService } from 'src/app/_aods/acceso.service';
 
 @Component({
   selector: 'app-rubros',
@@ -33,9 +34,24 @@ export class RubrosComponent implements OnInit {
   modalRefRubro: NgbModalRef;
   modalRefSubrubro: NgbModalRef;
 
+  esCargoAdministrador: boolean = false;
+  esCargoSecretario: boolean = false;
+  esCargoDirector: boolean = false;
+  esCargoApoyo: boolean = false;
+  esCargoEncargado: boolean = false;
+  esCargomonitoreo: boolean = false;
+  esCargoTecnologia: boolean = false;
+  esCargoMarketing: boolean = false;
+  esCargoTextil: boolean = false;
+  esCargoArtesania: boolean = false;
+  esCargoAlimento: boolean = false;
+  esCargoChofer: boolean = false;
+  esCargoPasante: boolean = false;
+
   constructor(
     private _rubrosService: RubrosService,
     private _subrubrosService: SubrubrosService,
+    private _accesoService: AccesoService,
     private _fb: FormBuilder,
     private _fbS: FormBuilder,
     private _modalService: NgbModal
@@ -50,6 +66,18 @@ export class RubrosComponent implements OnInit {
       subrubro: ['']
     });
     this.fdatos();
+    this.esCargoAdministrador = this._accesoService.esCargoAdministrador();
+    this.esCargoSecretario = this._accesoService.esCargoSecretario();
+    this.esCargoDirector = this._accesoService.esCargoDirector();
+    this.esCargoApoyo = this._accesoService.esCargoApoyo();
+    this.esCargoEncargado = this._accesoService.esCargoEncargado();
+    this.esCargomonitoreo = this._accesoService.esCargoMonitoreo();
+    this.esCargoTecnologia = this._accesoService.esCargoTecnologia();
+    this.esCargoMarketing = this._accesoService.esCargoMarketing();
+    this.esCargoTextil = this._accesoService.esCargoTextil();
+    this.esCargoArtesania = this._accesoService.esCargoArtesania();
+    this.esCargoAlimento = this._accesoService.esCargoAlimentos();
+    this.esCargoChofer = this._accesoService.esCargoChofer();
   }
 
   fcantidad() {
@@ -252,7 +280,7 @@ export class RubrosComponent implements OnInit {
 
   faceptarSubrubro(): void{
     this.submitted = true;
-    //console.log('Formulario Valores:', this.formsubrubro.value);
+
     this.subrubro.idrubro = this.formsubrubro.value.idrubro;
     this.subrubro.subrubro = this.formsubrubro.value.subrubro;
 
@@ -269,7 +297,6 @@ export class RubrosComponent implements OnInit {
         swal.fire('Dato adicionado', 'Dato adicionado con exito', 'success');
       });
     }
-    //console.log(this.dato);
   }
 
   fcancelar() {
