@@ -9,6 +9,7 @@
                     <div class="col-12 text-white align-content-center">
                         <h2 class="card-title">{{ totalusuarios }}</h2>
                         <h5 class="card-subtitle mb-2" *ngIf="totalusuarios == 1">Usuario registrado</h5>
+                        <h5 class="card-subtitle mb-2" *ngIf="totalusuarios == 0">Usuarios registrados</h5>
                         <h5 class="card-subtitle mb-2" *ngIf="totalusuarios > 1">Usuarios registrados</h5>
                     </div>
                     <i class="small-box-icon fa fa-user-plus fa-5x"></i>
@@ -29,6 +30,7 @@
                     <div class="col-12 text-white align-content-center" style="z-index: 1;">
                         <h2 class="card-title">{{ totalempresas }}</h2>
                         <h5 class="card-subtitle mb-2" *ngIf="totalempresas == 1">Unidad Productiva</h5>
+                        <h5 class="card-subtitle mb-2" *ngIf="totalempresas == 0">Unidades Productivas</h5>
                         <h5 class="card-subtitle mb-2" *ngIf="totalempresas > 1">Unidades Productivas</h5>
                     </div>
                     <i class="small-box-icon fa fa-list-alt fa-5x"></i>
@@ -48,6 +50,7 @@
                     <div class="col-12 text-white align-content-center">
                         <h2 class="card-title">{{ totalmunicipios }}</h2>
                         <h5 class="card-subtitle mb-2" *ngIf="totalmunicipios == 1">Municipio</h5>
+                        <h5 class="card-subtitle mb-2" *ngIf="totalmunicipios == 0">Municipios</h5>
                         <h5 class="card-subtitle mb-2" *ngIf="totalmunicipios > 1">Municipios</h5>
                     </div>
                     <i class="small-box-icon fa fa-map-o fa-5x"></i>

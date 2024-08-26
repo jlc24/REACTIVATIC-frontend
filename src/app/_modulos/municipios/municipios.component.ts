@@ -218,7 +218,12 @@ export class MunicipiosComponent implements OnInit {
     this._municipiosService.dato(id).subscribe((data) => {
       this.dato = data;
       this.flocalidades(id);
-      this.modalRefMunicipio = this._modalService.open(content, { backdrop: 'static', keyboard: false, size: 'lg' });
+      this.modalRefMunicipio = this._modalService.open(content, { 
+        backdrop: 'static', 
+        keyboard: false, 
+        size: 'lg',
+        scrollable: true
+      });
     });
   }
 

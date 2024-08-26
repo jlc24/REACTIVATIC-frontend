@@ -126,7 +126,7 @@ export class AccesoService {
   }
   esCargoDirector(){
     const cargo = sessionStorage.getItem(CARGO);
-    if (cargo.indexOf('DIRECTOR DE PROMOCION ECONOMIA INDUSTRIA Y COMERCIO') >= 0) {
+    if (cargo.indexOf('DIRECTOR DE PROMOCION ECONOMICA INDUSTRIA Y COMERCIO') >= 0) {
       return true;
     }else{
       return false;

@@ -133,7 +133,7 @@ export class CargosComponent implements OnInit {
         cargo.cargo,
         [
           Validators.required,
-          Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$'),
+          Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s.,-]+$'),
           Validators.minLength(5),
           Validators.maxLength(255)
         ]
@@ -156,7 +156,7 @@ export class CargosComponent implements OnInit {
         input = input.replace(/[^0-9]/g, '');
         break;
       case 'letrasynumerosguion':
-        input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1]/g, '');
+        input = input.replace(/[^a-zA-Z\u00f1\u00d1\s.,-]/g, '');
         break;
       case 'direccion':
         input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1\s.,#-]/g, '');
