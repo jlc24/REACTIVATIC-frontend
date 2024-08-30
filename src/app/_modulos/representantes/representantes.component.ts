@@ -70,12 +70,12 @@ export class RepresentantesComponent implements OnInit {
   }
 
   hijosMap: { [key: number]: string } = {
-    0: 'SIN HIJOS',
     1: '1 HIJO',
     2: '2 HIJOS',
     3: '3 HIJOS',
     4: '4 HIJOS',
-    5: '5 A MAS HIJOS'
+    5: '5 A MAS HIJOS',
+    6: 'SIN HIJOS',
   }
 
   step: number = 1;

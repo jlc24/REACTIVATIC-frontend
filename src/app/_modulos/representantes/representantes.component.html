@@ -144,7 +144,7 @@
               <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Representante</h4><br>
           </div>
           <div class="col-lg-6 col-md-12 alert-info p-3">
-              Estimado usuario, los campos remarcados con <b class="text-danger">*</b> son necesarios.
+              Los campos remarcados con <b class="text-danger">*</b> son necesarios.
           </div>
       </div>
   </div>
@@ -263,12 +263,12 @@
           </div>
           <div class="col-lg-2 col-md-6 col-sm-12 mt-1">
             <select class="custom-select custom-select-sm" formControlName="hijos" [class.is-invalid]="f.hijos.errors && f.hijos.touched" required>
-              <option value="0">SIN HIJOS</option>
               <option value="1">1 HIJO</option>
               <option value="2">2 HIJOS</option>
               <option value="3">3 HIJOS</option>
               <option value="4">4 HIJOS</option>
               <option value="5">5 A MAS HIJOS</option>
+              <option value="6">SIN HIJOS</option>
             </select>
           </div>
         </div>

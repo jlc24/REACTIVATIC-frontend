@@ -1,0 +1,253 @@
+.estado:hover{
+  cursor: pointer;
+}
+
+.puntero{
+  cursor: pointer;
+}
+
+.tabla-producto{
+  box-shadow: 2px 2px 18px 2px #a2a2a2;
+}
+
+.price-card {
+  position: relative;
+  width: 150px;
+  height: 100px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  /* padding: 20px; */
+  padding-top: 25px;
+  margin: 5px;
+  box-sizing: border-box;
+}
+
+.price-card:hover {
+  transform: scale(1.05);
+  background-color: #5CE699;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.delete-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: #e74c3c;
+  border: none;
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+}
+
+.price-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+p {
+  margin: 5px 0;
+}
+
+.color-card-container{
+  position: relative;
+  display: inline-block;
+}
+
+.color-card {
+  /* position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  margin: 5px;
+  border: 2px solid transparent; */
+
+  padding: 5px;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 5px;
+  border: 2px solid #0000006e;
+}
+
+.color-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.material-card-container {
+  position: relative;
+  display: inline-block;
+}
+
+.material-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  display: inline-block;
+  width: auto;
+  min-width: 50px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  margin: 7px;
+  border: 2px solid #0000006e;
+}
+
+.material-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.attributes-table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.attributes-table thead {
+  background-color: #3498db;
+  color: #ffffff;
+}
+
+.attributes-table th, .attributes-table td {
+  padding: 10px;
+  text-align: left;
+}
+
+.attributes-table th {
+  font-weight: bold;
+}
+
+.attributes-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.attributes-table tbody tr:hover {
+  background-color: #d9eaf7;
+}
+
+.attributes-table td {
+  border-bottom: 1px solid #ddd;
+}
+
+.attributes-table .borrar-btn {
+  background-color: #e74c3c;
+  border: none;
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.attributes-table .borrar-btn:hover {
+  background-color: #c0392b;
+}
+
+.image-card-container {
+  position: relative;
+  display: inline-block;
+}
+
+.image-card {
+  display: inline-block;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 150px;
+  height: 150px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-card:hover{
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.color-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.color-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #0000005b;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.color-circle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.color-display {
+  display: flex;
+  align-items: center;
+}
+
+.selected-color-circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 2px solid #0000005b;
+  /* margin-right: 20px; */
+}
+
+.color-info {
+  font-family: Arial, sans-serif;
+}
+
+/* .color-info p {
+  margin: 0;
+} */
+
+.icon-opacity {
+  font-size: 5rem; /* Ajusta el tamaño del ícono según sea necesario */
+  opacity: 0.5; /* Nivel de opacidad */
+  transition: opacity 0.3s ease; /* Transición suave al cambiar la opacidad */
+}
+

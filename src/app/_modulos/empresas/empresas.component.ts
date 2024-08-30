@@ -3,7 +3,7 @@ import { AsociacionesService } from 'src/app/_aods/asociaciones.service';
 import { Representantes } from './../../_entidades/representantes';
 import { Asociaciones } from './../../_entidades/asociaciones';
 import { LocalidadesService } from 'src/app/_aods/localidades.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { EmpresasService } from 'src/app/_aods/empresas.service';
@@ -31,6 +31,7 @@ import { Municipios } from 'src/app/_entidades/municipios';
 import { Rubros } from 'src/app/_entidades/rubros';
 import { RubrosService } from 'src/app/_aods/rubros.service';
 import { MunicipiosService } from 'src/app/_aods/municipios.service';
+import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-empresas',
@@ -41,7 +42,12 @@ export class EmpresasComponent implements OnInit {
 
   ruta = `${RUTA}/catalogos/descargarempresa/`;
 
-  archivoseleccionado: File;
+  @ViewChild('archivoInput') archivoInput: ElementRef;
+  archivoSeleccionado: File = null;
+  miniaturaUrl: string | ArrayBuffer = null;
+  sizeFileFormat: string | null = null;
+  cargando: boolean = false;
+  progreso: number = 0;
 
   usuarios: Usuarios[];
   persona: Personas;
@@ -85,28 +91,28 @@ export class EmpresasComponent implements OnInit {
   stepRep: number = 1;
 
   formacionMap: { [key: number]: string } = {
-    1: 'Inicial',
-    2: 'Primaria',
-    3: 'Secundaria',
-    4: 'Técnico',
-    5: 'Licenciatura'
+    1: 'INICIAL',
+    2: 'PRIMARIA',
+    3: 'SECUNDARIA',
+    4: 'TECNICO',
+    5: 'LICENCIATURA'
   };
 
   estadocivilMap: { [key: number]: string } = {
-    1: 'Soltero(a)',
-    2: 'Casado(a)',
-    3: 'Viudo(a)',
-    4: 'Conviviente',
-    5: 'Separado(a)'
+    1: 'SOLTERO(A)',
+    2: 'CASADO(A)',
+    3: 'VIUDO(A)',
+    4: 'CONVIVIENTE',
+    5: 'SEPARADO(A)'
   }
 
   hijosMap: { [key: number]: string } = {
-    0: 'Sin Hijos',
-    1: '1 Hijo',
-    2: '2 Hijos',
-    3: '3 Hijos',
-    4: '4 Hijos',
-    5: '5 a mas Hijos'
+    1: '1 HIJO',
+    2: '2 HIJOS',
+    3: '3 HIJOS',
+    4: '4 HIJOS',
+    5: '5 A MAS HIJOS',
+    6: 'SIN HIJOS',
   }
   capacidadMap: { [key: number]: string} = {
     1: '1 A 2',
@@ -148,7 +154,8 @@ export class EmpresasComponent implements OnInit {
     1: 'LOCAL',
     2: 'NACIONAL',
     3: 'MUNICIPAL',
-    4: 'INTERNACIONAL'
+    4: 'INTERNACIONAL',
+    5: 'NINGUNO',
   }
 
   //copiarDatos: boolean = false;
@@ -189,6 +196,7 @@ export class EmpresasComponent implements OnInit {
     private _fbE: FormBuilder,
     private _fbR: FormBuilder,
     private _modalService: NgbModal,
+    private toast: ToastrService,
     private _mensajes: ToastrService,
   ) { }
 
@@ -284,17 +292,19 @@ export class EmpresasComponent implements OnInit {
       }).then((result) => {
         if (result.value) {
           this.goToStep(1);
-
+          this.formEmpresa.value.copiarDatos = false;
         }
       });
     }else if (copiar && this.representante) {
       const idrepresentante = `${this.representante?.idrepresentante}`;
       const nombreCompleto = `${this.representante?.persona?.primerapellido} ${this.representante?.persona?.segundoapellido} ${this.representante?.persona?.primernombre}`;
       const celular = `${this.representante?.persona?.celular}`;
+      const direccion = `${this.representante?.persona?.direccion}`;
       this.formEmpresa.patchValue({
         idrepresentante: idrepresentante,
         empresa: nombreCompleto,
         razonsocial: nombreCompleto,
+        direccion: direccion,
         celular: celular
       });
     } else {
@@ -302,6 +312,7 @@ export class EmpresasComponent implements OnInit {
         idrepresentante: '',
         empresa: '',
         razonsocial: '',
+        direccion: '',
         celular: ''
       });
     }
@@ -436,6 +447,8 @@ export class EmpresasComponent implements OnInit {
     this.buscarRep = '';
     this.representantes = [];
     this.representante = null;
+    this.mostrarOtro = null;
+    this.mostrarOtroCampo = null;
   }
 
   frepresentantes() {
@@ -946,7 +959,8 @@ export class EmpresasComponent implements OnInit {
     this.modalRefEmpresa = this._modalService.open(content, {
       backdrop: 'static',
       keyboard: false,
-      size: 'lg'
+      size: 'lg',
+      scrollable: true
     });
   }
 
@@ -975,7 +989,8 @@ export class EmpresasComponent implements OnInit {
       this.modalRefEmpresa = this._modalService.open(content, {
         backdrop: 'static',
         keyboard: false,
-        size: 'lg'
+        size: 'lg',
+        scrollable: true
       });
     });
   }
@@ -1046,6 +1061,8 @@ export class EmpresasComponent implements OnInit {
       this._empresasService.adicionar(this.dato).subscribe((data) => {
         //this.fcargar(this.dato.idempresa);
         this.fdatos();
+        this.mostrarOtro = null;
+        this.mostrarOtroCampo = null;
         this.modalRefEmpresa.dismiss();
         swal.fire('Dato adicionado', 'Dato modificado con exito', 'success');
       });
@@ -1066,8 +1083,10 @@ export class EmpresasComponent implements OnInit {
     this.persona.dip = this.formRep.value.dip;
     this.persona.complementario = toUpperCaseDefined(this.formRep.value.complementario);
     this.persona.idtipoextension = this.formRep.value.idtipoextension;
-    this.persona.telefono = this.formRep.value.celular;
+    this.persona.direccion = this.formRep.value.direccion;
+    this.persona.telefono = this.formRep.value.telfono;
     this.persona.celular = this.formRep.value.celular;
+    this.persona.correo = this.formRep.value.correo;
     this.persona.formacion = this.formRep.value.formacion;
     this.persona.estadocivil = this.formRep.value.estadocivil;
     this.persona.hijos = this.formRep.value.hijos;
@@ -1083,21 +1102,98 @@ export class EmpresasComponent implements OnInit {
   }
 
   fseleccionarArchivo(event) {
-    const reader = new FileReader();
-    this.archivoseleccionado = event.target.files[0];
-    if (event.target.files[0] && event.target.files.length) {
-      const file = event.target.files[0];
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.imageSrc = reader.result as string;
-      };
+    const archivo = event.target.files[0];
+    if (!archivo) {
+      return;
     }
+
+    const tamañoMaximoMB = 2;
+    const tamañoMaximoBytes = tamañoMaximoMB * 1024 * 1024;
+    if (archivo.size > tamañoMaximoBytes) {
+      this.toast.error(`El archivo supera el límite de ${tamañoMaximoMB} MB.`, 'Tamaño de archivo no permitido');
+      this.fremoverArchivo();
+      return;
+    }
+
+    const tipoArchivo = archivo.type;
+    if (tipoArchivo !== 'image/png' && tipoArchivo !== 'image/jpeg') {
+      this.toast.error('Solo se permiten archivos PNG o JPG.', 'Formato no soportado');
+      this.fremoverArchivo();
+      return;
+    }
+
+    this.archivoSeleccionado = archivo;
+    this.sizeFileFormat = this.fformatearTamañoArchivo(archivo.size);
+    this.fcrearMiniatura();
 
   }
 
+  fformatearTamañoArchivo(tamañoBytes: number): string {
+    const tamañoMB = tamañoBytes / (1024 * 1024);
+    return `${tamañoMB.toFixed(2)} MB`;
+  }
+
+  farrastrarSobre(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    (event.currentTarget as HTMLElement).classList.add('dragover');
+  }
+
+  farrastrarFuera(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    (event.currentTarget as HTMLElement).classList.remove('dragover');
+  }
+
+  fsoltarArchivo(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    (event.currentTarget as HTMLElement).classList.remove('dragover');
+
+    if (event.dataTransfer.files.length > 0) {
+      this.archivoSeleccionado = event.dataTransfer.files[0];
+      this.fcrearMiniatura();
+    }
+  }
+
+  fcrearMiniatura() {
+    if (this.archivoSeleccionado) {
+      const reader = new FileReader();
+      reader.onload = (e) => this.miniaturaUrl = reader.result;
+      reader.readAsDataURL(this.archivoSeleccionado);
+    }
+  }
+
+  fremoverArchivo() {
+    this.archivoSeleccionado = null;
+    this.miniaturaUrl = null;
+  }
+
   fcargar(id: number) {
-    this._empresasService.cargarImagene(this.archivoseleccionado, id).subscribe((data) => {
-      this.fdatos();
+    // this._empresasService.cargarImagene(this.archivoseleccionado, id).subscribe((data) => {
+    //   this.fdatos();
+    // });
+    swal.fire({
+      title: 'Cargando archivo...',
+      html: 'Progreso: <b>0%</b>',
+      allowOutsideClick: false,
+      onBeforeOpen: () => {
+        swal.showLoading();
+      }
+    });
+
+    this._personasService.uploadperfil(this.archivoSeleccionado, 'usuarios').subscribe(event => {
+      if (event.type === HttpEventType.UploadProgress) {
+        const progreso = Math.round((event.loaded / event.total) * 100);
+        swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
+      } else if (event.type === HttpEventType.Response) {
+        swal.close();
+        swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
+        this._modalService.dismissAll();
+      }
+    }, error => {
+      swal.close();
+      swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
     });
   }
 
@@ -1111,6 +1207,7 @@ export class EmpresasComponent implements OnInit {
   fcancelarRep(){
     if (this.modalRefPersona) {
       this.modalRefPersona.dismiss();
+      this.archivoSeleccionado = null;
     }
   }
 

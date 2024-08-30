@@ -18,6 +18,7 @@ import swal from 'sweetalert2';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Cargos } from 'src/app/_entidades/cargos';
 import { CargosService } from 'src/app/_aods/cargos.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-usuarios',
@@ -80,7 +81,8 @@ export class UsuariosComponent implements OnInit {
     private _sanitizer: DomSanitizer,
     private _fb: FormBuilder,
     config: NgbModalConfig,
-    private _modalService: NgbModal
+    private _modalService: NgbModal,
+    private _toast: ToastrService
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
@@ -338,7 +340,6 @@ export class UsuariosComponent implements OnInit {
       correo: [
         user.persona.correo,
         [
-          Validators.required,
           Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'),
           Validators.maxLength(255)
         ],
@@ -455,19 +456,21 @@ export class UsuariosComponent implements OnInit {
   feliminar(id: number) {
     swal
       .fire({
-        title: 'Estás seguro?',
+        title: 'Confirmar eliminación',
+        text: '¿Realmente quieres eliminar este usuario? Esta acción no se puede revertir.',
         icon: 'warning',
-        text: 'No podrás revertir el borrado de este dato!',
         showCancelButton: true,
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Borrar',
+        cancelButtonText: 'No, mantener usuario',
+        confirmButtonText: 'Sí, eliminar',
       })
       .then((result) => {
         if (result.value) {
           // this._usuariosService.eliminar(id).subscribe((data) => {
           //   this.fdatos();
+          //   this._toast.success('Usuario eliminado correctamente.', 'Error en la carga');
           // });
-          swal.fire('Error', 'Procedimiento NO autorizado, por favor contacte al Administrador', 'error');
+          swal.fire('Error', 'Procedimiento NO autorizado, por favor contacte al administrador', 'error');
+          this._toast.error('', 'Error de eliminación');
         }
       });
   }
@@ -482,10 +485,17 @@ export class UsuariosComponent implements OnInit {
       confirmButtonText: 'Cambiar',
     }).then((result) => {
       if (result.value) {
-        this._usuariosService.cambiarestado({ idusuario, estado }).subscribe( response => {
-          this.fdatos();
-          swal.fire('Cambio realizado', 'El estado del usuario ha sido cambiado con éxito.', 'success');
-        });
+        this._usuariosService.cambiarestado({ idusuario, estado }).subscribe(
+          (response) => {
+            this.fdatos();
+            swal.fire('Cambio realizado', 'El estado del usuario ha sido cambiado con éxito.', 'success');
+            this._toast.success('', 'Operación exitosa');
+          },
+          (error) => {
+            swal.fire('Error', 'Hubo un problema al intentar cambiar el estado del usuario.', 'error');
+            this._toast.error('', 'Error de operación');
+          }
+        );
       }
     });
   }
@@ -500,6 +510,7 @@ export class UsuariosComponent implements OnInit {
     this.dato.usuario = new Usuarios();
     this.dato.rol = new Roles();
 
+    this.dato.idpersona = this.user.persona.idpersona;
     this.dato.primerapellido = toUpperCaseDefined(this.formulario.value.primerapellido);
     this.dato.segundoapellido = toUpperCaseDefined(this.formulario.value.segundoapellido);
     this.dato.primernombre = toUpperCaseDefined(this.formulario.value.primernombre);
@@ -509,25 +520,43 @@ export class UsuariosComponent implements OnInit {
     this.dato.complementario = toUpperCaseDefined(this.formulario.value.complementario);
     this.dato.idtipoextension = this.formulario.value.idtipoextension;
     this.dato.direccion = toUpperCaseDefined(this.formulario.value.direccion);
-    this.dato.telefono = this.formulario.value.celular;
+    this.dato.telefono = this.formulario.value.telefono;
     this.dato.celular = this.formulario.value.celular;
     this.dato.correo = this.formulario.value.correo;
+    this.dato.usuario.idusuario = this.user.idusuario;
     this.dato.usuario.usuario = this.formulario.value.usuario;
     this.dato.usuario.clave = this.formulario.value.clave;
+    this.dato.usuario.idcargo = this.formulario.value.idcargo;
     this.dato.rol.idrol = this.formulario.value.idrol;
 
+    console.log(this.dato);
+
     if (this.estado === 'Modificar') {
-      this._personasService.modificar(this.dato).subscribe((data) => {
-        this.fdatos();
-        this._modalService.dismissAll();
-        swal.fire('Dato modificado', 'Dato modificado con exito', 'success');
-      });
+      this._personasService.modificar(this.dato).subscribe(
+        (data) => {
+          this.fdatos();
+          this._modalService.dismissAll();
+          swal.fire('Modificación exitosa', 'El dato ha sido modificado con éxito.', 'success');
+          this._toast.success('', 'Operación exitosa');
+        },
+        (error) => {
+          swal.fire('Error de modificación', 'Hubo un problema al intentar modificar el dato. Por favor, intenta nuevamente.', 'error');
+          this._toast.error('', 'Error de operación');
+        }
+      );
     } else {
-      this._personasService.adicionar4(this.dato).subscribe((data) => {
-        this.fdatos();
-        this._modalService.dismissAll();
-        swal.fire('Dato adicionado', 'Dato registrado con exito', 'success');
-      });
+      this._personasService.adicionar4(this.dato).subscribe(
+        (data) => {
+          this.fdatos();
+          this._modalService.dismissAll();
+          swal.fire('Registro exitoso', 'El dato ha sido registrado con éxito.', 'success');
+          this._toast.success('', 'Operación exitosa');
+        },
+        (error) => {
+          swal.fire('Error de registro', 'Hubo un problema al intentar registrar el dato. Por favor, intenta nuevamente.', 'error');
+          this._toast.error('', 'Error de operación');
+        }
+      );
     }
   }
 

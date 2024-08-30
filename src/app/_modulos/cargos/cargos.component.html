@@ -125,14 +125,14 @@
 
 <ng-template #am>
   <div class="modal-header">
-      <div class="row col-12">
-          <div class="col-lg-6 col-md-12 text-center">
-              <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Cargo</h4><br>
-          </div>
-          <div class="col-lg-6 col-md-12 alert-info p-3">
-              Estimado usuario, los campos remarcados con <b class="text-danger">*</b> son necesarios.
-          </div>
+    <div class="row col-12">
+      <div class="col-lg-6 col-md-12 text-center">
+        <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Cargo</h4><br>
       </div>
+      <div class="col-lg-6 col-md-12 alert-info p-3">
+        Los campos remarcados con <b class="text-danger">*</b> son necesarios.
+      </div>
+    </div>
   </div>
   <div class="modal-body">
     <form [formGroup]="formCargo" (ngSubmit)="faceptar()">

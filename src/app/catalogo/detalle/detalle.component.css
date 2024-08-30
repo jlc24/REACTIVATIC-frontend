@@ -27,6 +27,115 @@ h1,
   color: #45595b;
 }
 
-p{
-  font-family: "Raleway", sans-serif;
+.position-relative {
+  position: relative;
+}
+
+.overlay-text {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-align: center;
+  width: 100%;
+  /* background-color: #fff; */
+}
+
+.overlay-text h1 h4 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.add-to-cart-btn {
+  font-size: 0.9rem;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+}
+
+.add-to-cart-btn i {
+  margin-right: 5px;
+}
+
+.back-link {
+  color: #fff; /* Color del texto del enlace */
+  font-size: 1.1rem; /* Tamaño de fuente del enlace */
+  text-decoration: none; /* Sin subrayado */
+  font-weight: bold; /* Fuente en negrita */
+}
+
+.back-link:hover {
+  color: #0056b3; /* Color del texto al pasar el cursor */
+  text-decoration: underline; /* Subrayar el texto al pasar el cursor */
+}
+
+.back-link i {
+  margin-right: .5rem; /* Espacio entre el ícono y el texto */
+}
+
+.imagen-logos{
+  transition: transform 0.3s;
+}
+.imagen-logos:hover{
+  transform: scale(1.05);
+}
+.social-icon i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem; /* Tamaño del icono */
+  height: 3rem;
+  border-radius: 50%; /* Hace que el fondo sea circular */
+  background-color: transparent; /* Fondo transparente por defecto */
+  transition: background-color 0.3s, color 0.3s, transform 0.3s; /* Efecto de transición para hover */
+  text-decoration: none;
+  font-size: 1.5rem; /* Tamaño del icono */
+  color: #FFF;
+  border: solid 1px #fff;
+}
+
+.social-icon:hover i {
+  color: #bb2036; /* Color del icono al pasar el ratón */
+  background-color: #FFF;
+  transform: scale(1.5); /* Aumenta el tamaño del icono al pasar el ratón */
+}
+
+.contact-info {
+  padding: 20px;
+  background-color: #f8f9fa; /* Fondo gris claro para resaltar el contenido */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Sombra sutil para un efecto de elevación */
+}
+
+.contact-info h4 {
+  margin-bottom: 20px;
+  font-size: 1.5rem; /* Tamaño de fuente del título */
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px; /* Espacio entre cada ítem */
+}
+
+.contact-item i {
+  font-size: 1.5rem; /* Tamaño del ícono */
+  margin-right: 10px; /* Espacio entre el ícono y el texto */
+}
+
+.contact-item p {
+  margin: 0; /* Elimina el margen por defecto */
+}
+
+.contact-item a {
+  color: #fff; /* Color del enlace */
+  text-decoration: none; /* Elimina el subrayado del enlace */
+}
+
+.contact-item a:hover {
+  text-decoration: underline; /* Subrayado al pasar el ratón sobre el enlace */
 }

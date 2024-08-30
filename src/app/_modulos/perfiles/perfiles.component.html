@@ -192,8 +192,8 @@
               </div>
               <div class="row">
                 <div class="col-md-12 text-center">
-                  <button class="btn btn-outline-info" (click)="fcambiarclave(cambiarclave)">
-                    <i class="fa fa-key"></i> Cambiar clave
+                  <button class="btn btn-outline-info" (click)="faceptarcambiarclave(perfil?.usuario?.usuario)">
+                    <i class="fa fa-key"></i> Restablecer Clave
                   </button>
                 </div>
               </div>
@@ -500,23 +500,45 @@
         <h4 class="modal-title pull-left">{{ estado }} Imagen</h4>
     </div>
     <div class="modal-body">
-        <div class="form-group">
-            <label>Fotografía</label>
-            <input class="form-control" type="file" (change)="fseleccionarArchivo($event)" />
+
+      <div class="dropzone" (click)="archivoInput.click()" (dragover)="farrastrarSobre($event)" (dragleave)="farrastrarFuera($event)" (drop)="fsoltarArchivo($event)">
+        <p *ngIf="!archivoSeleccionado">Arrastra tu imagen aquí o haz click para seleccionar</p>
+
+        <div *ngIf="archivoSeleccionado" class="preview-container">
+          <img [src]="miniaturaUrl" alt="Vista previa" class="thumbnail" />
+          <button type="button" class="btn btn-danger btn-sm" (click)="fremoverArchivo()" title="Cambiar Imagen">
+            <i class="bi bi-x-lg"></i>
+          </button>
         </div>
 
-        <div class="text-center">
-            <button type="button" class="btn btn-outline-success m-2" (click)="fcargar()">
-        <i class="fa fa-save"></i> Grabar
-      </button>
-            <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()">
-        <i class="fa fa-times"></i> Cancelar
-      </button>
+        <div class="file-info mt-3" *ngIf="archivoSeleccionado">
+          <p><b>Nombre: </b>{{ archivoSeleccionado.name }}</p>
+          <p><b>Tamaño: </b>{{ sizeFileFormat }}</p>
         </div>
+
+        <input class="form-control-file" type="file" (change)="fseleccionarArchivo($event)" hidden accept=".png,.jpg,.jpeg" #archivoInput />
+
+        <!-- <div *ngIf="cargando" class="progress mt-3">
+          <div
+            class="progress-bar progress-bar-striped progress-bar-animated"
+            role="progressbar"
+            [style.width.%]="progreso">
+            {{ progreso }}%
+          </div>
+        </div> -->
+      </div>
+      <div class="text-center">
+        <button type="button" class="btn btn-outline-success m-2" (click)="fcargar()" [disabled]="!archivoSeleccionado">
+          <i class="fa fa-save"></i> Grabar
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()">
+          <i class="fa fa-times"></i> Cancelar
+        </button>
+      </div>
     </div>
 </ng-template>
 
-<ng-template #cambiarclave>
+<!-- <ng-template #cambiarclave>
     <div class="modal-header">
         <h4 class="modal-title pull-left">{{ estado }} Contraseña de acceso</h4>
     </div>
@@ -554,243 +576,238 @@
             </div>
 
             <div class="text-center">
-                <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formulario.valid">
-          <i class="fa fa-save"></i> Cambiar clave
-        </button>
-                <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()">
-          <i class="fa fa-times"></i> Cancelar
-        </button>
+              <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formulario.valid">
+                <i class="fa fa-save"></i> Resetar clave
+              </button>
+                      <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()">
+                <i class="fa fa-times"></i> Cancelar
+              </button>
             </div>
         </form>
     </div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #modUser>
   <div class="modal-header">
-      <div class="row col-12">
-          <div class="col-lg-6 col-md-12 text-center">
-              <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Datos de Usuario</h4><br>
-          </div>
-          <div class="col-lg-6 col-md-12 alert-info p-3">
-              Estimado usuario, los campos remarcados con <b class="text-danger">*</b> son necesarios.
-          </div>
+    <div class="row col-12">
+      <div class="col-lg-6 col-md-12 text-center">
+        <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Datos de Usuario</h4><br>
       </div>
+      <div class="col-lg-6 col-md-12 alert-info p-3">
+        Los campos remarcados con <b class="text-danger">*</b> son necesarios.
+      </div>
+    </div>
   </div>
   <div class="modal-body">
-      <form [formGroup]="formUser" (ngSubmit)="faceptar()">
-          <div class="row">
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Apellido Paterno: <span class="text-danger"><b>*</b></span></label>
-                  <input type="text" class="form-control form-control-sm" formControlName="primerapellido" [class.is-invalid]="fU.primerapellido.errors && fU.primerapellido.touched" (input)="onInput($event, 'primerapellido', 'letrasyespacios')" autocomplete="no" required/>
-                  <small *ngIf="fU.primerapellido.errors&& fU.primerapellido.touched" class="text-danger">
-                      <ng-container *ngIf="fU.primerapellido.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="fU.primerapellido.errors.pattern">
-                          Solo se permiten letras.
-                      </ng-container>
-                      <ng-container *ngIf="fU.primerapellido.errors.maxlength">
-                          No puede exceder los 50 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Apellido Materno: </label>
-                  <input type="text" class="form-control form-control-sm" formControlName="segundoapellido" [class.is-invalid]="fU.segundoapellido.errors && fU.segundoapellido.touched" (input)="onInput($event, 'segundoapellido', 'letrasyespacios')" autocomplete="no" />
-                  <small *ngIf="fU.segundoapellido.errors&& fU.segundoapellido.touched" class="text-danger">
-                      <ng-container *ngIf="fU.segundoapellido.errors.pattern">
-                          Solo se permiten letras.
-                      </ng-container>
-                      <ng-container *ngIf="fU.segundoapellido.errors.maxlength">
-                          No puede exceder los 50 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Nombres: <span class="text-danger"><b>*</b></span></label>
-                  <input type="text" class="form-control form-control-sm" formControlName="primernombre" [class.is-invalid]="fU.primernombre.errors && fU.primernombre.touched" (input)="onInput($event, 'primernombre', 'letrasyespacios')" autocomplete="no" required/>
-                  <small *ngIf="fU.primernombre.errors&& fU.primernombre.touched" class="text-danger">
-                      <ng-container *ngIf="fU.primernombre.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="fU.primernombre.errors.pattern">
-                          Solo se permiten letras.
-                      </ng-container>
-                      <ng-container *ngIf="fU.primernombre.errors.maxlength">
-                          No puede exceder los 50 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Genero: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="idtipogenero">
-                      <option *ngFor="let _itemp of genero" [value]="_itemp.idtipogenero">{{ _itemp.tipogenero }}</option>
-                  </select>
-                  <small *ngIf="fU.idtipogenero.errors&& fU.idtipogenero.touched" class="text-danger">
-                      <ng-container *ngIf="fU.idtipogenero.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
-
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>Documento: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="idtipodocumento" >
-                      <option *ngFor="let _itemp of documento" [value]="_itemp.idtipodocumento">{{ _itemp.tipodocumento }}</option>
-                  </select>
-                  <small *ngIf="fU.idtipodocumento.errors&& fU.idtipodocumento.touched" class="text-danger">
-                      <ng-container *ngIf="fU.idtipodocumento.errors.required">
-                          Obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-6 col-sm-12">
-                  <label>DIP: <span class="text-danger"><b>*</b></span></label>
-                  <input type="text" class="form-control form-control-sm" formControlName="dip" [class.is-invalid]="fU.dip.errors && fU.dip.touched" (input)="onInput($event, 'dip', 'numeros')" autocomplete="no" required/>
-                  <small *ngIf="fU.dip.errors&& fU.dip.touched" class="text-danger">
-                      <ng-container *ngIf="fU.dip.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="fU.dip.errors.pattern">
-                          Solo se permite números.
-                      </ng-container>
-                      <ng-container *ngIf="fU.dip.errors.maxlength">
-                          No puede exceder los 15 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-3 col-md-6 col-sm-12">
-                  <label>Complemento: </label>
-                  <input type="text" class="form-control form-control-sm" formControlName="complementario" [class.is-invalid]="fU.complementario.errors && fU.complementario.touched" (input)="onInput($event, 'complementario', 'letrasynumerosguion')" autocomplete="no" />
-                  <small *ngIf="fU.complementario.errors && fU.complementario.touched" class="text-danger">
-                      <ng-container *ngIf="fU.complementario.errors.pattern">
-                          Caracter no permitido.
-                      </ng-container>
-                      <ng-container *ngIf="fU.complementario.errors.maxlength">
-                          No puede exceder los 5 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-3 col-md-6 col-sm-12">
-                  <label for="">Expedido: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="idtipoextension" [class.is-invalid]="fU.idtipoextension.errors && fU.idtipoextension.touched">
-                      <option *ngFor="let _itemp of extension" [value]="_itemp.idtipoextension">{{ _itemp.tipoextension }}</option>
-                  </select>
-                  <small *ngIf="fU.idtipoextension.errors && fU.idtipoextension.touched" class="text-danger">
-                      <ng-container *ngIf="fU.idtipoextension.errors.required">
-                          Obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-3 col-md-6 col-sm-12">
-                  <label>Celular:</label>
-                  <input type="text" class="form-control form-control-sm" formControlName="celular" [class.is-invalid]="fU.celular.errors && fU.celular.touched" (input)="onInput($event, 'celular', 'numeros')" autocomplete="no"/>
-                  <small *ngIf="fU.celular.errors && fU.celular.touched" class="text-danger">
-                      <ng-container *ngIf="fU.celular.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="fU.celular.errors.pattern">
-                        Solo se permite números.
-                      </ng-container>
-                      <ng-container *ngIf="fU.celular.errors.maxLength">
-                        No puede exceder 15 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-3 col-md-6 col-sm-12">
-                  <label>Teléfono:</label>
-                  <input type="text" class="form-control form-control-sm" formControlName="telefono" [class.is-invalid]="fU.telefono.errors && fU.telefono.touched" (input)="onInput($event, 'telefono', 'numeros')" autocomplete="no"/>
-                  <small *ngIf="fU.telefono.errors && fU.telefono.touched" class="text-danger">
-                      <ng-container *ngIf="fU.telefono.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="fU.telefono.errors.pattern">
-                        Solo se permite números.
-                      </ng-container>
-                      <ng-container *ngIf="fU.telefono.errors.maxLength">
-                        No puede exceder 15 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-6 col-md-6 col-sm-12">
-                  <label>Dirección:</label>
-                  <input type="text" class="form-control form-control-sm" formControlName="direccion" [class.is-invalid]="fU.direccion.errors && fU.direccion.touched" (input)="onInput($event, 'direccion', 'direccion')" autocomplete="no"/>
-                  <small *ngIf="fU.direccion.errors && fU.direccion.touched" class="text-danger">
-                      <ng-container *ngIf="fU.direccion.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="fU.direccion.errors.pattern">
-                        Caracter no permitido.
-                      </ng-container>
-                      <ng-container *ngIf="fU.direccion.errors.pattern">
-                          Solo se permite números.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-6 col-md-6 col-sm-12">
-                  <label>Correo Electrónico:</label>
-                  <input type="text" class="form-control form-control-sm" formControlName="correo" [class.is-invalid]="fU.correo.errors && fU.correo.touched" autocomplete="no"/>
-                  <small *ngIf="fU.correo.errors && fU.correo.touched" class="text-danger">
-                      <ng-container *ngIf="fU.correo.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="fU.correo.errors.pattern">
-                          Solo se permite números.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-4 col-sm-12">
-                  <label>Nivel Educacion: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="formacion" >
-                    <option value="1">Inicial</option>
-                    <option value="2">Primaria</option>
-                    <option value="3">Secundaria</option>
-                    <option value="4">Técnico</option>
-                    <option value="5">Licenciatura</option>
-                </select>
-                  <small *ngIf="fU.formacion.errors && fU.formacion.touched" class="text-danger">
-                      <ng-container *ngIf="fU.formacion.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-4 col-sm-12">
-                  <label>Estado Civil: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="estadocivil" >
-                    <option value="1">Soltero(a)</option>
-                    <option value="2">Casado(a)</option>
-                    <option value="3">Viudo(a)</option>
-                    <option value="4">Conviviente</option>
-                    <option value="5">Separado(a)</option>
-                </select>
-                  <small *ngIf="fU.estadocivil.errors && fU.estadocivil.touched" class="text-danger">
-                      <ng-container *ngIf="fU.estadocivil.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-lg-4 col-md-4 col-sm-12">
-                  <label>Hijos: <span class="text-danger"><b>*</b></span></label>
-                  <select class="custom-select custom-select-sm" formControlName="hijos" >
-                    <option value="0">Sin Hijos</option>
-                    <option value="1">1 Hijo</option>
-                    <option value="2">2 Hijos</option>
-                    <option value="3">3 Hijos</option>
-                    <option value="4">4 Hijos</option>
-                    <option value="5">5 a mas hijos</option>
-                </select>
-                  <small *ngIf="fU.hijos.errors && fU.hijos.touched" class="text-danger">
-                      <ng-container *ngIf="fU.hijos.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                  </small>
-              </div>
+    <div class="row">
+      <div class="col-sm-12 d-flex justify-content-center position-relative">
+        <div class="wizard-tabs">
+          <div class="wizard-step" [ngClass]="{'active-step': stepRep === 1, 'completed-step': stepRep > 1}" (click)="goToStepRep(1)">
+            <div class="wizard-circle"><i class="bi bi-card-checklist"></i></div>
+            <div class="wizard-label text-center">Datos<br>Personales</div>
           </div>
-
+          <div class="wizard-line"></div>
+          <div class="wizard-step" [ngClass]="{'active-step': stepRep === 2, 'completed-step': stepRep > 2}" (click)="goToStepRep(2)">
+            <div class="wizard-circle"><i class="bi bi-telephone"></i></div>
+            <div class="wizard-label text-center">Datos<br>Contacto</div>
+          </div>
+          <div class="wizard-line"></div>
+          <div class="wizard-step" [ngClass]="{'active-step': stepRep === 3, 'completed-step': stepRep === 3}" (click)="goToStepRep(3)">
+            <div class="wizard-circle"><i class="bi bi-check-circle"></i></div>
+            <div class="wizard-label text-center">Finalizar<br>Registro</div>
+          </div>
+        </div>
+      </div>
+    </div><hr>
+      <form [formGroup]="formUser" (ngSubmit)="faceptar()">
+        <div *ngIf="stepRep === 1">
+          <div class="row pl-3 justify-content-between">
+            <h5 class="card-title">I.- Datos Personales</h5>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+              <label>Apellido Paterno:<span class="text-danger"><b>*</b></span></label>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+              <input type="text" class="form-control form-control-sm" formControlName="primerapellido" [class.is-invalid]="fU.primerapellido.errors && fU.primerapellido.touched" (input)="onInput($event, 'primerapellido', 'letrasyespacios')" autocomplete="no" required/>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+              <label>Apellido Materno:</label>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+              <input type="text" class="form-control form-control-sm" formControlName="segundoapellido" [class.is-invalid]="fU.segundoapellido.errors && fU.segundoapellido.touched" (input)="onInput($event, 'segundoapellido', 'letrasyespacios')" autocomplete="no" />
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left" >
+              <label>Nombres:<span class="text-danger"><b>*</b></span></label>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 mt-1">
+              <input type="text" class="form-control form-control-sm" formControlName="primernombre" [class.is-invalid]="fU.primernombre.errors && fU.primernombre.touched" (input)="onInput($event, 'primernombre', 'letrasyespacios')" autocomplete="no" required/>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+              <label>Genero:<span class="text-danger"><b>*</b></span></label>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+              <select class="custom-select custom-select-sm" formControlName="idtipogenero" [class.is-invalid]="fU.idtipogenero.errors && fU.idtipogenero.touched" required>
+                <option *ngFor="let _itemp of genero" [value]="_itemp.idtipogenero">{{ _itemp.tipogenero }}</option>
+              </select>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+              <label>Documento:<span class="text-danger"><b>*</b></span></label>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 mt-1">
+              <select class="custom-select custom-select-sm" formControlName="idtipodocumento" [class.is-invalid]="fU.idtipodocumento.errors && fU.idtipodocumento.touched">
+                <option *ngFor="let _itemp of documento" [value]="_itemp.idtipodocumento">{{ _itemp.tipodocumento }}</option>
+              </select>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+              <label>DIP:<span class="text-danger"><b>*</b></span></label>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+              <input type="text" class="form-control form-control-sm" formControlName="dip" [class.is-invalid]="fU.dip.errors && fU.dip.touched" (input)="onInput($event, 'dip', 'numeros')" autocomplete="no" required/>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+              <label>Complemento:</label>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+              <input type="text" [maxlength]="5" class="form-control form-control-sm" formControlName="complementario" [class.is-invalid]="fU.complementario.errors && fU.complementario.touched" (input)="onInput($event, 'complementario', 'letrasynumerosguion')" autocomplete="no" />
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+                <label for="">Expedido:<span class="text-danger"><b>*</b></span></label>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
+              <select class="custom-select custom-select-sm" formControlName="idtipoextension" [class.is-invalid]="fU.idtipoextension.errors && fU.idtipoextension.touched" required>
+                <option *ngFor="let _itemp of extension" [value]="_itemp.idtipoextension">{{ _itemp.tipoextension }}</option>
+              </select>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left" *ngIf="esempresa">
+              <label>Nivel Educacion:<span class="text-danger"><b>*</b></span></label>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12 mt-1" *ngIf="esempresa">
+              <select class="custom-select custom-select-sm" formControlName="formacion" [class.is-invalid]="fU.formacion.errors && fU.formacion.touched" required>
+                <option value="1">INICIAL</option>
+                <option value="2">PRIMARIA</option>
+                <option value="3">SECUNDARIA</option>
+                <option value="4">TECNICO</option>
+                <option value="5">LICENCIATURA</option>
+              </select>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left" *ngIf="esempresa">
+              <label>Estado Civil:<span class="text-danger"><b>*</b></span></label>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12 mt-1" *ngIf="esempresa">
+              <select class="custom-select custom-select-sm" formControlName="estadocivil" [class.is-invalid]="fU.estadocivil.errors && fU.estadocivil.touched" required>
+                <option value="1">SOLTERO(A)</option>
+                <option value="2">CASADO(A)</option>
+                <option value="3">VIUDO(A)</option>
+                <option value="4">CONVIVIENTE</option>
+                <option value="5">SEPARADO(A)</option>
+              </select>
+            </div>
+            <div class="col-lg-1 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left" *ngIf="esempresa">
+              <label>Hijos:<span class="text-danger"><b>*</b></span></label>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12 mt-1" *ngIf="esempresa">
+              <select class="custom-select custom-select-sm" formControlName="hijos" [class.is-invalid]="fU.hijos.errors && fU.hijos.touched" required>
+                <option value="1">1 HIJO</option>
+                <option value="2">2 HIJOS</option>
+                <option value="3">3 HIJOS</option>
+                <option value="4">4 HIJOS</option>
+                <option value="5">5 A MAS HIJOS</option>
+                <option value="6">SIN HIJOS</option>
+              </select>
+            </div>
+          </div>
+          <div class="row justify-content-between p-3 mt-2">
+            <button class="btn btn-sm btn-outline-primary" (click)="nextStepRep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+            <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+          </div>
+        </div>
+        <div *ngIf="stepRep === 2">
+          <div class="row pl-3 justify-content-between">
+            <h5 class="card-title">II.- Datos de Contacto</h5>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label>Celular:<span class="text-danger"><b>*</b></span></label>
+            </div>
+            <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
+              <input type="text" class="form-control form-control-sm" formControlName="celular" [class.is-invalid]="fU.celular.errors && fU.celular.touched" (input)="onInput($event, 'celular', 'numeros')" autocomplete="no" required/>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label>Teléfono:</label>
+            </div>
+            <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
+              <input type="text" class="form-control form-control-sm" formControlName="telefono" [class.is-invalid]="fU.telefono.errors && fU.telefono.touched" (input)="onInput($event, 'telefono', 'numeros')" autocomplete="no"/>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label>Dirección:<span class="text-danger"><b>*</b></span></label>
+            </div>
+            <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
+              <input type="text" class="form-control form-control-sm" formControlName="direccion" [class.is-invalid]="fU.direccion.errors && fU.direccion.touched" (input)="onInput($event, 'direccion', 'direccion')" autocomplete="no"/>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
+              <label>Correo:</label>
+            </div>
+            <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
+              <input type="text" class="form-control form-control-sm" formControlName="correo" [class.is-invalid]="fU.correo.errors && fU.correo.touched" autocomplete="no"/>
+            </div>
+          </div>
+          <div class="row justify-content-between p-3 mt-2">
+            <div class="div">
+              <button class="btn btn-sm btn-outline-secondary" (click)="prevStepRep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+              <button class="btn btn-sm btn-outline-primary" (click)="nextStepRep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+          </div>
+        </div>
+        <div *ngIf="stepRep === 3">
+          <div class="row pl-3 justify-content-between">
+            <h5 class="card-title">IV.- Resumen de datos a guardar</h5>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered">
+              <tbody>
+                <tr>
+                  <td colspan="10"><strong>DATOS PERSONALES</strong></td>
+                </tr>
+                <tr>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Apellido Paterno:</td><td width="50px"><i *ngIf="this.formUser.value.primerapellido; else noData" class="fa fa-check-circle fa-2x text-success"></i>
+                    <ng-template #noData>
+                      <i class="fa fa-times-circle fa-2x text-danger"></i>
+                    </ng-template>
+                  </td>
+                  <td class="text-right">Apellido Paterno:</td><td width="50px"><i *ngIf="this.formUser.value.segundoapellido; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Nombre:</td><td width="50px"><i *ngIf="this.formUser.value.primernombre; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Genero:</td><td width="50px"><i *ngIf="this.formUser.value.idtipogenero; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                </tr>
+                <tr>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Documento:</td><td width="50px"><i *ngIf="this.formUser.value.idtipodocumento; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>DIP:</td><td width="50px"><i *ngIf="this.formUser.value.dip; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Complemento:</td><td width="50px"><i *ngIf="this.formUser.value.complementario; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Expedido:</td><td width="50px"><i *ngIf="this.formUser.value.idtipoextension; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                </tr>
+                <tr *ngIf="esempresa">
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Formación:</td><td width="50px"><i *ngIf="this.formUser.value.formacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Estado Civil:</td><td width="50px"><i *ngIf="this.formUser.value.estadocivil; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Hijos:</td><td width="50px"><i *ngIf="this.formUser.value.hijos; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"></td><td width="50px"></td>
+                </tr>
+                <tr>
+                  <td colspan="10"><strong>DATOS DE CONTACTO</strong></td>
+                </tr>
+                <tr>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Celular:</td><td width="50px"><i *ngIf="this.formUser.value.celular; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Teléfono:</td><td width="50px"><i *ngIf="this.formUser.value.telefono; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right"><span class="text-danger"><b>*</b></span>Direccion:</td><td width="50px"><i *ngIf="this.formUser.value.direccion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Correo:</td><td width="50px"><i *ngIf="this.formUser.value.correo; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <div *ngIf="formUser.invalid && formUser.touched" class="alert alert-danger">
             Por favor, completa todos los campos obligatorios.
           </div>
-          <ng-container *ngFor="let field of getFormControls()">
+          <ng-container *ngFor="let field of getFormControlsRep()">
             <div *ngIf="formUser.get(field).invalid && formUser.get(field).touched" class="alert alert-danger">
               <small><strong>El campo {{ field }} no es válido:</strong></small>
               <ul>
@@ -801,14 +818,14 @@
               </ul>
             </div>
           </ng-container>
-          <div class="text-center">
-              <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formUser.valid">
-                  <i class="fa fa-save"></i> Guardar
-              </button>
-              <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()">
-                  <i class="fa fa-times"></i> Cancelar
-              </button>
+          <div class="row justify-content-between p-3 mt-2">
+            <div class="div">
+              <button class="btn btn-sm btn-outline-secondary" (click)="prevStepRep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+              <button type="submit" class="btn btn-sm btn-outline-success" [disabled]="!formUser.valid">Guardar <i class="bi bi-floppy"></i></button>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
           </div>
+        </div>
       </form>
   </div>
 </ng-template>
@@ -1036,6 +1053,7 @@
                 <option value="4">7 a 8</option>
                 <option value="5">9 a 10</option>
                 <option value="6">10 a 11</option>
+                <option value="7">12 A MAS</option>
               </select>
             </div>
             <div class="col-md-3 col-sm-12 mt-1 text-md-right text-sm-left">
@@ -1047,6 +1065,7 @@
                 <option value="2">Nacional</option>
                 <option value="3">Municipal</option>
                 <option value="4">Internacional</option>
+                <option value="5">NINGUNA</option>
               </select>
             </div>
           </div>

@@ -7,7 +7,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Personas } from './../../_entidades/personas';
 import { PersonasService } from './../../_aods/personas.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import swal from 'sweetalert2';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MustMatch } from 'src/app/_config/application';
@@ -27,6 +27,8 @@ import { Localidades } from 'src/app/_entidades/localidades';
 import { Rubros } from 'src/app/_entidades/rubros';
 import { Subrubros } from 'src/app/_entidades/subrubros';
 import { Asociaciones } from 'src/app/_entidades/asociaciones';
+import { ToastrService } from 'ngx-toastr';
+import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-perfiles',
@@ -39,7 +41,7 @@ export class PerfilesComponent implements OnInit {
 
   perfil: Personas;
   estado: string;
-  archivoseleccionado: File;
+  //archivoseleccionado: File;
   imagen: any;
 
   formulario: FormGroup;
@@ -66,12 +68,12 @@ export class PerfilesComponent implements OnInit {
   }
 
   hijosMap: { [key: number]: string } = {
-    0: 'SIN HIJOS',
     1: '1 HIJO',
     2: '2 HIJOS',
     3: '3 HIJOS',
     4: '4 HIJOS',
-    5: '5 A MAS HIJOS'
+    5: '5 A MAS HIJOS',
+    6: 'SIN HIJOS',
   }
 
   capacidadMap: { [key: number]: string} = {
@@ -114,7 +116,8 @@ export class PerfilesComponent implements OnInit {
     1: 'LOCAL',
     2: 'NACIONAL',
     3: 'MUNICIPAL',
-    4: 'INTERNACIONAL'
+    4: 'INTERNACIONAL',
+    5: 'NINGUNA'
   }
 
   escliente: boolean =false;
@@ -129,6 +132,7 @@ export class PerfilesComponent implements OnInit {
   genero: Tiposgeneros[];
 
   step: number = 1;
+  stepRep: number = 1;
 
   municipios: Municipios[];
   localidades: Localidades[];
@@ -139,6 +143,13 @@ export class PerfilesComponent implements OnInit {
   mostrarOtroCampo = false;
   mostrarInvolucrados = false;
   mostrarOtro = false;
+
+  @ViewChild('archivoInput') archivoInput: ElementRef;
+  archivoSeleccionado: File = null;
+  miniaturaUrl: string | ArrayBuffer = null;
+  sizeFileFormat: string | null = null;
+  cargando: boolean = false;
+  progreso: number = 0;
 
   constructor(
     private _personasService: PersonasService,
@@ -154,6 +165,7 @@ export class PerfilesComponent implements OnInit {
     private _extensionesService: TiposextensionesService,
     private _generosService: TiposgenerosService,
     private _modalService: NgbModal,
+    private toast: ToastrService,
     private _sanitizer: DomSanitizer,
     private _fb: FormBuilder,
     private _fbU: FormBuilder,
@@ -214,37 +226,12 @@ export class PerfilesComponent implements OnInit {
     });
   }
 
-  fcambiarimagen(contenido: any) {
-    this.estado = 'Actualizar';
-    this._modalService.open(contenido, {
-      backdrop: 'static',
-      keyboard: false
-    });
-  }
-
-  fseleccionarArchivo(event) {
-    this.archivoseleccionado = event.target.files[0];
-  }
-
-  fcargar() {
-    this._personasService.cargarImagen(this.archivoseleccionado).subscribe(data => {
-      this._modalService.dismissAll();
-      this.fdescargar()
-      swal.fire('Archivo cargado', 'Archivo cargado con exito', 'success')
-    })
-  }
-
   fcancelar() {
     this._modalService.dismissAll();
+    this.archivoSeleccionado = null;
   }
 
-  fdescargar() {
-    this.imagen = null;
-    this._personasService.descargarImagen().subscribe(data=>{
-      const objectURL = window.URL.createObjectURL(data);
-      this.imagen = this._sanitizer.bypassSecurityTrustUrl(objectURL);
-    })
-  }
+
 
   fcambiarclave(contenido: any){
     this.estado = 'Actualizar';
@@ -285,18 +272,22 @@ export class PerfilesComponent implements OnInit {
     return this.formulario.controls;
   }
 
-  faceptarcambiarclave() {
-    this.submitted = true;
-    this.usuario = new Usuarios();
-    this.usuario.clave = this.formulario.value.clave;
-    this._usuariosService.cambiarclave(this.usuario).subscribe( data=>{
-      swal.fire(
-        "Dato modificado",
-        "Dato modificado con exito",
-        "success"
-      );
-      this._modalService.dismissAll();
+  faceptarcambiarclave(clave: string) {
+    swal.fire({
+      title: '¿Restablecer Contraseña?',
+      icon: 'warning',
+      text: '¿Estás seguro de que deseas restablecer la contraseña? Esta acción no se puede deshacer.',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Restablecer',
     })
+    .then((result) => {
+      if (result.value) {
+        this._usuariosService.cambiarclave({ clave }).subscribe(data => {
+          swal.fire('Exito', 'La contraseña ha sido restablecida correctamente', 'success');
+        })
+      }
+    });
   }
 
   fdocumento() {
@@ -407,21 +398,12 @@ export class PerfilesComponent implements OnInit {
       ],
       formacion: [
         dato.formacion,
-        [
-          Validators.required,
-        ]
       ],
       estadocivil: [
         dato.estadocivil,
-        [
-          Validators.required,
-        ]
       ],
       hijos: [
         dato.hijos,
-        [
-          Validators.required,
-        ]
       ],
 
     });
@@ -462,6 +444,7 @@ export class PerfilesComponent implements OnInit {
 
   fmodificar(content: any) {
     this.estado = 'Modificar';
+    this.goToStepRep(1);
     this._personasService.perfil().subscribe(data=>{
       this.perfil = data;
       this.fformUser(this.perfil);
@@ -487,8 +470,10 @@ export class PerfilesComponent implements OnInit {
     this.perfil.dip = this.formUser.value.dip;
     this.perfil.complementario = toUpperCaseDefined(this.formUser.value.complementario);
     this.perfil.idtipoextension = this.formUser.value.idtipoextension;
-    this.perfil.telefono = this.formUser.value.celular;
+    this.perfil.telefono = this.formUser.value.telefono;
     this.perfil.celular = this.formUser.value.celular;
+    this.perfil.direccion = this.formUser.value.direccion;
+    this.perfil.correo = this.formUser.value.correo;
     this.perfil.formacion = this.formUser.value.formacion;
     this.perfil.estadocivil = this.formUser.value.estadocivil;
     this.perfil.hijos = this.formUser.value.hijos;
@@ -522,8 +507,27 @@ export class PerfilesComponent implements OnInit {
     this.step = step;
   }
 
+  nextStepRep() {
+    if (this.stepRep < 3) {
+      this.stepRep++;
+    }
+  }
+
+  prevStepRep() {
+    if (this.stepRep > 1) {
+      this.stepRep--;
+    }
+  }
+
+  goToStepRep(stepRep: number) {
+    this.stepRep = stepRep;
+  }
+
   getFormEmpControls(): string[] {
     return Object.keys(this.formEmpresa.controls);
+  }
+  getFormControlsRep(): string[] {
+    return Object.keys(this.formUser.controls);
   }
 
   fmunicipios(){
@@ -773,6 +777,114 @@ export class PerfilesComponent implements OnInit {
 
   faceptarEmp(){
 
+  }
+
+  fcambiarimagen(contenido: any) {
+    this.estado = 'Actualizar';
+    this._modalService.open(contenido, {
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  fcargar() {
+    swal.fire({
+      title: 'Cargando archivo...',
+      html: 'Progreso: <b>0%</b>',
+      allowOutsideClick: false,
+      onBeforeOpen: () => {
+        swal.showLoading();
+      }
+    });
+
+    this._personasService.uploadperfil(this.archivoSeleccionado, 'usuarios').subscribe(event => {
+      if (event.type === HttpEventType.UploadProgress) {
+        const progreso = Math.round((event.loaded / event.total) * 100);
+        swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
+      } else if (event.type === HttpEventType.Response) {
+        swal.close();
+        swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
+        this._modalService.dismissAll();
+      }
+    }, error => {
+      swal.close();
+      swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
+    });
+  }
+
+  fdescargar() {
+    this.imagen = null;
+    this._personasService.descargarImagen().subscribe(data=>{
+      const objectURL = window.URL.createObjectURL(data);
+      this.imagen = this._sanitizer.bypassSecurityTrustUrl(objectURL);
+    })
+  }
+
+  fseleccionarArchivo(event: any) {
+    const archivo = event.target.files[0];
+    if (!archivo) {
+      return;
+    }
+
+    const tamañoMaximoMB = 2;
+    const tamañoMaximoBytes = tamañoMaximoMB * 1024 * 1024;
+    if (archivo.size > tamañoMaximoBytes) {
+      this.toast.error(`El archivo supera el límite de ${tamañoMaximoMB} MB.`, 'Tamaño de archivo no permitido');
+      this.fremoverArchivo();
+      return;
+    }
+
+    const tipoArchivo = archivo.type;
+    if (tipoArchivo !== 'image/png' && tipoArchivo !== 'image/jpeg') {
+      this.toast.error('Solo se permiten archivos PNG o JPG.', 'Formato no soportado');
+      this.fremoverArchivo();
+      return;
+    }
+
+    this.archivoSeleccionado = archivo;
+    this.sizeFileFormat = this.fformatearTamañoArchivo(archivo.size);
+    this.fcrearMiniatura();
+  }
+
+  fformatearTamañoArchivo(tamañoBytes: number): string {
+    const tamañoMB = tamañoBytes / (1024 * 1024);
+    return `${tamañoMB.toFixed(2)} MB`;
+  }
+
+  farrastrarSobre(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    (event.currentTarget as HTMLElement).classList.add('dragover');
+  }
+
+  farrastrarFuera(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    (event.currentTarget as HTMLElement).classList.remove('dragover');
+  }
+
+  fsoltarArchivo(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    (event.currentTarget as HTMLElement).classList.remove('dragover');
+
+    if (event.dataTransfer.files.length > 0) {
+      this.archivoSeleccionado = event.dataTransfer.files[0];
+      this.fcrearMiniatura();
+    }
+  }
+
+  fcrearMiniatura() {
+    if (this.archivoSeleccionado) {
+      const reader = new FileReader();
+      reader.onload = (e) => this.miniaturaUrl = reader.result;
+      reader.readAsDataURL(this.archivoSeleccionado);
+    }
+  }
+
+  fremoverArchivo() {
+    this.archivoSeleccionado = null;
+    this.miniaturaUrl = null;
   }
 
 }

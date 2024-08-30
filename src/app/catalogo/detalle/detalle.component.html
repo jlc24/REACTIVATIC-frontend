@@ -12,7 +12,7 @@
           <a  class="app-nav__item text-right puntero" (click)="fsolicitar(solicita)" title="Carrito">
             <span class=" d-sm-inline d-lg-none text-white">Carrito de Compras </span>
             <i class="fa fa-shopping-cart fa-2x text-white"></i>
-            <span class="badge badge-warning" *ngIf="cantidadcarrito.cantidad > 0">x{{ cantidadcarrito.cantidad }}</span>
+            <span class="badge badge-warning" *ngIf="cantidadcarrito?.cantidad > 0">x{{ cantidadcarrito?.cantidad }}</span>
           </a>
           <a *ngIf="localnombre==''" class="app-nav__item text-right puntero " (click)="faccesom(accesom)" title="Iniciar Sesión">
             <span class=" d-sm-inline d-lg-none text-white mr-2">Iniciar Sesión </span>
@@ -31,197 +31,267 @@
   </div>
 </nav>
 
-<div class="container" style="padding-top: 70px;">
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page"><a (click)="finicio()" style="cursor: pointer"><i class="fa fa-"></i><- Atrás</a></li>
-    </ol>
-  </nav>
-</div>
-
-<div class="container-lg" *ngIf="dato">
-  <div class="row justify-content-center">
-    <div class="col-md-10 col-sm-12">
+<div class="container-lg">
+  <div class="row">
+    <div class="col-12 position-relative">
+      <img src="assets/imagenes/bg.jpg" class="img-fluid w-100 mb-4" alt="Banner" style="max-height: 250px; object-fit: cover;">
+      <div class="overlay-text">
+        <h1 class="text-white">Tienda Virtual</h1>
+        <h4 class="text-white">Explora Nuestro Catálogo de Innovaciones</h4>
+      </div>
+    </div>
+  </div>
+  <div class="row m-1">
+    <div class="col-12 alert-info py-3 px-4">
+      <a (click)="finicio()" class="back-link puntero">
+        <i class="bi bi-arrow-left back-icon"></i> Atrás
+      </a>
+    </div>
+  </div>
+  <div class="row" *ngIf="dato">
+    <div class="col-sm-12">
       <h2>{{ dato.producto }}</h2>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-1 col-sm-12">
-      <div class="">
-        <img class="img-fluid puntero" [src]="ruta+id" width="50px" height="50px">
-        <img class="img-fluid puntero" [src]="ruta+id+1" width="50px" height="50px">
-        <img class="img-fluid puntero" [src]="ruta+id+2" width="50px" height="50px">
-        <img class="img-fluid puntero" [src]="ruta+id+3" width="50px" height="50px">
-        <img class="img-fluid puntero" [src]="ruta+id+4" width="50px" height="50px">
-        <img class="img-fluid puntero" [src]="ruta+id+5" width="50px" height="50px">
+    <div class="row">
+      <div class="col-md-1 col-sm-12">
+        <div class="">
+          <img class="img-fluid puntero" [src]="ruta+id" width="50px" height="50px">
+          <img class="img-fluid puntero" [src]="ruta+id+1" width="50px" height="50px">
+          <img class="img-fluid puntero" [src]="ruta+id+2" width="50px" height="50px">
+          <img class="img-fluid puntero" [src]="ruta+id+3" width="50px" height="50px">
+          <img class="img-fluid puntero" [src]="ruta+id+4" width="50px" height="50px">
+          <img class="img-fluid puntero" [src]="ruta+id+5" width="50px" height="50px">
+        </div>
       </div>
-    </div>
-    <div class="col-md-6 col-sm-12">
-      <img
-          [src]="ruta+id"
-          class="img-thumbnail" width="200px"
-      />
-        <h3 class="d-block mb-3 font-size-xs text-muted">Precio de Referencia <span class="font-weight-semibold">{{ dato.precioventa }} Bs</span></h3>
-        <!-- <button class="btn btn-pill btn-outline-primary btn-sm m-2" (click)="fadicionar(dato.idproducto, 1, solicitaproducto)"><i class="fa fa-cart-plus"></i></button>
-        <button class="btn btn-pill btn-outline-primary btn-sm mr-2" (click)="fwhastapp(dato.empresa.celular)"><i class="fa fa-whatsapp"></i></button> -->
-    </div>
-    <div class="col-md-5 col-sm-12">
-      <div class="row">
-        <div class="col-sm-12 mt-2">
-          <h4>1.- Precio</h4>
-          <h5>{{ dato.precioventa }} Bs.</h5>
-        </div>
-        <div class="col-sm-12">
-          <a href="#"><i class="fa fa-star fa-lg"></i></a>
-          <a href="#"><i class="fa fa-star fa-lg"></i></a>
-          <a href="#"><i class="fa fa-star fa-lg"></i></a>
-          <a href="#"><i class="fa fa-star fa-lg"></i></a>
-          <a href="#"><i class="fa fa-star fa-lg"></i></a>
-        </div>
-        <div class="col-sm-12 mt-2">
-          <h4>2.- Color</h4>
-          <h5><span class="text-danger">ROJO</span></h5>
-        </div>
-        <div class="col-sm-12 mt-2">
-          <h4>3.- Material</h4>
-          <button class="btn btn-sm btn-outline-secondary mr-2">Cuero</button>
-        </div>
-        <div class="col-sm-12 mt-2">
-          <h4>4.- Tamaño o Talla</h4>
-          <button class="btn btn-sm btn-outline-secondary mr-2">S</button>
-          <button class="btn btn-sm btn-outline-secondary mr-2">M</button>
-          <button class="btn btn-sm btn-outline-secondary mr-2">L</button>
-        </div>
-        <div class="col-sm-12 mt-3 align-items-center">
-          <div class="input-group mb-3" style="width: 100px;">
-            <div class="input-group-prepend">
-              <button class="btn btn-sm btn-light border rounded-circle" (click)="fmenos()">
-                <i class="fa fa-minus"></i>
-              </button>
+      <div class="col-md-6 col-sm-12">
+        <img
+            [src]="ruta+id"
+            class="img-thumbnail" width="200px"
+        />
+          <h3 class="d-block mb-3 font-size-xs text-muted">Precio de Referencia <span class="font-weight-semibold">{{ dato.precioventa }} Bs</span></h3>
+          <!-- <button class="btn btn-pill btn-outline-primary btn-sm m-2" (click)="fadicionar(dato.idproducto, 1, solicitaproducto)"><i class="fa fa-cart-plus"></i></button>
+          <button class="btn btn-pill btn-outline-primary btn-sm mr-2" (click)="fwhastapp(dato.empresa.celular)"><i class="fa fa-whatsapp"></i></button> -->
+      </div>
+      <div class="col-md-5 col-sm-12">
+        <div class="row">
+          <div class="col-sm-12 mt-2">
+            <h4>1.- Precio</h4>
+            <h5>{{ dato.precioventa }} Bs.</h5>
+          </div>
+          <div class="col-sm-12">
+            <a href="#"><i class="fa fa-star fa-lg"></i></a>
+            <a href="#"><i class="fa fa-star fa-lg"></i></a>
+            <a href="#"><i class="fa fa-star fa-lg"></i></a>
+            <a href="#"><i class="fa fa-star fa-lg"></i></a>
+            <a href="#"><i class="fa fa-star fa-lg"></i></a>
+          </div>
+          <div class="col-sm-12 mt-2">
+            <h4>2.- Color</h4>
+            <h5><span class="text-danger">ROJO</span></h5>
+          </div>
+          <div class="col-sm-12 mt-2">
+            <h4>3.- Material</h4>
+            <button class="btn btn-sm btn-outline-secondary mr-2">Cuero</button>
+          </div>
+          <div class="col-sm-12 mt-2">
+            <h4>4.- Tamaño o Talla</h4>
+            <button class="btn btn-sm btn-outline-secondary mr-2">S</button>
+            <button class="btn btn-sm btn-outline-secondary mr-2">M</button>
+            <button class="btn btn-sm btn-outline-secondary mr-2">L</button>
+          </div>
+          <div class="col-sm-12 mt-3 align-items-center">
+            <div class="input-group mb-3" style="width: 100px;">
+              <div class="input-group-prepend">
+                <button class="btn btn-sm btn-light border rounded-circle" (click)="fmenos()">
+                  <i class="fa fa-minus"></i>
+                </button>
+              </div>
+              <input type="text" class="form-control form-control-sm text-center border-0" [(ngModel)]="cantProd" value="1">
+              <div class="input-group-prepend">
+                <button class="btn btn-sm btn-light border rounded-circle" (click)="fmas()">
+                  <i class="fa fa-plus"></i>
+                </button>
+              </div>
             </div>
-            <input type="text" class="form-control form-control-sm text-center border-0" [(ngModel)]="cantProd" value="1">
-            <div class="input-group-prepend">
-              <button class="btn btn-sm btn-light border rounded-circle" (click)="fmas()">
-                <i class="fa fa-plus"></i>
-              </button>
+          </div>
+          <div class="col-sm-12 mt-2">
+            <div class="d-flex justify-content-between flex-lg-wrap">
+              <a (click)="fadicionar(dato.idproducto, cantProd)" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-cart me-2 text-primary"></i> Añadir al Carrito</a>
             </div>
           </div>
         </div>
-        <div class="col-sm-12 mt-2">
-          <div class="d-flex justify-content-between flex-lg-wrap">
-            <a (click)="fadicionar(dato.idproducto, 1)" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-cart me-2 text-primary"></i> Añadir al Carrito</a>
-          </div>
-        </div>
       </div>
-    </div>
-    <div class="col-sm-12">
-      <nav>
-        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-          <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Descripcion</button>
-          <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Empresa</button>
-          <button class="nav-link" id="nav-contact-tab" data-toggle="tab" data-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Comentarios</button>
-        </div>
-      </nav>
-      <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-          <h4>Descripción</h4>
-          <h6>{{ dato.descripcion }}</h6>
-        </div>
-        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-          <img
-            [src]="rutaempresa+dato.empresa.idempresa"
-            class="rounded-circle"
-            weight="80px"
-            height="80px"
-          />
-          <p class="text-justify">{{ dato.empresa.descripcion }}</p>
-          <table class="table table-sm">
-              <tr>
-                <td class="text-right">Empresa:</td>
-                <td class="text-left"><b>{{ dato.empresa.empresa }}</b></td>
-              </tr>
-              <tr>
-                <td class="text-right">Municipio y Localidad:</td>
-                <td class="text-left"><b>{{ dato.empresa.localidad.municipio.municipio}}, {{ dato.empresa.localidad.localidad }}</b></td>
-              </tr>
-              <tr *ngIf="dato.empresa.direccion">
-                <td class="text-right">Dirección:</td>
-                <td class="text-left"><b>{{ dato.empresa.direccion }}</b></td>
-              </tr>
-              <tr *ngIf="dato.empresa.telefono">
-                <td class="text-right">Teléfono:</td>
-                <td class="text-left"><b>{{ dato.empresa.telefono }}</b></td>
-              </tr>
-              <tr *ngIf="dato.empresa.celular">
-                <td class="text-right">Celular:</td>
-                <td class="text-left"><b>{{ dato.empresa.celular }}</b></td>
-              </tr>
-              <tr *ngIf="dato.empresa.correo">
-                <td class="text-right">Correo Electrónico:</td>
-                <td class="text-left"><b><a href="mailto:{{ dato.empresa.correo }}">{{ dato.empresa.correo }}</a></b></td>
-              </tr>
-              <tr *ngIf="dato.empresa.facebook">
-                  <td class="text-right">Facebook:</td>
-                  <td class="text-left"><b><a href="{{ dato.empresa.facebook }}" target="_blank">{{ dato.empresa.facebook }}</a></b></td>
+      <div class="col-sm-12">
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Descripcion</button>
+            <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Empresa</button>
+            <button class="nav-link" id="nav-contact-tab" data-toggle="tab" data-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Comentarios</button>
+          </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+            <h4>Descripción</h4>
+            <h6>{{ dato.descripcion }}</h6>
+          </div>
+          <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+            <img
+              [src]="rutaempresa+dato.empresa.idempresa"
+              class="rounded-circle"
+              weight="80px"
+              height="80px"
+            />
+            <p class="text-justify">{{ dato.empresa.descripcion }}</p>
+            <table class="table table-sm">
+                <tr>
+                  <td class="text-right">Empresa:</td>
+                  <td class="text-left"><b>{{ dato.empresa.empresa }}</b></td>
                 </tr>
-          </table>
-        </div>
-        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-          <div class="row">
-            <div class="col-sm-3 text-center">
-              <img src="assets/catalogo/img/avatar.jpg" class="img-fluid rounded-circle p-3" width="200px">
-            </div>
-            <div class="col-sm-9">
-              <div class="">
-                <p class="mb-2">April 12, 2024</p>
+                <tr>
+                  <td class="text-right">Municipio y Localidad:</td>
+                  <td class="text-left"><b>{{ dato.empresa.localidad.municipio.municipio}}, {{ dato.empresa.localidad.localidad }}</b></td>
+                </tr>
+                <tr *ngIf="dato.empresa.direccion">
+                  <td class="text-right">Dirección:</td>
+                  <td class="text-left"><b>{{ dato.empresa.direccion }}</b></td>
+                </tr>
+                <tr *ngIf="dato.empresa.telefono">
+                  <td class="text-right">Teléfono:</td>
+                  <td class="text-left"><b>{{ dato.empresa.telefono }}</b></td>
+                </tr>
+                <tr *ngIf="dato.empresa.celular">
+                  <td class="text-right">Celular:</td>
+                  <td class="text-left"><b>{{ dato.empresa.celular }}</b></td>
+                </tr>
+                <tr *ngIf="dato.empresa.correo">
+                  <td class="text-right">Correo Electrónico:</td>
+                  <td class="text-left"><b><a href="mailto:{{ dato.empresa.correo }}">{{ dato.empresa.correo }}</a></b></td>
+                </tr>
+                <tr *ngIf="dato.empresa.facebook">
+                    <td class="text-right">Facebook:</td>
+                    <td class="text-left"><b><a href="{{ dato.empresa.facebook }}" target="_blank">{{ dato.empresa.facebook }}</a></b></td>
+                  </tr>
+            </table>
+          </div>
+          <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+            <div class="row">
+              <div class="col-sm-3 text-center">
+                <img src="assets/catalogo/img/avatar.jpg" class="img-fluid rounded-circle p-3" width="200px">
               </div>
-              <div class="d-flex justify-content-between">
-                <h5>JSON SMITH</h5>
-                <div class="d-flex mb-3">
-                  <a href="#"><i class="fa fa-star fa-lg"></i></a>
-                  <a href="#"><i class="fa fa-star fa-lg"></i></a>
-                  <a href="#"><i class="fa fa-star fa-lg"></i></a>
-                  <a href="#"><i class="fa fa-star fa-lg"></i></a>
-                  <a href="#"><i class="fa fa-star fa-lg"></i></a>
+              <div class="col-sm-9">
+                <div class="">
+                  <p class="mb-2">April 12, 2024</p>
                 </div>
-              </div>
-              <p>
-                The generated Lorem Ipsum is therefore always free from repetition injected humour, or non-characteristic words etc. Susp endisse ultricies nisi vel quam suscipit
-              </p>
-            </div>
-          </div><hr>
-          <div class="row">
-            <div class="col-sm-3 text-center">
-              <img src="assets/catalogo/img/avatar.jpg" class="img-fluid rounded-circle p-3" width="200px">
-            </div>
-            <div class="col-sm-9">
-              <div class="">
-                <p class="mb-2">April 12, 2024</p>
-              </div>
-              <div class="d-flex justify-content-between">
-                <h5>JSON SMITH</h5>
-                <div class="d-flex mb-3">
-                  <a href="#"><i class="fa fa-star fa-lg"></i></a>
-                  <a href="#"><i class="fa fa-star fa-lg"></i></a>
-                  <a href="#"><i class="fa fa-star fa-lg"></i></a>
-                  <a href="#"><i class="fa fa-star fa-lg"></i></a>
-                  <a href="#"><i class="fa fa-star fa-lg"></i></a>
+                <div class="d-flex justify-content-between">
+                  <h5>JSON SMITH</h5>
+                  <div class="d-flex mb-3">
+                    <a href="#"><i class="fa fa-star fa-lg"></i></a>
+                    <a href="#"><i class="fa fa-star fa-lg"></i></a>
+                    <a href="#"><i class="fa fa-star fa-lg"></i></a>
+                    <a href="#"><i class="fa fa-star fa-lg"></i></a>
+                    <a href="#"><i class="fa fa-star fa-lg"></i></a>
+                  </div>
                 </div>
+                <p>
+                  The generated Lorem Ipsum is therefore always free from repetition injected humour, or non-characteristic words etc. Susp endisse ultricies nisi vel quam suscipit
+                </p>
               </div>
-              <p>
-                The generated Lorem Ipsum is therefore always free from repetition injected humour, or non-characteristic words etc. Susp endisse ultricies nisi vel quam suscipit
-              </p>
+            </div><hr>
+            <div class="row">
+              <div class="col-sm-3 text-center">
+                <img src="assets/catalogo/img/avatar.jpg" class="img-fluid rounded-circle p-3" width="200px">
+              </div>
+              <div class="col-sm-9">
+                <div class="">
+                  <p class="mb-2">April 12, 2024</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <h5>JSON SMITH</h5>
+                  <div class="d-flex mb-3">
+                    <a href="#"><i class="fa fa-star fa-lg"></i></a>
+                    <a href="#"><i class="fa fa-star fa-lg"></i></a>
+                    <a href="#"><i class="fa fa-star fa-lg"></i></a>
+                    <a href="#"><i class="fa fa-star fa-lg"></i></a>
+                    <a href="#"><i class="fa fa-star fa-lg"></i></a>
+                  </div>
+                </div>
+                <p>
+                  The generated Lorem Ipsum is therefore always free from repetition injected humour, or non-characteristic words etc. Susp endisse ultricies nisi vel quam suscipit
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </div><hr>
+  </div>
+  <div class="row mt-3 mb-3 justify-content-between align-items-center">
+    <div class="col-sm-3">
+      <img src="assets/imagenes/logogadorblack.png"  class="img-fluid imagen-logos" alt="" width="200px">
+    </div>
+    <div class="col-sm-3">
+      <img src="assets/imagenes/sddpi2.png"  class="img-fluid imagen-logos" alt="" width="200px">
+    </div>
+    <div class="col-sm-3">
+      <img src="assets/imagenes/dpeic.png"  class="img-fluid imagen-logos" alt="" width="200px">
+    </div>
+    <div class="col-sm-3">
+      <img src="assets/imagenes/logo.png"  class="img-fluid imagen-logos" alt="" width="200px">
     </div>
   </div>
 </div>
-<footer class="container-fluid" >
-  <p class="app-footer__logo text-center">
-    <small>Desarrollado por: SDDPI - DPEIC - REACTIVA TIC &copy; 2022-{{ gestion }} GADOR</small>
-  </p>
+
+
+<footer class="container-fluid bg-primary" >
+  <div class="container">
+    <div class="row mt-3">
+      <div class="col-lg-4 col-md-6 col-sm-12 pt-3 align-content-center">
+        <h4 class="text-white">Contacto</h4>
+        <div class="contact-item">
+            <i class="bi bi-house-door-fill text-white"></i>
+            <p class="text-white">
+                Calle Adolfo Mier entre Pdte. Montes y Washington Nro. 1900 <br>
+                (Interior Salón de Exposiciones Productivas) <br>
+                Plaza 10 de Febrero <br>
+                Departamento de Oruro
+            </p>
+        </div>
+        <div class="contact-item">
+            <i class="bi bi-telephone-fill text-white"></i>
+            <p class="text-white">2 5254161</p>
+        </div>
+        <div class="contact-item">
+            <i class="bi bi-envelope-fill text-white"></i>
+            <p class="text-white"><a href="mailto:reactivatic@gmail.com">reactivatic@gmail.com</a></p>
+        </div>
+        <div class="contact-item">
+            <i class="bi bi-globe text-white"></i>
+            <p class="text-white"><a href="http://desarrolla.oruro.gob.bo/" target="_blank">http://desarrolla.oruro.gob.bo/</a></p>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-12 text-center align-content-center">
+        <h2 class="text-white mb-4">Síguenos en:</h2>
+        <div class="d-flex justify-content-center">
+          <a href="https://www.facebook.com/profile.php?id=100083098698972" target="_blank" class="social-icon text-white mx-2" title="Facebook">
+              <i class="bi bi-facebook"></i>
+          </a>
+          <a href="https://www.youtube.com/" target="_blank" class="social-icon text-white mx-2" title="YouTube">
+              <i class="bi bi-youtube"></i>
+          </a>
+          <a href="https://www.instagram.com/" target="_blank" class="social-icon text-white mx-2" title="Instagram">
+              <i class="bi bi-instagram"></i>
+          </a>
+      </div>
+      </div>
+      <div class="col-lg-4 col-sm-12 text-center justify-content-center align-content-center">
+        <img src="assets/imagenes/escudo_oruro.png" alt="" width="150px">
+        <img src="assets/imagenes/lema_oruro.png" alt="" width="150px">
+      </div>
+    </div>
+    <p class="app-footer__logo text-center">
+      <small class="text-white">Desarrollado por: SDDPI - DPEIC - REACTIVA TIC &copy; 2022-{{ gestion }} GADOR</small>
+    </p>
+  </div>
 </footer>
 
 <ng-template #solicita>

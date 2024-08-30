@@ -1,9 +1,10 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-  <div class="container">
+  <div class="container ">
     <a href="" class="navbar-brand"><img src="assets/imagenes/logo.png" class="img-fluid" width="100px"/></a>
     <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="navbar-collapse collapse" id="navbarsExample07">
       <ul class="navbar-nav mr-auto">
 
@@ -12,7 +13,7 @@
           <a  class="app-nav__item text-right puntero" (click)="fsolicitar(solicita)" title="Carrito">
             <span class=" d-sm-inline d-lg-none text-white">Carrito de Compras </span>
             <i class="fa fa-shopping-cart fa-2x text-white"></i>
-            <span class="badge badge-warning" *ngIf="cantidadcarrito.cantidad > 0">x{{ cantidadcarrito.cantidad }}</span>
+            <span class="badge badge-warning" *ngIf="cantidadcarrito?.cantidad > 0">x{{ cantidadcarrito?.cantidad }}</span>
           </a>
           <a *ngIf="localnombre==''" class="app-nav__item text-right puntero " (click)="faccesom(accesom)" title="Iniciar Sesión">
             <span class=" d-sm-inline d-lg-none text-white mr-2">Iniciar Sesión </span>
@@ -31,99 +32,169 @@
   </div>
 </nav>
 
-<div class="container-lg mt-5 pt-5">
-    <div class="form-group row justify-content-center">
-        <div class="col-md-10 col-sm-12">
-          <div class="position-relative mx-auto">
-            <input class="form-control border-2 border-secondary w-80 py-3 px-4 rounded-pill" type="texto" [(ngModel)]="buscar"  placeholder="Producto a buscar..." (keyup)="fbuscar()">
-            <button type="submit" class="btn btn-primary border-2 border-secondary px-4 position-absolute rounded-pill text-white h-100" style="top: 0; right: 0%;" (click)="limpiar()">Buscar</button>
-          </div>
-        </div>
+<div class="container-lg">
+  <div class="row">
+    <div class="col-12 position-relative">
+      <img src="assets/imagenes/bg.jpg" class="img-fluid w-100 mb-4" alt="Banner" style="max-height: 250px; object-fit: cover;">
+      <div class="overlay-text">
+        <h1 class="text-white">Tienda Virtual</h1>
+        <h4 class="text-white">Explora Nuestro Catálogo de Innovaciones</h4>
+      </div>
+    </div>
+  </div>
 
-        <div class="col-12">
-          <h2 for="orden">Rubros: </h2>
-        </div>
-        <div class="col-md-9 col-sm-12 justify-content-center">
-          <ul class="nav nav-pills d-inline-flex text-center mb-5">
-              <li class="nav-item">
-                <a class="puntero d-flex m-2 py-2 bg-info rounded-pill active" data-bs-toggle="pill" (click)="limpiar(); flistasubrubro()">
-                  <h6 class="text-white" style="width: 130px;">Todos los Rubros</h6>
-                </a>
-              </li>
-              <li class="nav-item " *ngFor="let _rubro of rubros">
-                <a class="puntero d-flex py-2 m-2 bg-info rounded-pill" data-bs-toggle="pill" (click)="fbuscarrubro(_rubro.rubro); fsubrubro(_rubro.idrubro)">
-                  <h6 class="text-white" style="width: 130px;">{{ _rubro.rubro }}</h6>
-                </a>
-              </li>
-          </ul>
-        </div>
-        <div class="col-md-3 col-sm-12">
-          <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
-            <label for="orden">Orden: </label>
-            <select id="orden" name="fruitlist" class=" custom-select-sm bg-light me-2" form="fruitform">
-                <option value="volvo">A-Z (ASC)</option>
-                <option value="saab">Z-A (DESC)</option>
-                <option value="opel">Reciente</option>
-                <option value="audi">Popular</option>
-            </select>
-        </div>
-        </div>
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-sm-12">
+      <div class="position-relative mx-auto">
+        <input class="form-control border-2 w-80 py-3 px-4 rounded-pill" type="texto" [(ngModel)]="buscar"  placeholder="Producto a buscar..." (keyup)="fbuscar()">
+        <button type="submit" class="btn btn-primary border-2 px-4 position-absolute rounded-pill text-white h-100" style="top: 0; right: 0%;" (click)="limpiar()">Buscar</button>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 mt-3">
+      <h2 for="orden">Rubros: </h2>
+    </div>
+    <div class="col-md-9 col-sm-12 mt-3 justify-content-center">
+      <ul class="nav nav-pills d-inline-flex text-center">
+        <li class="nav-item mr-2" >
+          <button class="btn btn-sm btn-outline-info rounded-pill" [ngClass]="{'active': buscar === ''}" (click)="limpiar(); flistasubrubro()">
+            TODOS LOS RUBROS
+          </button>
+        </li>
+        <li class="nav-item mr-2" *ngFor="let _rubro of rubros">
+          <button class="btn btn-sm btn-outline-info rounded-pill" [ngClass]="{'active': buscar === _rubro.rubro}" (click)="fbuscarrubro(_rubro.rubro); fsubrubro(_rubro.idrubro)">
+            {{ _rubro.rubro }}
+          </button>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-3 col-sm-12 mt-3">
+      <div class="bg-light rounded d-flex justify-content-end">
+        <label for="orden" class="mr-2">Orden: </label>
+        <select id="orden" class=" custom-select-sm bg-light me-2" form="fruitform">
+          <option value="volvo">A-Z (ASC)</option>
+          <option value="saab">Z-A (DESC)</option>
+          <option value="opel">Reciente</option>
+          <option value="audi">Popular</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-3 col-sm-12">
+      <h3 for="orden">Subrubros: </h3>
+      <div class="list-group">
+        <button class="list-group-item list-group-item-action list-group-item-light d-flex justify-content-between align-items-center" *ngFor="let _subrubro of subrubros">
+          {{ _subrubro.subrubro }} <span class="badge badge-success badge-pill">14</span>
+        </button>
+      </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-3 col-sm-12">
-        <h3 for="orden">Subrubros: </h3>
-        <div class="list-group">
-          <a href="#" class="list-group-item list-group-item-action list-group-item-light d-flex justify-content-between align-items-center" *ngFor="let _subrubro of subrubros">
-            {{ _subrubro.subrubro }} <span class="badge badge-success badge-pill">14</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="col-md-9 col-sm-12">
-        <div class="row">
-          <div class="col-md-6 col-lg-6 col-xl-4" *ngFor="let _item of datos; let i = index">
-            <div class="rounded position-relative fruite-item tarjeta">
-                <div class="fruite-img">
-                    <img [src]="ruta+_item.idproducto" class="img-fluid w-100 rounded-top" alt="">
-                </div>
-                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Reactiva TIC</div>
-                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                    <a (click)="fdetalle(_item.idproducto)" class="puntero" title="{{ _item.producto }}"><h4><span class="product">{{ _item.producto }}</span></h4></a>
-                    <p class="description">{{ _item.descripcion }}</p>
-                    <div class="d-flex justify-content-between flex-lg-wrap">
-                        <p class="text-dark fs-5 fw-bold mb-0">{{ _item.precioventa }} Bs.</p>
-                    </div><hr>
-                    <div class="d-flex justify-content-end flex-lg-wrap">
-                        <a (click)="fadicionar(_item.idproducto, 1)" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-cart me-2 text-primary"></i> Añadir al Carrito</a>
-                    </div>
-                </div>
+    <div class="col-md-9 col-sm-12">
+      <div class="row">
+        <div class="col-md-6 col-lg-4 col-xl-4" *ngFor="let _item of datos; let i = index">
+          <div class="card product-card shadow-sm mb-4">
+            <img [src]="ruta+_item.idproducto" class="card-img-top product-image" alt="Nombre del Producto"><hr>
+            <div class="card-body">
+              <h5 class="card-title product-name puntero" (click)="fdetalle(_item.idproducto)" title="{{ _item.producto }}">{{ _item.producto }}</h5>
+              <p class="card-text product-description">
+                {{ _item.descripcion }}
+              </p>
+              <div class="product-price font-weight-bold text-left">Bs {{ _item.precioventa | number:'1.2-2' }}</div>
+              <div class="d-flex justify-content-end text-right">
+                <button class="btn btn-sm btn-outline-info add-to-cart-btn rounded-pill" (click)="fadicionar(_item.idproducto, 1)">
+                  <i class="bi bi-cart-plus"></i> Agregar al Carrito
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <div class="row mt-3">
-          <div class="col-lg-12" *ngIf="total > cantidad">
-            <ngb-pagination
-              class="d-flex justify-content-center pagination-rounded"
-              [collectionSize]="total"
-              [(page)]="pagina"
-              [maxSize]="cantidad"
-              [pageSize]="12"
-              [rotate]="false"
-              [ellipses]="false"
-              [boundaryLinks]="true"
-              (pageChange)="mostrarMas($event)"
-            ></ngb-pagination>
-          </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-lg-12" *ngIf="total > cantidad">
+          <ngb-pagination
+            class="d-flex justify-content-center pagination-rounded"
+            [collectionSize]="total"
+            [(page)]="pagina"
+            [maxSize]="cantidad"
+            [pageSize]="12"
+            [rotate]="false"
+            [ellipses]="false"
+            [boundaryLinks]="true"
+            (pageChange)="mostrarMas($event)"
+          ></ngb-pagination>
         </div>
       </div>
     </div>
+  </div><hr>
+  <div class="row mt-3 mb-3 justify-content-between align-items-center">
+    <div class="col-sm-3">
+      <img src="assets/imagenes/logogadorblack.png"  class="img-fluid imagen-logos" alt="" width="200px">
+    </div>
+    <div class="col-sm-3">
+      <img src="assets/imagenes/sddpi2.png"  class="img-fluid imagen-logos" alt="" width="200px">
+    </div>
+    <div class="col-sm-3">
+      <img src="assets/imagenes/dpeic.png"  class="img-fluid imagen-logos" alt="" width="200px">
+    </div>
+    <div class="col-sm-3">
+      <img src="assets/imagenes/logo.png"  class="img-fluid imagen-logos" alt="" width="200px">
+    </div>
+  </div>
 </div>
 
-<footer class="container-fluid" >
-  <p class="app-footer__logo text-center">
-    <small>Desarrollado por: SDDPI - DPEIC - REACTIVA TIC &copy; 2022-{{ gestion }} GADOR</small>
-  </p>
+<footer class="container-fluid bg-primary" >
+  <div class="container">
+    <div class="row mt-3">
+      <div class="col-lg-4 col-md-6 col-sm-12 pt-3 align-content-center">
+        <h4 class="text-white">Contacto</h4>
+        <div class="contact-item">
+            <i class="bi bi-house-door-fill text-white"></i>
+            <p class="text-white">
+                Calle Adolfo Mier entre Pdte. Montes y Washington Nro. 1900 <br>
+                (Interior Salón de Exposiciones Productivas) <br>
+                Plaza 10 de Febrero <br>
+                Departamento de Oruro
+            </p>
+        </div>
+        <div class="contact-item">
+            <i class="bi bi-telephone-fill text-white"></i>
+            <p class="text-white">2 5254161</p>
+        </div>
+        <div class="contact-item">
+            <i class="bi bi-envelope-fill text-white"></i>
+            <p class="text-white"><a href="mailto:reactivatic@gmail.com">reactivatic@gmail.com</a></p>
+        </div>
+        <div class="contact-item">
+            <i class="bi bi-globe text-white"></i>
+            <p class="text-white"><a href="http://desarrolla.oruro.gob.bo/" target="_blank">http://desarrolla.oruro.gob.bo/</a></p>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-12 text-center align-content-center">
+        <h2 class="text-white mb-4">Síguenos en:</h2>
+        <div class="d-flex justify-content-center">
+          <a href="https://www.facebook.com/profile.php?id=100083098698972" target="_blank" class="social-icon text-white mx-2" title="Facebook">
+              <i class="bi bi-facebook"></i>
+          </a>
+          <a href="https://www.youtube.com/" target="_blank" class="social-icon text-white mx-2" title="YouTube">
+              <i class="bi bi-youtube"></i>
+          </a>
+          <a href="https://www.instagram.com/" target="_blank" class="social-icon text-white mx-2" title="Instagram">
+              <i class="bi bi-instagram"></i>
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-4 col-sm-12 text-center justify-content-center align-content-center">
+        <img src="assets/imagenes/escudo_oruro.png" alt="" width="150px">
+        <img src="assets/imagenes/lema_oruro.png" alt="" width="150px">
+      </div>
+    </div>
+    <p class="app-footer__logo text-center">
+      <small class="text-white">Desarrollado por: SDDPI - DPEIC - REACTIVA TIC &copy; 2022-{{ gestion }} GADOR</small>
+    </p>
+  </div>
 </footer>
 
   <ng-template #solicita>

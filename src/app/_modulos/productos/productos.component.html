@@ -2,146 +2,155 @@
 </app-cabeceratitulos>
 
 <div class="row">
-    <div class="col-md-12">
-        <div class="tile">
-            <div class="row">
-                <div class="col-md-12 mb-2">
-                    <div class="input-group justify-content-end">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-outline-success mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus" title="Agregar Producto"></i> Agregar Producto</button>
-                            <div class="dropdown">
-                                <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-bars"></i> Opciones
-                            </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <!-- <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
-                                    <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button> -->
-                                    <button class="dropdown-item" ><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
-                                    <button class="dropdown-item" ><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  <div class="col-md-12">
+    <div class="tile">
+      <div class="row justify-content-center">
+        <h4>LISTA DE PRODUCTOS</h4>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mb-2">
+          <div class="input-group justify-content-first">
+            <div class="input-group-prepend">
+              <button class="btn btn-sm btn-outline-success mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus" title="Agregar Producto"></i> Agregar Producto</button>
+              <div class="dropdown">
+                <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-bars"></i> Opciones
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <!-- <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                    <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button> -->
+                    <button class="dropdown-item" ><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                    <button class="dropdown-item" ><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
                 </div>
+              </div>
             </div>
-
-            <div class="form-group row">
-                <div class="col-lg-8 col-md-12">
-                    <div class="input-group">
-                        <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Producto a buscar..." (keyup.enter)="fbuscar()" />
-                        <span class="input-group-prepend">
-                            <button class="btn btn-outline-danger d-none d-md-inline" (click)="limpiar()" title="Limpiar datos">
-                                <i class="fa fa-times"></i> 
-                            </button>
-                            <button class="btn btn-outline-danger d-inline d-md-none" (click)="limpiar()" title="Limpiar datos">
-                                <i class="fa fa-times"></i>
-                            </button>
-                            <button class="btn btn-outline-secondary d-none d-md-inline" (click)="fbuscar()" title="Buscar">
-                                <i class="fa fa-search"></i> Buscar
-                            </button>
-                            <button class="btn btn-outline-secondary d-inline d-md-none" (click)="fbuscar()" title="Buscar">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </span>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-12 mt-1" *ngIf="total > cantidad">
-                    <ngb-pagination class="d-flex justify-content-end align-items-baseline pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)" size="sm"></ngb-pagination>
-                </div>
-            </div>
-
-            <div class="table-responsive" *ngIf="datos?.length > 0">
-                <p class="text-right" *ngIf="total == 1">
-                    Total: <b>{{ total }} registro</b>
-                </p>
-                <p class="text-right" *ngIf="total > 1">
-                    Total: <b>{{ total }} registros</b>
-                </p>
-                <!-- Mostrando del registro {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de un total de {{total}} datos -->
-                <table class="table table-sm">
-                    <thead>
-                        <tr class="table-primary">
-                            <th class="text-center">Nro</th>
-                            <th class="text-center">Producto</th>
-                            <th class="text-center">Detalle</th>
-                            <th class="text-center">Precio venta</th>
-                            <!-- <th class="text-center">Precio compra</th>
-                            <th class="text-center">Cantidad</th> -->
-                            <th class="text-center">Imagen</th>
-                            <th class="text-center">Operaciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let _item of datos; let i = index">
-                            <td>{{ i+1 }}</td>
-                            <td>{{ _item.producto }}</td>
-                            <td>{{ _item.descripcion }}</td>
-                            <td>{{_item.precioventa}}</td>
-                            <!-- <td>{{_item.preciocompra}}</td>
-                            <td>{{_item.cantidad}}</td> -->
-                            <td class="text-center">
-                                <div class="main-img text-center">
-                                    <img
-                                      [src]="ruta+_item.idproducto"
-                                      weight="100px"
-                                      height="100px"
-                                    />
-                                </div>
-                            </td>
-                            <td class="text-right">
-                                <button class="btn btn-outline-dark btn-sm mr-2" (click)="fmodificar(_item.idproducto, ab)">
-                                    <i class="fa fa-edit"> Editar producto</i>
-                                </button>
-                                <button class="btn btn-outline-danger btn-sm mr-2" (click)="feliminar(_item.idproducto)">
-                                  <i class="fa fa-trash"> Eliminar imagen</i>
-                              </button>
-                            </td>
-                        </tr>
-
-                        <tr *ngIf="total > cantidad">
-                            <td colspan="8">
-                                <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="table-responsive" *ngIf="total == 0">
-                <table class="table table-sm table-bordered table-striped">
-                    <thead>
-                        <tr class="table-primary">
-                            <th class="text-center">Nro</th>
-                            <th class="text-center">Producto</th>
-                            <th class="text-center">Detalle</th>
-                            <th class="text-center">Precio venta</th>
-                            <!-- <th class="text-center">Precio compra</th>
-                            <th class="text-center">Cantidad</th> -->
-                            <th class="text-center">Imagen</th>
-                            <th class="text-center">Operaciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="8" class="text-center"><b>No se encontraron datos.</b></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6 mt-1">
+          <p *ngIf="total == 0">
+            Total: <b>{{ total }} registros</b>
+          </p>
+          <p *ngIf="total == 1">
+            Total: <b>{{ total }} registro</b>
+          </p>
+          <p *ngIf="total > 1">
+            Total: <b>{{ total }} registros</b>
+          </p>
+        </div>
+        <div class="col-sm-6">
+          <div class="row justify-content-end">
+            <div class="col-sm-2 text-md-right text-sm-left mt-1">
+              <label for="">Buscar: </label>
+            </div>
+            <div class="col-sm-10">
+              <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                </div>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Producto a buscar ..." (keyup)="fbuscar()" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive" *ngIf="datos?.length > 0">
+        <table class="table table-sm table-bordered table-hover table-striped tabla-producto">
+          <thead>
+            <tr class="table-primary">
+              <th class="text-center">Nro</th>
+              <th class="text-center">Producto</th>
+              <th class="text-center" *ngIf="!esRolEmpresa">Empresa</th>
+              <th class="text-center">Detalle</th>
+              <th class="text-center" width="150px">Precio venta</th>
+              <!-- <th class="text-center">Precio compra</th>-->
+              <th class="text-center" width="150px">Estado</th>
+              <th class="text-center">Operaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let _item of datos; let i = index">
+              <td class="text-right"><b>{{ pagina > 1 ? (i + 1 + ((pagina-1)*10)) : (i + 1) }}</b></td>
+              <td>{{ _item.producto }}</td>
+              <td *ngIf="!esRolEmpresa">{{ _item.empresa?.empresa }}</td>
+              <td>{{ _item.descripcion }}</td>
+              <td class="text-right">{{ _item.precioventa }} <b>Bs.</b></td>
+              <!-- <td>{{_item.preciocompra}}</td> -->
+              <td class="text-center">
+                <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado"  >
+                  {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                </span>
+              </td>
+              <td class="text-center">
+                <div class="btn-group" role="group" aria-label="First group">
+                  <button class="btn btn-outline-info btn-sm" title="Ver Producto" (click)="fver(_item.idproducto, ver)">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                  <button class="btn btn-outline-warning btn-sm" title="Editar Producto" (click)="fmodificar(_item.idproducto, ab)">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Producto" (click)="feliminar(_item.idproducto)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-responsive" *ngIf="total == 0">
+        <table class="table table-sm table-bordered table-hover table-striped tabla-producto">
+          <thead>
+            <tr class="table-primary">
+              <th class="text-center">Nro</th>
+              <th class="text-center">Producto</th>
+              <th class="text-center">Detalle</th>
+              <th class="text-center">Precio venta</th>
+              <!-- <th class="text-center">Precio compra</th>
+              <th class="text-center">Cantidad</th> -->
+              <th class="text-center">Imagen</th>
+              <th class="text-center">Operaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="8" class="text-center"><b>No se encontraron datos.</b></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row mt-2">
+        <div class="col-sm-6">
+          <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+        </div>
+        <div class="col-sm-6">
+          <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <ng-template #ab>
     <div class="modal-header">
         <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Producto</h4>
         <div class="alert alert-info" role="alert">
-            Estimado usuario los campos remarcados con <b>*</b> son necesarios.
+          Los campos remarcados con <b>*</b> son necesarios.
         </div>
     </div>
     <div class="modal-body">
         <form [formGroup]="formulario" (ngSubmit)="faceptar()">
             <div class="form-group">
-                <label>Producto <span class="text-danger"><b>*</b></span></label>
+                <label>Empresa:</label>
+                <select class="custom-select custom-select-sm" formControlName="idempresa">
+                  <option value=""></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Producto:<span class="text-danger"><b>*</b></span></label>
                 <input type="text" class="form-control form-control-sm" formControlName="producto" [class.is-invalid]="f.producto.errors && f.producto.touched" (input)="onInput($event, 'producto', 'letrasyespacios')" autocomplete="no" required/>
                 <small *ngIf="f.producto.errors&& f.producto.touched" class="text-danger">
                     <ng-container *ngIf="f.producto.errors.required">
@@ -156,7 +165,7 @@
                 </small>
             </div>
             <div class="form-group">
-                <label>Descripción <span class="text-danger"><b>*</b></span></label>
+                <label>Descripción:<span class="text-danger"><b>*</b></span></label>
                 <textarea class="form-control form-control-sm" formControlName="descripcion" [class.is-invalid]="f.descripcion.errors && f.descripcion.touched" (input)="onInput($event, 'descripcion', 'letrasynumerosguion')" autocomplete="no" required></textarea>
                 <small *ngIf="f.descripcion.errors&& f.descripcion.touched" class="text-danger">
                     <ng-container *ngIf="f.descripcion.errors.required">
@@ -170,64 +179,405 @@
                     </ng-container>
               </small>
             </div>
-            <div class="form-group" hidden>
-                <label>Precio compra <span class="text-danger"><b>*</b></span></label>
-                <input type="number" class="form-control" formControlName="preciocompra" [class.is-invalid]="f.preciocompra.errors && f.preciocompra.touched" (input)="onInput($event, 'preciocompra', 'numeros')" placeholder="0.00" min="1.00" step="0.01"/>
-                <small *ngIf="f.preciocompra.errors&& f.preciocompra.touched" class="text-danger">
-                    <ng-container *ngIf="f.preciocompra.errors.required">
-                        El dato es obligatorio.
-                    </ng-container>
-                    <ng-container *ngIf="f.preciocompra.errors.pattern">
-                        Solo se permiten letras.
-                    </ng-container>
-              </small>
-            </div>
-            <div class="form-group">
-                <label>Precio venta <span class="text-danger"><b>*</b></span></label>
-                <input type="number" class="form-control form-control-sm" formControlName="precioventa" [class.is-invalid]="f.precioventa.errors && f.precioventa.touched" (input)="onInput($event, 'precioventa', 'numeros')" placeholder="0.00" min="1.00" step="0.01" required/>
-                <small *ngIf="f.precioventa.errors&& f.precioventa.touched" class="text-danger">
-                    <ng-container *ngIf="f.precioventa.errors.required">
-                        El dato es obligatorio.
-                    </ng-container>
-                    <ng-container *ngIf="f.precioventa.errors.pattern">
-                        Solo se permiten letras.
-                    </ng-container>
-              </small>
-            </div>
-            <div class="form-group" hidden>
-                <label>Cantidad <span class="text-danger"><b>*</b></span></label>
-                <input type="number" class="form-control" formControlName="cantidad" [class.is-invalid]="f.cantidad.errors && f.cantidad.touched" />
-                <small *ngIf="f.cantidad.errors&& f.cantidad.touched" class="text-danger">
-                  El dato es obligatorio y solo permite letras
-              </small>
-            </div>
-            <div class="form-group">
-                <label>Fotografía <span class="text-danger"><b>*</b></span></label>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroupFileAddon01">Subir Imagen</span>
-                    </div>
-                    <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/png, image/jpeg" (change)="fseleccionarArchivo($event)">
-                      <label class="custom-file-label" for="inputGroupFile01">Seleccionar imagen...</label>
-                    </div>
-                </div>
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="customFile">
-                    <label class="custom-file-label" for="customFile"></label>
-                </div>
-                <hr>
-                <img [src]="imageSrc" *ngIf="imageSrc" class="img-fluid mx-auto d-block" height="150px" width="150px" />
-            </div>
-
             <div class="text-center">
-                <button type="submit" class="btn btn-success m-2" [disabled]="!formulario.valid">
-                  <i class="fa fa-save"></i> Guardar
+              <button type="submit" class="btn btn-sm btn-outline-success m-2" [disabled]="!formulario.valid">
+                <i class="fa fa-save"></i> Guardar
               </button>
-                <button type="button" class="btn btn-danger" (click)="fcancelar()">
-                  <i class="fa fa-times"></i> Cancelar
+              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">
+                <i class="fa fa-times"></i> Cancelar
               </button>
             </div>
         </form>
     </div>
+</ng-template>
+
+<ng-template #ver>
+  <div class="modal-header alert-info">
+      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} detalle del Producto "{{ dato.producto }}"</h4>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-lg-3 col-sm-12 text-lg-right text-sm-left">
+        <h5><strong>Producto:</strong></h5>
+      </div>
+      <div class="col-lg-9 col-sm-12">
+        <label for="">{{ dato.producto }}</label>
+      </div>
+      <div class="col-lg-3 col-sm-12 text-lg-right text-sm-left">
+        <h5><strong>Descripción:</strong></h5>
+      </div>
+      <div class="col-lg-9 col-sm-12">
+        <label for="">{{ dato.descripcion }}</label>
+      </div>
+    </div><hr>
+    <div class="row">
+      <div class="col-lg-3 col-sm-4 text-lg-right text-sm-left">
+        <h5><strong>Precio:</strong></h5>
+      </div>
+      <div class="col-lg-9 col-sm-8 text-sm-right">
+        <button class="btn btn-sm btn-outline-success mr-2" (click)="fadicionarPrecio(precio)"><i class="bi bi-plus-lg"></i> Añadir</button>
+      </div>
+      <div class="col-lg-3 col-sm-12 d-none d-lg-flex justify-content-center align-items-center">
+        <strong><i class="bi bi-currency-dollar icon-opacity" *ngIf="precios && precios.length > 0"></i></strong>
+      </div>
+      <div class="col-lg-8 col-sm-12 mt-3 mb-1 ml-2">
+        <div class="row">
+          <div class="material-card-container mr-4" *ngFor="let _precio of precios">
+            <div class="material-card">
+              <p>Cantidad: <b>{{ _precio.cantidad }}</b></p>
+              <p>Precio: Bs <b>{{ _precio.precio | number:'1.2-2' }}</b></p>
+            </div>
+            <button class="delete-btn" title="Quitar Color" (click)="feliminarPrecio(_precio.idprecio)"><i class="bi bi-dash"></i></button>
+          </div>
+        </div>
+      </div>
+    </div><hr>
+    <div class="row">
+      <div class="col-lg-3 col-sm-4 text-lg-right text-sm-left">
+        <h5><strong>Color:</strong></h5>
+      </div>
+      <div class="col-lg-9 col-sm-8 text-sm-right">
+        <button class="btn btn-sm btn-outline-success mr-2" (click)="fadicionarColor(color)"><i class="bi bi-plus-lg"></i> Añadir</button>
+      </div>
+      <div class="col-lg-3 col-sm-12 d-none d-lg-flex justify-content-center align-items-center">
+        <i class="bi bi-palette icon-opacity" *ngIf="colores && colores.length > 0"></i>
+      </div>
+      <div class="col-lg-8 col-sm-12 mt-3 mb-1 ml-2">
+        <div class="row">
+          <div class="color-card-container mr-4 mb-2 text-center" *ngFor="let _color of colores">
+            <div class="color-card" style="background-color: #3498db;" [ngStyle]="{ 'background-color': _color.codigo }">
+            </div>
+            <p>{{ _color.color }}</p>
+            <button class="delete-btn" title="Quitar Color" (click)="feliminarColor(_color.idcolor)"><i class="bi bi-dash"></i></button>
+          </div>
+        </div>
+      </div>
+    </div><hr>
+    <div class="row">
+      <div class="col-lg-3 col-sm-4 text-lg-right text-sm-left">
+        <h5><strong>Material:</strong></h5>
+      </div>
+      <div class="col-lg-9 col-sm-8 text-sm-right">
+        <button class="btn btn-sm btn-outline-success mr-2" (click)="fadicionarMaterial(material)"><i class="bi bi-plus-lg"></i> Añadir</button>
+      </div>
+      <div class="col-lg-3 col-sm-12  d-none d-lg-flex justify-content-center align-items-center">
+        <i class="bi bi-box icon-opacity" *ngIf="materiales && materiales.length > 0"></i>
+      </div>
+      <div class="col-lg-8 col-sm-12 mt-3 mb-1 ml-2">
+        <div class="row">
+          <div class="material-card-container mr-4 mb-2" *ngFor="let _mat of materiales">
+            <div class="material-card">{{ _mat.material }}</div>
+            <button class="delete-btn" title="Quitar Color" (click)="feliminarMaterial(_mat.idmaterial)"><i class="bi bi-dash"></i></button>
+          </div>
+        </div>
+      </div>
+    </div><hr>
+    <div class="row">
+      <div class="col-lg-3 col-sm-4 text-lg-right text-sm-left">
+        <h5><strong>Tamaño o Talla:</strong></h5>
+      </div>
+      <div class="col-lg-9 col-sm-8 text-sm-right">
+        <button class="btn btn-sm btn-outline-success mr-2" (click)="fadicionarTamano(tamano)"><i class="bi bi-plus-lg"></i> Añadir</button>
+      </div>
+      <div class="col-lg-3 col-sm-12  d-none d-lg-flex justify-content-center align-items-center">
+        <i class="bi bi-rulers icon-opacity" *ngIf="tamanos && tamanos.length > 0"></i>
+      </div>
+      <div class="col-lg-8 col-sm-12 mt-3 mb-1 ml-2">
+        <div class="row">
+          <div class="material-card-container mr-4 mb-2" *ngFor="let _talla of tamanos">
+            <div class="material-card">{{ _talla.tamano }}</div>
+            <button class="delete-btn" title="Quitar Color" (click)="feliminarTamano(_talla.idtamano)"><i class="bi bi-dash"></i></button>
+          </div>
+        </div>
+      </div>
+    </div><hr>
+    <div class="row">
+      <div class="col-lg-3 col-sm-4 text-lg-right text-sm-left">
+        <h5><strong>Atributos:</strong></h5>
+      </div>
+      <div class="col-lg-9 col-sm-8 text-sm-right">
+        <button class="btn btn-sm btn-outline-success mr-2" (click)="fadicionarAtributo(atributo)"><i class="bi bi-plus-lg"></i> Añadir</button>
+      </div>
+      <div class="col-lg-3 col-sm-12  d-none d-lg-flex justify-content-center align-items-center">
+        <i class="bi bi-list-check icon-opacity" *ngIf="atributos && atributos.length > 0"></i>
+      </div>
+      <div class="col-lg-8 col-sm-12 mt-2 mb-2 table-responsive">
+        <table class="attributes-table" *ngIf="atributos && atributos.length > 0">
+          <thead>
+            <tr>
+              <th>Atributo</th>
+              <th>Detalle</th>
+              <th>Opción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let _atrib of atributos">
+              <td>{{ _atrib.atributo }}</td>
+              <td>{{ _atrib.detalle }}</td>
+              <td><button class="borrar-btn" title="Quitar Color" (click)="feliminarAtributo(_atrib.idatributo)"><i class="bi bi-dash"></i></button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div><hr>
+    <div class="row">
+      <div class="col-lg-3 col-sm-4 text-lg-right text-sm-left">
+        <h5><strong>Imagenes:</strong></h5>
+      </div>
+      <div class="col-lg-9 col-sm-8 text-sm-right">
+        <button class="btn btn-sm btn-outline-success mr-2"><i class="bi bi-plus-lg"></i> Añadir</button>
+      </div>
+      <div class="col-lg-3 col-sm-12  d-none d-lg-flex justify-content-center align-items-center">
+        <i class="bi bi-image icon-opacity" ></i>
+      </div>
+      <div class="col-lg-9 col-sm-12 mt-3 mb-2">
+        <div class="row d-flex justify-content-center">
+          <div class="image-card-container mr-4 mb-2">
+            <div class="image-card">
+              <img src="../../../assets/imagenes/productos/featur-1.jpg" alt="Imagen 1" class="image">
+            </div>
+            <button class="delete-btn" title="Quitar Imagen"><i class="bi bi-dash"></i></button>
+          </div>
+          <div class="image-card-container mr-4 mb-2">
+            <div class="image-card">
+              <img src="../../../assets/imagenes/productos/featur-2.jpg" alt="Imagen 2" class="image">
+            </div>
+            <button class="delete-btn" title="Quitar Imagen"><i class="bi bi-dash"></i></button>
+          </div>
+          <div class="image-card-container mr-4 mb-2">
+            <div class="image-card">
+              <img src="../../../assets/imagenes/productos/featur-3.jpg" alt="Imagen 3" class="image">
+            </div>
+            <button class="delete-btn" title="Quitar Imagen"><i class="bi bi-dash"></i></button>
+            <!-- Añadir más imágenes aquí -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar</button>
+  </div>
+</ng-template>
+
+<ng-template #precio>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Precio del Producto</h4>
+      <div class="alert alert-info" role="alert">
+        Los campos remarcados con <b>*</b> son necesarios.
+      </div>
+  </div>
+  <div class="modal-body">
+      <form [formGroup]="formPrecio" (ngSubmit)="faceptarPrecio()">
+          <div class="form-group">
+              <label>Cantidad:<span class="text-danger"><b>*</b></span></label>
+              <input type="text" class="form-control form-control-sm" formControlName="cantidad" [class.is-invalid]="fP.cantidad.errors && fP.cantidad.touched" (input)="onInputPrecio($event, 'cantidad', 'cantidad')" autocomplete="no" required/>
+          </div>
+          <div class="form-group">
+              <label>Precio:<span class="text-danger"><b>*</b></span></label>
+              <input type="text" class="form-control form-control-sm" formControlName="precio" [class.is-invalid]="fP.precio.errors && fP.precio.touched" (input)="onInputPrecio($event, 'precio', 'precio')" placeholder="0.00" autocomplete="no" required/>
+          </div>
+          <div *ngIf="formPrecio.invalid && formPrecio.touched" class="alert alert-danger">
+            Por favor, completa todos los campos obligatorios.
+          </div>
+          <ng-container *ngFor="let field of getFormControlsPrecio()">
+            <div *ngIf="formPrecio.get(field).invalid && formPrecio.get(field).touched" class="alert alert-danger">
+              <small><strong>El campo {{ field }} no es válido:</strong></small>
+              <ul>
+                <small><li *ngIf="formPrecio.get(field).errors?.required">Este campo es obligatorio.</li></small>
+                <small><li *ngIf="formPrecio.get(field).errors?.minlength">Debe tener al menos {{ formPrecio.get(field).errors?.minlength.requiredLength }} caracteres.</li></small>
+                <small><li *ngIf="formPrecio.get(field).errors?.maxlength">No debe tener más de {{ formPrecio.get(field).errors?.maxlength.requiredLength }} caracteres.</li></small>
+                <small><li *ngIf="formPrecio.get(field).errors?.pattern">El formato no es válido.</li></small>
+              </ul>
+            </div>
+          </ng-container>
+          <div class="text-center">
+            <button type="submit" class="btn btn-sm btn-outline-success m-2" [disabled]="!formPrecio.valid">
+              <i class="fa fa-save"></i> Guardar
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarDet()">
+              <i class="fa fa-times"></i> Cancelar
+            </button>
+          </div>
+      </form>
+  </div>
+</ng-template>
+
+<ng-template #color>
+  <div class="modal-header alert-info">
+      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Color del Producto</h4>
+  </div>
+  <div class="modal-body">
+    <div class="row pl-2 justify-content-between">
+      <div class="col-sm-12">
+        <h4><b>Paleta de Colores</b></h4>
+      </div>
+      <div class="col-lg-7 col-sm-12">
+        <div class="row">
+          <div class="col-sm-2 text-sm-right mt-1">
+            <label for="">Buscar: </label>
+          </div>
+          <div class="col-sm-10">
+            <div class="input-group input-group-sm">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+              </div>
+              <input type="text" class="form-control form-control-sm" placeholder="Color a buscar ..."/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7 col-sm-12 mt-2">
+        <div class="color-container justify-content-between">
+          <div *ngFor="let color of colors"
+                class="color-circle"
+                [ngStyle]="{'background-color': color.code}"
+                (click)="onColorClick(color.code)">
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5 col-sm-12">
+        <div class="col-sm-12 d-flex justify-content-center align-items-center pt-5">
+          <div class="selected-color-circle" [ngStyle]="{'background-color': selectedColor.code}"></div>
+        </div>
+        <div class="col-sm-12 text-center mt-2">
+          <div class="color-info">
+            <p>{{ selectedColor.name }}</p>
+            <p>{{ selectedColor.code }}</p>
+          </div>
+        </div>
+        </div>
+        <div class="color-display">
+      </div>
+    </div>
+    <div class="text-center">
+      <button type="button" class="btn btn-sm btn-outline-success m-2" (click)="faceptarColor(selectedColor.name, selectedColor.code)" [disabled]="!selectedColor.name">
+        <i class="fa fa-save"></i> Guardar
+      </button>
+      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarDet()">
+        <i class="fa fa-times"></i> Cancelar
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #material>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Material del Producto</h4>
+      <div class="alert alert-info" role="alert">
+        Los campos remarcados con <b>*</b> son necesarios.
+      </div>
+  </div>
+  <div class="modal-body">
+      <form [formGroup]="formMaterial" (ngSubmit)="faceptarMaterial()">
+          <div class="form-group">
+              <label>Material:<span class="text-danger"><b>*</b></span></label>
+              <input type="text" class="form-control form-control-sm" formControlName="material" [class.is-invalid]="fM.material.errors && fM.material.touched" (input)="onInputMaterial($event, 'material', 'material')" autocomplete="no" required/>
+          </div>
+          <div *ngIf="formMaterial.invalid && formMaterial.touched" class="alert alert-danger">
+            Por favor, completa todos los campos obligatorios.
+          </div>
+          <ng-container *ngFor="let field of getFormControlsMaterial()">
+            <div *ngIf="formMaterial.get(field).invalid && formMaterial.get(field).touched" class="alert alert-danger">
+              <small><strong>El campo {{ field }} no es válido:</strong></small>
+              <ul>
+                <small><li *ngIf="formMaterial.get(field).errors?.required">Este campo es obligatorio.</li></small>
+                <small><li *ngIf="formMaterial.get(field).errors?.minlength">Debe tener al menos {{ formMaterial.get(field).errors?.minlength.requiredLength }} caracteres.</li></small>
+                <small><li *ngIf="formMaterial.get(field).errors?.maxlength">No debe tener más de {{ formMaterial.get(field).errors?.maxlength.requiredLength }} caracteres.</li></small>
+                <small><li *ngIf="formMaterial.get(field).errors?.pattern">El formato no es válido.</li></small>
+              </ul>
+            </div>
+          </ng-container>
+          <div class="text-center">
+            <button type="submit" class="btn btn-sm btn-outline-success m-2" [disabled]="!formMaterial.valid">
+              <i class="fa fa-save"></i> Guardar
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarDet()">
+              <i class="fa fa-times"></i> Cancelar
+            </button>
+          </div>
+      </form>
+  </div>
+</ng-template>
+
+<ng-template #tamano>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Tamaño o Talla del Producto</h4>
+      <div class="alert alert-info" role="alert">
+        Los campos remarcados con <b>*</b> son necesarios.
+      </div>
+  </div>
+  <div class="modal-body">
+      <form [formGroup]="formTamano" (ngSubmit)="faceptarTamano()">
+          <div class="form-group">
+              <label>Tamaño o Talla:<span class="text-danger"><b>*</b></span></label>
+              <input type="text" class="form-control form-control-sm" formControlName="tamano" [class.is-invalid]="fT.tamano.errors && fT.tamano.touched" (input)="onInputTamano($event, 'tamano', 'tamano')" autocomplete="no" required/>
+          </div>
+          <div *ngIf="formTamano.invalid && formTamano.touched" class="alert alert-danger">
+            Por favor, completa todos los campos obligatorios.
+          </div>
+          <ng-container *ngFor="let field of getFormControlsTamano()">
+            <div *ngIf="formTamano.get(field).invalid && formTamano.get(field).touched" class="alert alert-danger">
+              <small><strong>El campo {{ field }} no es válido:</strong></small>
+              <ul>
+                <small><li *ngIf="formTamano.get(field).errors?.required">Este campo es obligatorio.</li></small>
+                <small><li *ngIf="formTamano.get(field).errors?.minlength">Debe tener al menos {{ formTamano.get(field).errors?.minlength.requiredLength }} caracteres.</li></small>
+                <small><li *ngIf="formTamano.get(field).errors?.maxlength">No debe tener más de {{ formTamano.get(field).errors?.maxlength.requiredLength }} caracteres.</li></small>
+                <small><li *ngIf="formTamano.get(field).errors?.pattern">El formato no es válido.</li></small>
+              </ul>
+            </div>
+          </ng-container>
+          <div class="text-center">
+            <button type="submit" class="btn btn-sm btn-outline-success m-2" [disabled]="!formTamano.valid">
+              <i class="fa fa-save"></i> Guardar
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarDet()">
+              <i class="fa fa-times"></i> Cancelar
+            </button>
+          </div>
+      </form>
+  </div>
+</ng-template>
+
+<ng-template #atributo>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Atributos del Producto</h4>
+      <div class="alert alert-info" role="alert">
+        Los campos remarcados con <b>*</b> son necesarios.
+      </div>
+  </div>
+  <div class="modal-body">
+      <form [formGroup]="formAtributo" (ngSubmit)="faceptarAtributo()">
+          <div class="form-group">
+              <label>Atributo:<span class="text-danger"><b>*</b></span></label>
+              <input type="text" class="form-control form-control-sm" formControlName="atributo" [class.is-invalid]="fA.atributo.errors && fA.atributo.touched" (input)="onInputAtributo($event, 'atributo', 'atributo')" autocomplete="no" required/>
+          </div>
+          <div class="form-group">
+              <label>Detalle:<span class="text-danger"><b>*</b></span></label>
+              <input type="text" class="form-control form-control-sm" formControlName="detalle" [class.is-invalid]="fA.detalle.errors && fA.detalle.touched" (input)="onInputAtributo($event, 'detalle', 'atributo')" autocomplete="no" required/>
+          </div>
+          <div *ngIf="formAtributo.invalid && formAtributo.touched" class="alert alert-danger">
+            Por favor, completa todos los campos obligatorios.
+          </div>
+          <ng-container *ngFor="let field of getFormControlsAtributo()">
+            <div *ngIf="formAtributo.get(field).invalid && formAtributo.get(field).touched" class="alert alert-danger">
+              <small><strong>El campo {{ field }} no es válido:</strong></small>
+              <ul>
+                <small><li *ngIf="formAtributo.get(field).errors?.required">Este campo es obligatorio.</li></small>
+                <small><li *ngIf="formAtributo.get(field).errors?.minlength">Debe tener al menos {{ formAtributo.get(field).errors?.minlength.requiredLength }} caracteres.</li></small>
+                <small><li *ngIf="formAtributo.get(field).errors?.maxlength">No debe tener más de {{ formAtributo.get(field).errors?.maxlength.requiredLength }} caracteres.</li></small>
+                <small><li *ngIf="formAtributo.get(field).errors?.pattern">El formato no es válido.</li></small>
+              </ul>
+            </div>
+          </ng-container>
+          <div class="text-center">
+            <button type="submit" class="btn btn-sm btn-outline-success m-2" [disabled]="!formAtributo.valid">
+              <i class="fa fa-save"></i> Guardar
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarDet()">
+              <i class="fa fa-times"></i> Cancelar
+            </button>
+          </div>
+      </form>
+  </div>
 </ng-template>

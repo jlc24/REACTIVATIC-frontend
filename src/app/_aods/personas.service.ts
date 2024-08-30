@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { Personas } from '../_entidades/personas';
 import { catchError } from 'rxjs/operators';
 import swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class PersonasService {
 
   ruta = `${RUTA}/apirest/personas`;
 
-  constructor(private _httpClient: HttpClient) { }
+  constructor(private _httpClient: HttpClient, private toastr: ToastrService) { }
 
   dato(id: number): Observable<Personas> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
@@ -35,11 +36,6 @@ export class PersonasService {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     }).pipe(
       catchError(e => {
-        // if (e.status === 400 ) {
-        //   return throwError(e);
-        // }
-        // swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
-        // return throwError(e);
         if (e.status === 400) {
           swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
         } else if (e.status === 409) {
@@ -94,6 +90,31 @@ export class PersonasService {
     });
   }
 
+  uploadperfil(archivo: File, tipo: string): Observable<any>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    const formData: FormData = new FormData();
+    formData.append('archivo', archivo);
+    formData.append('tipo', tipo);
+    return this._httpClient.post<void>(`${this.ruta}/uploadperfil`, formData, {
+      reportProgress: true,
+      responseType: 'json',
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`)
+    }).pipe(
+      catchError(e => {
+        if (e.status === 400) {
+          this.toastr.error('No se ha seleccionado ningún archivo.', 'Error en la carga');
+        } else if (e.status === 401) {
+          this.toastr.error('No autorizado. Por favor, inicia sesión.', 'Error de Autenticación');
+        } else if (e.status === 500) {
+          this.toastr.error('Error al procesar el archivo en el servidor.', 'Error en el Servidor');
+        } else {
+          this.toastr.error('Ocurrió un error desconocido.', 'Error Desconocido');
+        }
+        return throwError(e);
+      })
+    );
+  }
+
   descargarImagen() {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
     return this._httpClient.get(`${this.ruta}/descargar/`, {
@@ -101,6 +122,8 @@ export class PersonasService {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`)
     });
   }
+
+  //downloadImage()
 
   adicionar2(dato: Personas): Observable<any> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;

@@ -6,6 +6,7 @@ export class Productos {
     producto: string;
     descripcion: string;
     precioventa: number;
+    cantidad: number;
     estado: boolean;
     created_at: Date;
 
