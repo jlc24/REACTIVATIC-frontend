@@ -75,6 +75,27 @@ export class UsuariosService {
       })
     );
   }
+  
+  datorep(id: number): Observable<Usuarios> {
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Usuarios>(`${this.ruta}/representante/${id}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    }).pipe(
+      catchError(e => {
+        if (e.status === 400) {
+          swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
+        } else if (e.status === 409) {
+          const errorMsg = e.error.mensaje || 'Conflicto en los datos';
+          swal.fire('Error de Conflicto', errorMsg, 'error');
+        } else if (e.status === 500) {
+          swal.fire('Error en el Servidor', 'Error al realizar la consulta en la Base de Datos', 'error');
+        } else {
+          swal.fire('Error', 'Ocurrió un error desconocido', 'error');
+        }
+        return throwError(e);
+      })
+    );
+  }
 
   adicionar(dato: Usuarios): Observable<any> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
@@ -166,6 +187,28 @@ export class UsuariosService {
           swal.fire('Error de Conflicto', errorMsg, 'error');
         } else if (e.status === 500) {
           swal.fire('Error en el Servidor', 'Error al realizar la consulta en la Base de Datos', 'error');
+        } else {
+          swal.fire('Error', 'Ocurrió un error desconocido', 'error');
+        }
+        return throwError(e);
+      })
+    );
+  }
+
+  verificar(dato: {clave: string}): Observable<any>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.post<void>(`${this.ruta}/verificar`, dato, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    }).pipe(
+      catchError((e) => {
+        if (e.status === 400) {
+          swal.fire('Error en los datos', 'Los datos enviados no son válidos', 'error');
+        } else if (e.status === 401) {
+          swal.fire('Error de Autenticación', 'La clave es incorrecta', 'error');
+        } else if (e.status === 403) {
+          swal.fire('Acceso Denegado', 'No tiene permiso para realizar esta acción', 'error');
+        } else if (e.status === 500) {
+          swal.fire('Error en el Servidor', 'Error al procesar la solicitud', 'error');
         } else {
           swal.fire('Error', 'Ocurrió un error desconocido', 'error');
         }

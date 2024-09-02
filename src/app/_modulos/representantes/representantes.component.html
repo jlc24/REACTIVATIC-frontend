@@ -55,7 +55,7 @@
         </div>
       </div>
 
-      <div class="table-responsive" *ngIf="datos?.length > 0">
+      <div class="table-responsive" *ngIf="representantes?.length > 0">
         <table class="table table-sm table-bordered table-hover table-striped tabla-representante">
           <thead>
             <tr class="table-primary">
@@ -70,7 +70,7 @@
             </tr>
           </thead>
             <tbody>
-              <tr *ngFor="let _item of datos; let i = index">
+              <tr *ngFor="let _item of representantes; let i = index">
                 <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
                 <td>
                   {{ _item.persona.primerapellido }} {{ _item.persona.segundoapellido }} {{ _item.persona.primernombre }}
@@ -79,20 +79,20 @@
                 <td class="text-center">{{ _item.persona.tipogenero?.tipogenero }}</td>
                 <td class="text-center">{{ _item.persona.celular }} <a href="#"><i class="bi bi-whatsapp text-success"></i></a> </td>
                 <td class="text-center">
-                  <span class="estado badge {{ _item.persona.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.persona.idpersona, _item.persona.estado)">
-                    {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                  <span class="estado badge {{ _item.persona.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.persona.idpersona, !_item.persona.estado)">
+                    {{ _item.persona.estado ? 'HABILITADO' : 'INHABILITADO' }}
                   </span>
                 </td>
                 <td>{{ _item.persona.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
                 <td class="text-center">
                   <div class="btn-group" role="group" aria-label="First group">
-                    <button class="btn btn-outline-info btn-sm" title="Ver Representante" (click)="fverrep(_item.idusuario, ver)">
+                    <button class="btn btn-outline-info btn-sm" title="Ver Representante" (click)="fverrep(_item.persona.idpersona, ver)">
                       <i class="fa fa-eye"></i>
                     </button>
-                    <button class="btn btn-outline-warning btn-sm" title="Editar Representante" (click)="fmodificar(_item.idusuario, ab)">
+                    <button class="btn btn-outline-warning btn-sm" title="Editar Representante" (click)="fmodificar(_item.persona.idpersona, ab)">
                       <i class="fa fa-edit"></i>
                     </button>
-                    <button class="btn btn-outline-danger btn-sm" title="Eliminar Representante" (click)="feliminar(_item.idusuario)" [disabled]="!esCargoAdministrador && !esCargoTecnologia">
+                    <button class="btn btn-outline-danger btn-sm" title="Eliminar Representante" (click)="feliminar(_item.persona.idpersona)" [disabled]="!esCargoAdministrador && !esCargoTecnologia">
                       <i class="fa fa-trash"></i>
                     </button>
                     <button class="btn btn-outline-dark btn-sm" title="Imrpimir">
@@ -534,8 +534,8 @@
           </div>
         </div>
         <div class="row justify-content-center mt-2 mb-2">
-          <button class="btn btn-sm btn-outline-info" (click)="fcambiarclave(cambiarclave)">
-            <i class="fa fa-key"></i> Cambiar clave
+          <button class="btn btn-sm btn-outline-info" (click)="fcambiarclave(user.usuario)">
+            <i class="fa fa-key"></i> Restablecer clave
           </button>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { AccesoService } from 'src/app/_aods/acceso.service';
 import { PersonasService } from 'src/app/_aods/personas.service';
 import { RepresentantesService } from 'src/app/_aods/representantes.service';
@@ -12,6 +13,7 @@ import { TiposgenerosService } from 'src/app/_aods/tiposgeneros.service';
 import { UsuariosService } from 'src/app/_aods/usuarios.service';
 import { MustMatch } from 'src/app/_config/application';
 import { Personas } from 'src/app/_entidades/personas';
+import { Representantes } from 'src/app/_entidades/representantes';
 import { Roles } from 'src/app/_entidades/roles';
 import { Tiposdocumentos } from 'src/app/_entidades/tiposdocumentos';
 import { Tiposextensiones } from 'src/app/_entidades/tiposextensiones';
@@ -33,6 +35,7 @@ export class RepresentantesComponent implements OnInit {
   extension: Tiposextensiones[];
   genero: Tiposgeneros[];
   rol: Roles[];
+  representantes: Representantes[];
 
   pagina:number = 1;
   numPaginas:number = 0;
@@ -94,6 +97,11 @@ export class RepresentantesComponent implements OnInit {
   esCargoChofer: boolean = false;
   esCargoPasante: boolean = false;
 
+  attempts: number = 0;
+  maxAttempts: number = 3;
+  lockEndTime: number = 0;
+  intervalId: any;
+
   constructor(
     private _usuariosService: UsuariosService,
     private _personasService: PersonasService,
@@ -107,6 +115,7 @@ export class RepresentantesComponent implements OnInit {
     private _fbI: FormBuilder,
     private _fbC: FormBuilder,
     private _modalService: NgbModal,
+    private _toast: ToastrService,
     private _sanitizer: DomSanitizer,
   ) { }
 
@@ -181,7 +190,7 @@ export class RepresentantesComponent implements OnInit {
   }
 
   fcantidad() {
-    this._usuariosService.cantidadrep(this.buscar).subscribe((data) => {
+    this._representantesService.cantidad(this.buscar).subscribe((data) => {
       this.total = data;
     });
   }
@@ -192,9 +201,9 @@ export class RepresentantesComponent implements OnInit {
   }
 
   fdatos() {
-    this._usuariosService.datosrep(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
+    this._representantesService.datos(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
         this.fcantidad();
-        this.datos = data;
+        this.representantes = data;
       });
   }
 
@@ -411,7 +420,7 @@ export class RepresentantesComponent implements OnInit {
   fmodificar(id: number, content: any) {
     this.estado = 'Modificar';
     this.goToStep(1);
-    this._usuariosService.dato(id).subscribe((data) => {
+    this._usuariosService.datorep(id).subscribe((data) => {
       this.user = data;
       this.fformulario(this.user, true);
       this.modalRefRep = this._modalService.open(content, {
@@ -424,7 +433,7 @@ export class RepresentantesComponent implements OnInit {
 
   fverrep(id: number, content: any) {
     this.estado = 'Ver';
-    this._usuariosService.dato(id).subscribe((data) => {
+    this._usuariosService.datorep(id).subscribe((data) => {
       this.user = data;
       this.modalRefRep = this._modalService.open(content, {
         backdrop:'static',
@@ -512,18 +521,86 @@ export class RepresentantesComponent implements OnInit {
     swal.fire({
       title: !estado ? '¿Está seguro de deshabilitar?' : '¿Está seguro de habilitar?',
       icon: 'warning',
-      text: !estado ? 'El rubro NO se podrá utilizar para registros.' : 'El rubro se podrá utilizar para registros.',
+      text: !estado ? 'El representante NO se podrá utilizar para registros.' : 'El representante se podrá utilizar para registros.',
       showCancelButton: true,
       cancelButtonText: 'cancelar',
       confirmButtonText: 'Cambiar',
     }).then((result) => {
       if (result.value) {
-        // this._rubrosService.cambiarestado({ idrubro, estado }).subscribe( response => {
-        //   this.fdatos();
-        //   swal.fire('Cambio realizado', 'El estado del rubro ha sido cambiado con éxito.', 'success');
-        // });
+        swal.fire({
+          title: 'Confirmación de clave',
+          html: `
+            <input id="clave-input" class="swal2-input" placeholder="Ingrese su clave" type="password">
+            <div id="intentos-restantes" style="margin-top: 10px;">Intentos restantes: ${this.maxAttempts - this.attempts}</div>
+          `,
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Confirmar',
+          preConfirm: () => {
+            const clave = (document.getElementById('clave-input') as HTMLInputElement).value;
+            if (!clave) {
+              swal.showValidationMessage('Debe ingresar una clave');
+              return false;
+            }
+            return clave;
+          }
+        }).then((claveResult) => {
+          if (claveResult.value) {
+            this._usuariosService.verificar({ clave: claveResult.value }).subscribe(
+              (verificacionResponse) => {
+                this._personasService.cambiarestado({ idpersona, estado }).subscribe(response => {
+                  this.fdatos();
+                  this._toast.success('','Clave correcta.');
+                  swal.fire('Cambio realizado', 'El estado del representante ha sido cambiado con éxito.', 'success');
+                  this.attempts = 0;
+                });
+              },
+              (error) => {
+                this.attempts++;
+                if (this.attempts >= this.maxAttempts) {
+                  this._toast.error('Se bloqueron los accesos.','Intentos excedidos.');
+                  this.blockUI();
+                } else {
+                  this._toast.error('','Clave incorrecta.');
+                  this.fcambiarestado(idpersona, estado);
+                }
+              }
+            );
+          }
+        });
       }
     });
+  }
+
+  blockUI() {
+    const remainingTime = 30; // Tiempo de bloqueo en segundos
+    this.lockEndTime = Date.now() + remainingTime * 1000; // Calcular el tiempo de desbloqueo
+  
+    swal.fire({
+      title: 'Intentos excedidos',
+      html: `<div>Espere <strong id="countdown">${remainingTime}</strong> segundos para intentar de nuevo.</div>`,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      onBeforeOpen: () => {
+        swal.showLoading(); // Mostrar el ícono de carga
+        this.updateCountdown(); // Actualizar el contador
+      }
+    });
+  }
+
+  updateCountdown() {
+    const interval = 1000; // Intervalo en milisegundos
+    this.intervalId = setInterval(() => {
+      const now = Date.now();
+      const remainingTime = Math.max(0, Math.ceil((this.lockEndTime - now) / 1000));
+      if (remainingTime <= 0) {
+        clearInterval(this.intervalId);
+        swal.close(); // Cerrar el Swal cuando se acabe el tiempo
+        this.attempts = 0; // Reiniciar el contador de intentos
+      } else {
+        document.getElementById('countdown').innerText = remainingTime.toString();
+      }
+    }, interval);
   }
 
   fdatosXLS() {
@@ -551,12 +628,47 @@ export class RepresentantesComponent implements OnInit {
     });
   }
 
-  fcambiarclave(contenido: any){
-    this.estado = 'Actualizar';
-    this.crearformulario();
-    this.modalRefClave = this._modalService.open(contenido, {
-      backdrop: 'static',
-      keyboard: false
+  fcambiarclave(claveNueva: string){
+    swal.fire({
+      title: 'Confirmación de clave',
+      html: `
+        <input id="clave-input" class="swal2-input" placeholder="Ingrese su clave" type="password">
+        <div id="intentos-restantes" style="margin-top: 10px;">Intentos restantes: ${this.maxAttempts - this.attempts}</div>
+      `,
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Confirmar',
+      preConfirm: () => {
+        const clave = (document.getElementById('clave-input') as HTMLInputElement).value;
+        if (!clave) {
+          swal.showValidationMessage('Debe ingresar una clave');
+          return false;
+        }
+        return clave;
+      }
+    }).then((claveResult) => {
+      if (claveResult.value) {
+        this._usuariosService.verificar({ clave: claveResult.value }).subscribe(
+          (verificacionResponse) => {
+            this._usuariosService.cambiarclave({ claveNueva }).subscribe(response => {
+              this.fdatos();
+              this._toast.success('','Clave correcta.');
+              swal.fire('Clave Restablecida', 'La clave ha sido restablecida con éxito.', 'success');
+              this.attempts = 0;
+            });
+          },
+          (error) => {
+            this.attempts++;
+            if (this.attempts >= this.maxAttempts) {
+              this._toast.error('Se bloqueron los accesos.','Intentos excedidos.');
+              this.blockUI();
+            } else {
+              this._toast.error('','Clave incorrecta.');
+              this.fcambiarclave(claveNueva);
+            }
+          }
+        );
+      }
     });
   }
 
