@@ -3,7 +3,7 @@ import { AsociacionesService } from 'src/app/_aods/asociaciones.service';
 import { Representantes } from './../../_entidades/representantes';
 import { Asociaciones } from './../../_entidades/asociaciones';
 import { LocalidadesService } from 'src/app/_aods/localidades.service';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, Sanitizer, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { EmpresasService } from 'src/app/_aods/empresas.service';
@@ -32,6 +32,10 @@ import { Rubros } from 'src/app/_entidades/rubros';
 import { RubrosService } from 'src/app/_aods/rubros.service';
 import { MunicipiosService } from 'src/app/_aods/municipios.service';
 import { HttpEventType } from '@angular/common/http';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { UtilsService } from 'src/app/_aods/utils.service';
+import { switchMap } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
 
 @Component({
   selector: 'app-empresas',
@@ -177,6 +181,10 @@ export class EmpresasComponent implements OnInit {
   esCargoChofer: boolean = false;
   esCargoPasante: boolean = false;
 
+  imagenEmpresa: any[];
+  imagenEmpresas: { [key: number]: { filename: string, data: any, mimeType: string } } = {};
+
+
   constructor(
     private _accesoService: AccesoService,
     private _usuariosService: UsuariosService,
@@ -198,6 +206,8 @@ export class EmpresasComponent implements OnInit {
     private _modalService: NgbModal,
     private toast: ToastrService,
     private _mensajes: ToastrService,
+    private sanitizer: DomSanitizer,
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit(): void {
@@ -451,6 +461,11 @@ export class EmpresasComponent implements OnInit {
     this.mostrarOtroCampo = null;
   }
 
+  flimpiarbuscar(){
+    this.buscarRep = '';
+    this.representante = null;
+  }
+
   frepresentantes() {
     this._representantesService.buscar(this.buscarRep).subscribe( data => {
       this.representantes = data;
@@ -469,9 +484,37 @@ export class EmpresasComponent implements OnInit {
     }
   }
   fselrepresentante(id: number){
-    this._representantesService.dato(id).subscribe((data) => {
-      this.representante = data;
-    });
+    if (this.estado === 'Adicionar') {
+      this._empresasService.verificar(id).pipe(
+        switchMap(empresasRegistradas => {
+          if (empresasRegistradas === 0) {
+            return this._representantesService.dato(id);
+          } else {
+            swal.fire({
+              icon: 'info',
+              title: 'Información',
+              text: `El representante ya tiene ${empresasRegistradas} empresas registradas.`,
+              confirmButtonText: 'Aceptar'
+            });
+            this.toast.error('El representante ya tiene empresas registradas', 'Operación fallida');
+            this.buscarRep = '';
+            return EMPTY;
+          }
+        })
+      ).subscribe(
+        data => {
+          if (data) {
+              this.representante = data;
+          }
+        }, (error) => {
+          this.toast.error(error, 'Error');
+        }
+      );
+    }else{
+      this._representantesService.dato(id).subscribe((data) => {
+        this.representante = data;
+      });
+    }
   }
 
   fcantidad() {
@@ -486,6 +529,7 @@ export class EmpresasComponent implements OnInit {
   }
 
   fdatos() {
+    this.utilsService.mostrarCargando();
     this.esCargoTextil = this._accesoService.esCargoTextil();
     this.esCargoArtesania = this._accesoService.esCargoArtesania();
     this.esCargoAlimento = this._accesoService.esCargoAlimentos();
@@ -504,6 +548,7 @@ export class EmpresasComponent implements OnInit {
     this._empresasService.datos(this.pagina, this.cantidad, this.buscar, this.rubro).subscribe((data) => {
       this.fcantidad();
       this.datos = data;
+      this.utilsService.cerrarCargando();
     });
   }
 
@@ -675,7 +720,7 @@ export class EmpresasComponent implements OnInit {
     this.formEmpresa = this._fbE.group({
       copiarDatos: [false],
       idrepresentante: [
-        dato.idrepresentante,
+        dato.representante?.idrepresentante,
         [
           Validators.required
         ]
@@ -860,7 +905,7 @@ export class EmpresasComponent implements OnInit {
       this.mostrarInvolucrados = value;
       if (!value) {
         this.formEmpresa.get('involucrados').setValue('');
-        this.mostrarOtro = false;
+        this.mostrarInvolucrados = false;
       }
     });
 
@@ -914,7 +959,7 @@ export class EmpresasComponent implements OnInit {
   onInputRep(event: any): void {
     let inputValue = event.target.value;
 
-    inputValue = inputValue.toUpperCase().replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1\s]/g, '');
+    inputValue = inputValue.toUpperCase().replace(/[^a-zA-ZÀ-ÿ0-9\u00f1\u00d1\s]/g, '');
 
     this.buscarRep = inputValue;
   }
@@ -978,13 +1023,23 @@ export class EmpresasComponent implements OnInit {
   }
 
   fmodificar(id: number, content: any) {
+    this.utilsService.mostrarCargando();
     this.estado = 'Modificar';
     this.goToStep(1);
     this._empresasService.dato(id).subscribe((data) => {
       this.dato = data;
       this.fformEmpresa(this.dato);
-      this.fselrepresentante(this.dato.idrepresentante);
+      this.fselrepresentante(this.dato.representante.idrepresentante);
       this.fsubrubros(data.subrubro?.idrubro);
+      if (data.otromotivo) {
+        this.mostrarOtroCampo = true;
+      }
+      if (data.familiar) {
+        this.mostrarInvolucrados = true;
+      }
+      if (data.otrosinvolucrados) {
+        this.mostrarOtro = true;
+      }
       this.flocalidades(data.localidad?.idmunicipio);
       this.modalRefEmpresa = this._modalService.open(content, {
         backdrop: 'static',
@@ -992,19 +1047,23 @@ export class EmpresasComponent implements OnInit {
         size: 'lg',
         scrollable: true
       });
+      this.utilsService.cerrarCargando();
     });
   }
 
   fver(id: number, content: any) {
+    this.utilsService.mostrarCargando();
     this.estado = 'Ver';
     this._empresasService.dato(id).subscribe((data) => {
       this.dato = data;
+      this.fdescargar(data.idempresa, 'empresas');
       this.modalRefEmpresa = this._modalService.open(content, {
         backdrop: 'static',
         keyboard: false,
         size: 'xl',
         scrollable: true
-      })
+      });
+      this.utilsService.cerrarCargando();
     })
   }
 
@@ -1052,14 +1111,12 @@ export class EmpresasComponent implements OnInit {
 
     if (this.estado === 'Modificar') {
       this._empresasService.modificar(this.dato).subscribe((data) => {
-        //this.fcargar(this.dato.idempresa);
         this.fdatos();
         this.modalRefEmpresa.dismiss();
         swal.fire('Dato modificado', 'Dato modificado con exito', 'success');
       });
     } else {
       this._empresasService.adicionar(this.dato).subscribe((data) => {
-        //this.fcargar(this.dato.idempresa);
         this.fdatos();
         this.mostrarOtro = null;
         this.mostrarOtroCampo = null;
@@ -1169,10 +1226,15 @@ export class EmpresasComponent implements OnInit {
     this.miniaturaUrl = null;
   }
 
-  fcargar(id: number) {
-    // this._empresasService.cargarImagene(this.archivoseleccionado, id).subscribe((data) => {
-    //   this.fdatos();
-    // });
+  fimagenEmp(contenido: any) {
+    this.estado = 'Empresa';
+    this.modalRefPersona = this._modalService.open(contenido, {
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  fcargar() {
     swal.fire({
       title: 'Cargando archivo...',
       html: 'Progreso: <b>0%</b>',
@@ -1182,19 +1244,34 @@ export class EmpresasComponent implements OnInit {
       }
     });
 
-    this._personasService.uploadperfil(this.archivoSeleccionado, 'usuarios').subscribe(event => {
+    this._empresasService.upload(this.dato?.idempresa.toString(), 'empresas', this.archivoSeleccionado).subscribe(event => {
       if (event.type === HttpEventType.UploadProgress) {
         const progreso = Math.round((event.loaded / event.total) * 100);
         swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
       } else if (event.type === HttpEventType.Response) {
         swal.close();
+        this.fdescargar(this.dato?.idempresa, 'empresas')
+        this.fdatos();
         swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
-        this._modalService.dismissAll();
+        this.modalRefPersona.dismiss();
       }
     }, error => {
       swal.close();
       swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
     });
+  }
+
+  fdescargar(id: number, rol: string) {
+    if (rol == 'empresas') {
+      this.imagenEmpresa = [];
+      this._empresasService.download(id, 'empresas').subscribe((data) => {
+        this.imagenEmpresa = data;
+      });
+    }
+  }
+
+  sanitizarImagen(data: string, mimeType: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(`data:${mimeType};base64,${data}`);
   }
 
   fcancelar() {

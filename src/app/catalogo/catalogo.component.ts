@@ -6,7 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Carritos } from './../_entidades/carritos';
 import { CarritosService } from './../_aods/carritos.service';
 import { CatalogosService } from './../_aods/catalogos.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Productos } from '../_entidades/productos';
 import swal from 'sweetalert2';
 import { Rubros } from '../_entidades/rubros';
@@ -15,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 import { RUTA } from '../_config/application';
 import { Subrubros } from '../_entidades/subrubros';
 import Swal from 'sweetalert2';
+import { UtilsService } from '../_aods/utils.service';
 
 @Component({
   selector: 'app-catalogo',
@@ -66,6 +67,10 @@ export class CatalogoComponent implements OnInit {
   localcelular: number;
   localcorreo: string;
 
+  showButton: boolean = false;
+  isShow: boolean;
+  topPosToStartShowing = 100;
+
   constructor(
     private _catalogosService: CatalogosService,
     private _carritosService: CarritosService,
@@ -73,6 +78,7 @@ export class CatalogoComponent implements OnInit {
     private _fb: FormBuilder,
     private _ruta: Router,
     private _mensajes: ToastrService,
+    private utilsService: UtilsService
   ) {
     let dato = JSON.parse(localStorage.getItem('idcliente'));
     if (dato === null) {
@@ -97,6 +103,20 @@ export class CatalogoComponent implements OnInit {
     this.flistasubrubro();
     this.fcantidadcarrito();
     this.fsolicitarproductoinit();
+  }
+
+  @HostListener('window:scroll')
+  checkScroll() {
+    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    if (scrollPosition >= this.topPosToStartShowing) {
+      this.isShow = true;
+    } else {
+      this.isShow = false;
+    }
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   fcantidadcarrito() {
@@ -150,6 +170,7 @@ export class CatalogoComponent implements OnInit {
     this._catalogosService.datos(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
       this.fcantidad();
       this.datos = data;
+      this.scrollToTop();
     });
   }
 

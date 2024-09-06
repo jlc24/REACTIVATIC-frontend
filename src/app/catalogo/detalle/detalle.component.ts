@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -35,6 +36,14 @@ export class DetalleComponent implements OnInit {
   cantidadcarrito: Carritos;
   carritos: Carritos[];
   rubros: Rubros[];
+  imagenes: any[] = [];
+
+  imagen: any[] = [];
+  imagenActual: any; // Imagen que se muestra en grande
+  indiceActual: number = 0;
+  intervalo: any;
+  imagenActualIndex: number = 0;
+
   estalogueado: Boolean = false;
 
   datosempresa: Empresas;
@@ -51,8 +60,6 @@ export class DetalleComponent implements OnInit {
 
   cantProd: number = 1;
 
-  imagen: any;
-
   formulario: FormGroup;
   submitted: boolean = false;
 
@@ -65,13 +72,18 @@ export class DetalleComponent implements OnInit {
   localcelular: number;
   localcorreo: string;
 
+  isShow: boolean;
+  topPosToStartShowing = 100;
+
+
   constructor(
     private _route: ActivatedRoute,
     private _catalogosService: CatalogosService,
     private _carritosService: CarritosService,
     private _modalService: NgbModal,
     private _fb: FormBuilder,
-    private _ruta: Router
+    private _ruta: Router,
+    private sanitizer: DomSanitizer
   ) {
     let dato = JSON.parse(localStorage.getItem('idcliente'));
     if (dato === null) {
@@ -96,7 +108,24 @@ export class DetalleComponent implements OnInit {
     this.fdato(this.id);
     this.fcantidadcarrito();
     this.fsolicitarproductoinit();
+    this.imagenActual = this.imagenes[0];
+    this.fdescargar(1);
   }
+
+  @HostListener('window:scroll')
+  checkScroll() {
+    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    if (scrollPosition >= this.topPosToStartShowing) {
+      this.isShow = true;
+    } else {
+      this.isShow = false;
+    }
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
 
   fcantidadcarrito() {
     let idcliente = JSON.parse(localStorage.getItem('idcliente'));
@@ -120,7 +149,70 @@ export class DetalleComponent implements OnInit {
   fdato(id: number) {
     this._catalogosService.dato(id).subscribe((data) => {
       this.dato = data;
+      this.fdescargar(data.idproducto);
     });
+  }
+
+  fdescargar(id: number) {
+    this.imagenes = [];
+    this._catalogosService.download(id, 'productos').subscribe((data) => {
+      //this.imagenes = data;
+      this.imagenes = data.map((img) => ({
+        data: this.sanitizarImagen(img.data, img.mimeType),
+        mimeType: img.mimeType,
+      }));
+
+      // Configura la primera imagen como la imagen actual
+      if (this.imagenes.length > 0) {
+        this.imagenActual = this.imagenes[0];
+        this.iniciarDesplazamientoAutomatico();
+      }
+    });
+  }
+
+  sanitizarImagen(data: string, mimeType: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(`data:${mimeType};base64,${data}`);
+  }
+
+  iniciarDesplazamientoAutomatico() {
+    // this.intervalo = setInterval(() => {
+    //   this.cambiarImagenAutomatica();
+    // }, 3000); // Cambia cada 3 segundos
+  }
+
+  cambiarImagenAutomatica() {
+    if (this.imagenes.length > 0) {
+      this.indiceActual = (this.indiceActual + 1) % this.imagenes.length;
+      this.imagenActual = this.imagenes[this.indiceActual];
+    }
+  }
+
+  cambiarImagen(imagen: any) {
+    this.imagenActual = imagen;
+  }
+
+  mostrarImagen(indice: number) {
+    // Cancela el desplazamiento automático cuando el usuario interactúa
+    clearInterval(this.intervalo);
+    this.imagenActual = this.imagenes[indice];
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.intervalo);  // Limpia el intervalo al destruir el componente
+  }
+
+  desplazarIzquierda() {
+    if (this.imagenes.length > 0) {
+      this.imagenActualIndex = (this.imagenActualIndex - 1 + this.imagenes.length) % this.imagenes.length;
+      this.imagenActual = this.imagenes[this.imagenActualIndex];
+    }
+  }
+
+  desplazarDerecha() {
+    if (this.imagenes.length > 0) {
+      this.imagenActualIndex = (this.imagenActualIndex + 1) % this.imagenes.length;
+      this.imagenActual = this.imagenes[this.imagenActualIndex];
+    }
   }
 
   fmas(){

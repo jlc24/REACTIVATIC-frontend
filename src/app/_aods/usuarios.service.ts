@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class UsuariosService {
 
   ruta = `${RUTA}/apirest/usuarios`;
 
-  constructor(private _httpClient: HttpClient) { }
+  constructor(private _httpClient: HttpClient, private toast: ToastrService) { }
 
   datos(pagina: number, cantidad: number, buscar: string): Observable<Usuarios[]> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
@@ -63,11 +64,17 @@ export class UsuariosService {
       catchError(e => {
         if (e.status === 400) {
           swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
+          this.toast.error('','Error 400');
+        }else if (e.status === 404) {
+          swal.fire('Error en los datos', 'No tiene usuario registrado.', 'error');
+          this.toast.error('','Error 404');
         } else if (e.status === 409) {
           const errorMsg = e.error.mensaje || 'Conflicto en los datos';
           swal.fire('Error de Conflicto', errorMsg, 'error');
+          this.toast.error('','Error 409');
         } else if (e.status === 500) {
           swal.fire('Error en el Servidor', 'Error al realizar la consulta en la Base de Datos', 'error');
+          this.toast.error('','Error 500');
         } else {
           swal.fire('Error', 'Ocurrió un error desconocido', 'error');
         }
@@ -75,7 +82,7 @@ export class UsuariosService {
       })
     );
   }
-  
+
   datorep(id: number): Observable<Usuarios> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
     return this._httpClient.get<Usuarios>(`${this.ruta}/representante/${id}`, {
@@ -84,11 +91,17 @@ export class UsuariosService {
       catchError(e => {
         if (e.status === 400) {
           swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
+          this.toast.error('','Error 400');
+        }else if (e.status === 404) {
+          swal.fire('Error en los datos', 'El representante NO tiene usuario registrado.', 'error');
+          this.toast.error('','Error 404');
         } else if (e.status === 409) {
           const errorMsg = e.error.mensaje || 'Conflicto en los datos';
           swal.fire('Error de Conflicto', errorMsg, 'error');
+          this.toast.error('','Error 409');
         } else if (e.status === 500) {
           swal.fire('Error en el Servidor', 'Error al realizar la consulta en la Base de Datos', 'error');
+          this.toast.error('','Error 500');
         } else {
           swal.fire('Error', 'Ocurrió un error desconocido', 'error');
         }

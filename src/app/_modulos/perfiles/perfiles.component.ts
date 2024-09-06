@@ -9,7 +9,7 @@ import { Personas } from './../../_entidades/personas';
 import { PersonasService } from './../../_aods/personas.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import swal from 'sweetalert2';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { MustMatch } from 'src/app/_config/application';
 import { TiposdocumentosService } from 'src/app/_aods/tiposdocumentos.service';
 import { TiposextensionesService } from 'src/app/_aods/tiposextensiones.service';
@@ -29,6 +29,7 @@ import { Subrubros } from 'src/app/_entidades/subrubros';
 import { Asociaciones } from 'src/app/_entidades/asociaciones';
 import { ToastrService } from 'ngx-toastr';
 import { HttpEventType } from '@angular/common/http';
+import { UtilsService } from 'src/app/_aods/utils.service';
 
 @Component({
   selector: 'app-perfiles',
@@ -42,7 +43,10 @@ export class PerfilesComponent implements OnInit {
   perfil: Personas;
   estado: string;
   //archivoseleccionado: File;
-  imagen: any;
+  imagenUsuario: any[];
+  imagenRepAnverso: any[];
+  imagenRepReverso: any[];
+  imagenEmpresa: any[];
 
   formulario: FormGroup;
   formUser: FormGroup;
@@ -151,6 +155,11 @@ export class PerfilesComponent implements OnInit {
   cargando: boolean = false;
   progreso: number = 0;
 
+  attempts: number = 0;
+  maxAttempts: number = 3;
+  lockEndTime: number = 0;
+  intervalId: any;
+
   constructor(
     private _personasService: PersonasService,
     private _usuariosService: UsuariosService,
@@ -166,10 +175,11 @@ export class PerfilesComponent implements OnInit {
     private _generosService: TiposgenerosService,
     private _modalService: NgbModal,
     private toast: ToastrService,
-    private _sanitizer: DomSanitizer,
     private _fb: FormBuilder,
     private _fbU: FormBuilder,
-    private _fbE: FormBuilder
+    private _fbE: FormBuilder,
+    private sanitizer: DomSanitizer,
+    private utilsService: UtilsService,
   ) { }
 
   ngOnInit(): void {
@@ -180,19 +190,23 @@ export class PerfilesComponent implements OnInit {
     this.essddpi = this._accesoService.esRolSddpi();
     this.esadmin = this._accesoService.esRolAdmin();
     this.fdato();
-    // this.fdescargar();
     this.fdocumento();
     this.fextension();
     this.fgenero();
     this.esempresa = this._accesoService.esRolEmpresa();
-    if (this.esempresa) {
-      this._empresasService.perfilempresa().subscribe( data=> {
-        this.empresa = data;
-      })
-    }
     this.frubros();
     this.fmunicipios();
     this.fasociaciones();
+    if (this.esempresa) {
+      this._empresasService.perfilempresa().subscribe( data=> {
+        this.empresa = data;
+        this.fdescargar('repanverso');
+        this.fdescargar('repreverso');
+        this.fdescargar('empresas');
+      });
+    }else{
+      this.fdescargar('usuarios');
+    }
   }
 
   getFormacionDescription(value: number): string {
@@ -274,20 +288,77 @@ export class PerfilesComponent implements OnInit {
 
   faceptarcambiarclave(clave: string) {
     swal.fire({
-      title: '¿Restablecer Contraseña?',
-      icon: 'warning',
-      text: '¿Estás seguro de que deseas restablecer la contraseña? Esta acción no se puede deshacer.',
+      title: 'Confirmación de clave',
+      html: `
+        <input id="clave-input" class="swal2-input" placeholder="Ingrese su clave" type="password">
+        <div id="intentos-restantes" style="margin-top: 10px;">Intentos restantes: ${this.maxAttempts - this.attempts}</div>
+      `,
       showCancelButton: true,
       cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Restablecer',
+      confirmButtonText: 'Confirmar',
+      preConfirm: () => {
+        const clave = (document.getElementById('clave-input') as HTMLInputElement).value;
+        if (!clave) {
+          swal.showValidationMessage('Debe ingresar una clave');
+          return false;
+        }
+        return clave;
+      }
     })
     .then((result) => {
       if (result.value) {
-        this._usuariosService.cambiarclave({ clave }).subscribe(data => {
-          swal.fire('Exito', 'La contraseña ha sido restablecida correctamente', 'success');
-        })
+        this._usuariosService.verificar({ clave: result.value }).subscribe(
+          (verificacionResponse) => {
+            this._usuariosService.cambiarclave({ clave }).subscribe(response => {
+              this.toast.success('','Clave correcta.');
+              swal.fire('Clave Restablecida', 'La clave ha sido restablecida con éxito.', 'success');
+              this.attempts = 0;
+            });
+          },
+          (error) => {
+            this.attempts++;
+            if (this.attempts >= this.maxAttempts) {
+              this.toast.error('Se bloqueron los accesos.','Intentos excedidos.');
+              this.blockUI();
+            } else {
+              this.toast.error('','Clave incorrecta.');
+              this.faceptarcambiarclave(clave);
+            }
+          }
+        );
       }
     });
+  }
+
+  blockUI() {
+    const remainingTime = 30; // Tiempo de bloqueo en segundos
+    this.lockEndTime = Date.now() + remainingTime * 1000; // Calcular el tiempo de desbloqueo
+
+    swal.fire({
+      title: 'Intentos excedidos',
+      html: `<div>Espere <strong id="countdown">${remainingTime}</strong> segundos para intentar de nuevo.</div>`,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      onBeforeOpen: () => {
+        swal.showLoading(); // Mostrar el ícono de carga
+        this.updateCountdown(); // Actualizar el contador
+      }
+    });
+  }
+
+  updateCountdown() {
+    const interval = 1000; // Intervalo en milisegundos
+    this.intervalId = setInterval(() => {
+      const now = Date.now();
+      const remainingTime = Math.max(0, Math.ceil((this.lockEndTime - now) / 1000));
+      if (remainingTime <= 0) {
+        clearInterval(this.intervalId);
+        swal.close(); // Cerrar el Swal cuando se acabe el tiempo
+        this.attempts = 0; // Reiniciar el contador de intentos
+      } else {
+        document.getElementById('countdown').innerText = remainingTime.toString();
+      }
+    }, interval);
   }
 
   fdocumento() {
@@ -443,6 +514,7 @@ export class PerfilesComponent implements OnInit {
   }
 
   fmodificar(content: any) {
+    this.utilsService.mostrarCargando();
     this.estado = 'Modificar';
     this.goToStepRep(1);
     this._personasService.perfil().subscribe(data=>{
@@ -453,6 +525,7 @@ export class PerfilesComponent implements OnInit {
         keyboard: false,
         size: 'lg'
       });
+      this.utilsService.cerrarCargando();
     });
   }
 
@@ -617,7 +690,7 @@ export class PerfilesComponent implements OnInit {
         ]
       ],
       idasociacion: [
-        dato.idasociacion
+        dato.asociacion?.idasociacion
       ],
       celular: [
         dato.celular,
@@ -637,7 +710,7 @@ export class PerfilesComponent implements OnInit {
         dato.subrubro?.idrubro
       ],
       idsubrubro: [
-        dato.idsubrubro,
+        dato.subrubro?.idsubrubro,
         [
           Validators.required
         ]
@@ -682,7 +755,7 @@ export class PerfilesComponent implements OnInit {
         dato.localidad?.idmunicipio
       ],
       idlocalidad:[
-        dato.idlocalidad,
+        dato.localidad?.idlocalidad,
         [
           Validators.required
         ]
@@ -731,6 +804,7 @@ export class PerfilesComponent implements OnInit {
       this.mostrarOtroCampo = value === '5';
       if (!this.mostrarOtroCampo) {
         this.formEmpresa.get('otromotivo').setValue('');
+        this.mostrarOtroCampo = false;
       }
     });
 
@@ -746,6 +820,7 @@ export class PerfilesComponent implements OnInit {
       this.mostrarOtro = value === '6';
       if (!this.mostrarOtro) {
         this.formEmpresa.get('otrosinvolucrados').setValue('');
+        this.mostrarOtro = false;
       }
     });
   }
@@ -762,25 +837,62 @@ export class PerfilesComponent implements OnInit {
   get fE() { return this.formEmpresa.controls; }
 
   fmodificarEmpresa(content: any) {
+    this.utilsService.mostrarCargando();
     this.estado = 'Modificar';
     this.goToStep(1);
     this._empresasService.perfilempresa().subscribe((data) => {
       this.empresa = data;
       this.fformEmpresa(this.empresa);
+      this.fsubrubros(data.subrubro?.idrubro);
+      if (data.otromotivo) {
+        this.mostrarOtroCampo = true;
+      }
+      if (data.familiar) {
+        this.mostrarInvolucrados = true;
+      }
+      if (data.otrosinvolucrados) {
+        this.mostrarOtro = true;
+      }
+      this.flocalidades(data.localidad?.idmunicipio);
       this._modalService.open(content, {
         backdrop: 'static',
         keyboard: false,
-        size: 'lg'
+        size: 'lg',
+        scrollable: true
       });
+      this.utilsService.cerrarCargando();
     });
   }
 
   faceptarEmp(){
+    this.submitted = true;
+
 
   }
 
-  fcambiarimagen(contenido: any) {
-    this.estado = 'Actualizar';
+  fimagenUsuario(contenido: any) {
+    this.estado = 'Perfil';
+    this._modalService.open(contenido, {
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+  fimagenRepA(contenido: any) {
+    this.estado = 'Carnet Anverso';
+    this._modalService.open(contenido, {
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+  fimagenRepR(contenido: any) {
+    this.estado = 'Carnet Reverso';
+    this._modalService.open(contenido, {
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+  fimagenEmp(contenido: any) {
+    this.estado = 'Empresa';
     this._modalService.open(contenido, {
       backdrop: 'static',
       keyboard: false
@@ -796,29 +908,110 @@ export class PerfilesComponent implements OnInit {
         swal.showLoading();
       }
     });
-
-    this._personasService.uploadperfil(this.archivoSeleccionado, 'usuarios').subscribe(event => {
-      if (event.type === HttpEventType.UploadProgress) {
-        const progreso = Math.round((event.loaded / event.total) * 100);
-        swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
-      } else if (event.type === HttpEventType.Response) {
+    if (this.estado === 'Perfil') {
+      this._personasService.uploadperfil(this.archivoSeleccionado, 'usuarios').subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const progreso = Math.round((event.loaded / event.total) * 100);
+          swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
+        } else if (event.type === HttpEventType.Response) {
+          swal.close();
+          swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
+          this.toast.success('','Image de perfil cambiado.');
+          this.fdescargar('usuarios');
+          this._modalService.dismissAll();
+          this.archivoSeleccionado = null;
+        }
+      }, error => {
         swal.close();
-        swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
-        this._modalService.dismissAll();
-      }
-    }, error => {
-      swal.close();
-      swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
-    });
+        swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
+      });
+    }else if (this.estado === 'Carnet Anverso') {
+      this._personasService.upload(this.perfil.idpersona.toString(), 'repanverso', this.archivoSeleccionado).subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const progreso = Math.round((event.loaded / event.total) * 100);
+          swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
+        } else if (event.type === HttpEventType.Response) {
+          swal.close();
+          swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
+          this.toast.success('', 'Carnet Anverso cambiado.');
+          this.fdescargar('repanverso');
+          this._modalService.dismissAll();
+          this.archivoSeleccionado = null;
+        }
+      }, error => {
+        swal.close();
+        swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
+      });
+    }else if (this.estado === 'Carnet Reverso') {
+      this._personasService.upload(this.perfil.idpersona.toString(), 'repreverso', this.archivoSeleccionado).subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const progreso = Math.round((event.loaded / event.total) * 100);
+          swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
+        } else if (event.type === HttpEventType.Response) {
+          swal.close();
+          swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
+          this.toast.success('', 'Carnet Reverso cambiado.');
+          this.fdescargar('repreverso');
+          this._modalService.dismissAll();
+          this.archivoSeleccionado = null;
+        }
+      }, error => {
+        swal.close();
+        swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
+      });
+    }else if (this.estado === 'Empresa') {
+      this._empresasService.upload(this.empresa.idempresa.toString(), 'empresas', this.archivoSeleccionado).subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const progreso = Math.round((event.loaded / event.total) * 100);
+          swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
+        } else if (event.type === HttpEventType.Response) {
+          swal.close();
+          this.toast.success('', 'Carnet Reverso cambiado.');
+          this.fdescargar('empresas');
+          this._modalService.dismissAll();
+          this.archivoSeleccionado = null;
+        }
+      }, error => {
+        swal.close();
+        swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
+      });
+    }
   }
 
-  fdescargar() {
-    this.imagen = null;
-    this._personasService.descargarImagen().subscribe(data=>{
-      const objectURL = window.URL.createObjectURL(data);
-      this.imagen = this._sanitizer.bypassSecurityTrustUrl(objectURL);
-    })
+  fdescargar(rol: string) {
+    if (rol == 'empresas') {
+      this.imagenEmpresa = [];
+      this._empresasService.download(this.empresa?.idempresa, 'empresas').subscribe((data) => {
+        this.imagenEmpresa = data;
+      });
+    }
+    if(rol == 'usuarios'){
+      this.imagenUsuario = [];
+      this._personasService.downloadperfil('usuarios').subscribe((data) => {
+        this.imagenUsuario = data;
+      });
+    }
+    if (rol == 'repanverso') {
+      this.imagenRepAnverso = [];
+      this._personasService.downloadperfil('repanverso').subscribe((data) => {
+        this.imagenRepAnverso = data;
+      });
+    }
+    if (rol == 'repreverso') {
+      this.imagenRepReverso = [];
+      this._personasService.downloadperfil('repreverso').subscribe((data) => {
+        this.imagenRepReverso = data;
+      });
+    }
   }
+
+  sanitizarImagen(data: string, mimeType: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(`data:${mimeType};base64,${data}`);
+  }
+  // this._personasService.descargarImagen().subscribe(data=>{
+  //   const objectURL = window.URL.createObjectURL(data);
+  //   this.imagen = this._sanitizer.bypassSecurityTrustUrl(objectURL);
+  // })
 
   fseleccionarArchivo(event: any) {
     const archivo = event.target.files[0];

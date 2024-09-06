@@ -107,17 +107,17 @@
             <tr class="table-primary">
               <th class="text-center">Nro</th>
               <th class="text-center">Producto</th>
+              <th class="text-center" *ngIf="!esRolEmpresa">Empresa</th>
               <th class="text-center">Detalle</th>
-              <th class="text-center">Precio venta</th>
-              <!-- <th class="text-center">Precio compra</th>
-              <th class="text-center">Cantidad</th> -->
-              <th class="text-center">Imagen</th>
+              <th class="text-center" width="150px">Precio venta</th>
+              <!-- <th class="text-center">Precio compra</th>-->
+              <th class="text-center" width="150px">Estado</th>
               <th class="text-center">Operaciones</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td colspan="8" class="text-center"><b>No se encontraron datos.</b></td>
+              <td colspan="7" class="text-center"><b>No se encontraron datos.</b></td>
             </tr>
           </tbody>
         </table>
@@ -127,7 +127,15 @@
           <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
         </div>
         <div class="col-sm-6">
-          <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+          <ngb-pagination class="d-flex justify-content-end pagination-rounded"
+            [collectionSize]="total"
+            [(page)]="pagina"
+            [maxSize]="cantidad"
+            [rotate]="false"
+            [ellipses]="false"
+            [boundaryLinks]="true"
+            (pageChange)="mostrarMas($event)">
+          </ngb-pagination>
         </div>
       </div>
     </div>
@@ -143,10 +151,11 @@
     </div>
     <div class="modal-body">
         <form [formGroup]="formulario" (ngSubmit)="faceptar()">
-            <div class="form-group">
+            <div class="form-group" *ngIf="!esRolEmpresa">
                 <label>Empresa:</label>
                 <select class="custom-select custom-select-sm" formControlName="idempresa">
-                  <option value=""></option>
+                  <option value="" [selected]>Seleccionar Empresa ...</option>
+                  <option *ngFor="let _empresa of empresas" [value]="_empresa.idempresa">{{ _empresa.empresa}}</option>
                 </select>
             </div>
             <div class="form-group">
@@ -325,31 +334,18 @@
         <h5><strong>Imagenes:</strong></h5>
       </div>
       <div class="col-lg-9 col-sm-8 text-sm-right">
-        <button class="btn btn-sm btn-outline-success mr-2"><i class="bi bi-plus-lg"></i> Añadir</button>
+        <button class="btn btn-sm btn-outline-success mr-2" (click)="fadicionarImagen(imagen)"><i class="bi bi-plus-lg"></i> Añadir</button>
       </div>
       <div class="col-lg-3 col-sm-12  d-none d-lg-flex justify-content-center align-items-center">
-        <i class="bi bi-image icon-opacity" ></i>
+        <i class="bi bi-image icon-opacity" *ngIf="imagenes && imagenes.length > 0"></i>
       </div>
       <div class="col-lg-9 col-sm-12 mt-3 mb-2">
         <div class="row d-flex justify-content-center">
-          <div class="image-card-container mr-4 mb-2">
+          <div class="image-card-container mr-4 mb-2" *ngFor="let _imagen of imagenes">
             <div class="image-card">
-              <img src="../../../assets/imagenes/productos/featur-1.jpg" alt="Imagen 1" class="image">
+              <img [src]="sanitizarImagen(_imagen.data, _imagen.mimeType)" alt="Imagen 1" class="image">
             </div>
             <button class="delete-btn" title="Quitar Imagen"><i class="bi bi-dash"></i></button>
-          </div>
-          <div class="image-card-container mr-4 mb-2">
-            <div class="image-card">
-              <img src="../../../assets/imagenes/productos/featur-2.jpg" alt="Imagen 2" class="image">
-            </div>
-            <button class="delete-btn" title="Quitar Imagen"><i class="bi bi-dash"></i></button>
-          </div>
-          <div class="image-card-container mr-4 mb-2">
-            <div class="image-card">
-              <img src="../../../assets/imagenes/productos/featur-3.jpg" alt="Imagen 3" class="image">
-            </div>
-            <button class="delete-btn" title="Quitar Imagen"><i class="bi bi-dash"></i></button>
-            <!-- Añadir más imágenes aquí -->
           </div>
         </div>
       </div>
@@ -579,5 +575,40 @@
             </button>
           </div>
       </form>
+  </div>
+</ng-template>
+
+<ng-template #imagen>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left">Cambiar Imagen {{ estado }}</h4>
+  </div>
+  <div class="modal-body">
+
+    <div class="dropzone" (click)="archivoInput.click()" (dragover)="farrastrarSobre($event)" (dragleave)="farrastrarFuera($event)" (drop)="fsoltarArchivo($event)">
+      <p *ngIf="!archivoSeleccionado">Arrastra tu imagen aquí o haz click para seleccionar</p>
+
+      <div *ngIf="archivoSeleccionado" class="preview-container">
+        <img [src]="miniaturaUrl" alt="Vista previa" class="thumbnail" />
+        <button type="button" class="btn btn-danger btn-sm" (click)="fremoverArchivo()" title="Cambiar Imagen">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div class="file-info mt-3" *ngIf="archivoSeleccionado">
+        <p><b>Nombre: </b>{{ archivoSeleccionado.name }}</p>
+        <p><b>Tamaño: </b>{{ sizeFileFormat }}</p>
+      </div>
+
+      <input class="form-control-file" type="file" (change)="fseleccionarArchivo($event)" hidden accept=".png,.jpg,.jpeg" #archivoInput />
+
+    </div>
+    <div class="text-center">
+      <button type="button" class="btn btn-outline-success m-2" (click)="fcargar()" [disabled]="!archivoSeleccionado">
+        <i class="fa fa-save"></i> Guardar
+      </button>
+      <button type="button" class="btn btn-outline-secondary" (click)="fcancelarDet()">
+        <i class="fa fa-times"></i> Cancelar
+      </button>
+    </div>
   </div>
 </ng-template>

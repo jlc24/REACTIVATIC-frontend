@@ -31,7 +31,7 @@
   </div>
 </nav>
 
-<div class="container-lg">
+<div class="container-lg bg-white">
   <div class="row">
     <div class="col-12 position-relative">
       <img src="assets/imagenes/bg.jpg" class="img-fluid w-100 mb-4" alt="Banner" style="max-height: 250px; object-fit: cover;">
@@ -42,36 +42,59 @@
     </div>
   </div>
   <div class="row m-1">
-    <div class="col-12 alert-info py-3 px-4">
+    <div class="col-12 alert alert-info py-3 px-4">
       <a (click)="finicio()" class="back-link puntero">
         <i class="bi bi-arrow-left back-icon"></i> Atrás
       </a>
     </div>
   </div>
-  <div class="row" *ngIf="dato">
+  <div class="row m-1" *ngIf="dato">
     <div class="col-sm-12">
       <h2>{{ dato.producto }}</h2>
     </div>
     <div class="row">
-      <div class="col-md-1 col-sm-12">
-        <div class="">
-          <img class="img-fluid puntero" [src]="ruta+id" width="50px" height="50px">
-          <img class="img-fluid puntero" [src]="ruta+id+1" width="50px" height="50px">
-          <img class="img-fluid puntero" [src]="ruta+id+2" width="50px" height="50px">
-          <img class="img-fluid puntero" [src]="ruta+id+3" width="50px" height="50px">
-          <img class="img-fluid puntero" [src]="ruta+id+4" width="50px" height="50px">
-          <img class="img-fluid puntero" [src]="ruta+id+5" width="50px" height="50px">
+      <!-- <div class="col-md-2 col-sm-12 text-center">
+        <div class="mb-2 img-product" *ngFor="let _imagen of imagenes">
+          <img class="img-fluid puntero" [src]="sanitizarImagen(_imagen.data, _imagen.mimeType)" width="100px" >
         </div>
       </div>
-      <div class="col-md-6 col-sm-12">
-        <img
-            [src]="ruta+id"
-            class="img-thumbnail" width="200px"
-        />
+      <div class="col-md-5 col-sm-12">
+        <img [src]="ruta+id" class="img-thumbnail" width="auto" />
           <h3 class="d-block mb-3 font-size-xs text-muted">Precio de Referencia <span class="font-weight-semibold">{{ dato.precioventa }} Bs</span></h3>
-          <!-- <button class="btn btn-pill btn-outline-primary btn-sm m-2" (click)="fadicionar(dato.idproducto, 1, solicitaproducto)"><i class="fa fa-cart-plus"></i></button>
-          <button class="btn btn-pill btn-outline-primary btn-sm mr-2" (click)="fwhastapp(dato.empresa.celular)"><i class="fa fa-whatsapp"></i></button> -->
+      </div> -->
+      <div class="col-md-2 col-sm-12 text-center">
+        <div class="miniaturas-container">
+          <div *ngFor="let _imagen of imagenes; let i = index"
+               (mouseover)="mostrarImagen(i)"
+               class="mb-2 img-product">
+            <img class="img-fluid puntero" [src]="_imagen.data" width="100px" [class.active]="_imagen === imagenActual" (click)="cambiarImagen(_imagen)" />
+          </div>
+        </div>
       </div>
+      <div class="col-md-5 col-sm-12">
+        <div class="imagen-grande-container">
+          <button class="btn btn-arrow-left" (click)="desplazarIzquierda()">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <img *ngIf="imagenActual" [src]="imagenActual.data" class="imagen-grande" width="auto" />
+          <button class="btn btn-arrow-right" (click)="desplazarDerecha()">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+          <div class="btn-container">
+            <button class="btn btn-favoritos">
+              <i class="bi bi-heart"></i>
+            </button>
+            <button class="btn btn-similares">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </div>
+        <h3 class="d-block mb-3 font-size-xs text-muted">
+          Precio de Referencia <span class="font-weight-semibold">{{ dato.precioventa }} Bs</span>
+        </h3>
+      </div>
+        <!-- <button class="btn btn-pill btn-outline-primary btn-sm m-2" (click)="fadicionar(dato.idproducto, 1, solicitaproducto)"><i class="fa fa-cart-plus"></i></button>
+        <button class="btn btn-pill btn-outline-primary btn-sm mr-2" (click)="fwhastapp(dato.empresa.celular)"><i class="fa fa-whatsapp"></i></button> -->
       <div class="col-md-5 col-sm-12">
         <div class="row">
           <div class="col-sm-12 mt-2">
@@ -223,24 +246,25 @@
           </div>
         </div>
       </div>
-    </div><hr>
+    </div>
+    <button *ngIf="isShow" (click)="scrollToTop()" class="scroll-to-top-btn"><i class="bi bi-chevron-up" style="font-size: 30px;"></i></button>
   </div>
-  <div class="row mt-3 mb-3 justify-content-between align-items-center">
+  <hr>
+  <div class="row m-3 p-3 justify-content-between align-items-center">
     <div class="col-sm-3">
-      <img src="assets/imagenes/logogadorblack.png"  class="img-fluid imagen-logos" alt="" width="200px">
+      <img src="assets/imagenes/logogadorblack.png"  class="img-fluid imagen-logos" alt="Logo GADOR" width="200px">
     </div>
     <div class="col-sm-3">
-      <img src="assets/imagenes/sddpi2.png"  class="img-fluid imagen-logos" alt="" width="200px">
+      <img src="assets/imagenes/sddpi2.png"  class="img-fluid imagen-logos" alt="Logo SDDPI" width="200px">
     </div>
     <div class="col-sm-3">
-      <img src="assets/imagenes/dpeic.png"  class="img-fluid imagen-logos" alt="" width="200px">
+      <img src="assets/imagenes/dpeic.png"  class="img-fluid imagen-logos" alt="LOGO DPEIC" width="200px">
     </div>
     <div class="col-sm-3">
-      <img src="assets/imagenes/logo.png"  class="img-fluid imagen-logos" alt="" width="200px">
+      <img src="assets/imagenes/logo.png"  class="img-fluid imagen-logos" alt="LOGO REACTIVA TIC" width="200px">
     </div>
   </div>
 </div>
-
 
 <footer class="container-fluid bg-primary" >
   <div class="container">
@@ -288,9 +312,12 @@
         <img src="assets/imagenes/lema_oruro.png" alt="" width="150px">
       </div>
     </div>
-    <p class="app-footer__logo text-center">
-      <small class="text-white">Desarrollado por: SDDPI - DPEIC - REACTIVA TIC &copy; 2022-{{ gestion }} GADOR</small>
-    </p>
+    <hr class="border-white">
+    <div>
+      <p class="app-footer__logo text-right pb-3">
+        <small class="text-white">&copy; 2022-{{ gestion }} Derechos Reservados | REACTIVA TIC - DPEIC - SDDPI - GADOR </small>
+      </p>
+    </div>
   </div>
 </footer>
 

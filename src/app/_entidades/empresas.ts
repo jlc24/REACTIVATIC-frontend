@@ -3,6 +3,7 @@ import { Localidades } from './localidades';
 import { Subrubros } from './subrubros';
 import { Representantes } from './representantes';
 import { Usuarios } from './usuarios';
+import { Imagen } from './imagen';
 
 export class Empresas {
   idempresa: number;
@@ -53,4 +54,6 @@ export class Empresas {
   localidad: Localidades;
   asociacion: Asociaciones;
   usuario: Usuarios;
+
+  imagen?: Imagen;
 }

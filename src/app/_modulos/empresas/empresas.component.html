@@ -77,12 +77,7 @@
               <td>{{ _item.empresa}}</td>
               <td class="text-center">
                 <div class="main-img text-center">
-                  <img
-                    [src]="ruta+_item.idempresa"
-                    weight="100px"
-                    height="100px"
-                    (error)="$event.target.src='../../../assets/imagenes/images/default/404.png'"
-                  />
+                  <img [src]="ruta+_item.idempresa" width="80px" (error)="$event.target.src='../../../assets/imagenes/images/default/404.png'" />
                 </div>
               </td>
               <td class="text-center">{{ _item.nit}}</td>
@@ -153,9 +148,6 @@
 <ng-template #ab>
     <div class="modal-header">
       <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Unidad Productiva</h4>
-      <div class="alert alert-info" role="alert">
-          Los campos remarcados con <b class="text-danger">*</b> son necesarios.
-      </div>
     </div>
     <div class="modal-body">
       <div class="row">
@@ -192,7 +184,7 @@
         <div class="row pl-3">
           <h5 class="card-title">I.- Datos del Representante</h5>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="estado === 'Adicionar'">
           <div class="col-lg-2 col-sm-3 text-sm-right">
             <label>Buscar:</label>
           </div>
@@ -213,6 +205,9 @@
         </div>
         <div class="row mt-2 justify-content-center" *ngIf="representante">
           <div class="col-sm-10 border border-success">
+            <div class="row justify-content-end" *ngIf="estado === 'Adicionar'">
+              <button class="btn btn-sm btn-danger" (click)="flimpiarbuscar()" title="Borrar selección"><i class="bi bi-x"></i></button>
+            </div>
             <div class="row p-3">
               <div class="col-lg-3 col-md-12 text-center">
                 <img src="../../../assets/catalogo/img/avatar.jpg" class="img-fluid rounded-circle" alt="" width="150px">
@@ -404,7 +399,7 @@
             <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
               <label for="">Producción:</label>
             </div>
-            <div class="col-lg-4 col-md-3 col-sm-12">
+            <div class="col-lg-4 col-md-8 col-sm-12">
               <select class="custom-select custom-select-sm" formControlName="capacidad">
                 <option value="1">1 A 2</option>
                 <option value="2">3 A 5</option>
@@ -415,10 +410,10 @@
                 <option value="7">>50</option>
               </select>
             </div>
-            <div class="col-lg- col-md-2 col-sm-12 mt-1 text-md-right text-sm-left">
+            <div class="col-lg-1 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
               <label for="">Medida:</label>
             </div>
-            <div class="col-lg- col-md-3 col-sm-12">
+            <div class="col-lg-4 col-md-8 col-sm-12">
               <input type="text" class="form-control form-control-sm" formControlName="unidadmedida" (input)="onInput($event, 'unidadmedida', 'letrasyespacios')" autocomplete="no">
             </div>
           </div>
@@ -435,10 +430,10 @@
                 <option value="5">OTRO</option>
               </select>
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left" *ngIf="mostrarOtroCampo">
+            <div class="col-lg-1 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left" *ngIf="mostrarOtroCampo">
               <label for="">Otro:</label>
             </div>
-            <div class="col-lg-3 col-md-8" *ngIf="mostrarOtroCampo">
+            <div class="col-lg-4 col-md-8" *ngIf="mostrarOtroCampo">
               <input type="text" class="form-control form-control-sm" formControlName="otromotivo" (input)="onInput($event, 'otromotivo', 'letrasyespacios')" autocomplete="no">
             </div>
           </div>
@@ -449,14 +444,14 @@
             <div class="col-sm-1">
               <div class="input-group-prepend">
                 <div class="input-group-text">
-                  <input type="checkbox" aria-label="Checkbox for following text input" formControlName="familiar">
+                  <input type="checkbox" formControlName="familiar">
                 </div>
               </div>
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left" *ngIf="mostrarInvolucrados">
+            <div class="col-lg-2 col-sm-4 mt-1 text-sm-right" *ngIf="mostrarInvolucrados">
               <label for="">Involucrados:</label>
             </div>
-            <div class="col-lg-2 col-md-3 col-sm-12" *ngIf="mostrarInvolucrados">
+            <div class="col-lg-2 col-md-3 col-sm-4" *ngIf="mostrarInvolucrados">
               <select class="custom-select custom-select-sm" formControlName="involucrados" (change)="onInvolucradosChange($event)">
                 <option value="1">PAREJA</option>
                 <option value="2">HIJOS</option>
@@ -477,7 +472,7 @@
             <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
               <label for="">Trabajadores:</label>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12 mt-1">
+            <div class="col-md-3 col-sm-12 mt-1">
               <select class="custom-select custom-select-sm" formControlName="trabajadores">
                 <option value="1">1 A 2</option>
                 <option value="2">3 A 4</option>
@@ -491,7 +486,7 @@
             <div class="col-lg-3 col-md-2 col-sm-12 mt-1 text-md-right text-sm-left">
               <label for="">Ferias:</label>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12 mt-1">
+            <div class="col-md-3 col-sm-12 mt-1">
               <select class="custom-select custom-select-sm" formControlName="participacion">
                 <option value="1">LOCAL</option>
                 <option value="2">NACIONAL</option>
@@ -550,7 +545,7 @@
             <div class="col-lg-2 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
               <label for="">Zona:</label>
             </div>
-            <div class="col-lg-2 col-md-6 col-sm-12">
+            <div class="col-lg-2 col-md-8 col-sm-12">
               <input type="text" class="form-control form-control-sm" formControlName="zona" (input)="onInput($event, 'zona', 'letrasyespacios')">
             </div>
           </div>
@@ -696,8 +691,11 @@
           </div>
         </div>
         <div *ngIf="step === 5">
-          <div class="row pl-3 pr-3">
+          <div class="row justify-content-between pl-3 pr-3">
             <h5 class="card-title">VI.- Resumen de datos a guardar</h5>
+            <div class="alert alert-info" role="alert">
+              Estimado usuario. Los campos remarcados con <b class="text-danger">*</b> son necesarios.
+            </div>
           </div>
           <div class="row table-responsive pl-3">
             <table class="table table-sm table-bordered">
@@ -1078,276 +1076,282 @@
   <div class="modal-body">
     <div class="row pl-3 pr-3">
       <div class="col-lg-4 col-sm-12 pt-3">
-        <div class="row align-content-center justify-content-center mt-2">
-          <img class="usuario-img" [src]="imagen" />
-          <img [src]="imagen" width="300px" (error)="$event.target.src='../../../assets/imagenes/images/default/404.png'" />
-        </div>
-        <div class="row justify-content-center mt-4">
-          <button class="btn btn-outline-info" (click)="fcambiarimagen(cargarimagen)">
-            <i class="fa fa-picture-o"></i> Cambiar Logo
-          </button>
+        <div class="row justify-content-center mt-2">
+          <div class="col-sm-12">
+            <div class="row justify-content-center">
+              <h3 class="mt-3">Logo</h3>
+              <button class="btn btn-sm btn-outline-info m-3" (click)="fimagenEmp(cargarimagen)">
+                <i class="fa fa-refresh"></i>
+              </button>
+            </div>
+            <div class="row justify-content-center">
+              <div *ngFor="let _imgEmp of imagenEmpresa">
+                <img [src]="sanitizarImagen(_imgEmp.data, _imgEmp.mimeType)" width="300px" class="img-fluid icon-empresa" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="col-lg-8 col-sm-12 mt-2">
-        <div class="row mt-2">
-          <div class="col-sm-12 text-sm-left">
+        <div class="col-sm-10 border m-2 p-2" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);">
+          <div class="col-sm-12 text-md-left text-sm-center">
             <h5>DATOS DE REGISTRO:</h5>
           </div>
+          <div class="row">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>N° Formulario:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.nform }}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Fecha Registro:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.fechareg | date:'dd/MM/yyyy' }}</label>
+            </div>
+          </div>
         </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>N° Formulario:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.nform }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Fecha Registro:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.fechareg | date:'dd/MM/yyyy' }}</label>
-          </div>
-        </div>
-        <div class="row mt-2">
-          <div class="col-sm-12 text-sm-left">
+        <div class="col-sm-10 border m-2 p-2" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);">
+          <div class="col-sm-12 text-md-left text-sm-center">
             <h5>DATOS DE LA UNIDAD PRODUCTIVA:</h5>
           </div>
+          <div class="row">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Nombre Comercial:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.empresa }}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Razon Social:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.razonsocial }}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Descripción:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.descripcion }}</label>
+            </div>
+          </div>
+          <div class="row" *ngIf="dato?.nit">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>NIT:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.nit }}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Banca Movil:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.bancamovil ? 'SI' : 'NO' }}</label>
+            </div>
+          </div>
+          <div class="row" *ngIf="dato?.fechaapertura">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Fecha Apertura:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.fechaapertura | date:'dd/MM/yyyy' }}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Rubro:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.subrubro.rubro.rubro }}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Subrubro:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.subrubro.subrubro }}</label>
+            </div>
+          </div>
+          <div class="row" *ngIf="dato?.servicios">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Servicios:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.servicios }}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Produccion:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ getCapacidadDescription(dato?.capacidad) }} {{ dato?.unidadmedida }}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Motivo:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ getMotivoDescription(dato?.motivo) }} {{ dato?.otromotivo }}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Familiar:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.familiar ? 'SI' : 'NO' }}</label>
+            </div>
+          </div>
+          <div class="row" *ngIf="dato?.familiar">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Involucrados:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ getInvolucradosDescription(dato?.involucrados) }} {{ dato?.otrosinvolucrados }}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Trabajadores:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ getTrabajadoresDescription(dato?.trabajadores) }}</label>
+            </div>
+          </div>
+          <div class="row" *ngIf="dato?.familiar">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Ferias:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ getFeriasDescription(dato?.participacion) }}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Capacitación:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.capacitacion != null ? dato?.capacitacion : 'SIN CAPACITACION' }}</label>
+            </div>
+          </div>
         </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Nombre Comercial:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.empresa }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Razon Social:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.razonsocial }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Descripción:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.descripcion }}</label>
-          </div>
-        </div>
-        <div class="row" *ngIf="dato?.nit">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>NIT:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.nit }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Banca Movil:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.bancamovil ? 'SI' : 'NO' }}</label>
-          </div>
-        </div>
-        <div class="row" *ngIf="dato?.fechaapertura">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Fecha Apertura:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.fechaapertura | date:'dd/MM/yyyy' }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Rubro:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.subrubro.rubro.rubro }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Subrubro:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.subrubro.subrubro }}</label>
-          </div>
-        </div>
-        <div class="row" *ngIf="dato?.servicios">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Servicios:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.servicios }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Produccion:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ getCapacidadDescription(dato?.capacidad) }} {{ dato?.unidadmedida }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Motivo:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ getMotivoDescription(dato?.motivo) }} {{ dato?.otromotivo }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Familiar:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.familiar ? 'SI' : 'NO' }}</label>
-          </div>
-        </div>
-        <div class="row" *ngIf="dato?.familiar">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Involucrados:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ getInvolucradosDescription(dato?.involucrados) }} {{ dato?.otrosinvolucrados }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Trabajadores:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ getTrabajadoresDescription(dato?.trabajadores) }}</label>
-          </div>
-        </div>
-        <div class="row" *ngIf="dato?.familiar">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Ferias:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ getFeriasDescription(dato?.participacion) }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Capacitación:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.capacitacion != null ? dato?.capacitacion : 'SIN CAPACITACION' }}</label>
-          </div>
-        </div>
-        <div class="row mt-2">
-          <div class="col-sm-12 text-sm-left">
+        <div class="col-sm-10 border m-2 p-2" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);">
+          <div class="col-sm-12 text-md-left text-sm-center">
             <h5>DATOS DE CONTACTO:</h5>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Municipio:</strong>
+          <div class="row">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Municipio:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.localidad.municipio.municipio }}</label>
+            </div>
           </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.localidad.municipio.municipio }}</label>
+          <div class="row">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Localidad:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.localidad.localidad }}</label>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Localidad:</strong>
+          <div class="row" *ngIf="dato?.zona">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Zona:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.zona }}</label>
+            </div>
           </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.localidad.localidad }}</label>
+          <div class="row" *ngIf="dato?.direccion">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Dirección:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.direccion }}</label>
+            </div>
           </div>
-        </div>
-        <div class="row" *ngIf="dato?.zona">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Zona:</strong>
+          <div class="row" *ngIf="dato?.referencia">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Referencia:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.referencia }}</label>
+            </div>
           </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.zona }}</label>
+          <div class="row" *ngIf="dato?.transporte">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Transporte:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.transporte }}</label>
+            </div>
           </div>
-        </div>
-        <div class="row" *ngIf="dato?.direccion">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Dirección:</strong>
+          <div class="row">
+            <div class="col-md-4 col-sm-4 text-sm-right" *ngIf="dato?.celular">
+              <strong>Celular:</strong>
+            </div>
+            <div class="col-md-3 col-sm-8" *ngIf="dato?.celular">
+              <label for="">{{ dato?.celular }}</label>
+            </div>
+            <div class="col-md-2 col-sm-4 text-sm-right" *ngIf="dato?.telefono">
+              <strong>Teléfono:</strong>
+            </div>
+            <div class="col-md-3 col-sm-8" *ngIf="dato?.telefono">
+              <label for="">{{ dato?.telefono }}</label>
+            </div>
           </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.direccion }}</label>
+          <div class="row" *ngIf="dato?.correo">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Correo:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.correo }}</label>
+            </div>
           </div>
-        </div>
-        <div class="row" *ngIf="dato?.referencia">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Referencia:</strong>
+          <div class="row" *ngIf="dato?.facebook">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Facebook:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.facebook }}</label>
+            </div>
           </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.referencia }}</label>
+          <div class="row" *ngIf="dato?.twitter">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Twitter:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.twitter }}</label>
+            </div>
           </div>
-        </div>
-        <div class="row" *ngIf="dato?.transporte">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Transporte:</strong>
+          <div class="row" *ngIf="dato?.instagram">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Instagram:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.instagram }}</label>
+            </div>
           </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.transporte }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 col-sm-4 text-sm-right" *ngIf="dato?.celular">
-            <strong>Celular:</strong>
-          </div>
-          <div class="col-md-3 col-sm-8" *ngIf="dato?.celular">
-            <label for="">{{ dato?.celular }}</label>
-          </div>
-          <div class="col-md-2 col-sm-4 text-sm-right" *ngIf="dato?.telefono">
-            <strong>Teléfono:</strong>
-          </div>
-          <div class="col-md-3 col-sm-8" *ngIf="dato?.telefono">
-            <label for="">{{ dato?.telefono }}</label>
-          </div>
-        </div>
-        <div class="row" *ngIf="dato?.correo">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Correo:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.correo }}</label>
-          </div>
-        </div>
-        <div class="row" *ngIf="dato?.facebook">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Facebook:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.facebook }}</label>
-          </div>
-        </div>
-        <div class="row" *ngIf="dato?.twitter">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Twitter:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.twitter }}</label>
-          </div>
-        </div>
-        <div class="row" *ngIf="dato?.instagram">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Instagram:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.instagram }}</label>
-          </div>
-        </div>
-        <div class="row" *ngIf="dato?.paginaweb">
-          <div class="col-md-4 col-sm-4 text-sm-right">
-            <strong>Página WEB:</strong>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <label for="">{{ dato?.paginaweb }}</label>
+          <div class="row" *ngIf="dato?.paginaweb">
+            <div class="col-md-4 col-sm-4 text-sm-right">
+              <strong>Página WEB:</strong>
+            </div>
+            <div class="col-md-8 col-sm-8">
+              <label for="">{{ dato?.paginaweb }}</label>
+            </div>
           </div>
         </div>
       </div>
@@ -1380,23 +1384,15 @@
 
       <input class="form-control-file" type="file" (change)="fseleccionarArchivo($event)" hidden accept=".png,.jpg,.jpeg" #archivoInput />
 
-      <!-- <div *ngIf="cargando" class="progress mt-3">
-        <div
-          class="progress-bar progress-bar-striped progress-bar-animated"
-          role="progressbar"
-          [style.width.%]="progreso">
-          {{ progreso }}%
-        </div>
-      </div> -->
     </div>
 
-      <div class="text-center">
-        <button type="button" class="btn btn-sm btn-outline-success m-2">
-          <i class="fa fa-save"></i> Grabar
-        </button>
-              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarRep()">
-          <i class="fa fa-times"></i> Cancelar
-        </button>
-      </div>
+    <div class="text-center">
+      <button type="button" class="btn btn-sm btn-outline-success m-2" (click)="fcargar()" [disabled]="!archivoSeleccionado">
+        <i class="fa fa-save"></i> Grabar
+      </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarRep()">
+        <i class="fa fa-times"></i> Cancelar
+      </button>
+    </div>
   </div>
 </ng-template>

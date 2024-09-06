@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpEventType } from '@angular/common/http';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { AccesoService } from 'src/app/_aods/acceso.service';
@@ -11,6 +12,7 @@ import { TiposdocumentosService } from 'src/app/_aods/tiposdocumentos.service';
 import { TiposextensionesService } from 'src/app/_aods/tiposextensiones.service';
 import { TiposgenerosService } from 'src/app/_aods/tiposgeneros.service';
 import { UsuariosService } from 'src/app/_aods/usuarios.service';
+import { UtilsService } from 'src/app/_aods/utils.service';
 import { MustMatch } from 'src/app/_config/application';
 import { Personas } from 'src/app/_entidades/personas';
 import { Representantes } from 'src/app/_entidades/representantes';
@@ -44,8 +46,9 @@ export class RepresentantesComponent implements OnInit {
   total:number = 0;
   estado:string = '';
 
-  archivoseleccionado: File;
   imagen: any;
+  imagenRepAnverso: any[];
+  imagenRepReverso: any[];
 
   formulario: FormGroup;
   formImagen: FormGroup;
@@ -97,6 +100,13 @@ export class RepresentantesComponent implements OnInit {
   esCargoChofer: boolean = false;
   esCargoPasante: boolean = false;
 
+  @ViewChild('archivoInput') archivoInput: ElementRef;
+  archivoSeleccionado: File = null;
+  miniaturaUrl: string | ArrayBuffer = null;
+  sizeFileFormat: string | null = null;
+  cargando: boolean = false;
+  progreso: number = 0;
+
   attempts: number = 0;
   maxAttempts: number = 3;
   lockEndTime: number = 0;
@@ -116,7 +126,8 @@ export class RepresentantesComponent implements OnInit {
     private _fbC: FormBuilder,
     private _modalService: NgbModal,
     private _toast: ToastrService,
-    private _sanitizer: DomSanitizer,
+    private sanitizer: DomSanitizer,
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit(): void {
@@ -418,29 +429,84 @@ export class RepresentantesComponent implements OnInit {
   }
 
   fmodificar(id: number, content: any) {
+    this.utilsService.mostrarCargando();
     this.estado = 'Modificar';
     this.goToStep(1);
-    this._usuariosService.datorep(id).subscribe((data) => {
-      this.user = data;
-      this.fformulario(this.user, true);
-      this.modalRefRep = this._modalService.open(content, {
-        backdrop: 'static',
-        keyboard: false,
-        size: 'lg'
-      });
-    });
+    this._usuariosService.datorep(id).subscribe(
+      (data) => {
+        this.user = data;
+        this.fformulario(this.user, true);
+        this.modalRefRep = this._modalService.open(content, {
+          backdrop: 'static',
+          keyboard: false,
+          size: 'lg'
+        });
+        this.utilsService.cerrarCargando();
+      }
+      // (error) => {
+      //   this.utilsService.cerrarCargando();
+      //   swal.fire({
+      //       icon: 'error',
+      //       title: 'Error',
+      //       text: 'Ocurrió un error al cargar los datos. Por favor, intente nuevamente.'
+      //   });
+      //   if (this.modalRefRep) {
+      //     this.modalRefRep.dismiss();
+      //   }
+      // }
+    );
   }
 
   fverrep(id: number, content: any) {
+    this.utilsService.mostrarCargando();
     this.estado = 'Ver';
-    this._usuariosService.datorep(id).subscribe((data) => {
-      this.user = data;
-      this.modalRefRep = this._modalService.open(content, {
-        backdrop:'static',
-        keyboard: false,
-        size: 'lg'
-      });
-    });
+    this._usuariosService.datorep(id).subscribe(
+      (data) => {
+        this.user = data;
+        this.fdescargar('repanverso');
+        this.fdescargar('repreverso');
+
+        this.modalRefRep = this._modalService.open(content, {
+          backdrop:'static',
+          keyboard: false,
+          size: 'lg'
+        });
+        this.utilsService.cerrarCargando();
+      },
+      (error) => {
+        this.utilsService.cerrarCargando();
+        if (error.status === 404) {
+          // Mostrar Swal para crear usuario y clave
+          swal.fire({
+            icon: 'warning',
+            title: 'Usuario no encontrado',
+            text: 'El representante no tiene un usuario registrado. ¿Desea generar un usuario y clave?',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, generar',
+            cancelButtonText: 'No, cancelar'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Llamar a la ruta correspondiente para generar usuario y clave
+              // this._usuariosService.adicionar(id).subscribe(
+              //   () => {
+              //     swal.fire('Éxito', 'Usuario y clave generados exitosamente', 'success');
+              //     this.toast.success('', 'Usuario y clave generados.');
+              //   },
+              //   (error) => {
+              //     swal.fire('Error', 'Ocurrió un error al generar el usuario y la clave.', 'error');
+              //     this.toast.error('', 'Error al generar usuario y clave.');
+              //   }
+              // );
+            }
+          });
+        }
+        // swal.fire({
+        //     icon: 'error',
+        //     title: 'Error',
+        //     text: 'Ocurrió un error al cargar los datos. Por favor, intente nuevamente.'
+        // });
+      }
+    );
   }
 
   faceptar(): void {
@@ -469,16 +535,22 @@ export class RepresentantesComponent implements OnInit {
     this.dato.usuario.clave = this.formulario.value.clave;
 
     if (this.estado === 'Modificar') {
+      this.utilsService.mostrarCargando();
       this._personasService.modificar(this.dato).subscribe((data) => {
         this.fdatos();
         this.modalRefRep.dismiss();
+        this.utilsService.cerrarCargando();
         swal.fire('Exito', 'Representante modificado con exito', 'success');
+        this._toast.error('','Operacion exitosa');
       });
     } else {
+      this.utilsService.mostrarCargando();
       this._personasService.adicionar2(this.dato).subscribe((data) => {
         this.fdatos();
         this.modalRefRep.dismiss();
+        this.utilsService.cerrarCargando();
         swal.fire('Exito', 'Representante registrado con exito', 'success');
+        this._toast.error('','Operacion exitosa');
       });
     }
   }
@@ -493,6 +565,7 @@ export class RepresentantesComponent implements OnInit {
 
   fcancelarImagen(){
     this.modalRefImagen.dismiss();
+    this.archivoSeleccionado = null;
   }
 
   fcancelarClave(){
@@ -501,7 +574,7 @@ export class RepresentantesComponent implements OnInit {
 
   feliminar(id: number) {
     swal.fire({
-      title: 'Estás seguro?',
+      title: '¿Estás seguro?',
       icon: 'warning',
       text: 'No podrás revertir el borrado de este dato!',
       showCancelButton: true,
@@ -509,10 +582,46 @@ export class RepresentantesComponent implements OnInit {
       confirmButtonText: 'Borrar',
     }).then((result) => {
       if (result.value) {
-        // this._usuariosService.eliminarrep(id).subscribe((data) => {
-        //   this.fdatos();
-        // });
-        swal.fire('Error', 'Procedimiento NO autorizado, por favor contacte al Administrador', 'error');
+        swal.fire({
+          title: 'Confirmación de clave',
+          html: `
+            <input id="clave-input" class="swal2-input" placeholder="Ingrese su clave" type="password">
+            <div id="intentos-restantes" style="margin-top: 10px;">Intentos restantes: ${this.maxAttempts - this.attempts}</div>
+          `,
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Confirmar',
+          preConfirm: () => {
+            const clave = (document.getElementById('clave-input') as HTMLInputElement).value;
+            if (!clave) {
+              swal.showValidationMessage('Debe ingresar una clave');
+              return false;
+            }
+            return clave;
+          }
+        }).then((claveResult) => {
+          if (claveResult.value) {
+            if (!this.esCargoPasante) {
+              this._usuariosService.eliminarrep(id).subscribe(
+                (data) => {
+                  this.fdatos();
+                },
+                (error) => {
+                  this.attempts++;
+                  if (this.attempts >= this.maxAttempts) {
+                    this._toast.error('Se bloqueron los accesos.','Intentos excedidos.');
+                    this.blockUI();
+                  } else {
+                    this._toast.error('','Clave incorrecta.');
+                    this.feliminar(id);
+                  }
+                }
+              );
+            }else{
+              swal.fire('Error', 'Procedimiento NO autorizado, por favor contacte al Administrador', 'error');
+            }
+          }
+        });
       }
     });
   }
@@ -575,7 +684,7 @@ export class RepresentantesComponent implements OnInit {
   blockUI() {
     const remainingTime = 30; // Tiempo de bloqueo en segundos
     this.lockEndTime = Date.now() + remainingTime * 1000; // Calcular el tiempo de desbloqueo
-  
+
     swal.fire({
       title: 'Intentos excedidos',
       html: `<div>Espere <strong id="countdown">${remainingTime}</strong> segundos para intentar de nuevo.</div>`,
@@ -628,7 +737,7 @@ export class RepresentantesComponent implements OnInit {
     });
   }
 
-  fcambiarclave(claveNueva: string){
+  fcambiarclave(clave: string){
     swal.fire({
       title: 'Confirmación de clave',
       html: `
@@ -650,7 +759,7 @@ export class RepresentantesComponent implements OnInit {
       if (claveResult.value) {
         this._usuariosService.verificar({ clave: claveResult.value }).subscribe(
           (verificacionResponse) => {
-            this._usuariosService.cambiarclave({ claveNueva }).subscribe(response => {
+            this._usuariosService.cambiarclave({ clave }).subscribe(response => {
               this.fdatos();
               this._toast.success('','Clave correcta.');
               swal.fire('Clave Restablecida', 'La clave ha sido restablecida con éxito.', 'success');
@@ -664,7 +773,7 @@ export class RepresentantesComponent implements OnInit {
               this.blockUI();
             } else {
               this._toast.error('','Clave incorrecta.');
-              this.fcambiarclave(claveNueva);
+              this.fcambiarclave(clave);
             }
           }
         );
@@ -714,8 +823,15 @@ export class RepresentantesComponent implements OnInit {
     })
   }
 
-  fcambiarimagen(contenido: any) {
-    this.estado = 'Actualizar';
+  fimagenRepA(contenido: any) {
+    this.estado = 'Carnet Anverso';
+    this.modalRefImagen = this._modalService.open(contenido, {
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+  fimagenRepR(contenido: any) {
+    this.estado = 'Carnet Reverso';
     this.modalRefImagen = this._modalService.open(contenido, {
       backdrop: 'static',
       keyboard: false
@@ -723,24 +839,134 @@ export class RepresentantesComponent implements OnInit {
   }
 
   fseleccionarArchivo(event) {
-    this.archivoseleccionado = event.target.files[0];
+    const archivo = event.target.files[0];
+    if (!archivo) {
+      return;
+    }
+
+    const tamañoMaximoMB = 2;
+    const tamañoMaximoBytes = tamañoMaximoMB * 1024 * 1024;
+    if (archivo.size > tamañoMaximoBytes) {
+      this._toast.error(`El archivo supera el límite de ${tamañoMaximoMB} MB.`, 'Tamaño de archivo no permitido');
+      this.fremoverArchivo();
+      return;
+    }
+
+    const tipoArchivo = archivo.type;
+    if (tipoArchivo !== 'image/png' && tipoArchivo !== 'image/jpeg') {
+      this._toast.error('Solo se permiten archivos PNG o JPG.', 'Formato no soportado');
+      this.fremoverArchivo();
+      return;
+    }
+
+    this.archivoSeleccionado = archivo;
+    this.sizeFileFormat = this.fformatearTamañoArchivo(archivo.size);
+    this.fcrearMiniatura();
+  }
+
+  fformatearTamañoArchivo(tamañoBytes: number): string {
+    const tamañoMB = tamañoBytes / (1024 * 1024);
+    return `${tamañoMB.toFixed(2)} MB`;
+  }
+
+  farrastrarSobre(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    (event.currentTarget as HTMLElement).classList.add('dragover');
+  }
+
+  farrastrarFuera(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    (event.currentTarget as HTMLElement).classList.remove('dragover');
+  }
+
+  fsoltarArchivo(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    (event.currentTarget as HTMLElement).classList.remove('dragover');
+
+    if (event.dataTransfer.files.length > 0) {
+      this.archivoSeleccionado = event.dataTransfer.files[0];
+      this.fcrearMiniatura();
+    }
+  }
+
+  fcrearMiniatura() {
+    if (this.archivoSeleccionado) {
+      const reader = new FileReader();
+      reader.onload = (e) => this.miniaturaUrl = reader.result;
+      reader.readAsDataURL(this.archivoSeleccionado);
+    }
+  }
+
+  fremoverArchivo() {
+    this.archivoSeleccionado = null;
+    this.miniaturaUrl = null;
   }
 
   fcargar() {
-    this._personasService.cargarImagen(this.archivoseleccionado).subscribe(data => {
-      this.modalRefImagen.dismiss();
-      this.fdescargar()
-      swal.fire('Archivo cargado', 'Archivo cargado con exito', 'success')
-    })
+    swal.fire({
+      title: 'Cargando archivo...',
+      html: 'Progreso: <b>0%</b>',
+      allowOutsideClick: false,
+      onBeforeOpen: () => {
+        swal.showLoading();
+      }
+    });
+    if (this.estado === 'Carnet Anverso') {
+      this._personasService.upload(this.user.persona.idpersona.toString(), 'repanverso', this.archivoSeleccionado).subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const progreso = Math.round((event.loaded / event.total) * 100);
+          swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
+        } else if (event.type === HttpEventType.Response) {
+          swal.close();
+          swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
+          this._toast.success('', 'Carnet Anverso cambiado.');
+          this.fdescargar('repanverso');
+          this._modalService.dismissAll();
+          this.archivoSeleccionado = null;
+        }
+      }, error => {
+        swal.close();
+        swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
+      });
+    }else if (this.estado === 'Carnet Reverso') {
+      this._personasService.upload(this.user.idpersona.toString(), 'repreverso', this.archivoSeleccionado).subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const progreso = Math.round((event.loaded / event.total) * 100);
+          swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
+        } else if (event.type === HttpEventType.Response) {
+          swal.close();
+          swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
+          this._toast.success('', 'Carnet Reverso cambiado.');
+          this.fdescargar('repreverso');
+          this._modalService.dismissAll();
+          this.archivoSeleccionado = null;
+        }
+      }, error => {
+        swal.close();
+        swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
+      });
+    }
   }
 
-  fdescargar() {
-    this.imagen = null;
-    this._personasService.descargarImagen().subscribe(data=>{
-      const objectURL = window.URL.createObjectURL(data);
-      this.imagen = this._sanitizer.bypassSecurityTrustUrl(objectURL);
-    })
+  fdescargar(rol: string) {
+    if (rol == 'repanverso') {
+      this.imagenRepAnverso = [];
+      this._personasService.download(this.user.idpersona, 'repanverso').subscribe((data) => {
+        this.imagenRepAnverso = data;
+      });
+    }
+    if (rol == 'repreverso') {
+      this.imagenRepReverso = [];
+      this._personasService.downloadperfil('repreverso').subscribe((data) => {
+        this.imagenRepReverso = data;
+      });
+    }
   }
 
-
+  sanitizarImagen(data: string, mimeType: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(`data:${mimeType};base64,${data}`);
+  }
 }

@@ -32,7 +32,7 @@
   </div>
 </nav>
 
-<div class="container-lg">
+<div class="container-lg bg-white">
   <div class="row">
     <div class="col-12 position-relative">
       <img src="assets/imagenes/bg.jpg" class="img-fluid w-100 mb-4" alt="Banner" style="max-height: 250px; object-fit: cover;">
@@ -58,12 +58,12 @@
     <div class="col-md-9 col-sm-12 mt-3 justify-content-center">
       <ul class="nav nav-pills d-inline-flex text-center">
         <li class="nav-item mr-2" >
-          <button class="btn btn-sm btn-outline-info rounded-pill" [ngClass]="{'active': buscar === ''}" (click)="limpiar(); flistasubrubro()">
+          <button class="btn btn-sm btn-outline-custom rounded-pill" [ngClass]="{'active': buscar === ''}" (click)="limpiar(); flistasubrubro()">
             TODOS LOS RUBROS
           </button>
         </li>
         <li class="nav-item mr-2" *ngFor="let _rubro of rubros">
-          <button class="btn btn-sm btn-outline-info rounded-pill" [ngClass]="{'active': buscar === _rubro.rubro}" (click)="fbuscarrubro(_rubro.rubro); fsubrubro(_rubro.idrubro)">
+          <button class="btn btn-sm btn-outline-custom rounded-pill" [ngClass]="{'active': buscar === _rubro.rubro}" (click)="fbuscarrubro(_rubro.rubro); fsubrubro(_rubro.idrubro)">
             {{ _rubro.rubro }}
           </button>
         </li>
@@ -83,8 +83,15 @@
   </div>
 
   <div class="row mt-3">
-    <div class="col-md-3 col-sm-12">
+    <div class="col-md-3 col-sm-12 d-none d-md-block">
       <h3 for="orden">Subrubros: </h3>
+      <div class="list-group">
+        <button class="list-group-item list-group-item-action list-group-item-light d-flex justify-content-between align-items-center" *ngFor="let _subrubro of subrubros">
+          {{ _subrubro.subrubro }} <span class="badge badge-success badge-pill">14</span>
+        </button>
+      </div>
+      <hr>
+      <h4 class="mt-3">Productos destacados:</h4>
       <div class="list-group">
         <button class="list-group-item list-group-item-action list-group-item-light d-flex justify-content-between align-items-center" *ngFor="let _subrubro of subrubros">
           {{ _subrubro.subrubro }} <span class="badge badge-success badge-pill">14</span>
@@ -94,9 +101,11 @@
 
     <div class="col-md-9 col-sm-12">
       <div class="row">
-        <div class="col-md-6 col-lg-4 col-xl-4" *ngFor="let _item of datos; let i = index">
-          <div class="card product-card shadow-sm mb-4">
-            <img [src]="ruta+_item.idproducto" class="card-img-top product-image" alt="Nombre del Producto"><hr>
+        <div class="col-sm-6 col-lg-4" *ngFor="let _item of datos; let i = index">
+          <div class="card product-card mb-4">
+            <div class="card-header p-0">
+              <img [src]="ruta+_item.idproducto" class="card-img-top product-image border" alt="Nombre del Producto">
+            </div>
             <div class="card-body">
               <h5 class="card-title product-name puntero" (click)="fdetalle(_item.idproducto)" title="{{ _item.producto }}">{{ _item.producto }}</h5>
               <p class="card-text product-description">
@@ -104,7 +113,7 @@
               </p>
               <div class="product-price font-weight-bold text-left">Bs {{ _item.precioventa | number:'1.2-2' }}</div>
               <div class="d-flex justify-content-end text-right">
-                <button class="btn btn-sm btn-outline-info add-to-cart-btn rounded-pill" (click)="fadicionar(_item.idproducto, 1)">
+                <button class="btn btn-sm btn-outline-custom add-to-cart-btn rounded-pill" (click)="fadicionar(_item.idproducto, 1)">
                   <i class="bi bi-cart-plus"></i> Agregar al Carrito
                 </button>
               </div>
@@ -113,7 +122,7 @@
         </div>
       </div>
       <div class="row mt-3">
-        <div class="col-lg-12" *ngIf="total > cantidad">
+        <div class="col-lg-12">
           <ngb-pagination
             class="d-flex justify-content-center pagination-rounded"
             [collectionSize]="total"
@@ -129,7 +138,7 @@
       </div>
     </div>
   </div><hr>
-  <div class="row mt-3 mb-3 justify-content-between align-items-center">
+  <div class="row m-3 p-3 justify-content-between align-items-center">
     <div class="col-sm-3">
       <img src="assets/imagenes/logogadorblack.png"  class="img-fluid imagen-logos" alt="" width="200px">
     </div>
@@ -142,9 +151,10 @@
     <div class="col-sm-3">
       <img src="assets/imagenes/logo.png"  class="img-fluid imagen-logos" alt="" width="200px">
     </div>
-  </div>
-</div>
 
+  </div>
+  <button *ngIf="isShow" (click)="scrollToTop()" class="scroll-to-top-btn"><i class="bi bi-chevron-up" style="font-size: 30px;"></i></button>
+</div>
 <footer class="container-fluid bg-primary" >
   <div class="container">
     <div class="row mt-3">
@@ -191,9 +201,12 @@
         <img src="assets/imagenes/lema_oruro.png" alt="" width="150px">
       </div>
     </div>
-    <p class="app-footer__logo text-center">
-      <small class="text-white">Desarrollado por: SDDPI - DPEIC - REACTIVA TIC &copy; 2022-{{ gestion }} GADOR</small>
-    </p>
+    <hr class="border-white">
+    <div>
+      <p class="app-footer__logo text-right pb-3">
+        <small class="text-white">&copy; 2022-{{ gestion }} Derechos Reservados | REACTIVA TIC - DPEIC - SDDPI - GADOR </small>
+      </p>
+    </div>
   </div>
 </footer>
 

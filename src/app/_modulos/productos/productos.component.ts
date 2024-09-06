@@ -1,5 +1,5 @@
-import { DomSanitizer } from '@angular/platform-browser';
-import { Component, OnInit } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ProductosService } from 'src/app/_aods/productos.service';
@@ -18,6 +18,10 @@ import { Tamanos } from 'src/app/_entidades/tamanos';
 import { TamanosService } from 'src/app/_aods/tamanos.service';
 import { Atributos } from 'src/app/_entidades/atributos';
 import { AtributosService } from 'src/app/_aods/atributos.service';
+import { Empresas } from 'src/app/_entidades/empresas';
+import { EmpresasService } from 'src/app/_aods/empresas.service';
+import { UtilsService } from 'src/app/_aods/utils.service';
+import { HttpEventType } from '@angular/common/http';
 
 
 @Component({
@@ -33,6 +37,7 @@ export class ProductosComponent implements OnInit {
 
   datos: Productos[];
   dato: Productos;
+  empresas: Empresas[];
 
   precios: Precios[];
   precio: Precios;
@@ -44,6 +49,8 @@ export class ProductosComponent implements OnInit {
   tamano: Tamanos;
   atributos: Atributos[];
   atributo: Atributos;
+  imagenes: any[];
+  imagen: any;
 
   pagina: number = 1;
   numPaginas: number = 0;
@@ -61,7 +68,7 @@ export class ProductosComponent implements OnInit {
   formAtributo: FormGroup;
   submitted: boolean = false;
 
-  imagen: any;
+  //imagen: any;
 
   imageSrc: string;
 
@@ -87,6 +94,13 @@ export class ProductosComponent implements OnInit {
 
   modalRefProducto: NgbModalRef;
   modalRefDetalle: NgbModalRef;
+
+  @ViewChild('archivoInput') archivoInput: ElementRef;
+  archivoSeleccionado: File = null;
+  miniaturaUrl: string | ArrayBuffer = null;
+  sizeFileFormat: string | null = null;
+  cargando: boolean = false;
+  progreso: number = 0;
 
   colors = [
     { name: 'Negro', code: '#000000' },
@@ -147,6 +161,7 @@ export class ProductosComponent implements OnInit {
 
   constructor(
     private _productosService: ProductosService,
+    private _empresasServcie: EmpresasService,
     private _preciosService: PreciosService,
     private _coloresService: ColoresService,
     private _materialesService: MaterialesService,
@@ -160,7 +175,8 @@ export class ProductosComponent implements OnInit {
     private _fbA: FormBuilder,
     private _modalService: NgbModal,
     private _toast: ToastrService,
-    private _sanitizer: DomSanitizer,
+    private sanitizer: DomSanitizer,
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit(): void {
@@ -207,6 +223,7 @@ export class ProductosComponent implements OnInit {
   }
 
   fdatos() {
+    this.utilsService.mostrarCargando();
     this.esadmin = this._accesoService.esRolAdmin();
     this.essddpi = this._accesoService.esRolSddpi();
     this.esdpeic = this._accesoService.esRolDpeic();
@@ -228,13 +245,21 @@ export class ProductosComponent implements OnInit {
       this._productosService.datosAdmin(this.pagina, this.cantidad, this.buscar, this.rubro).subscribe((data) => {
         this.fcantidadAdmin();
         this.datos = data;
+        this.utilsService.cerrarCargando();
       })
     }else{
       this._productosService.datos(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
         this.fcantidad();
         this.datos = data;
+        this.utilsService.cerrarCargando();
       });
     }
+  }
+
+  fempresas(){
+    this._empresasServcie.lista().subscribe((data) => {
+      this.empresas = data;
+    })
   }
 
   fprecios(id: number){
@@ -287,7 +312,7 @@ export class ProductosComponent implements OnInit {
         dato.producto,
         [
           Validators.required,
-          Validators.pattern('^[a-zA-Z\u00f1\u00d1\\s]+$'),
+          Validators.pattern('^[a-zA-Z.,\u00f1\u00d1\\s]+$'),
           Validators.maxLength(50)
         ]
       ],
@@ -311,7 +336,7 @@ export class ProductosComponent implements OnInit {
         input = input.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1]/g, '');
         break;
       case 'letrasyespacios':
-        input = input.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1\s]/g, '');
+        input = input.replace(/[^a-zA-ZÀ-ÿ.,\u00f1\u00d1\s]/g, '');
         break;
       case 'numeros':
         input = input.replace(/[^0-9]/g, '');
@@ -320,11 +345,12 @@ export class ProductosComponent implements OnInit {
         input = input.replace(/[^a-zA-Z0-9.,\u00f1\u00d1\s]/g, '');
         break;
     }
-    this.formulario.get(controlName)?.setValue(input, { emitEvent: false });
+    this.formulario.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
   }
 
   fadicionar(content: any) {
     this.estado = 'Adicionar';
+    this.fempresas();
     this.dato = new Productos();
     this.fformulario(this.dato);
     this.modalRefProducto = this._modalService.open(content, {
@@ -335,6 +361,7 @@ export class ProductosComponent implements OnInit {
 
   fmodificar(id: number, content: any) {
     this.estado = 'Modificar';
+    this.fempresas();
     this._productosService.dato(id).subscribe((data) => {
       this.imageSrc = null;
       this.dato = data;
@@ -356,6 +383,7 @@ export class ProductosComponent implements OnInit {
       this.fmateriales(data.idproducto);
       this.ftamanos(data.idproducto);
       this.fatributos(data.idproducto);
+      this.fdescargar(data.idproducto);
       this.modalRefProducto = this._modalService.open(content, {
         backdrop: 'static',
         keyboard: false,
@@ -367,13 +395,16 @@ export class ProductosComponent implements OnInit {
 
   faceptar(): void {
     this.submitted = true;
+    if (!this.esRolEmpresa) {
+      this.dato.idempresa = this.formulario.value.idempresa;
+    }
     this.dato.producto = this.formulario.value.producto.toUpperCase();
     this.dato.descripcion = this.formulario.value.descripcion;
     this.dato.precioventa = this.formulario.value.precioventa;
+
     if (this.estado === 'Modificar') {
       this._productosService.modificar(this.dato).subscribe(
         (data) => {
-          this.fcargar(this.dato.idproducto);
           this.fdatos();
           this.modalRefProducto.dismiss();
           swal.fire('Dato modificado', 'Dato modificado con exito', 'success');
@@ -388,7 +419,6 @@ export class ProductosComponent implements OnInit {
       this._productosService.adicionar(this.dato).subscribe(
         (data) => {
           this.dato = data;
-          this.fcargar(this.dato.idproducto);
           this.fdatos();
           this.modalRefProducto.dismiss();
           swal.fire('Dato adicionado', 'Dato modificado con exito', 'success');
@@ -400,31 +430,30 @@ export class ProductosComponent implements OnInit {
         }
       );
     }
-
   }
 
   fcambiarestado(){
-    
+
   }
 
-  fseleccionarArchivo(event) {
-    const reader = new FileReader();
-    this.archivoseleccionado = event.target.files[0];
-    if (event.target.files[0] && event.target.files.length) {
-      const file = event.target.files[0];
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.imageSrc = reader.result as string;
-      };
-    }
-  }
+  // fseleccionarArchivo(event) {
+  //   const reader = new FileReader();
+  //   this.archivoseleccionado = event.target.files[0];
+  //   if (event.target.files[0] && event.target.files.length) {
+  //     const file = event.target.files[0];
+  //     reader.readAsDataURL(file);
+  //     reader.onload = () => {
+  //       this.imageSrc = reader.result as string;
+  //     };
+  //   }
+  // }
 
 
-  fcargar(id: number) {
-    this._productosService.cargarImagenp(this.archivoseleccionado, id).subscribe((data) => {
-      this.fdatos();
-    });
-  }
+  // fcargar(id: number) {
+  //   this._productosService.cargarImagenp(this.archivoseleccionado, id).subscribe((data) => {
+  //     this.fdatos();
+  //   });
+  // }
 
   /* fdescargar(id: number) {
     this.imagen = null;
@@ -444,23 +473,23 @@ export class ProductosComponent implements OnInit {
   }
 
   feliminar(id: number){
-    swal
-      .fire({
-        title: 'Estás seguro?',
-        icon: 'warning',
-        text: 'No podrás revertir el borrado de esta imagen!',
-        showCancelButton: true,
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Borrar',
-      })
-      .then((result) => {
-        if (result.value) {
-          this._productosService.eliminarImagenp(id).subscribe( data => {
-            this.fdatos();
-            swal.fire('Imagen eliminda', 'Imagen eliminada con exito', 'success');
-          });
-        }
-      });
+    swal.fire({
+      title: 'Estás seguro?',
+      icon: 'warning',
+      text: 'No podrás revertir el borrado de esta imagen!',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Borrar',
+    })
+    .then((result) => {
+      if (result.value) {
+        this._productosService.eliminar(id).subscribe( data => {
+          this.fdatos();
+          swal.fire('Eliminado', 'Producto eliminado correctamente', 'success');
+          this._toast.success('', 'Producto eliminado');
+        });
+      }
+    });
   }
 
   fformPrecio(precio: Precios){
@@ -806,6 +835,119 @@ export class ProductosComponent implements OnInit {
         }
       );
     }
+  }
+
+  fadicionarImagen(content: any){
+    this.estado = 'Adicionar';
+    this.atributo = new Atributos();
+    this.fformAtributo(this.atributo);
+    this.modalRefDetalle = this._modalService.open(content, {
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  fcargar() {
+    swal.fire({
+      title: 'Cargando archivo...',
+      html: 'Progreso: <b>0%</b>',
+      allowOutsideClick: false,
+      onBeforeOpen: () => {
+        swal.showLoading();
+      }
+    });
+    console.log(this.archivoSeleccionado);
+
+    this._productosService.upload(this.dato.idproducto.toString(), 'productos', this.archivoSeleccionado).subscribe(event => {
+      if (event.type === HttpEventType.UploadProgress) {
+        const progreso = Math.round((event.loaded / event.total) * 100);
+        swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
+      } else if (event.type === HttpEventType.Response) {
+        swal.close();
+        this._toast.success('','Imagen de producto agregado.');
+        this.fdescargar(this.dato.idproducto);
+        this.modalRefDetalle.dismiss();
+        this.archivoSeleccionado = null;
+      }
+    });
+  }
+
+  fdescargar(id: number) {
+    this.imagenes = [];
+    this._productosService.download(id, 'productos').subscribe((data) => {
+      this.imagenes = data;
+    });
+  }
+
+  sanitizarImagen(data: string, mimeType: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(`data:${mimeType};base64,${data}`);
+  }
+
+  fseleccionarArchivo(event: any) {
+    const archivo = event.target.files[0];
+    if (!archivo) {
+      return;
+    }
+
+    const tamañoMaximoMB = 2;
+    const tamañoMaximoBytes = tamañoMaximoMB * 1024 * 1024;
+    if (archivo.size > tamañoMaximoBytes) {
+      this._toast.error(`El archivo supera el límite de ${tamañoMaximoMB} MB.`, 'Tamaño de archivo no permitido');
+      this.fremoverArchivo();
+      return;
+    }
+
+    const tipoArchivo = archivo.type;
+    if (tipoArchivo !== 'image/png' && tipoArchivo !== 'image/jpeg') {
+      this._toast.error('Solo se permiten archivos PNG o JPG.', 'Formato no soportado');
+      this.fremoverArchivo();
+      return;
+    }
+
+    this.archivoSeleccionado = archivo;
+    this.sizeFileFormat = this.fformatearTamañoArchivo(archivo.size);
+    this.fcrearMiniatura();
+  }
+
+  fformatearTamañoArchivo(tamañoBytes: number): string {
+    const tamañoMB = tamañoBytes / (1024 * 1024);
+    return `${tamañoMB.toFixed(2)} MB`;
+  }
+
+  farrastrarSobre(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    (event.currentTarget as HTMLElement).classList.add('dragover');
+  }
+
+  farrastrarFuera(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    (event.currentTarget as HTMLElement).classList.remove('dragover');
+  }
+
+  fsoltarArchivo(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    (event.currentTarget as HTMLElement).classList.remove('dragover');
+
+    if (event.dataTransfer.files.length > 0) {
+      this.archivoSeleccionado = event.dataTransfer.files[0];
+      this.fcrearMiniatura();
+    }
+  }
+
+  fcrearMiniatura() {
+    if (this.archivoSeleccionado) {
+      const reader = new FileReader();
+      reader.onload = (e) => this.miniaturaUrl = reader.result;
+      reader.readAsDataURL(this.archivoSeleccionado);
+    }
+  }
+
+  fremoverArchivo() {
+    this.archivoSeleccionado = null;
+    this.miniaturaUrl = null;
   }
 }
 

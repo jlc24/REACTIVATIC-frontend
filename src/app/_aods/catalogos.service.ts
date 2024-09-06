@@ -30,6 +30,10 @@ export class CatalogosService {
     return this._httpClient.get<Productos>(`${this.ruta}/${id}`);
   }
 
+  download(id: number, tipo: string): Observable<any>{
+    return this._httpClient.get(`${this.ruta}/imagen/download?id=${id}&tipo=${tipo}`);
+  }
+
   rubros(): Observable<Rubros[]> {
     return this._httpClient.get<Rubros[]>(`${this.ruta}/rubros`);
   }

@@ -136,3 +136,18 @@
   .file-info button {
     align-self: flex-end;
   }
+
+  .icon-carnet{
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    border: solid 1px #00000054;
+  }
+  .icon-usuario{
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    border: solid 2px #0000008f;
+  }
+  .icon-empresa{
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    border: solid 2px #0000004f;
+  }

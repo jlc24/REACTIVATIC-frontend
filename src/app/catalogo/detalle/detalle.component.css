@@ -139,3 +139,101 @@ h1,
 .contact-item a:hover {
   text-decoration: underline; /* Subrayado al pasar el ratón sobre el enlace */
 }
+
+.scroll-to-top-btn {
+  position: fixed;
+  bottom: 100px;
+  right: 100px;
+  padding: 10px 20px;
+  font-size: 20px;
+  background-color: #fd7e14;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.scroll-to-top-btn:hover {
+  background-color: #e06c75;
+}
+
+.miniaturas-container {
+  max-height: 400px; /* Define la altura máxima para mostrar las miniaturas */
+  overflow-y: auto; /* Habilita el desplazamiento vertical */
+}
+
+.img-product{
+  display: inline-block;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s, border 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.img-product:hover,
+.img-product.active {
+  transform: scale(1.05);
+  border: 1px solid #960023; /* Color del borde cuando la imagen está activa */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Si quieres que active solo se vea el borde y no el escalado */
+.img-product.active {
+  transform: scale(1.05); /* Desactivar el escalado cuando está activo */
+  border: 2px solid #960023; /* Color del borde cuando la imagen está activa */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Puedes ajustar esto si es necesario */
+}
+
+.imagen-grande-container {
+  /* position: relative; */
+  display: inline-block;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.imagen-grande {
+  width: 100%;
+}
+
+.btn-arrow-left, .btn-arrow-right {
+  position: absolute;
+  top: 45%;
+  /* transform: translateY(-50%); */
+  background-color: rgba(255, 255, 255, 0.5);
+  border: none;
+  cursor: pointer;
+}
+
+.btn-arrow-left {
+  font-size: 25px;
+  left: 10px;
+}
+
+.btn-arrow-right {
+  font-size: 25px;
+  right: 10px;
+}
+
+.btn-container {
+  position: absolute;
+  top: 10px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Espacio entre los botones */
+  z-index: 10;
+}
+
+.btn-favoritos, .btn-similares {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  color: #333;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.btn-favoritos i, .btn-similares i {
+  font-size: 1.5rem; /* Tamaño del ícono */
+}

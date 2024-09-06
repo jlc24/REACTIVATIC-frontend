@@ -86,6 +86,9 @@
                 <td>{{ _item.persona.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
                 <td class="text-center">
                   <div class="btn-group" role="group" aria-label="First group">
+                    <button class="btn btn-outline-danger btn-sm" title="Generar usuario" *ngIf="_item.usuario?.usuario !== null && _item.usuario?.usuario !== undefined && _item.usuario?.usuario !== ''">
+                      <i class="fa fa-eye"></i>
+                    </button>
                     <button class="btn btn-outline-info btn-sm" title="Ver Representante" (click)="fverrep(_item.persona.idpersona, ver)">
                       <i class="fa fa-eye"></i>
                     </button>
@@ -430,17 +433,16 @@
   </div>
   <div class="modal-body">
     <div class="row pl-3 pr-3">
-      <div class="col-md-5 col-sm-12 border pt-3">
-        <div class="row justify-content-center" >
-          <img src="../../../assets/catalogo/img/carnet1.png" alt="" class="img-fluid puntero" width="200px">
+      <div class="col-md-5 col-sm-12 border rounded p-3 bg-light">
+        <div class="row justify-content-center mb-3">
+          <div *ngFor="let _imgRepAnv of imagenRepAnverso">
+            <img [src]="sanitizarImagen(_imgRepAnv.data, _imgRepAnv.mimeType)" width="300px" class="icon-carnet" />
+          </div>
         </div>
-        <div class="row justify-content-center">
-          <img src="../../../assets/catalogo/img/carnet2.png" alt="" class="img-fluid puntero" width="200px">
-        </div>
-        <div class="row justify-content-center mt-3">
-          <button class="btn btn-sm btn-outline-info" (click)="fcambiarimagen(cargarimagen)">
-            <i class="fa fa-picture-o"></i> Cambiar imagen
-          </button>
+        <div class="row justify-content-center mb-3">
+          <div *ngFor="let _imgRepRev of imagenRepReverso">
+            <img [src]="sanitizarImagen(_imgRepRev.data, _imgRepRev.mimeType)" width="300px" class="icon-carnet" />
+          </div>
         </div>
       </div>
       <div class="col-md-7 col-sm-12 border pt-3">
@@ -479,7 +481,7 @@
             <strong>Exp.:</strong>
           </div>
           <div class="col-md-2">
-            <label for="">{{ user.persona?.tipoextension.sigla }}</label>
+            <label for="">{{ user.persona?.tipoextension?.sigla }}</label>
           </div>
         </div>
         <div class="row">
@@ -538,6 +540,14 @@
             <i class="fa fa-key"></i> Restablecer clave
           </button>
         </div>
+        <div class="row justify-content-center mt-2 mb-2">
+          <button class="btn btn-outline-info btn-sm mr-3" (click)="fimagenRepA(cargarimagen)">
+            <i class="fa fa-picture-o"></i> Cambiar Carnet Reverso
+          </button>
+          <button class="btn btn-outline-info btn-sm" (click)="fimagenRepR(cargarimagen)">
+            <i class="fa fa-picture-o"></i> Cambiar Carnet Reverso
+        </button>
+        </div>
       </div>
     </div>
   </div>
@@ -551,16 +561,34 @@
     <h4 class="modal-title pull-left">{{ estado }} Imagen</h4>
   </div>
   <div class="modal-body">
-    <div class="form-group">
-      <label>Carnet Anverso:</label>
-      <input class="form-control" type="file" (change)="fseleccionarArchivo($event)" />
-    </div>
-    <div class="form-group">
-      <label>Carnet Reverso:</label>
-      <input class="form-control" type="file" (change)="fseleccionarArchivo($event)" />
+    <div class="dropzone" (click)="archivoInput.click()" (dragover)="farrastrarSobre($event)" (dragleave)="farrastrarFuera($event)" (drop)="fsoltarArchivo($event)">
+      <p *ngIf="!archivoSeleccionado">Arrastra tu imagen aquí o haz click para seleccionar</p>
+
+      <div *ngIf="archivoSeleccionado" class="preview-container">
+        <img [src]="miniaturaUrl" alt="Vista previa" class="thumbnail" />
+        <button type="button" class="btn btn-danger btn-sm" (click)="fremoverArchivo()" title="Cambiar Imagen">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div class="file-info mt-3" *ngIf="archivoSeleccionado">
+        <p><b>Nombre: </b>{{ archivoSeleccionado.name }}</p>
+        <p><b>Tamaño: </b>{{ sizeFileFormat }}</p>
+      </div>
+
+      <input class="form-control-file" type="file" (change)="fseleccionarArchivo($event)" hidden accept=".png,.jpg,.jpeg" #archivoInput />
+
+      <!-- <div *ngIf="cargando" class="progress mt-3">
+        <div
+          class="progress-bar progress-bar-striped progress-bar-animated"
+          role="progressbar"
+          [style.width.%]="progreso">
+          {{ progreso }}%
+        </div>
+      </div> -->
     </div>
     <div class="text-center">
-      <button type="button" class="btn btn-sm btn-outline-success m-2" (click)="fcargar()">
+      <button type="button" class="btn btn-sm btn-outline-success m-2" (click)="fcargar()" [disabled]="!archivoSeleccionado">
         <i class="fa fa-save"></i> Grabar
       </button>
       <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarImagen()">
