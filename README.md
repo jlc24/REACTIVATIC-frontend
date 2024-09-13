@@ -142,7 +142,7 @@ Si prefieres utilizar NVM (Node Version Manager) para gestionar la instalación 
     ```sh
     npm install
     ```
-    si falla la instacacion ejecutar:
+    si falla la instalación ejecutar:
     ```sh
     npm install --force
     ```

@@ -1,0 +1,323 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+  <div class="container ">
+    <a href="" class="navbar-brand"><img src="assets/imagenes/logo.png" class="img-fluid" width="100px"/></a>
+    <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="navbar-collapse collapse" id="navbarsExample07">
+      <ul class="navbar-nav mr-auto"></ul>
+      <form class="form-inline my-2 my-md-0 d-flex flex-md-row flex-column align-items-end">
+        <!-- Carrito de Compras -->
+        <a class="app-nav__item text-right puntero" (click)="toggleCarrito()" title="Carrito">
+          <span class="d-md-none d-sm-inline d-lg-none text-white">Carrito de Compras </span>
+          <i class="fa fa-shopping-cart fa-2x text-white"></i>
+          <span class="badge badge-warning" *ngIf="cantidadcarrito > 0">x{{ cantidadcarrito }}</span>
+        </a>
+
+        <!-- Iniciar Sesión o Bienvenida -->
+        <a *ngIf="localusuario == '' || localusuario == null" class="app-nav__item text-right puntero " (click)="faccesom(accesom)" title="Iniciar Sesión">
+          <span class="d-md-none d-sm-inline d-lg-none text-white mr-2">Iniciar Sesión </span>
+          <i class="fa fa-user fa-2x text-white"></i>
+        </a>
+
+        <a class="app-nav__item text-right puntero" *ngIf="localusuario" title="Bienvenido">
+          <span class="text-white mr-2 d-none d-md-inline">{{ localusuario }} </span>
+          <i class="fa fa-user fa-2x text-white d-md-none d-sm-inline"></i>
+        </a>
+
+        <!-- Cerrar Sesión -->
+        <a *ngIf="localusuario" class="app-nav__item text-right puntero" (click)="fsalir()" title="Cerrar Sesion">
+          <span class="d-md-none d-sm-inline d-lg-none text-white mr-2">Cerrar Sesión </span>
+          <i class="fa fa-sign-out fa-2x text-white"></i>
+        </a>
+      </form>
+    </div>
+  </div>
+</nav>
+
+<!-- Div para el offcanvas que simula el carrito -->
+<div class="offcanvas-right" [class.show]="carritoVisible">
+  <div class="offcanvas-header d-flex justify-content-between align-items-center">
+    <h5 class="offcanvas-title">Mi Carrito</h5>
+    <div class="d-flex align-items-center">
+      <i class="fa fa-shopping-cart fa-2x text-white"></i>
+      <span class="badge badge-warning ms-2" style="font-size: 15px;" *ngIf="cantidadcarrito > 0">x{{ cantidadcarrito }}</span>
+    </div>
+  </div>
+  <div class="offcanvas-body">
+    <div *ngIf="carritos?.length > 0">
+      <div *ngFor="let empresa of carritosAgrupados | keyvalue">
+        <h4><i class="bi bi-building"></i> {{ empresa.key }}</h4>
+        <div *ngFor="let carrito of empresa.value" class="mb-2 p-2 producto-container">
+          <div class="d-flex justify-content-between align-items-center">
+            <h6>{{ carrito.producto.producto }}</h6>
+            <div class="btn-delete" title="Eliminar Producto del carrito" (click)="feliminar(carrito.idcarrito)">
+              <i class="bi bi-trash-fill"></i>
+            </div>
+          </div>
+          <div class="row p-2">
+            <div class="col-sm-3 p-0 m-0">
+              <img [src]="rutaproducto+carrito.producto.idproducto+'/'+carrito.imagen" alt="Imagen del producto" class="imagen-producto mr-2 ml-2" />
+            </div>
+            <div class="col-sm-9">
+              <p><small>| {{ carrito.material?.material }} | {{ carrito.color?.color }} | </small>
+              <small>Tamaño: {{ carrito.tamano?.tamano }} | </small><br>
+              <small>Precio: {{ carrito.precio?.precio | number:'1.2-2' }} Bs. | Cantidad: {{ carrito.cantidad }} | </small></p>
+              <strong>Total: {{ carrito.cantidad * carrito.precio?.precio | number:'1.2-2' }} Bs.</strong>
+            </div>
+            <!-- <div class="col-sm-2 d-flex justify-content-center align-items-center ">
+              <div class="btn-delete" title="Elminar Producto del carrito" (click)="feliminar(carrito.idcarrito)">
+                <i class="bi bi-trash-fill"></i>
+              </div>
+            </div> -->
+          </div>
+        </div>
+        <hr>
+      </div>
+    </div>
+    <div *ngIf="!(carritos?.length > 0)" class="empty-cart-container">
+      <i class="bi bi-cart-x empty-cart-icon"></i>
+      <h3 class="text-center">Tu carrito está vacío</h3>
+    </div>
+  </div>
+  <div class="offcanvas-footer p-3 border-top">
+    <div class="d-flex justify-content-between mb-3" *ngIf="carritos?.length > 0">
+      <span>Resumen del pedido:</span>
+      <span><strong>{{ cantidadcarrito }} {{ cantidadcarrito == 1 ? 'producto' : 'productos' }}</strong></span>
+    </div>
+    <div class="d-flex justify-content-between mb-3" *ngIf="carritos?.length > 0">
+      <span>Total a pagar:</span>
+      <strong>{{ totalAPagar | number:'1.2-2' }} Bs.</strong>
+    </div>
+    <div class="d-flex justify-content-end" [ngClass]="carritos?.length > 0 ? ' border-top' : ''">
+      <!-- <button class="btn btn-outline-success mr-2" [ngClass]="carritos?.length > 0 ? 'mt-3' : ''" (click)="fprocesa(registrar)" [disabled]="!(carritos?.length > 0)">
+        <span><i class="fa fa-cogs"></i> Realizar Compra</span>
+      </button> -->
+      <button class="btn btn-outline-secondary mr-2" [ngClass]="carritos?.length > 0 ? 'mt-3' : ''" (click)="toggleCarrito()">
+        <span><i class="fa fa-close"></i> Cerrar</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop -->
+<div class="backdrop" [class.show]="carritoVisible" (click)="toggleCarrito()"></div>
+
+<div class="toolbar">
+  <div class="toolbar-content">
+    <!-- Carrito -->
+    <div class="toolbar-item puntero" (click)="toggleCarrito()" title="Carrito">
+      <div class="icon-container">
+        <i class="bi bi-cart-fill" *ngIf="cantidadcarrito > 0"></i>
+        <i class="bi bi-cart" *ngIf="cantidadcarrito == null"></i>
+        <span class="toolbar-cart" *ngIf="cantidadcarrito > 0">x{{ cantidadcarrito }}</span>
+      </div>
+      <span class="d-none d-sm-inline">Mi Carrito</span>
+    </div>
+
+    <!-- Iniciar Sesión o Bienvenida -->
+    <div *ngIf="localusuario == '' || localusuario == null" class="toolbar-item puntero" (click)="faccesom(accesom)" title="Iniciar Sesión">
+      <i class="bi bi-person-fill"></i>
+      <span class="d-none d-sm-inline">Iniciar Sesión</span>
+    </div>
+    <div *ngIf="localusuario == '' || localusuario == null" class="toolbar-item puntero" (click)="faccesom(accesom)" title="Registrarse">
+      <i class="bi bi-person-fill-add"></i>
+      <span class="d-none d-sm-inline">Registro</span>
+    </div>
+
+    <div *ngIf="localusuario" class="toolbar-item puntero" title="Bienvenido">
+      <i class="bi bi-person-circle"></i>
+      <span class="d-none d-sm-inline">{{ localusuario }}</span>
+    </div>
+
+    <!-- Cerrar Sesión -->
+    <div *ngIf="localusuario" class="toolbar-item puntero" (click)="fsalir()" title="Cerrar Sesión">
+      <i class="bi bi-box-arrow-right"></i>
+      <span class="d-none d-sm-inline">Cerrar Sesión</span>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-lg bg-white">
+  <div class="row">
+    <div class="col-12 position-relative">
+      <img src="assets/imagenes/bg.jpg" class="img-fluid w-100 mb-4" alt="Banner" style="max-height: 250px; object-fit: cover;">
+      <div class="overlay-text">
+        <h1 class="text-white">Tienda Virtual</h1>
+        <h4 class="text-white">Explora Nuestro Catálogo de Innovaciones</h4>
+      </div>
+    </div>
+  </div>
+  <div class="row m-1">
+    <div class="col-12 alert alert-info py-3 px-4 d-flex justify-content-end align-items-center">
+      <span (click)="finicio()" class="back-link puntero d-flex align-items-center">
+        <i class="bi bi-border-style back-icon"></i>
+        <span class="ml-2">Catálogo</span>
+      </span>
+      <span class="current-page">/empresa</span>
+    </div>
+  </div>
+  <div *ngIf="cargando  && !error" class="text-center my-5">
+    <div class="spinner-border spinner-large mb-3" role="status">
+      <span class="sr-only">Cargando datos de Empresa ...</span>
+    </div>
+    <div class="mt-3 cargando-texto">
+      <span class="">Cargando datos de Empresa</span>
+      <span class="dot-one mt-2"><i class="bi bi-circle-fill"></i></span>
+      <span class="dot-two mt-2"><i class="bi bi-circle-fill"></i></span>
+      <span class="dot-three mt-2"><i class="bi bi-circle-fill"></i></span>
+    </div>
+  </div>
+  <div *ngIf="!cargando && error" class="text-center my-5">
+    <div class="error-icon mb-3">
+      <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 3rem;"></i>
+    </div>
+    <div class="error-texto">
+      <h5 class="text-danger" [innerHTML]="error"></h5>
+    </div>
+  </div>
+</div>
+<div class="container-lg bg-white">
+  <div class="row m-3 p-3 justify-content-between align-items-center">
+    <div class="col-sm-3">
+      <img src="assets/imagenes/logogadorblack.png"  class="img-fluid imagen-logos" alt="" width="200px">
+    </div>
+    <div class="col-sm-3">
+      <img src="assets/imagenes/sddpi2.png"  class="img-fluid imagen-logos" alt="" width="200px">
+    </div>
+    <div class="col-sm-3">
+      <img src="assets/imagenes/dpeic.png"  class="img-fluid imagen-logos" alt="" width="200px">
+    </div>
+    <div class="col-sm-3">
+      <img src="assets/imagenes/logo.png"  class="img-fluid imagen-logos" alt="" width="200px">
+    </div>
+  </div>
+</div>
+<button *ngIf="isShow" (click)="scrollToTop()" class="scroll-to-top-btn"><i class="bi bi-chevron-up" style="font-size: 30px;"></i></button>
+<footer class="container-fluid bg-primary" >
+  <div class="container">
+    <div class="row mt-3">
+      <div class="col-lg-5 col-md-6 col-sm-12 pt-3 align-content-center">
+        <h4 class="text-white">Contacto</h4>
+        <div class="contact-item">
+            <i class="bi bi-house-door-fill text-white"></i>
+            <p class="text-white">
+                Calle Adolfo Mier entre Pdte. Montes y Washington Nro. 1900 <br>
+                (Interior Salón de Exposiciones Productivas) <br>
+                Plaza 10 de Febrero <br>
+                Departamento de Oruro
+            </p>
+        </div>
+        <div class="contact-item">
+            <i class="bi bi-telephone-fill text-white"></i>
+            <p class="text-white">2 5254161</p>
+        </div>
+        <div class="contact-item">
+            <i class="bi bi-envelope-fill text-white"></i>
+            <p class="text-white"><a href="mailto:reactivatic@gmail.com">reactivatic@gmail.com</a></p>
+        </div>
+        <div class="contact-item">
+            <i class="bi bi-globe text-white"></i>
+            <p class="text-white"><a href="http://desarrolla.oruro.gob.bo/" target="_blank">http://desarrolla.oruro.gob.bo/</a></p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-12 text-center align-content-center">
+        <h2 class="text-white mb-4">Síguenos en:</h2>
+        <div class="d-flex justify-content-center mb-4">
+          <a href="https://www.facebook.com/profile.php?id=100083098698972" target="_blank" class="social-icon text-white mx-2" title="Facebook">
+              <i class="bi bi-facebook"></i>
+          </a>
+          <a href="https://www.youtube.com/" target="_blank" class="social-icon text-white mx-2" title="YouTube">
+              <i class="bi bi-youtube"></i>
+          </a>
+          <a href="https://www.instagram.com/" target="_blank" class="social-icon text-white mx-2" title="Instagram">
+              <i class="bi bi-instagram"></i>
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-4 col-sm-12 text-center justify-content-center align-content-center">
+        <img src="assets/imagenes/escudo_oruro.png" alt="" width="150px">
+        <img src="assets/imagenes/lema_oruro.png" alt="" width="150px">
+      </div>
+    </div>
+    <hr class="border-white">
+    <div>
+      <p class="app-footer__logo text-right pb-3">
+        <small class="text-white">&copy; 2022-{{ gestion }} Derechos Reservados | REACTIVA TIC - DPEIC - SDDPI - GADOR </small>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<ng-template #registrar>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> Proceso de solicitud</h4>
+      <div class="alert alert-info" role="alert">
+          Estimado cliente Los campos remarcados con * son necesarios.
+      </div>
+  </div>
+  <div class="modal-body">
+      <!-- <form [formGroup]="formulario" (ngSubmit)="faceptar()">
+          <div class="form-group">
+              <label>Nombre completo <span class="text-danger"><b>*</b></span></label>
+              <input type="text" class="form-control" formControlName="primerapellido" [class.is-invalid]="f.primerapellido.errors && f.primerapellido.touched" />
+              <small *ngIf="f.primerapellido.errors&& f.primerapellido.touched" class="text-danger">
+                El dato es obligatorio y solo permite letras
+              </small>
+          </div>
+          <div class="form-group">
+              <label>Celular <span class="text-danger"><b>*</b></span></label>
+              <input type="number" class="form-control" formControlName="celular" [class.is-invalid]="f.celular.errors && f.celular.touched" />
+              <small *ngIf="f.celular.errors && f.celular.touched" class="text-danger">
+              El dato es obligatorio y solo permite numeros de celulares
+              </small>
+          </div>
+          <div class="form-group">
+              <label>Correo </label>
+              <input type="email" class="form-control" formControlName="correo" [class.is-invalid]="f.correo.errors && f.correo.touched" />
+              <small *ngIf="f.correo.errors && f.correo.touched" class="text-danger">
+              El dato es obligatorio
+              </small>
+          </div>
+          <div class="text-center">
+              <button type="submit" class="btn btn-success m-2" [disabled]="!formulario.valid">
+                <i class="fa fa-save"></i> Grabar
+            </button>
+              <button type="button" class="btn btn-danger" (click)="fcancelar()">
+                <i class="fa fa-times"></i> Cancelar
+            </button>
+          </div>
+      </form> -->
+  </div>
+</ng-template>
+
+<ng-template #accesom>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> Acceso al sistema</h4>
+      <div class="alert alert-info" role="alert">
+          Estimado cliente Los campos remarcados con * son necesarios.
+      </div>
+  </div>
+  <div class="modal-body">
+      <form [formGroup]="formulariom" (ngSubmit)="faceptarm()">
+          <div class="form-group">
+              <label>Usuario <span class="text-danger"><b>*</b></span></label>
+              <input type="text" class="form-control" formControlName="usuario" [maxlength]="10" [class.is-invalid]="fm.usuario.errors && fm.usuario.touched" (input)="onInputLogin($event, 'usuario', 'usuario')" />
+          </div>
+          <div class="form-group">
+              <label>Clave de acceso <span class="text-danger"><b>*</b></span></label>
+              <input type="password" class="form-control" formControlName="clave" [maxlength]="20" [class.is-invalid]="fm.clave.errors && fm.clave.touched" (input)="onInputLogin($event, 'clave', 'clave')" />
+          </div>
+          <div class="text-center">
+              <button type="submit" class="btn btn-success m-2" [disabled]="!formulariom.valid">
+                <i class="fa fa-sign-in"></i> Ingresar
+            </button>
+              <button type="button" class="btn btn-danger" (click)="fcancelar()">
+                <i class="fa fa-times"></i> Cancelar
+            </button>
+          </div>
+      </form>
+  </div>
+</ng-template>

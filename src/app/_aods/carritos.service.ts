@@ -19,6 +19,10 @@ export class CarritosService {
     return this._httpClient.get<Carritos[]>(`${this.ruta}/l?idcliente=${idcliente}`);
   }
 
+  atributosproducto(id: number): Observable<Carritos>{
+    return this._httpClient.get<Carritos>(`${this.ruta}/atributosproducto/${id}`);
+  }
+
   adicionar(dato: Carritos): Observable<any> {
     return this._httpClient.post<void>(`${this.ruta}`, dato).pipe(
       catchError(e => {
@@ -31,11 +35,11 @@ export class CarritosService {
     );
   }
 
-  eliminar(dato: Carritos): Observable<any> {
-    return this._httpClient.delete<void>(`${this.ruta}/${dato.idcliente}/${dato.idproducto}`);
+  eliminar(id: number): Observable<any> {
+    return this._httpClient.delete<void>(`${this.ruta}/${id}`);
   }
 
-  cantidadcarrito(idcliente: number): Observable<Carritos> {
-    return this._httpClient.get<Carritos>(`${this.ruta}/cantidadcarrito?idcliente=${idcliente}`);
+  cantidadcarrito(idcliente: number): Observable<number> {
+    return this._httpClient.get<number>(`${this.ruta}/cantidadcarrito?idcliente=${idcliente}`);
   }
 }

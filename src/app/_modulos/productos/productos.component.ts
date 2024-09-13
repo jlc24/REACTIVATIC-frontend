@@ -432,38 +432,25 @@ export class ProductosComponent implements OnInit {
     }
   }
 
-  fcambiarestado(){
-
+  fcambiarestado(idproducto: number, estado: boolean){
+    swal.fire({
+      title: !estado ? '¿Está seguro de deshabilitar?' : '¿Está seguro de habilitar?',
+      icon: 'warning',
+      text: !estado ? 'El producto NO se podrá utilizar para ventas.' : 'El producto se podrá utilizar para ventas.',
+      showCancelButton: true,
+      cancelButtonText: 'cancelar',
+      confirmButtonText: 'Cambiar',
+    }).then((result) => {
+      if (result.value) {
+        this._productosService.cambiarestado({ idproducto, estado }).subscribe( response => {
+          this.fdatos();
+          swal.fire('Cambio realizado', 'El estado del rubro ha sido cambiado con éxito.', 'success');
+        });
+      }
+    });
   }
 
-  // fseleccionarArchivo(event) {
-  //   const reader = new FileReader();
-  //   this.archivoseleccionado = event.target.files[0];
-  //   if (event.target.files[0] && event.target.files.length) {
-  //     const file = event.target.files[0];
-  //     reader.readAsDataURL(file);
-  //     reader.onload = () => {
-  //       this.imageSrc = reader.result as string;
-  //     };
-  //   }
-  // }
-
-
-  // fcargar(id: number) {
-  //   this._productosService.cargarImagenp(this.archivoseleccionado, id).subscribe((data) => {
-  //     this.fdatos();
-  //   });
-  // }
-
-  /* fdescargar(id: number) {
-    this.imagen = null;
-    this._productosService.descargarproducto(id).subscribe(data=>{
-      const objectURL = window.URL.createObjectURL(data);
-      this.imagen = this._sanitizer.bypassSecurityTrustUrl(objectURL);
-    });
-  } */
-
-
+  
   fcancelar() {
     this.modalRefProducto.dismiss();
   }

@@ -61,7 +61,9 @@ export class EscritorioComponent implements OnInit {
     this.fcantidadempresas();
     this.fcantidadmunicipios();
     this.fcantidadproductos();
-    this.fcantidadsventa();
+    if (this.esempresa) {
+      this.fcantidadsventa();
+    }
 
     this.esCargoAdministrador = this._accesoService.esCargoAdministrador();
     this.esCargoSecretario = this._accesoService.esCargoSecretario();

@@ -17,6 +17,8 @@ import { ToastrModule } from 'ngx-toastr';
 import localeEsBo from '@angular/common/locales/es-BO';
 import { registerLocaleData } from '@angular/common';
 import { DetalleComponent } from './catalogo/detalle/detalle.component';
+import { EmpresaComponent } from './catalogo/empresa/empresa.component';
+import { PerfilComponent } from './catalogo/perfil/perfil.component';
 registerLocaleData(localeEsBo,  'es-Bo');
 
 @NgModule({
@@ -26,7 +28,9 @@ registerLocaleData(localeEsBo,  'es-Bo');
     E404Component,
     CatalogoComponent,
     RegistrosComponent,
-    DetalleComponent
+    DetalleComponent,
+    EmpresaComponent,
+    PerfilComponent,
   ],
   imports: [
     BrowserModule,

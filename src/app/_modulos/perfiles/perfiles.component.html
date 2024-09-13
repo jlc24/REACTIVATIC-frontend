@@ -340,15 +340,7 @@
                   <strong>Rubro:</strong>
                 </div>
                 <div class="col-md-8">
-                  <label for="">{{ empresa?.subrubro.rubro.rubro }}</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-4 text-md-right text-sm-left">
-                  <strong>Subrubro:</strong>
-                </div>
-                <div class="col-md-8">
-                  <label for="">{{ empresa?.subrubro.subrubro }}</label>
+                  <label for="">{{ empresa?.rubro.rubro }}</label>
                 </div>
               </div>
               <div class="row" *ngIf="empresa?.servicios">
@@ -425,15 +417,7 @@
                   <strong>Municipio:</strong>
                 </div>
                 <div class="col-md-8">
-                  <label for="">{{ empresa?.localidad.municipio.municipio }}</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-4 text-md-right text-sm-left">
-                  <strong>Localidad:</strong>
-                </div>
-                <div class="col-md-8">
-                  <label for="">{{ empresa?.localidad.localidad }}</label>
+                  <label for="">{{ empresa?.municipio.municipio }}</label>
                 </div>
               </div>
               <div class="row" *ngIf="empresa?.zona">
@@ -906,7 +890,7 @@
             <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
               <label for="">Asociación:</label>
             </div>
-            <div class="col-lg-5 col-md-8 col-sm-12">
+            <div class="col-lg-4 col-md-8 col-sm-12">
               <select class="custom-select custom-select-sm" formControlName="idasociacion">
                 <option value="" [selected]>Seleccionar...</option>
                 <option *ngFor="let _aso of asociaciones" [value]="_aso.idasociacion">
@@ -914,22 +898,12 @@
                 </option>
               </select>
             </div>
-          </div>
-          <div class="row pl-3 pr-3 mt-1">
-            <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
+            <div class="col-lg-1 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
               <label for="">Rubro:</label>
             </div>
-            <div class="col-lg-3 col-md-8 col-sm-12">
-              <select class="custom-select custom-select-sm" formControlName="idrubro" (change)="fsubrubros($event.target.value)">
+            <div class="col-lg-4 col-md-8 col-sm-12">
+              <select class="custom-select custom-select-sm" formControlName="idrubro">
                 <option *ngFor="let _rubro of rubros" [value]="_rubro.idrubro">{{ _rubro.rubro }}</option>
-              </select>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
-              <label for="">Subrubro:</label>
-            </div>
-            <div class="col-lg-3 col-md-8 col-sm-12">
-              <select class="custom-select custom-select-sm" formControlName="idsubrubro">
-                <option *ngFor="let _subr of subrubros" [value]="_subr.idsubrubro">{{ _subr.subrubro }}</option>
               </select>
             </div>
           </div>
@@ -1068,31 +1042,23 @@
               <label for="">Municipio:</label>
             </div>
             <div class="col-lg-4 col-md-8 col-sm-12">
-              <select class="custom-select custom-select-sm" (change)="flocalidades($event.target.value)" formControlName="idmunicipio">
+              <select class="custom-select custom-select-sm">
                 <option *ngFor="let _mun of municipios" [value]="_mun.idmunicipio">{{ _mun.municipio }}</option>
               </select>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
-              <label for="">Localidad:</label>
+              <label for="">Zona:</label>
             </div>
             <div class="col-lg-4 col-md-8 col-sm-12">
-              <select class="custom-select custom-select-sm" formControlName="idlocalidad">
-                <option *ngFor="let _local of localidades" [value]="_local.idlocalidad">{{ _local.localidad }}</option>
-              </select>
+              <input type="text" class="form-control form-control-sm" formControlName="zona" (input)="onInput($event, 'zona', 'letrasyespacios')">
             </div>
           </div>
           <div class="row pl-3 pr-3 mt-1">
             <div class="col-lg-2 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
               <label for="">Dirección:</label>
             </div>
-            <div class="col-lg-6 col-md-8 col-sm-12">
+            <div class="col-lg-10 col-md-8 col-sm-12">
               <input type="text" class="form-control form-control-sm" formControlName="direccion" (input)="onInput($event, 'direccion', 'direccion')">
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
-              <label for="">Zona:</label>
-            </div>
-            <div class="col-lg-2 col-md-8 col-sm-12">
-              <input type="text" class="form-control form-control-sm" formControlName="zona" (input)="onInput($event, 'zona', 'letrasyespacios')">
             </div>
           </div>
           <div class="row pl-3 pr-3 mt-1">
@@ -1263,25 +1229,25 @@
                   <td class="text-right">Banca Movil:</td><td width="50px"><i *ngIf="this.formEmpresa.value.bancamovil; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right"><span class="text-danger"><b>*</b></span>Celular:</td><td width="50px"><i *ngIf="this.formEmpresa.value.celular; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Rubro:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrubro; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Subrubro:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idsubrubro; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <!-- <td class="text-right"><span class="text-danger"><b>*</b></span>Subrubro:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idsubrubro; else noData" class="fa fa-check-circle fa-2x text-success"></i></td> -->
+                  <td class="text-right">Servicios:</td><td width="50px"><i *ngIf="this.formEmpresa.value.servicios; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                 </tr>
                 <tr>
-                  <td class="text-right">Servicios:</td><td width="50px"><i *ngIf="this.formEmpresa.value.servicios; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Capacidad:</td><td width="50px"><i *ngIf="this.formEmpresa.value.capacidad; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Fecha Ap.:</td><td width="50px"><i *ngIf="this.formEmpresa.value.fechaapertura; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Motivo:</td><td width="50px"><i *ngIf="this.formEmpresa.value.motivo; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Familiar:</td><td width="50px"><i *ngIf="this.formEmpresa.value.familiar; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Involucrados:</td><td width="50px"><i *ngIf="this.formEmpresa.value.involucrados; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                 </tr>
                 <tr>
-                  <td class="text-right">Involucrados:</td><td width="50px"><i *ngIf="this.formEmpresa.value.involucrados; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Trabajadores:</td><td width="50px"><i *ngIf="this.formEmpresa.value.trabajadores; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Participación:</td><td width="50px"><i *ngIf="this.formEmpresa.value.participacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Capacitación:</td><td width="50px"><i *ngIf="this.formEmpresa.value.capacitacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Municipio:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idmunicipio; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Zona:</td><td width="50px"><i *ngIf="this.formEmpresa.value.zona; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                 </tr>
                 <tr>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Localidad:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idlocalidad; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right">Zona:</td><td width="50px"><i *ngIf="this.formEmpresa.value.zona; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <!-- <td class="text-right"><span class="text-danger"><b>*</b></span>Localidad:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idlocalidad; else noData" class="fa fa-check-circle fa-2x text-success"></i></td> -->
                   <td class="text-right"><span class="text-danger"><b>*</b></span>Direccion:</td><td width="50px"><i *ngIf="this.formEmpresa.value.direccion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Referencia:</td><td width="50px"><i *ngIf="this.formEmpresa.value.referencia; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Transporte:</td><td width="50px"><i *ngIf="this.formEmpresa.value.transporte; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>

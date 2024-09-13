@@ -69,18 +69,6 @@ p {
 }
 
 .color-card {
-  /* position: relative;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
-  margin: 5px;
-  border: 2px solid transparent; */
-
   padding: 5px;
   display: inline-block;
   width: 50px;

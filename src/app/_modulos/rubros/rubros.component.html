@@ -83,7 +83,7 @@
                 <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
                 <td class="text-center">
                   <div class="btn-group" role="group" aria-label="First group">
-                    <button class="btn btn-outline-info btn-sm" title="Ver Subrubros" (click)="fversubrubro(_item.idrubro, ver)">
+                    <button class="btn btn-outline-info btn-sm" title="Ver Subrubros" (click)="fversubrubro(_item.idrubro, ver)" hidden>
                       <i class="fa fa-eye"></i>
                     </button>
                     <button class="btn btn-outline-warning btn-sm" title="Editar Rubro" (click)="fmodificar(_item.idrubro, ab)" [disabled]="!esCargoAdministrador && !esCargoTecnologia && !esCargoEncargado">

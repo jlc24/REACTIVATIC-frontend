@@ -65,7 +65,6 @@
               <th class="text-center">NIT</th>
               <th class="text-center">Rubro</th>
               <th class="text-center">Municipio</th>
-              <th class="text-center">Localidad</th>
               <th class="text-center">Dirección</th>
               <th class="text-center">Estado</th>
               <th class="text-center">Operaciones</th>
@@ -81,9 +80,8 @@
                 </div>
               </td>
               <td class="text-center">{{ _item.nit}}</td>
-              <td class="text-center">{{ _item.subrubro.rubro.rubro}}</td>
-              <td class="text-center">{{ _item.localidad.municipio.municipio}}</td>
-              <td class="text-center">{{ _item.localidad.localidad}}</td>
+              <td class="text-center">{{ _item.rubro.rubro}}</td>
+              <td class="text-center">{{ _item.municipio.municipio}}</td>
               <td>{{ _item.direccion }}</td>
               <td class="text-center">
                 <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idempresa, !_item.estado)" >
@@ -120,7 +118,6 @@
               <th class="text-center">NIT</th>
               <th class="text-center">Rubro</th>
               <th class="text-center">Municipio</th>
-              <th class="text-center">Localidad</th>
               <th class="text-center">Dirección</th>
               <th class="text-center">Estado</th>
               <th class="text-center">Operaciones</th>
@@ -209,10 +206,19 @@
               <button class="btn btn-sm btn-danger" (click)="flimpiarbuscar()" title="Borrar selección"><i class="bi bi-x"></i></button>
             </div>
             <div class="row p-3">
-              <div class="col-lg-3 col-md-12 text-center">
-                <img src="../../../assets/catalogo/img/avatar.jpg" class="img-fluid rounded-circle" alt="" width="150px">
+              <div class="col-lg-3 col-sm-12 text-center">
+                <div class="row justify-content-center mb-3">
+                  <div *ngFor="let _imgRepAnv of imagenRepAnverso">
+                    <img [src]="sanitizarImagen(_imgRepAnv.data, _imgRepAnv.mimeType)" width="150px" class="icon-carnet" />
+                  </div>
+                </div>
+                <div class="row justify-content-center mb-3">
+                  <div *ngFor="let _imgRepRev of imagenRepReverso">
+                    <img [src]="sanitizarImagen(_imgRepRev.data, _imgRepRev.mimeType)" width="150px" class="icon-carnet" />
+                  </div>
+                </div>
               </div>
-              <div class="col-lg-9 col-md-12" >
+              <div class="col-lg-9 col-sm-12" >
                 <div class="row">
                   <div class="col-md-4 col-sm-6 text-sm-right" hidden>
                     <strong>ID:</strong>
@@ -360,7 +366,7 @@
             <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
               <label for="">Asociación:</label>
             </div>
-            <div class="col-lg-5 col-md-8 col-sm-12">
+            <div class="col-lg-4 col-md-8 col-sm-12">
               <select class="custom-select custom-select-sm" formControlName="idasociacion">
                 <option value="" [selected]>Seleccionar...</option>
                 <option *ngFor="let _aso of asociaciones" [value]="_aso.idasociacion">
@@ -368,22 +374,12 @@
                 </option>
               </select>
             </div>
-          </div>
-          <div class="row pl-3 pr-3 mt-1">
-            <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
+            <div class="col-lg-1 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
               <label for="">Rubro:</label>
             </div>
-            <div class="col-lg-3 col-md-8 col-sm-12">
-              <select class="custom-select custom-select-sm" formControlName="idrubro" (change)="fsubrubros($event.target.value)">
+            <div class="col-lg-4 col-md-8 col-sm-12">
+              <select class="custom-select custom-select-sm" formControlName="idrubro">
                 <option *ngFor="let _rubro of rubros" [value]="_rubro.idrubro">{{ _rubro.rubro }}</option>
-              </select>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
-              <label for="">Subrubro:</label>
-            </div>
-            <div class="col-lg-3 col-md-8 col-sm-12">
-              <select class="custom-select custom-select-sm" formControlName="idsubrubro">
-                <option *ngFor="let _subr of subrubros" [value]="_subr.idsubrubro">{{ _subr.subrubro }}</option>
               </select>
             </div>
           </div>
@@ -517,36 +513,28 @@
           <div class="row pl-3 pr-3">
             <h5 class="card-title">III.- Ubicación de la Unidad Productiva</h5>
           </div>
-          <div class="row pl-3 pr-3">
+          <div class="row pl-3 pr-3 mt-1">
             <div class="col-lg-2 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
               <label for="">Municipio:</label>
             </div>
             <div class="col-lg-4 col-md-8 col-sm-12">
-              <select class="custom-select custom-select-sm" (change)="flocalidades($event.target.value)" formControlName="idmunicipio">
+              <select class="custom-select custom-select-sm" formControlName="idmunicipio">
                 <option *ngFor="let _mun of municipios" [value]="_mun.idmunicipio">{{ _mun.municipio }}</option>
               </select>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
-              <label for="">Localidad:</label>
+              <label for="">Zona:</label>
             </div>
             <div class="col-lg-4 col-md-8 col-sm-12">
-              <select class="custom-select custom-select-sm" formControlName="idlocalidad">
-                <option *ngFor="let _local of localidades" [value]="_local.idlocalidad">{{ _local.localidad }}</option>
-              </select>
+              <input type="text" class="form-control form-control-sm" formControlName="zona" (input)="onInput($event, 'zona', 'letrasyespacios')">
             </div>
           </div>
-          <div class="row pl-3 pr-3 mt-1">
+          <div class="row pl-3 pr-3">
             <div class="col-lg-2 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
               <label for="">Dirección:</label>
             </div>
-            <div class="col-lg-6 col-md-8 col-sm-12">
+            <div class="col-lg-10 col-md-8 col-sm-12">
               <input type="text" class="form-control form-control-sm" formControlName="direccion" (input)="onInput($event, 'direccion', 'direccion')">
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
-              <label for="">Zona:</label>
-            </div>
-            <div class="col-lg-2 col-md-8 col-sm-12">
-              <input type="text" class="form-control form-control-sm" formControlName="zona" (input)="onInput($event, 'zona', 'letrasyespacios')">
             </div>
           </div>
           <div class="row pl-3 pr-3 mt-1">
@@ -729,7 +717,7 @@
                   <td class="text-right">Banca Movil:</td><td width="50px"><i *ngIf="this.formEmpresa.value.bancamovil; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right"><span class="text-danger"><b>*</b></span>Celular:</td><td width="50px"><i *ngIf="this.formEmpresa.value.celular; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Rubro:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrubro; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Subrubro:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idsubrubro; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <!-- <td class="text-right"><span class="text-danger"><b>*</b></span>Subrubro:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idsubrubro; else noData" class="fa fa-check-circle fa-2x text-success"></i></td> -->
                 </tr>
                 <tr>
                   <td class="text-right">Servicios:</td><td width="50px"><i *ngIf="this.formEmpresa.value.servicios; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
@@ -741,12 +729,12 @@
                 <tr>
                   <td class="text-right">Involucrados:</td><td width="50px"><i *ngIf="this.formEmpresa.value.involucrados; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Trabajadores:</td><td width="50px"><i *ngIf="this.formEmpresa.value.trabajadores; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right">Participación:</td><td width="50px"><i *ngIf="this.formEmpresa.value.participacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <td class="text-right">Ferias:</td><td width="50px"><i *ngIf="this.formEmpresa.value.participacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Capacitación:</td><td width="50px"><i *ngIf="this.formEmpresa.value.capacitacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Municipio:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idmunicipio; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                 </tr>
                 <tr>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Localidad:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idlocalidad; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
+                  <!-- <td class="text-right"><span class="text-danger"><b>*</b></span>Localidad:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idlocalidad; else noData" class="fa fa-check-circle fa-2x text-success"></i></td> -->
                   <td class="text-right">Zona:</td><td width="50px"><i *ngIf="this.formEmpresa.value.zona; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right"><span class="text-danger"><b>*</b></span>Direccion:</td><td width="50px"><i *ngIf="this.formEmpresa.value.direccion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
                   <td class="text-right">Referencia:</td><td width="50px"><i *ngIf="this.formEmpresa.value.referencia; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
@@ -1171,15 +1159,7 @@
               <strong>Rubro:</strong>
             </div>
             <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.subrubro.rubro.rubro }}</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Subrubro:</strong>
-            </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.subrubro.subrubro }}</label>
+              <label for="">{{ dato?.rubro.rubro }}</label>
             </div>
           </div>
           <div class="row" *ngIf="dato?.servicios">
@@ -1256,15 +1236,7 @@
               <strong>Municipio:</strong>
             </div>
             <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.localidad.municipio.municipio }}</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Localidad:</strong>
-            </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.localidad.localidad }}</label>
+              <label for="">{{ dato?.municipio.municipio }}</label>
             </div>
           </div>
           <div class="row" *ngIf="dato?.zona">

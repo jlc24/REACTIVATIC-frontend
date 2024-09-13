@@ -8,6 +8,13 @@ import { RUTA, TOKEN } from '../_config/application';
 import { Productos } from '../_entidades/productos';
 import swal from 'sweetalert2';
 import { Subrubros } from '../_entidades/subrubros';
+import { Municipios } from '../_entidades/municipios';
+import { Precios } from '../_entidades/precios';
+import { Colores } from '../_entidades/colores';
+import { Materiales } from '../_entidades/materiales';
+import { Tamanos } from '../_entidades/tamanos';
+import { Atributos } from '../_entidades/atributos';
+import { Usuarios } from '../_entidades/usuarios';
 
 @Injectable({
   providedIn: 'root'
@@ -18,12 +25,32 @@ export class CatalogosService {
 
   constructor(private _httpClient: HttpClient) { }
 
-  datos(pagina: number, cantidad: number, buscar: string): Observable<Productos[]> {
-    return this._httpClient.get<Productos[]>(`${this.ruta}/?pagina=${pagina}&cantidad=${cantidad}&buscar=${buscar}`);
+  datos(pagina: number, cantidad: number, buscar: string, orden: string): Observable<Productos[]> {
+    return this._httpClient.get<Productos[]>(`${this.ruta}/?pagina=${pagina}&cantidad=${cantidad}&buscar=${buscar}&orden=${orden}`);
   }
 
   cantidad(buscar: string): Observable<number> {
     return this._httpClient.get<number>(`${this.ruta}/cantidad?buscar=${buscar}`);
+  }
+
+  precios(id: number): Observable<Precios[]>{
+    return this._httpClient.get<Precios[]>(`${this.ruta}/precios/${id}`);
+  }
+
+  colores(id: number): Observable<Colores[]>{
+    return this._httpClient.get<Colores[]>(`${this.ruta}/colores/${id}`);
+  }
+
+  materiales(id: number): Observable<Materiales[]>{
+    return this._httpClient.get<Materiales[]>(`${this.ruta}/materiales/${id}`);
+  }
+
+  tamanos(id: number): Observable<Tamanos[]>{
+    return this._httpClient.get<Tamanos[]>(`${this.ruta}/tamanos/${id}`);
+  }
+
+  atributos(id: number): Observable<Atributos[]>{
+    return this._httpClient.get<Atributos[]>(`${this.ruta}/atributos/${id}`);
   }
 
   dato(id: number): Observable<Productos> {
@@ -38,15 +65,12 @@ export class CatalogosService {
     return this._httpClient.get<Rubros[]>(`${this.ruta}/rubros`);
   }
 
-  subrubros(id: number): Observable<Subrubros[]> {
-    return this._httpClient.get<Subrubros[]>(`${this.ruta}/subrubros/${id}`);
-  }
-  listaSubrubros(): Observable<Subrubros[]>{
-    return this._httpClient.get<Subrubros[]>(`${this.ruta}/listasubrubros`);
+  listaMunicipios(): Observable<Municipios[]>{
+    return this._httpClient.get<Municipios[]>(`${this.ruta}/productos`);
   }
 
   cantidadporrubros(): Observable<Rubros[]> {
-    return this._httpClient.get<Rubros[]>(`${this.ruta}/rubros`);
+    return this._httpClient.get<Rubros[]>(`${this.ruta}/cantidadporrubros`);
   }
 
   procesar(dato: Procesar): Observable<any> {
@@ -62,6 +86,10 @@ export class CatalogosService {
   }
 
   usuariocatalogo(dato: Procesar): Observable<Procesar> {
-    return this._httpClient.post<Procesar>(`${this.ruta}/usuariocatalogo`, dato);
+    const payload = {
+      usuario: dato.usuario,
+      clave: dato.clave
+  };
+    return this._httpClient.post<Procesar>(`${this.ruta}/usuariocatalogo`, payload);
   }
 }

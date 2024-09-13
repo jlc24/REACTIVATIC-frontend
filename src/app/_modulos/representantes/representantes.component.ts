@@ -960,7 +960,7 @@ export class RepresentantesComponent implements OnInit {
     }
     if (rol == 'repreverso') {
       this.imagenRepReverso = [];
-      this._personasService.downloadperfil('repreverso').subscribe((data) => {
+      this._personasService.download(this.user.idpersona, 'repreverso').subscribe((data) => {
         this.imagenRepReverso = data;
       });
     }

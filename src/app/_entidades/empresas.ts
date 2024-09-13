@@ -4,10 +4,14 @@ import { Subrubros } from './subrubros';
 import { Representantes } from './representantes';
 import { Usuarios } from './usuarios';
 import { Imagen } from './imagen';
+import { Rubros } from './rubros';
+import { Municipios } from './municipios';
 
 export class Empresas {
   idempresa: number;
+  idrubro: number;
   idsubrubro: number;
+  idmunicipio: number;
   idlocalidad: number;
   idrepresentante: number;
   idasociacion: number;
@@ -50,7 +54,9 @@ export class Empresas {
   created_at: Date;
 
   representante: Representantes;
+  rubro: Rubros;
   subrubro: Subrubros;
+  municipio: Municipios;
   localidad: Localidades;
   asociacion: Asociaciones;
   usuario: Usuarios;

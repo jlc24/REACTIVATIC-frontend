@@ -91,6 +91,10 @@ body {
     background-attachment: fixed;
 }
 
+body.offcanvas-open {
+  overflow: hidden;
+}
+
 [tabindex="-1"]:focus {
     outline: 0 !important;
 }
@@ -2268,27 +2272,27 @@ pre code {
 }
 
 .form-control::-webkit-input-placeholder {
-    color: #1ca591;
+    color: #6c757d;
     opacity: 1;
 }
 
 .form-control::-moz-placeholder {
-    color: #1ca591;
+    color: #6c757d;
     opacity: 1;
 }
 
 .form-control:-ms-input-placeholder {
-    color: #1ca591;
+    color: #6c757d;
     opacity: 1;
 }
 
 .form-control::-ms-input-placeholder {
-    color: #1ca591;
+    color: #6c757d;
     opacity: 1;
 }
 
 .form-control::placeholder {
-    color: #1ca591;
+    color: #6c757d;
     opacity: 1;
 }
 
@@ -10849,7 +10853,7 @@ a.text-primary:focus {
 }
 
 .text-secondary {
-    color: #1ca591 !important;
+    color: #6c757d !important;
 }
 
 a.text-secondary:hover,
@@ -10917,7 +10921,7 @@ a.text-dark:focus {
 
 .text-muted,
 .app-notification__meta {
-    color: #1ca591 !important;
+    color: #6c757d !important;
 }
 
 .text-black-50 {

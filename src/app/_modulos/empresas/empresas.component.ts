@@ -70,6 +70,8 @@ export class EmpresasComponent implements OnInit {
   asociaciones: Asociaciones[];
   representantes: Representantes[];
   representante: Representantes;
+  imagenRepAnverso: any[];
+  imagenRepReverso: any[];
 
   pagina:number = 0;
   numPaginas:number = 0;
@@ -224,7 +226,6 @@ export class EmpresasComponent implements OnInit {
       idsociacion: [''],
       celular: [''],
       idrubro: [''],
-      idsubrubro: [''],
       servicios: [''],
       capacidad: [''],
       unidadmedida: [''],
@@ -238,7 +239,6 @@ export class EmpresasComponent implements OnInit {
       participacion: [''],
       capacitacion: [''],
       idmunicipio: [''],
-      idlocalidad: [''],
       zona: [''],
       direccion: [''],
       referencia: [''],
@@ -402,11 +402,11 @@ export class EmpresasComponent implements OnInit {
     })
   }
 
-  flocalidades(id: number) {
-    this._localidadesService.datosl(id).subscribe( data => {
-      this.localidades = data;
-    });
-  }
+  // flocalidades(id: number) {
+  //   this._localidadesService.datosl(id).subscribe( data => {
+  //     this.localidades = data;
+  //   });
+  // }
 
   frubros(){
     this.esCargoTextil = this._accesoService.esCargoTextil();
@@ -432,11 +432,11 @@ export class EmpresasComponent implements OnInit {
     }
   }
 
-  fsubrubros(id: number) {
-    this._subrubrosService.datosl(id).subscribe( data => {
-      this.subrubros = data;
-    });
-  }
+  // fsubrubros(id: number) {
+  //   this._subrubrosService.datosl(id).subscribe( data => {
+  //     this.subrubros = data;
+  //   });
+  // }
 
   fasociaciones() {
     this._asociacionesService.datosl().subscribe( data => {
@@ -505,6 +505,8 @@ export class EmpresasComponent implements OnInit {
         data => {
           if (data) {
               this.representante = data;
+              this.fdescargar(data.persona.idpersona, 'repanverso');
+              this.fdescargar(data.persona.idpersona, 'repreverso');
           }
         }, (error) => {
           this.toast.error(error, 'Error');
@@ -513,6 +515,8 @@ export class EmpresasComponent implements OnInit {
     }else{
       this._representantesService.dato(id).subscribe((data) => {
         this.representante = data;
+        this.fdescargar(data.persona.idpersona, 'repanverso');
+        this.fdescargar(data.persona.idpersona, 'repreverso');
       });
     }
   }
@@ -797,10 +801,7 @@ export class EmpresasComponent implements OnInit {
         ]
       ],
       idrubro: [
-        dato.subrubro?.idrubro
-      ],
-      idsubrubro: [
-        dato.subrubro?.idsubrubro,
+        dato.rubro?.idrubro,
         [
           Validators.required
         ]
@@ -842,10 +843,7 @@ export class EmpresasComponent implements OnInit {
         dato.capacitacion
       ],
       idmunicipio:[
-        dato.localidad?.idmunicipio
-      ],
-      idlocalidad:[
-        dato.localidad?.idlocalidad,
+        dato.municipio?.idmunicipio,
         [
           Validators.required
         ]
@@ -1030,7 +1028,7 @@ export class EmpresasComponent implements OnInit {
       this.dato = data;
       this.fformEmpresa(this.dato);
       this.fselrepresentante(this.dato.representante.idrepresentante);
-      this.fsubrubros(data.subrubro?.idrubro);
+      this.frubros();
       if (data.otromotivo) {
         this.mostrarOtroCampo = true;
       }
@@ -1040,7 +1038,6 @@ export class EmpresasComponent implements OnInit {
       if (data.otrosinvolucrados) {
         this.mostrarOtro = true;
       }
-      this.flocalidades(data.localidad?.idmunicipio);
       this.modalRefEmpresa = this._modalService.open(content, {
         backdrop: 'static',
         keyboard: false,
@@ -1070,8 +1067,8 @@ export class EmpresasComponent implements OnInit {
   faceptar(): void {
     this.submitted = true;
 
-    this.dato.idsubrubro = this.formEmpresa.value.idsubrubro;
-    this.dato.idlocalidad = this.formEmpresa.value.idlocalidad;
+    this.dato.idrubro = this.formEmpresa.value.idrubro;
+    this.dato.idmunicipio = this.formEmpresa.value.idmunicipio;
     this.dato.idrepresentante = this.formEmpresa.value.idrepresentante;
     this.dato.idasociacion = this.formEmpresa.value.idasociacion;
     this.dato.empresa = this.formEmpresa.value.empresa;
@@ -1268,6 +1265,18 @@ export class EmpresasComponent implements OnInit {
         this.imagenEmpresa = data;
       });
     }
+    if (rol == 'repanverso') {
+      this.imagenRepAnverso = [];
+      this._personasService.download(id, 'repanverso').subscribe((data) => {
+        this.imagenRepAnverso = data;
+      });
+    }
+    if (rol == 'repreverso') {
+      this.imagenRepReverso = [];
+      this._personasService.download(id, 'repreverso').subscribe((data) => {
+        this.imagenRepReverso = data;
+      });
+    }
   }
 
   sanitizarImagen(data: string, mimeType: string): SafeUrl {
@@ -1312,7 +1321,7 @@ export class EmpresasComponent implements OnInit {
     swal.fire({
       title: !estado ? '¿Está seguro de deshabilitar?' : '¿Está seguro de habilitar?',
       icon: 'warning',
-      text: !estado ? 'La localidad NO se podrá utilizar para registros.' : 'La localidad se podrá utilizar para registros.',
+      text: !estado ? 'La Unidad Productiva NO se podrá utilizar para registros.' : 'La Unidad Productiva se podrá utilizar para registros.',
       showCancelButton: true,
       cancelButtonText: 'cancelar',
       confirmButtonText: 'Cambiar',

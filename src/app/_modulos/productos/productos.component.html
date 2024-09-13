@@ -80,7 +80,7 @@
               <td class="text-right">{{ _item.precioventa }} <b>Bs.</b></td>
               <!-- <td>{{_item.preciocompra}}</td> -->
               <td class="text-center">
-                <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado"  >
+                <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idproducto, !_item.estado)" >
                   {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
                 </span>
               </td>

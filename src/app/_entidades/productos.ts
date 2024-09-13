@@ -5,7 +5,7 @@ export class Productos {
     idempresa: number;
     producto: string;
     descripcion: string;
-    precioventa: number;
+    precioventa: string;
     cantidad: number;
     estado: boolean;
     created_at: Date;

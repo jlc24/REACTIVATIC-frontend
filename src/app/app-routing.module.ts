@@ -7,6 +7,8 @@ import { AccesoComponent } from './acceso/acceso.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DetalleComponent } from './catalogo/detalle/detalle.component';
+import { EmpresaComponent } from './catalogo/empresa/empresa.component';
+import { PerfilComponent } from './catalogo/perfil/perfil.component';
 
 const routes: Routes = [
   {
@@ -18,14 +20,17 @@ const routes: Routes = [
     component: CatalogoComponent,
   },
   {
-    path: 'catalogo/:id',
+    path: 'catalogo/producto/:id',
     component: DetalleComponent,
   },
   {
-    path: 'registros',
-    component: RegistrosComponent,
+    path: 'catalogo/empresa/:id',
+    component: EmpresaComponent,
   },
-
+  {
+    path: 'catalogo/perfil/:id',
+    component: PerfilComponent,
+  },
   {
     path: '',
     component: PlantillaComponent,
