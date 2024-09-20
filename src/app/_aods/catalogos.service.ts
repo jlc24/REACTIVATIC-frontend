@@ -15,6 +15,7 @@ import { Materiales } from '../_entidades/materiales';
 import { Tamanos } from '../_entidades/tamanos';
 import { Atributos } from '../_entidades/atributos';
 import { Usuarios } from '../_entidades/usuarios';
+import { Empresas } from '../_entidades/empresas';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,10 @@ export class CatalogosService {
 
   cantidad(buscar: string): Observable<number> {
     return this._httpClient.get<number>(`${this.ruta}/cantidad?buscar=${buscar}`);
+  }
+
+  destacados(): Observable<Productos[]>{
+    return this._httpClient.get<Productos[]>(`${this.ruta}/destacados`);
   }
 
   precios(id: number): Observable<Precios[]>{
@@ -55,6 +60,13 @@ export class CatalogosService {
 
   dato(id: number): Observable<Productos> {
     return this._httpClient.get<Productos>(`${this.ruta}/${id}`);
+  }
+
+  datoempresa(id: number): Observable<Empresas> {
+    return this._httpClient.get<Empresas>(`${this.ruta}/empresa/${id}`);
+  }
+  datoperfil(id: number): Observable<Empresas> {
+    return this._httpClient.get<Empresas>(`${this.ruta}/perfil/${id}`);
   }
 
   download(id: number, tipo: string): Observable<any>{
@@ -91,5 +103,9 @@ export class CatalogosService {
       clave: dato.clave
   };
     return this._httpClient.post<Procesar>(`${this.ruta}/usuariocatalogo`, payload);
+  }
+
+  registrarCliente(dato: Procesar): Observable<Procesar>{
+    return this._httpClient.post<Procesar>(`${this.ruta}/registrar`, dato);
   }
 }

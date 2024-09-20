@@ -424,7 +424,8 @@ export class RepresentantesComponent implements OnInit {
     this.modalRefRep = this._modalService.open(content, {
       backdrop:'static',
       keyboard: false,
-      size: 'lg'
+      size: 'lg',
+      scrollable: true
     });
   }
 
@@ -439,7 +440,8 @@ export class RepresentantesComponent implements OnInit {
         this.modalRefRep = this._modalService.open(content, {
           backdrop: 'static',
           keyboard: false,
-          size: 'lg'
+          size: 'lg',
+          scrollable: true
         });
         this.utilsService.cerrarCargando();
       }
@@ -469,7 +471,8 @@ export class RepresentantesComponent implements OnInit {
         this.modalRefRep = this._modalService.open(content, {
           backdrop:'static',
           keyboard: false,
-          size: 'lg'
+          size: 'lg',
+          scrollable: true
         });
         this.utilsService.cerrarCargando();
       },
@@ -483,7 +486,12 @@ export class RepresentantesComponent implements OnInit {
             text: 'El representante no tiene un usuario registrado. ¿Desea generar un usuario y clave?',
             showCancelButton: true,
             confirmButtonText: 'Sí, generar',
-            cancelButtonText: 'No, cancelar'
+            cancelButtonText: 'No, cancelar',
+            customClass: {
+              confirmButton: 'btn btn-success rounded-pill mr-3',
+              cancelButton: 'btn btn-secondary rounded-pill',
+            },
+            buttonsStyling: false,
           }).then((result) => {
             if (result.isConfirmed) {
               // Llamar a la ruta correspondiente para generar usuario y clave
@@ -580,6 +588,11 @@ export class RepresentantesComponent implements OnInit {
       showCancelButton: true,
       cancelButtonText: 'Cancelar',
       confirmButtonText: 'Borrar',
+      customClass: {
+        confirmButton: 'btn btn-success rounded-pill mr-3',
+        cancelButton: 'btn btn-secondary rounded-pill',
+      },
+      buttonsStyling: false,
     }).then((result) => {
       if (result.value) {
         swal.fire({
@@ -591,6 +604,11 @@ export class RepresentantesComponent implements OnInit {
           showCancelButton: true,
           cancelButtonText: 'Cancelar',
           confirmButtonText: 'Confirmar',
+          customClass: {
+            confirmButton: 'btn btn-success rounded-pill mr-3',
+            cancelButton: 'btn btn-secondary rounded-pill',
+          },
+          buttonsStyling: false,
           preConfirm: () => {
             const clave = (document.getElementById('clave-input') as HTMLInputElement).value;
             if (!clave) {
@@ -634,6 +652,11 @@ export class RepresentantesComponent implements OnInit {
       showCancelButton: true,
       cancelButtonText: 'cancelar',
       confirmButtonText: 'Cambiar',
+      customClass: {
+        confirmButton: 'btn btn-success rounded-pill mr-3',
+        cancelButton: 'btn btn-secondary rounded-pill',
+      },
+      buttonsStyling: false,
     }).then((result) => {
       if (result.value) {
         swal.fire({
@@ -645,6 +668,11 @@ export class RepresentantesComponent implements OnInit {
           showCancelButton: true,
           cancelButtonText: 'Cancelar',
           confirmButtonText: 'Confirmar',
+          customClass: {
+            confirmButton: 'btn btn-success rounded-pill mr-3',
+            cancelButton: 'btn btn-secondary rounded-pill',
+          },
+          buttonsStyling: false,
           preConfirm: () => {
             const clave = (document.getElementById('clave-input') as HTMLInputElement).value;
             if (!clave) {
@@ -747,6 +775,11 @@ export class RepresentantesComponent implements OnInit {
       showCancelButton: true,
       cancelButtonText: 'Cancelar',
       confirmButtonText: 'Confirmar',
+      customClass: {
+        confirmButton: 'btn btn-success rounded-pill mr-3',
+        cancelButton: 'btn btn-secondary rounded-pill',
+      },
+      buttonsStyling: false,
       preConfirm: () => {
         const clave = (document.getElementById('clave-input') as HTMLInputElement).value;
         if (!clave) {

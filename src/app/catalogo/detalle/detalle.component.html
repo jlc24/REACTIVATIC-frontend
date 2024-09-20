@@ -81,9 +81,9 @@
       <strong>{{ totalAPagar | number:'1.2-2' }} Bs.</strong>
     </div>
     <div class="d-flex justify-content-end" [ngClass]="carritos?.length > 0 ? ' border-top' : ''">
-      <!-- <button class="btn btn-outline-success mr-2" [ngClass]="carritos?.length > 0 ? 'mt-3' : ''" (click)="fprocesa(registrar)" [disabled]="!(carritos?.length > 0)">
+      <button class="btn btn-outline-success mr-2" [ngClass]="carritos?.length > 0 ? 'mt-3' : ''" (click)="fprocesa(registrar)" [disabled]="!(carritos?.length > 0)">
         <span><i class="fa fa-cogs"></i> Realizar Pedido</span>
-      </button> -->
+      </button>
       <button class="btn btn-outline-secondary mr-2" [ngClass]="carritos?.length > 0 ? 'mt-3' : ''" (click)="toggleCarrito()">
         <span><i class="fa fa-close"></i> Cerrar</span>
       </button>
@@ -103,28 +103,28 @@
         <i class="bi bi-cart" *ngIf="cantidadcarrito == null"></i>
         <span class="toolbar-cart" *ngIf="cantidadcarrito > 0">x{{ cantidadcarrito }}</span>
       </div>
-      <span class="d-none d-sm-inline">Mi Carrito</span>
+      <span class="d-none d-sm-inline nombre">Mi Carrito</span>
     </div>
 
     <!-- Iniciar Sesión o Bienvenida -->
     <div *ngIf="localusuario == '' || localusuario == null" class="toolbar-item puntero" (click)="faccesom(accesom)" title="Iniciar Sesión">
       <i class="bi bi-person-fill"></i>
-      <span class="d-none d-sm-inline">Iniciar Sesión</span>
+      <span class="d-none d-sm-inline nombre">Iniciar Sesión</span>
     </div>
-    <div *ngIf="localusuario == '' || localusuario == null" class="toolbar-item puntero" (click)="faccesom(accesom)" title="Registrarse">
+    <div *ngIf="localusuario == '' || localusuario == null" class="toolbar-item puntero" (click)="fregistrar(registrar)" title="Registrarse" hidden>
       <i class="bi bi-person-fill-add"></i>
-      <span class="d-none d-sm-inline">Registro</span>
+      <span class="d-none d-sm-inline nombre">Registro</span>
     </div>
 
     <div *ngIf="localusuario" class="toolbar-item puntero" title="Bienvenido">
       <i class="bi bi-person-circle"></i>
-      <span class="d-none d-sm-inline">{{ localusuario }}</span>
+      <span class="d-none d-sm-inline nombre">{{ localusuario }}</span>
     </div>
 
     <!-- Cerrar Sesión -->
     <div *ngIf="localusuario" class="toolbar-item puntero" (click)="fsalir()" title="Cerrar Sesión">
       <i class="bi bi-box-arrow-right"></i>
-      <span class="d-none d-sm-inline">Cerrar Sesión</span>
+      <span class="d-none d-sm-inline nombre">Cerrar Sesión</span>
     </div>
   </div>
 </div>
@@ -207,8 +207,8 @@
             <div class="row">
               <div class="material-card-container mr-4" *ngFor="let _precio of precios" (click)="selectPrecio(_precio.idprecio)" [ngClass]="{'selected': selectedPrecio === _precio.idprecio}">
                 <div class="material-card puntero">
-                  <p><b>{{ _precio.cantidad }} {{ _precio.cantidad == '1' ? 'pieza' : 'piezas' }} </b></p>
-                  <p>Bs <b>{{ _precio.precio | number:'1.2-2' }}</b></p>
+                  <p style="font-size: 20px;"><b>{{ _precio.cantidad }} {{ _precio.cantidad == '1' ? 'pieza' : 'piezas' }} </b></p>
+                  <p style="font-size: 20px;"><strong>Bs <b>{{ _precio.precio | number:'1.2-2' }}</b></strong></p>
                 </div>
                 <i *ngIf="selectedPrecio === _precio.idprecio" class="bi bi-check"></i>
               </div>
@@ -475,62 +475,115 @@
 
 <ng-template #registrar>
   <div class="modal-header">
-      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> Proceso de solicitud</h4>
+      <h4 class="modal-title pull-left"><i class="bi bi-person-fill-add" style="font-size: 2rem;"></i> Registrar Datos de Cliente</h4>
       <div class="alert alert-info" role="alert">
-          Estimado cliente Los campos remarcados con * son necesarios.
+          Estimado cliente. Los campos remarcados con <b class="text-danger">*</b> son necesarios.
       </div>
   </div>
   <div class="modal-body">
-      <!-- <form [formGroup]="formulario" (ngSubmit)="faceptar()">
-          <div class="form-group">
-              <label>Nombre completo <span class="text-danger"><b>*</b></span></label>
-              <input type="text" class="form-control" formControlName="primerapellido" [class.is-invalid]="f.primerapellido.errors && f.primerapellido.touched" />
+      <form [formGroup]="formulario" (ngSubmit)="faceptar()">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="primerapellido">Apellido Paterno: <span class="text-danger">*</span></label>
+            <input type="text" id="primerapellido" class="form-control form-control-sm" formControlName="primerapellido"
+              [class.is-invalid]="f.primerapellido.errors && f.primerapellido.touched"
+              (input)="onInputRegister($event, 'primerapellido', 'letrasyespacios')"
+              autocomplete="no" placeholder="Ingrese su apellido paterno" required/>
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
           </div>
-          <div class="form-group">
-              <label>Celular <span class="text-danger"><b>*</b></span></label>
-              <input type="number" class="form-control" formControlName="celular" [class.is-invalid]="f.celular.errors && f.celular.touched" />
+          <div class="col-md-6 mb-3">
+            <label for="segundoapellido">Apellido Materno:</label>
+            <input type="text" id="segundoapellido" class="form-control form-control-sm" formControlName="segundoapellido"
+              [class.is-invalid]="f.segundoapellido.errors && f.segundoapellido.touched"
+              (input)="onInputRegister($event, 'segundoapellido', 'letrasyespacios')"
+              autocomplete="no" placeholder="Ingrese su apellido materno"/>
+            <div class="invalid-feedback">Este campo no es obligatorio.</div>
           </div>
-          <div class="form-group">
-              <label>Correo </label>
-              <input type="email" class="form-control" formControlName="correo" [class.is-invalid]="f.correo.errors && f.correo.touched" />
+          <div class="col-md-6 mb-3">
+            <label for="primernombre">Nombres: <span class="text-danger">*</span></label>
+            <input type="text" id="primernombre" class="form-control form-control-sm" formControlName="primernombre"
+              [class.is-invalid]="f.primernombre.errors && f.primernombre.touched"
+              (input)="onInputRegister($event, 'primernombre', 'letrasyespacios')"
+              autocomplete="no" placeholder="Ingrese su nombre" required/>
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
           </div>
-          <div class="text-center">
-              <button type="submit" class="btn btn-success m-2" [disabled]="!formulario.valid">
-                <i class="fa fa-save"></i> Grabar
-            </button>
-              <button type="button" class="btn btn-danger" (click)="fcancelar()">
-                <i class="fa fa-times"></i> Cancelar
-            </button>
+          <div class="col-md-6 mb-3">
+            <label for="celular">Celular: <span class="text-danger">*</span></label>
+            <input type="text" id="celular" class="form-control form-control-sm" formControlName="celular"
+              [class.is-invalid]="f.celular.errors && f.celular.touched"
+              (input)="onInputRegister($event, 'celular', 'numeros')"
+              autocomplete="no" placeholder="Ingrese su número de celular"/>
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
           </div>
-      </form> -->
+          <div class="col-md-6 mb-3">
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" class="form-control form-control-sm" formControlName="direccion"
+              [class.is-invalid]="f.direccion.errors && f.direccion.touched"
+              (input)="onInputRegister($event, 'direccion', 'direccion')"
+              autocomplete="no" placeholder="Ingrese su dirección"/>
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="correo">Correo:</label>
+            <input type="email" id="correo" class="form-control form-control-sm" formControlName="correo"
+              [class.is-invalid]="f.correo.errors && f.correo.touched"
+              autocomplete="no" placeholder="Ingrese su correo electrónico"/>
+            <div class="invalid-feedback">Por favor ingrese un correo válido.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="usuario">Usuario:</label>
+            <input type="text" id="usuario" class="form-control form-control-sm" formControlName="usuario"
+              [class.is-invalid]="f.usuario.errors && f.usuario.touched"
+              autocomplete="no" placeholder="Ingrese su usuario"/>
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="clave">Clave:</label>
+            <input type="password" id="clave" class="form-control form-control-sm" formControlName="clave"
+              [class.is-invalid]="f.clave.errors && f.clave.touched"
+              autocomplete="no" placeholder="Ingrese su clave"/>
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formulario.valid" style="border-radius: 50px;">
+            <i class="bi bi-floppy"></i> Registrar datos
+          </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()" style="border-radius: 50px;">
+              <i class="bi bi-x"></i> Cancelar
+          </button>
+        </div>
+      </form>
   </div>
 </ng-template>
 
 <ng-template #accesom>
-  <div class="modal-header">
-      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> Acceso al sistema</h4>
-      <div class="alert alert-info" role="alert">
-          Estimado cliente Los campos remarcados con * son necesarios.
-      </div>
+  <div class="modal-header d-flex align-items-center flex-column">
+    <div class="icon-modal">
+      <i class="bi bi-person-circle"></i>
+    </div>
+    <h4 class="modal-title">Iniciar sesión</h4>
   </div>
   <div class="modal-body">
-      <form [formGroup]="formulariom" (ngSubmit)="faceptarm()">
-          <div class="form-group">
-              <label>Celular <span class="text-danger"><b>*</b></span></label>
-              <input type="text" class="form-control" formControlName="usuario" [class.is-invalid]="fm.usuario.errors && fm.usuario.touched" />
-          </div>
-          <div class="form-group">
-              <label>Clave de acceso <span class="text-danger"><b>*</b></span></label>
-              <input type="password" class="form-control" formControlName="clave" [class.is-invalid]="fm.clave.errors && fm.clave.touched" />
-          </div>
-          <div class="text-center">
-              <button type="submit" class="btn btn-success m-2" [disabled]="!formulariom.valid">
-                <i class="fa fa-sign-in"></i> Ingresar
-            </button>
-              <button type="button" class="btn btn-danger" (click)="fcancelar()">
-                <i class="fa fa-times"></i> Cancelar
-            </button>
-          </div>
-      </form>
+    <form [formGroup]="formulariom" (ngSubmit)="faceptarm()">
+      <div class="form-group">
+        <label>Usuario <span class="text-danger"><b>*</b></span></label>
+        <input type="text" class="form-control" formControlName="usuario" [maxlength]="10" [class.is-invalid]="fm.usuario.errors && fm.usuario.touched" (input)="onInputLogin($event, 'usuario', 'usuario')" placeholder="Ingrese Usuario ..." style="border-radius: 50px;"/>
+      </div>
+      <div class="form-group">
+        <label>Clave de acceso <span class="text-danger"><b>*</b></span></label>
+        <input type="password" class="form-control" formControlName="clave" [maxlength]="20" [class.is-invalid]="fm.clave.errors && fm.clave.touched" (input)="onInputLogin($event, 'clave', 'clave')" placeholder="Ingrese Clave ..." style="border-radius: 50px;"/>
+      </div><br>
+      <div class="form-group">
+        <button type="submit" class="btn btn-success btn-block" [disabled]="!formulariom.valid" style="border-radius: 50px;">
+          <i class="bi bi-box-arrow-in-right"></i> Acceder
+        </button>
+      </div>
+      <hr>
+      <div class="text-center mt-3">
+        <span  (click)="forgotPassword()" class="d-block text-secondary puntero">¿Olvidaste tu contraseña?</span>
+        <span  (click)="fregistrar(registrar)" class="d-block text-muted puntero">No tienes cuenta? Regístrate</span>
+      </div>
+    </form>
   </div>
 </ng-template>

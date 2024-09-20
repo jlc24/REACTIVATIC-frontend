@@ -6,6 +6,8 @@ import { EmpresasService } from 'src/app/_aods/empresas.service';
 import { MunicipiosService } from 'src/app/_aods/municipios.service';
 import { ProductosService } from 'src/app/_aods/productos.service';
 import { SolicitudesService } from 'src/app/_aods/solicitudes.service';
+import { ReportesService } from 'src/app/_aods/reportes.service';
+import { Reportes } from 'src/app/_entidades/reportes';
 
 @Component({
   selector: 'app-escritorio',
@@ -13,6 +15,8 @@ import { SolicitudesService } from 'src/app/_aods/solicitudes.service';
   styleUrls: ['./escritorio.component.css'],
 })
 export class EscritorioComponent implements OnInit {
+
+  empresasgestion: Reportes[];
 
   escliente: boolean =false;
   esempresa: boolean =false;
@@ -48,6 +52,7 @@ export class EscritorioComponent implements OnInit {
     private _productosService: ProductosService,
     private _solicitudesService: SolicitudesService,
     private _accesoService: AccesoService,
+    private _reportesService: ReportesService,
     private _ruta: Router
   ) {}
 
@@ -163,6 +168,12 @@ export class EscritorioComponent implements OnInit {
   fcantidadsventa(){
     this._solicitudesService.cantidade().subscribe((data) => {
       this.totalsolicitudesventa = data;
+    })
+  }
+
+  fempresasgestion(){
+    this._reportesService.empresasporgestion().subscribe((data) => {
+      this.empresasgestion = data;
     })
   }
 

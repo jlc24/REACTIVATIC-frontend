@@ -23,7 +23,6 @@ import { EmpresasService } from 'src/app/_aods/empresas.service';
 import { UtilsService } from 'src/app/_aods/utils.service';
 import { HttpEventType } from '@angular/common/http';
 
-
 @Component({
   selector: 'app-productos',
   templateUrl: './productos.component.html',
@@ -198,10 +197,6 @@ export class ProductosComponent implements OnInit {
   }
 
   onColorClick(colorCode: string) {
-    // const selectedColor = this.colors.find(color => color.code === colorCode);
-    // if (selectedColor) {
-    //   this.selectedColor = selectedColor;
-    // }
     this.selectedColor = this.colors.find(color => color.code === colorCode) || null;
   }
 
@@ -440,6 +435,11 @@ export class ProductosComponent implements OnInit {
       showCancelButton: true,
       cancelButtonText: 'cancelar',
       confirmButtonText: 'Cambiar',
+      customClass: {
+        confirmButton: 'btn btn-success rounded-pill mr-3',
+        cancelButton: 'btn btn-secondary rounded-pill',
+      },
+      buttonsStyling: false,
     }).then((result) => {
       if (result.value) {
         this._productosService.cambiarestado({ idproducto, estado }).subscribe( response => {
@@ -450,13 +450,12 @@ export class ProductosComponent implements OnInit {
     });
   }
 
-  
+
   fcancelar() {
     this.modalRefProducto.dismiss();
   }
   fcancelarDet() {
     this.modalRefDetalle.dismiss();
-
   }
 
   feliminar(id: number){
@@ -467,6 +466,11 @@ export class ProductosComponent implements OnInit {
       showCancelButton: true,
       cancelButtonText: 'Cancelar',
       confirmButtonText: 'Borrar',
+      customClass: {
+        confirmButton: 'btn btn-success rounded-pill mr-3',
+        cancelButton: 'btn btn-secondary rounded-pill',
+      },
+      buttonsStyling: false,
     })
     .then((result) => {
       if (result.value) {
@@ -570,7 +574,8 @@ export class ProductosComponent implements OnInit {
     this.modalRefDetalle = this._modalService.open(content, {
       backdrop: 'static',
       keyboard: false,
-      size: 'lg'
+      size: 'lg',
+      scrollable: true
     });
   }
 

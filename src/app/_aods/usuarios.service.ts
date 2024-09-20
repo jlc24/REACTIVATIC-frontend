@@ -16,6 +16,13 @@ export class UsuariosService {
 
   constructor(private _httpClient: HttpClient, private toast: ToastrService) { }
 
+  lista(): Observable<Usuarios[]> {
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Usuarios[]>(`${this.ruta}/lista`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+
   datos(pagina: number, cantidad: number, buscar: string): Observable<Usuarios[]> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
     return this._httpClient.get<Usuarios[]>(`${this.ruta}?pagina=${pagina}&cantidad=${cantidad}&buscar=${buscar}`, {
@@ -26,6 +33,13 @@ export class UsuariosService {
   datossddpi(pagina: number, cantidad: number, buscar: string): Observable<Usuarios[]> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
     return this._httpClient.get<Usuarios[]>(`${this.ruta}/sddpi?pagina=${pagina}&cantidad=${cantidad}&buscar=${buscar}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+
+  datosdpeic(pagina: number, cantidad: number, buscar: string): Observable<Usuarios[]> {
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Usuarios[]>(`${this.ruta}/dpeic?pagina=${pagina}&cantidad=${cantidad}&buscar=${buscar}`, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
   }
@@ -46,6 +60,12 @@ export class UsuariosService {
   cantidadsddpi(buscar: string): Observable<number> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
     return this._httpClient.get<number>(`${this.ruta}/cantidad/sddpi?buscar=${buscar}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+  cantidaddpeic(buscar: string): Observable<number> {
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<number>(`${this.ruta}/cantidad/dpeic?buscar=${buscar}`, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
   }

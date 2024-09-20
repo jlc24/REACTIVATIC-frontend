@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { AccesoService } from 'src/app/_aods/acceso.service';
 import { EnlacesService } from 'src/app/_aods/enlaces.service';
 import { EnlacesrolesService } from 'src/app/_aods/enlacesroles.service';
@@ -62,7 +63,8 @@ export class RolesComponent implements OnInit {
     private _accesoService: AccesoService,
     private _fb: FormBuilder,
     config: NgbModalConfig,
-    private _modalService: NgbModal
+    private _modalService: NgbModal,
+    private _toast: ToastrService
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
@@ -195,7 +197,12 @@ export class RolesComponent implements OnInit {
     this._rolesService.dato(id).subscribe((data) => {
       this.rol = data;
       this.fenlaces(id);
-      this._modalService.open(content, { size: 'lg'});
+      this._modalService.open(content,
+        {
+          size: 'lg',
+          scrollable: true
+        }
+      );
     });
   }
 
@@ -229,6 +236,11 @@ export class RolesComponent implements OnInit {
       showCancelButton: true,
       cancelButtonText: 'Cancelar',
       confirmButtonText: 'Borrar',
+      customClass: {
+        confirmButton: 'btn btn-success rounded-pill mr-3',
+        cancelButton: 'btn btn-secondary rounded-pill',
+      },
+      buttonsStyling: false,
     })
     .then((result) => {
       if (result.value) {
@@ -269,20 +281,24 @@ export class RolesComponent implements OnInit {
       this._enlacesrolesService.adicionar(this.enlacerol).subscribe({
         next: () => {
           this.fenlaces(idrol);
-          Swal.fire('Exito', 'Enlace adicionado exitosamente', 'success');
+          //Swal.fire('Exito', 'Enlace adicionado exitosamente', 'success');
+          this._toast.success('Enlace adicionado exitosamente','Hecho');
         },
         error: () => {
-          Swal.fire('Error', 'No se pudo adicionar el enlace-rol', 'error');
+          //Swal.fire('Error', 'No se pudo adicionar el enlace-rol', 'error');
+          this._toast.error('No se pudo adicionar el enlace-rol','Error');
         }
       });
     } else {
       this._enlacesrolesService.eliminar(this.enlacerol).subscribe({
         next: () => {
           this.fenlaces(idrol);
-          Swal.fire('Exito', 'Enlace eliminado exitosamente', 'success');
+          //Swal.fire('Exito', 'Enlace eliminado exitosamente', 'success');
+          this._toast.success('Enlace eliminado exitosamente','Hecho');
         },
         error: () => {
-          Swal.fire('Error', 'No se pudo eliminar el enlace-rol', 'error');
+          //Swal.fire('Error', 'No se pudo eliminar el enlace-rol', 'error');
+          this._toast.error('No se pudo eliminar el enlace-rol','Error');
         }
       });
     }

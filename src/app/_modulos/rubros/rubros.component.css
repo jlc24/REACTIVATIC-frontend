@@ -5,3 +5,27 @@
 .tabla-rubro{
   box-shadow: 2px 2px 18px 2px #a2a2a2;
 }
+
+:host ::ng-deep .pagination-rounded .page-item {
+  border-radius: 50px;
+}
+
+:host ::ng-deep .pagination-rounded .page-link {
+  border-radius: 50px;
+  color: #960023;
+  background-color: #f8f9fa;
+  border: 1px solid #960023;
+  padding: 10px 16px; /* Aumentar el tamaño del botón */
+  font-size: 1.2rem; /* Aumentar el tamaño del texto */
+}
+
+:host ::ng-deep .pagination-rounded .page-link:hover {
+  background-color: #a01938;
+  color: white;
+}
+
+:host ::ng-deep .pagination-rounded .page-item.active .page-link {
+  background-color: #960023;
+  border-color: #960023;
+  color: white;
+}

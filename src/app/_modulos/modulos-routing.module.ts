@@ -35,10 +35,10 @@ import { CargosComponent } from './cargos/cargos.component';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'escritorio',
+    redirectTo: 'inicio',
   },
   {
-    path: 'escritorio',
+    path: 'inicio',
     component: EscritorioComponent,
     canActivate: [GuardianGuard],
     data: {

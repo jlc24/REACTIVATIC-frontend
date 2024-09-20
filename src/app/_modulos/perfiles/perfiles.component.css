@@ -5,14 +5,22 @@
     margin-top: 10px;
   }
 
+ 
   .puntero{
     cursor: pointer;
+  }
+
+  .wizard-tabs-container{
+    display: flex;
+    justify-content: center;
+    width: 100%;
   }
 
   .wizard-tabs {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: nowrap;
     width: 80%;
   }
 

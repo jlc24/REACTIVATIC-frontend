@@ -3,129 +3,129 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="tile">
-      <div class="row justify-content-center">
-        <h4>LISTA DE ENLACES</h4>
+    <div class="card" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+      <div class="card-header" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
+        <h4 class="text-white">LISTA DE ENLACES</h4>
       </div>
-      <div class="row">
-        <div class="col-md-12 mb-2">
-          <div class="input-group justify-content-first">
-            <div class="input-group-prepend">
-              <button class="btn btn-sm btn-outline-success mr-2" type="button" (click)="fadicionar(am)"><i class="fa fa-plus"></i> Agregar Enlace</button>
-              <div class="dropdown">
-                <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-bars"></i> Opciones
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <button class="dropdown-item"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
-                  <button class="dropdown-item"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-12 mb-2">
+            <div class="input-group justify-content-first">
+              <div class="input-group-prepend">
+                <button class="btn btn-sm btn-outline-success rounded-pill mr-2" type="button" (click)="fadicionar(am)"><i class="fa fa-plus"></i> Agregar Enlace</button>
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-outline-info rounded-pill dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-bars"></i> Opciones
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <button class="dropdown-item"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                    <button class="dropdown-item"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="row">
-        <div class="col-sm-6 mt-1">
-          <p *ngIf="total == 0">
-            Total: <b>{{ total }} registros</b>
-          </p>
-          <p *ngIf="total == 1">
-            Total: <b>{{ total }} registro</b>
-          </p>
-          <p *ngIf="total > 1">
-            Total: <b>{{ total }} registros</b>
-          </p>
-        </div>
-        <div class="col-sm-6">
-          <div class="row justify-content-end">
-            <div class="col-sm-2 text-md-right text-sm-left mt-1">
-              <label for="">Buscar: </label>
-            </div>
-            <div class="col-sm-10">
-              <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+        <div class="row">
+          <div class="col-sm-6 mt-1">
+            <p *ngIf="total == 0">
+              Total: <b>{{ total }} registros</b>
+            </p>
+            <p *ngIf="total == 1">
+              Total: <b>{{ total }} registro</b>
+            </p>
+            <p *ngIf="total > 1">
+              Total: <b>{{ total }} registros</b>
+            </p>
+          </div>
+          <div class="col-sm-6">
+            <div class="row justify-content-end">
+              <div class="col-sm-2 text-md-right text-sm-left mt-1">
+                <label for="">Buscar: </label>
+              </div>
+              <div class="col-sm-10">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                  </div>
+                  <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Enlace a buscar..." (keyup)="fbuscar()" />
                 </div>
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Enlace a buscar..." (keyup)="fbuscar()" />
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="table-responsive" *ngIf="enlaces?.length > 0">
-        <table class="table table-bordered table-striped table-hover table-sm tabla-enlace">
-          <thead>
-            <tr class="table-info">
-              <th class="text-center">Nro</th>
-              <th class="text-center">Enlace</th>
-              <th class="text-center">Ruta</th>
-              <th class="text-center">Icono</th>
-              <th class="text-center">Orden</th>
-              <th class="text-center">estado</th>
-              <th class="text-center">Fecha Creación</th>
-              <th class="text-center">Operaciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let _item of enlaces; let i = index">
-              <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
-              <td>{{ _item.enlace }}</td>
-              <td>{{ _item.ruta }}</td>
-              <td>{{ _item.iconoenlace }}</td>
-              <td>{{ _item.orden }}</td>
-              <td class="text-center">
-                <span class="estado badge badge-success" title="Cambiar estado" >
-                    HABILITADO
-                </span>
-              </td>
-              <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
-              <td class="text-center">
-                <div class="btn-group" role="group" aria-label="First group">
-                  <button class="btn btn-outline-info btn-sm" title="Ver roles" (click)="fver(_item.idenlace, ver)">
-                    <i class="fa fa-eye"></i>
-                  </button>
-                  <button class="btn btn-outline-warning btn-sm" title="Editar enlace" (click)="fmodificar(_item.idenlace, am)">
-                    <i class="fa fa-edit"></i>
-                  </button>
-                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Enlace" (click)="feliminar(_item.idenlace)">
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="table-responsive" *ngIf="total == 0">
-        <table class="table table-bordered table-striped table-sm tabla-enlace">
-          <thead>
-            <tr class="table-info">
-              <th class="text-center">Nro</th>
-              <th class="text-center">Categoría</th>
-              <th class="text-center">Ruta</th>
-              <th class="text-center">Icono</th>
-              <th class="text-center">Orden</th>
-              <th class="text-center">estado</th>
-              <th class="text-center">Fecha Creación</th>
-              <th class="text-center">Operaciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colspan="8" class="text-center">No se encontraron registros.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="row mt-2">
-        <div class="col-sm-6">
-          <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+        <div class="table-responsive" *ngIf="enlaces?.length > 0">
+          <table class="table table-bordered table-striped table-hover table-sm tabla-enlace">
+            <thead>
+              <tr class="table-info">
+                <th class="text-center">Nro</th>
+                <th class="text-center">Enlace</th>
+                <th class="text-center">Ruta</th>
+                <th class="text-center">Icono</th>
+                <th class="text-center">Orden</th>
+                <th class="text-center">estado</th>
+                <th class="text-center">Fecha Creación</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let _item of enlaces; let i = index">
+                <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
+                <td>{{ _item.enlace }}</td>
+                <td>{{ _item.ruta }}</td>
+                <td>{{ _item.iconoenlace }}</td>
+                <td>{{ _item.orden }}</td>
+                <td class="text-center">
+                  <span class="estado badge badge-success" title="Cambiar estado" >
+                      HABILITADO
+                  </span>
+                </td>
+                <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td class="text-center">
+                  <div class="btn-group" role="group" aria-label="First group">
+                    <button class="btn btn-outline-info btn-sm" title="Ver roles" (click)="fver(_item.idenlace, ver)">
+                      <i class="fa fa-eye"></i>
+                    </button>
+                    <button class="btn btn-outline-warning btn-sm" title="Editar enlace" (click)="fmodificar(_item.idenlace, am)">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" title="Eliminar Enlace" (click)="feliminar(_item.idenlace)">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="col-sm-6">
-          <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+        <div class="table-responsive" *ngIf="total == 0">
+          <table class="table table-bordered table-striped table-sm tabla-enlace">
+            <thead>
+              <tr class="table-info">
+                <th class="text-center">Nro</th>
+                <th class="text-center">Categoría</th>
+                <th class="text-center">Ruta</th>
+                <th class="text-center">Icono</th>
+                <th class="text-center">Orden</th>
+                <th class="text-center">estado</th>
+                <th class="text-center">Fecha Creación</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="8" class="text-center">No se encontraron registros.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row mt-2">
+          <div class="col-sm-6">
+            <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+          </div>
+          <div class="col-sm-6">
+            <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+          </div>
         </div>
       </div>
     </div>
@@ -133,17 +133,13 @@
 </div>
 
 <ng-template #am>
-  <div class="modal-header">
-    <div class="row col-12">
-      <div class="col-lg-6 col-md-12 text-center">
-        <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Enlace</h4><br>
-      </div>
-      <div class="col-lg-6 col-md-12 alert-info p-3">
-        Los campos remarcados con <b class="text-danger">*</b> son necesarios.
-      </div>
-    </div>
+  <div class="modal-header" style="background-color: #4A5568; ">
+    <h4 class="modal-title pull-left text-white"><i class="fa fa-edit"></i> {{ estado }} Enlace</h4>
   </div>
   <div class="modal-body">
+    <div class="alert alert-info p-2">
+      Los campos remarcados con <b class="text-danger">*</b> son necesarios.
+    </div>
     <form [formGroup]="formulario" (ngSubmit)="faceptar()">
       <div class="row">
         <div class="form-group col-md-6 col-sm-12">
@@ -197,7 +193,7 @@
         </div>
         <div class="form-group col-md-6 col-sm-12">
             <label>Icono: <span class="text-danger"><b>*</b></span></label>
-            <input type="text" class="form-control form-control-sm" formControlName="iconoenlace" [class.is-invalid]="f.iconoenlace.errors && f.iconoenlace.touched" (input)="onInput($event, 'iconoenlace', 'letrasyespacioguion')" autocomplete="no" required/>
+            <input type="text" class="form-control form-control-sm" formControlName="iconoenlace" [class.is-invalid]="f.iconoenlace.errors && f.iconoenlace.touched" (input)="onInput($event, 'iconoenlace', 'letrasyespacioguion')" autocomplete="no" required readonly/>
             <small *ngIf="f.iconoenlace.errors&& f.iconoenlace.touched" class="text-danger">
                 <ng-container *ngIf="f.iconoenlace.errors.required">
                     El dato es obligatorio.
@@ -213,12 +209,30 @@
                 </ng-container>
             </small>
         </div>
+        <div class="form-group col-md-6 col-sm-12">
+            <label>Orden: <span class="text-danger"><b>*</b></span></label>
+            <input type="text" class="form-control form-control-sm" formControlName="orden" [maxlength]="3" [class.is-invalid]="f.orden.errors && f.orden.touched" (input)="onInput($event, 'orden', 'numeros')" autocomplete="no" required/>
+            <small *ngIf="f.orden.errors&& f.orden.touched" class="text-danger">
+                <ng-container *ngIf="f.orden.errors.required">
+                    El dato es obligatorio.
+                </ng-container>
+                <ng-container *ngIf="f.orden.errors.pattern">
+                  Solo se permiten letras.
+                </ng-container>
+                <ng-container *ngIf="f.orden.errors.minlength">
+                    Debe ser mas de 1 caracteres.
+                </ng-container>
+                <ng-container *ngIf="f.orden.errors.maxlength">
+                    No puede exceder los 3 caracteres.
+                </ng-container>
+            </small>
+        </div>
       </div>
       <div class="text-center">
-        <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formulario.valid">
+        <button type="submit" class="btn btn-sm btn-outline-success rounded-pill m-2" [disabled]="!formulario.valid">
             <i class="fa fa-save"></i> Guardar
         </button>
-        <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()">
+        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">
             <i class="fa fa-times"></i> Cancelar
         </button>
       </div>

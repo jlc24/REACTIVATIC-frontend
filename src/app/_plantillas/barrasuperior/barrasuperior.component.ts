@@ -9,17 +9,26 @@ import { AccesoService } from 'src/app/_aods/acceso.service';
 })
 export class BarrasuperiorComponent implements OnInit {
 
+  nombre: string;
+  nombrecliente: string;
+
   constructor(
     private _accesoService: AccesoService,
     private _ruta: Router
   ) { }
 
   ngOnInit(): void {
+    this.fdatosusuario();
   }
 
   fsalir() {
     this._accesoService.cerrarSesion();
     this._ruta.navigate(['acceso']);
+  }
+
+  fdatosusuario() {
+    this.nombre = this._accesoService.nombreLogueado();
+    this.nombrecliente = this._accesoService.nombreclienteLogueado();
   }
 
 }

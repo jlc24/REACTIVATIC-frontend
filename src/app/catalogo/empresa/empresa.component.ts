@@ -25,6 +25,8 @@ export class EmpresaComponent implements OnInit {
 
   gestion: number = new Date().getFullYear();
 
+  estado: string = '';
+
   datos: Productos[] = [];
   dato: Productos;
   carrito: Carritos;
@@ -174,54 +176,188 @@ export class EmpresaComponent implements OnInit {
     });
   }
 
-  // fprocesa(contenido: any) {
-  //   let idcliente = JSON.parse(localStorage.getItem('idcliente'));
-  //   this.procesar = new Procesar();
-  //   this.procesar.idcliente = idcliente;
-  //   if (this.localcelular != null) {
-  //     this.utilsService.mostrarCargando();
-  //     let dato = new Procesar();
-  //     dato.celular = this.localcelular;
-  //     dato.correo = this.localcorreo;
-  //     dato.nombre = this.localnombre;
-  //     this.fformulario(dato);
-  //     this.faceptar();
-  //     this.utilsService.cerrarCargando();
-  //   } else {
-  //     this.fformulario(this.procesar);
-  //     this._modalService.open(contenido);
-  //   }
-  // }
+  fregistrar(content: any){
+    this._modalService.dismissAll();
+    this.estado = 'Registrar';
+    let dato = new Procesar();
+    this.fformulario(dato);
+    this._modalService.open(content, {
+      backdrop: 'static',
+      keyboard: false,
+      size: 'lg',
+      scrollable: true
+    });
+  }
 
-  // fformulario(dato: Procesar) {
-  //   this.formulario = this._fb.group({
-  //     primerapellido: [dato.nombre, [Validators.required]],
-  //     celular: [dato.celular, [Validators.required, Validators.pattern('[0-9]*'), Validators.min(60000000), Validators.max(79999999)]],
-  //     correo: [dato.correo, [Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]]
-  //   });
-  // }
+  fprocesa(contenido: any) {
+    this.estado = 'Procesar';
+    if (this.localusuario) {
+      let dato = new Procesar();
+      dato.primerapellido = this.localapellidopat;
+      dato.segundoapellido = this.localapellidomat;
+      dato.primernombre = this.localnombre;
+      dato.usuario = this.localusuario;
+      dato.celular = this.localcelular;
+      dato.correo = this.localcorreo;
+      this.fformulario(dato);
+      this.faceptar();
+    } else {
+      this.fformulario(this.procesar);
+      this._modalService.open(contenido, {
+        backdrop: 'static',
+        keyboard: false,
+        size: 'lg'
+      });
+    }
+  }
+
+  fformulario(dato: Procesar) {
+    this.formulario = this._fb.group({
+      primerapellido: [
+        dato.primerapellido,
+        [
+          Validators.required,
+          Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$')
+        ]
+      ],
+      segundoapellido: [
+        dato.segundoapellido,
+        [
+          Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$')
+        ]
+      ],
+      primernombre: [
+        dato.primernombre,
+        [
+          Validators.required,
+          Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$')
+        ]
+      ],
+      celular: [
+        dato.celular,
+        [
+          Validators.required,
+          Validators.pattern('^[0-9]+$'),
+          Validators.maxLength(15)
+        ]
+      ],
+      direccion: [
+        dato.direccion,
+        [
+          Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1\\s.,#-]+$'),
+          Validators.maxLength(255)
+        ]
+      ],
+      correo: [
+        dato.correo,
+        [
+          Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'),
+          Validators.maxLength(255)
+        ]
+      ],
+      usuario: [
+        dato.usuario,
+        [
+          Validators.required,
+          Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1]+$'),
+          Validators.maxLength(10)
+        ]
+      ],
+      clave: [
+        dato.clave,
+        [
+          Validators.required,
+          Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1]+$'),
+          Validators.minLength(8),
+          Validators.maxLength(20)
+        ]
+      ]
+    });
+  }
 
   get f() {
     return this.formulario.controls;
   }
 
-  // faceptar() {
-  //   console.log('ingreso cesar');
-  //   this.procesar.nombre = this.formulario.value.primerapellido.toUpperCase();
-  //   this.procesar.celular = this.formulario.value.celular;
-  //   this.procesar.correo = this.formulario.value.correo;
-  //   this._catalogosService.procesar(this.procesar).subscribe(data => {
-  //     this.localcelular = this.procesar.celular;
-  //     this.localnombre = this.procesar.nombre;
-  //     this.localcorreo = this.procesar.correo;
-  //     let idcliente = Math.floor((Math.random() * 1000000) + 1);
-  //     localStorage.setItem('idcliente', JSON.stringify(idcliente));
-  //     swal.fire('Proceso completado', 'La Unidad productora se comunicara con usted ya se mediante whastapp o su correo electrónico, gracias.', 'success');
-  //     this.fdatoscarrito();
-  //     this.fcantidadcarrito();
-  //     this._modalService.dismissAll();
-  //   });
-  // }
+  onInputRegister(event: any, controlName: string, type: 'letrasyespacios' | 'numeros' | 'direccion'): void {
+    let input = event.target.value;
+    switch (type) {
+      case 'letrasyespacios':
+        input = input.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1\s]/g, '');
+        break;
+      case 'numeros':
+        input = input.replace(/[^0-9]/g, '');
+        break;
+      case 'direccion':
+        input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1\s.,#-]/g, '');
+        break;
+    }
+    this.formulario.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
+  }
+
+  faceptar() {
+    this.submitted = true;
+
+    let idcliente = JSON.parse(localStorage.getItem('idcliente'));
+    this.procesar = new Procesar();
+
+    this.procesar.idcliente = idcliente;
+    this.procesar.primerapellido = this.formulario.value.primerapellido;
+    this.procesar.segundoapellido = this.formulario.value.segundoapellido;
+    this.procesar.primernombre = this.formulario.value.primernombre;
+    this.procesar.celular = this.formulario.value.celular;
+    this.procesar.direccion = this.formulario.value.direccion;
+    this.procesar.correo = this.formulario.value.correo;
+    this.procesar.usuario = this.formulario.value.usuario;
+
+    if (this.estado == 'Procesar') {
+      this.procesar.clave = this.formulario.value.clave;
+
+      this._catalogosService.procesar(this.procesar).subscribe(data => {
+        this.localapellidopat = this.procesar.primerapellido;
+        this.localapellidomat = this.procesar.segundoapellido;
+        this.localnombre = this.procesar.primernombre;
+        this.localusuario = this.procesar.usuario;
+        this.localcelular = this.procesar.celular;
+        this.localcorreo = this.procesar.correo;
+
+        localStorage.setItem('localapellidopat', JSON.stringify(this.localapellidopat));
+        localStorage.setItem('localapellidomat', JSON.stringify(this.localapellidomat));
+        localStorage.setItem('localnombre', JSON.stringify(this.localnombre));
+        localStorage.setItem('localusuario', JSON.stringify(this.localusuario));
+        localStorage.setItem('localcelular', JSON.stringify(this.localcelular));
+        localStorage.setItem('localcorreo', JSON.stringify(this.localcorreo));
+
+        let idcliente = Math.floor((Math.random() * 1000000) + 1);
+        localStorage.setItem('idcliente', JSON.stringify(idcliente));
+        Swal.fire('Proceso completado', 'La Unidad productora se comunicara con usted ya se mediante whastapp o su correo electrónico, gracias.', 'success');
+        this.fdatoscarrito();
+        this.fcantidadcarrito();
+        this._modalService.dismissAll();
+      });
+    }else{
+      this._catalogosService.registrarCliente(this.procesar).subscribe((data) => {
+        this.localapellidopat = this.procesar.primerapellido;
+        this.localapellidomat = this.procesar.segundoapellido;
+        this.localnombre = this.procesar.primernombre;
+        this.localusuario = this.procesar.usuario;
+        this.localcelular = this.procesar.celular;
+        this.localcorreo = this.procesar.correo;
+
+        localStorage.setItem('localapellidopat', JSON.stringify(this.localapellidopat));
+        localStorage.setItem('localapellidomat', JSON.stringify(this.localapellidomat));
+        localStorage.setItem('localnombre', JSON.stringify(this.localnombre));
+        localStorage.setItem('localusuario', JSON.stringify(this.localusuario));
+        localStorage.setItem('localcelular', JSON.stringify(this.localcelular));
+        localStorage.setItem('localcorreo', JSON.stringify(this.localcorreo));
+
+        this._modalService.dismissAll();
+        this._toast.success('','REGISTRO COMPLETADO');
+        Swal.fire('Registro completado', 'Bienvenido a la Tienda Virtual de REACTIVA TIC.', 'success');
+        this._modalService.dismissAll();
+      })
+    }
+  }
 
   fcancelar() {
     this._modalService.dismissAll();
@@ -252,7 +388,12 @@ export class EmpresaComponent implements OnInit {
   faccesom(contenido: any){
     this.procesar = new Procesar();
     this.fformulariom();
-    this._modalService.open(contenido);
+    this._modalService.open(contenido, {
+      // backdrop: 'static',
+      // keyboard: false,
+      size: 'sm',
+      centered: true
+    });
   }
 
   fformulariom() {
@@ -343,4 +484,7 @@ export class EmpresaComponent implements OnInit {
     this._ruta.navigateByUrl(_ruta);
   }
 
+  forgotPassword(){
+
+  }
 }

@@ -3,139 +3,139 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="tile">
-      <div class="row justify-content-center">
-        <h4>LISTA DE PRODUCTOS</h4>
+    <div class="card" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+      <div class="card-header" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
+        <h4 class="text-white">LISTA DE PRODUCTOS</h4>
       </div>
-      <div class="row">
-        <div class="col-md-12 mb-2">
-          <div class="input-group justify-content-first">
-            <div class="input-group-prepend">
-              <button class="btn btn-sm btn-outline-success mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus" title="Agregar Producto"></i> Agregar Producto</button>
-              <div class="dropdown">
-                <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-bars"></i> Opciones
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-12 mb-2">
+            <div class="input-group justify-content-first">
+              <div class="input-group-prepend">
+                <button class="btn btn-sm btn-outline-success rounded-pill mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus" title="Agregar Producto"></i> Agregar Producto</button>
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-outline-info rounded-pill dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-bars"></i> Opciones
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <!-- <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
                     <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button> -->
                     <button class="dropdown-item" ><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
                     <button class="dropdown-item" ><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="row">
-        <div class="col-sm-6 mt-1">
-          <p *ngIf="total == 0">
-            Total: <b>{{ total }} registros</b>
-          </p>
-          <p *ngIf="total == 1">
-            Total: <b>{{ total }} registro</b>
-          </p>
-          <p *ngIf="total > 1">
-            Total: <b>{{ total }} registros</b>
-          </p>
-        </div>
-        <div class="col-sm-6">
-          <div class="row justify-content-end">
-            <div class="col-sm-2 text-md-right text-sm-left mt-1">
-              <label for="">Buscar: </label>
-            </div>
-            <div class="col-sm-10">
-              <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+        <div class="row">
+          <div class="col-sm-6 mt-1">
+            <p *ngIf="total == 0">
+              Total: <b>{{ total }} registros</b>
+            </p>
+            <p *ngIf="total == 1">
+              Total: <b>{{ total }} registro</b>
+            </p>
+            <p *ngIf="total > 1">
+              Total: <b>{{ total }} registros</b>
+            </p>
+          </div>
+          <div class="col-sm-6">
+            <div class="row justify-content-end">
+              <div class="col-sm-2 text-md-right text-sm-left mt-1">
+                <label for="">Buscar: </label>
+              </div>
+              <div class="col-sm-10">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                  </div>
+                  <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Producto a buscar ..." (keyup)="fbuscar()" />
                 </div>
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Producto a buscar ..." (keyup)="fbuscar()" />
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="table-responsive" *ngIf="datos?.length > 0">
-        <table class="table table-sm table-bordered table-hover table-striped tabla-producto">
-          <thead>
-            <tr class="table-primary">
-              <th class="text-center">Nro</th>
-              <th class="text-center">Producto</th>
-              <th class="text-center" *ngIf="!esRolEmpresa">Empresa</th>
-              <th class="text-center">Detalle</th>
-              <th class="text-center" width="150px">Precio venta</th>
-              <!-- <th class="text-center">Precio compra</th>-->
-              <th class="text-center" width="150px">Estado</th>
-              <th class="text-center">Operaciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let _item of datos; let i = index">
-              <td class="text-right"><b>{{ pagina > 1 ? (i + 1 + ((pagina-1)*10)) : (i + 1) }}</b></td>
-              <td>{{ _item.producto }}</td>
-              <td *ngIf="!esRolEmpresa">{{ _item.empresa?.empresa }}</td>
-              <td>{{ _item.descripcion }}</td>
-              <td class="text-right">{{ _item.precioventa }} <b>Bs.</b></td>
-              <!-- <td>{{_item.preciocompra}}</td> -->
-              <td class="text-center">
-                <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idproducto, !_item.estado)" >
-                  {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
-                </span>
-              </td>
-              <td class="text-center">
-                <div class="btn-group" role="group" aria-label="First group">
-                  <button class="btn btn-outline-info btn-sm" title="Ver Producto" (click)="fver(_item.idproducto, ver)">
-                    <i class="fa fa-eye"></i>
-                  </button>
-                  <button class="btn btn-outline-warning btn-sm" title="Editar Producto" (click)="fmodificar(_item.idproducto, ab)">
-                    <i class="fa fa-edit"></i>
-                  </button>
-                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Producto" (click)="feliminar(_item.idproducto)">
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="table-responsive" *ngIf="total == 0">
-        <table class="table table-sm table-bordered table-hover table-striped tabla-producto">
-          <thead>
-            <tr class="table-primary">
-              <th class="text-center">Nro</th>
-              <th class="text-center">Producto</th>
-              <th class="text-center" *ngIf="!esRolEmpresa">Empresa</th>
-              <th class="text-center">Detalle</th>
-              <th class="text-center" width="150px">Precio venta</th>
-              <!-- <th class="text-center">Precio compra</th>-->
-              <th class="text-center" width="150px">Estado</th>
-              <th class="text-center">Operaciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colspan="7" class="text-center"><b>No se encontraron datos.</b></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="row mt-2">
-        <div class="col-sm-6">
-          <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+        <div class="table-responsive" *ngIf="datos?.length > 0">
+          <table class="table table-sm table-bordered table-hover table-striped tabla-producto">
+            <thead>
+              <tr class="table-primary">
+                <th class="text-center">Nro</th>
+                <th class="text-center">Producto</th>
+                <th class="text-center" *ngIf="!esRolEmpresa">Empresa</th>
+                <th class="text-center">Detalle</th>
+                <th class="text-center" width="150px">Precio venta</th>
+                <!-- <th class="text-center">Precio compra</th>-->
+                <th class="text-center" width="150px">Estado</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let _item of datos; let i = index">
+                <td class="text-right"><b>{{ pagina > 1 ? (i + 1 + ((pagina-1)*10)) : (i + 1) }}</b></td>
+                <td>{{ _item.producto }}</td>
+                <td *ngIf="!esRolEmpresa">{{ _item.empresa?.empresa }}</td>
+                <td>{{ _item.descripcion }}</td>
+                <td class="text-right">{{ _item.precioventa }} <b>Bs.</b></td>
+                <!-- <td>{{_item.preciocompra}}</td> -->
+                <td class="text-center">
+                  <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idproducto, !_item.estado)" >
+                    {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <div class="btn-group" role="group" aria-label="First group">
+                    <button class="btn btn-outline-info btn-sm" title="Ver Producto" (click)="fver(_item.idproducto, ver)">
+                      <i class="fa fa-eye"></i>
+                    </button>
+                    <button class="btn btn-outline-warning btn-sm" title="Editar Producto" (click)="fmodificar(_item.idproducto, ab)">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" title="Eliminar Producto" (click)="feliminar(_item.idproducto)">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="col-sm-6">
-          <ngb-pagination class="d-flex justify-content-end pagination-rounded"
-            [collectionSize]="total"
-            [(page)]="pagina"
-            [maxSize]="cantidad"
-            [rotate]="false"
-            [ellipses]="false"
-            [boundaryLinks]="true"
-            (pageChange)="mostrarMas($event)">
-          </ngb-pagination>
+        <div class="table-responsive" *ngIf="total == 0">
+          <table class="table table-sm table-bordered table-hover table-striped tabla-producto">
+            <thead>
+              <tr class="table-primary">
+                <th class="text-center">Nro</th>
+                <th class="text-center">Producto</th>
+                <th class="text-center" *ngIf="!esRolEmpresa">Empresa</th>
+                <th class="text-center">Detalle</th>
+                <th class="text-center" width="150px">Precio venta</th>
+                <!-- <th class="text-center">Precio compra</th>-->
+                <th class="text-center" width="150px">Estado</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="7" class="text-center"><b>No se encontraron datos.</b></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row mt-2">
+          <div class="col-sm-6">
+            <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+          </div>
+          <div class="col-sm-6">
+            <ngb-pagination class="d-flex justify-content-end pagination-rounded"
+              [collectionSize]="total"
+              [(page)]="pagina"
+              [maxSize]="cantidad"
+              [rotate]="false"
+              [ellipses]="false"
+              [boundaryLinks]="true"
+              (pageChange)="mostrarMas($event)">
+            </ngb-pagination>
+          </div>
         </div>
       </div>
     </div>
@@ -143,13 +143,13 @@
 </div>
 
 <ng-template #ab>
-    <div class="modal-header">
-        <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Producto</h4>
-        <div class="alert alert-info" role="alert">
-          Los campos remarcados con <b>*</b> son necesarios.
-        </div>
+    <div class="modal-header" style="background-color: #4A5568;">
+        <h4 class="modal-title pull-left text-white"><i class="fa fa-edit"></i> {{ estado }} Producto</h4>
     </div>
     <div class="modal-body">
+      <div class="alert alert-info" role="alert">
+        Los campos remarcados con <b>*</b> son necesarios.
+      </div>
         <form [formGroup]="formulario" (ngSubmit)="faceptar()">
             <div class="form-group" *ngIf="!esRolEmpresa">
                 <label>Empresa:</label>
@@ -189,10 +189,10 @@
               </small>
             </div>
             <div class="text-center">
-              <button type="submit" class="btn btn-sm btn-outline-success m-2" [disabled]="!formulario.valid">
+              <button type="submit" class="btn btn-sm btn-outline-success rounded-pill mr-2" [disabled]="!formulario.valid">
                 <i class="fa fa-save"></i> Guardar
               </button>
-              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">
+              <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">
                 <i class="fa fa-times"></i> Cancelar
               </button>
             </div>
@@ -201,21 +201,21 @@
 </ng-template>
 
 <ng-template #ver>
-  <div class="modal-header alert-info">
-      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} detalle del Producto "{{ dato.producto }}"</h4>
+  <div class="modal-header" style="background-color: #4A5568; ">
+      <h4 class="modal-title pull-left text-white"><i class="fa fa-edit"></i> {{ estado }} detalle del Producto "{{ dato.producto }}"</h4>
   </div>
   <div class="modal-body">
     <div class="row">
-      <div class="col-lg-3 col-sm-12 text-lg-right text-sm-left">
+      <div class="col-lg-3 col-sm-4 text-sm-right">
         <h5><strong>Producto:</strong></h5>
       </div>
-      <div class="col-lg-9 col-sm-12">
+      <div class="col-lg-9 col-sm-8">
         <label for="">{{ dato.producto }}</label>
       </div>
-      <div class="col-lg-3 col-sm-12 text-lg-right text-sm-left">
+      <div class="col-lg-3 col-sm-4 text-sm-right">
         <h5><strong>Descripción:</strong></h5>
       </div>
-      <div class="col-lg-9 col-sm-12">
+      <div class="col-lg-9 col-sm-8">
         <label for="">{{ dato.descripcion }}</label>
       </div>
     </div><hr>
@@ -224,7 +224,7 @@
         <h5><strong>Precio:</strong></h5>
       </div>
       <div class="col-lg-9 col-sm-8 text-sm-right">
-        <button class="btn btn-sm btn-outline-success mr-2" (click)="fadicionarPrecio(precio)"><i class="bi bi-plus-lg"></i> Añadir</button>
+        <button class="btn btn-sm btn-outline-success rounded-pill mr-2" (click)="fadicionarPrecio(precio)"><i class="bi bi-plus-lg"></i> Añadir</button>
       </div>
       <div class="col-lg-3 col-sm-12 d-none d-lg-flex justify-content-center align-items-center">
         <strong><i class="bi bi-currency-dollar icon-opacity" *ngIf="precios && precios.length > 0"></i></strong>
@@ -236,7 +236,7 @@
               <p>Cantidad: <b>{{ _precio.cantidad }}</b></p>
               <p>Precio: Bs <b>{{ _precio.precio | number:'1.2-2' }}</b></p>
             </div>
-            <button class="delete-btn" title="Quitar Color" (click)="feliminarPrecio(_precio.idprecio)"><i class="bi bi-dash"></i></button>
+            <button class="delete-btn" title="Quitar Precio" (click)="feliminarPrecio(_precio.idprecio)"><i class="bi bi-dash"></i></button>
           </div>
         </div>
       </div>
@@ -246,7 +246,7 @@
         <h5><strong>Color:</strong></h5>
       </div>
       <div class="col-lg-9 col-sm-8 text-sm-right">
-        <button class="btn btn-sm btn-outline-success mr-2" (click)="fadicionarColor(color)"><i class="bi bi-plus-lg"></i> Añadir</button>
+        <button class="btn btn-sm btn-outline-success rounded-pill mr-2" (click)="fadicionarColor(color)"><i class="bi bi-plus-lg"></i> Añadir</button>
       </div>
       <div class="col-lg-3 col-sm-12 d-none d-lg-flex justify-content-center align-items-center">
         <i class="bi bi-palette icon-opacity" *ngIf="colores && colores.length > 0"></i>
@@ -267,7 +267,7 @@
         <h5><strong>Material:</strong></h5>
       </div>
       <div class="col-lg-9 col-sm-8 text-sm-right">
-        <button class="btn btn-sm btn-outline-success mr-2" (click)="fadicionarMaterial(material)"><i class="bi bi-plus-lg"></i> Añadir</button>
+        <button class="btn btn-sm btn-outline-success rounded-pill mr-2" (click)="fadicionarMaterial(material)"><i class="bi bi-plus-lg"></i> Añadir</button>
       </div>
       <div class="col-lg-3 col-sm-12  d-none d-lg-flex justify-content-center align-items-center">
         <i class="bi bi-box icon-opacity" *ngIf="materiales && materiales.length > 0"></i>
@@ -286,7 +286,7 @@
         <h5><strong>Tamaño o Talla:</strong></h5>
       </div>
       <div class="col-lg-9 col-sm-8 text-sm-right">
-        <button class="btn btn-sm btn-outline-success mr-2" (click)="fadicionarTamano(tamano)"><i class="bi bi-plus-lg"></i> Añadir</button>
+        <button class="btn btn-sm btn-outline-success rounded-pill mr-2" (click)="fadicionarTamano(tamano)"><i class="bi bi-plus-lg"></i> Añadir</button>
       </div>
       <div class="col-lg-3 col-sm-12  d-none d-lg-flex justify-content-center align-items-center">
         <i class="bi bi-rulers icon-opacity" *ngIf="tamanos && tamanos.length > 0"></i>
@@ -305,7 +305,7 @@
         <h5><strong>Atributos:</strong></h5>
       </div>
       <div class="col-lg-9 col-sm-8 text-sm-right">
-        <button class="btn btn-sm btn-outline-success mr-2" (click)="fadicionarAtributo(atributo)"><i class="bi bi-plus-lg"></i> Añadir</button>
+        <button class="btn btn-sm btn-outline-success rounded-pill mr-2" (click)="fadicionarAtributo(atributo)"><i class="bi bi-plus-lg"></i> Añadir</button>
       </div>
       <div class="col-lg-3 col-sm-12  d-none d-lg-flex justify-content-center align-items-center">
         <i class="bi bi-list-check icon-opacity" *ngIf="atributos && atributos.length > 0"></i>
@@ -334,7 +334,7 @@
         <h5><strong>Imagenes:</strong></h5>
       </div>
       <div class="col-lg-9 col-sm-8 text-sm-right">
-        <button class="btn btn-sm btn-outline-success mr-2" (click)="fadicionarImagen(imagen)"><i class="bi bi-plus-lg"></i> Añadir</button>
+        <button class="btn btn-sm btn-outline-success rounded-pill mr-2" (click)="fadicionarImagen(imagen)"><i class="bi bi-plus-lg"></i> Añadir</button>
       </div>
       <div class="col-lg-3 col-sm-12  d-none d-lg-flex justify-content-center align-items-center">
         <i class="bi bi-image icon-opacity" *ngIf="imagenes && imagenes.length > 0"></i>
@@ -352,18 +352,18 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar</button>
+    <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">Cerrar</button>
   </div>
 </ng-template>
 
 <ng-template #precio>
   <div class="modal-header">
       <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Precio del Producto</h4>
-      <div class="alert alert-info" role="alert">
-        Los campos remarcados con <b>*</b> son necesarios.
-      </div>
   </div>
   <div class="modal-body">
+    <div class="alert alert-info p-2" role="alert">
+      Los campos remarcados con <b>*</b> son necesarios.
+    </div>
       <form [formGroup]="formPrecio" (ngSubmit)="faceptarPrecio()">
           <div class="form-group">
               <label>Cantidad:<span class="text-danger"><b>*</b></span></label>
@@ -388,10 +388,10 @@
             </div>
           </ng-container>
           <div class="text-center">
-            <button type="submit" class="btn btn-sm btn-outline-success m-2" [disabled]="!formPrecio.valid">
+            <button type="submit" class="btn btn-sm btn-outline-success rounded-pill m-2" [disabled]="!formPrecio.valid">
               <i class="fa fa-save"></i> Guardar
             </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarDet()">
+            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelarDet()">
               <i class="fa fa-times"></i> Cancelar
             </button>
           </div>
@@ -438,7 +438,7 @@
         </div>
         <div class="col-sm-12 text-center mt-2">
           <div class="color-info">
-            <p>{{ selectedColor.name }}</p>
+            <h5>{{ selectedColor.name }}</h5>
             <p>{{ selectedColor.code }}</p>
           </div>
         </div>
@@ -446,11 +446,11 @@
         <div class="color-display">
       </div>
     </div>
-    <div class="text-center">
-      <button type="button" class="btn btn-sm btn-outline-success m-2" (click)="faceptarColor(selectedColor.name, selectedColor.code)" [disabled]="!selectedColor.name">
+    <div class="modal-footer">
+      <button type="button" class="btn btn-sm btn-outline-success rounded-pill m-2" (click)="faceptarColor(selectedColor.name, selectedColor.code)" [disabled]="!selectedColor.name">
         <i class="fa fa-save"></i> Guardar
       </button>
-      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarDet()">
+      <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelarDet()">
         <i class="fa fa-times"></i> Cancelar
       </button>
     </div>
@@ -460,11 +460,11 @@
 <ng-template #material>
   <div class="modal-header">
       <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Material del Producto</h4>
-      <div class="alert alert-info" role="alert">
-        Los campos remarcados con <b>*</b> son necesarios.
-      </div>
   </div>
   <div class="modal-body">
+    <div class="alert alert-info p-2" role="alert">
+      Los campos remarcados con <b>*</b> son necesarios.
+    </div>
       <form [formGroup]="formMaterial" (ngSubmit)="faceptarMaterial()">
           <div class="form-group">
               <label>Material:<span class="text-danger"><b>*</b></span></label>
@@ -485,10 +485,10 @@
             </div>
           </ng-container>
           <div class="text-center">
-            <button type="submit" class="btn btn-sm btn-outline-success m-2" [disabled]="!formMaterial.valid">
+            <button type="submit" class="btn btn-sm btn-outline-success rounded-pill m-2" [disabled]="!formMaterial.valid">
               <i class="fa fa-save"></i> Guardar
             </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarDet()">
+            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelarDet()">
               <i class="fa fa-times"></i> Cancelar
             </button>
           </div>
@@ -499,11 +499,11 @@
 <ng-template #tamano>
   <div class="modal-header">
       <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Tamaño o Talla del Producto</h4>
-      <div class="alert alert-info" role="alert">
-        Los campos remarcados con <b>*</b> son necesarios.
-      </div>
   </div>
   <div class="modal-body">
+    <div class="alert alert-info p-2" role="alert">
+      Los campos remarcados con <b>*</b> son necesarios.
+    </div>
       <form [formGroup]="formTamano" (ngSubmit)="faceptarTamano()">
           <div class="form-group">
               <label>Tamaño o Talla:<span class="text-danger"><b>*</b></span></label>
@@ -524,10 +524,10 @@
             </div>
           </ng-container>
           <div class="text-center">
-            <button type="submit" class="btn btn-sm btn-outline-success m-2" [disabled]="!formTamano.valid">
+            <button type="submit" class="btn btn-sm btn-outline-success rounded-pill m-2" [disabled]="!formTamano.valid">
               <i class="fa fa-save"></i> Guardar
             </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarDet()">
+            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelarDet()">
               <i class="fa fa-times"></i> Cancelar
             </button>
           </div>
@@ -538,11 +538,11 @@
 <ng-template #atributo>
   <div class="modal-header">
       <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Atributos del Producto</h4>
-      <div class="alert alert-info" role="alert">
-        Los campos remarcados con <b>*</b> son necesarios.
-      </div>
   </div>
   <div class="modal-body">
+    <div class="alert alert-info p-2" role="alert">
+      Los campos remarcados con <b>*</b> son necesarios.
+    </div>
       <form [formGroup]="formAtributo" (ngSubmit)="faceptarAtributo()">
           <div class="form-group">
               <label>Atributo:<span class="text-danger"><b>*</b></span></label>
@@ -567,10 +567,10 @@
             </div>
           </ng-container>
           <div class="text-center">
-            <button type="submit" class="btn btn-sm btn-outline-success m-2" [disabled]="!formAtributo.valid">
+            <button type="submit" class="btn btn-sm btn-outline-success rounded-pill m-2" [disabled]="!formAtributo.valid">
               <i class="fa fa-save"></i> Guardar
             </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarDet()">
+            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelarDet()">
               <i class="fa fa-times"></i> Cancelar
             </button>
           </div>
@@ -603,10 +603,10 @@
 
     </div>
     <div class="text-center">
-      <button type="button" class="btn btn-outline-success m-2" (click)="fcargar()" [disabled]="!archivoSeleccionado">
+      <button type="button" class="btn btn-outline-success rounded-pill m-2" (click)="fcargar()" [disabled]="!archivoSeleccionado">
         <i class="fa fa-save"></i> Guardar
       </button>
-      <button type="button" class="btn btn-outline-secondary" (click)="fcancelarDet()">
+      <button type="button" class="btn btn-outline-secondary rounded-pill" (click)="fcancelarDet()">
         <i class="fa fa-times"></i> Cancelar
       </button>
     </div>

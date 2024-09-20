@@ -3,132 +3,146 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="tile">
-      <div class="row justify-content-center">
-        <h4>LISTA DE USUARIOS</h4>
+    <div class="card" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+      <div class="card-header" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
+        <h4 class="text-white">LISTA DE USUARIOS</h4>
       </div>
-      <div class="row">
-        <div class="col-md-12 mb-2">
-          <div class="input-group justify-content-first">
-            <div class="input-group-prepend">
-              <button class="btn btn-sm btn-outline-success mr-2" type="button" (click)="fadicionar(am)" *ngIf="esCargoAdministrador || esCargoDirector || esCargoApoyo || esCargoEncargado || esCargoTecnologia"><i class="fa fa-plus"></i> Agregar Usuario</button>
-              <div class="dropdown">
-                <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-bars"></i> Opciones
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
-                  <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-12 mb-2">
+            <div class="input-group justify-content-first">
+              <div class="input-group-prepend">
+                <button class="btn btn-sm btn-outline-success rounded-pill mr-2" type="button" (click)="fadicionar(am)" *ngIf="esCargoAdministrador || esCargoDirector || esCargoApoyo || esCargoEncargado || esCargoTecnologia"><i class="fa fa-plus"></i> Agregar Usuario</button>
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-outline-info rounded-pill dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-bars"></i> Opciones
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                    <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="row">
-        <div class="col-sm-6 mt-1">
-          <p *ngIf="total == 0">
-            Total: <b>{{ total }} registros</b>
-          </p>
-          <p *ngIf="total == 1">
-            Total: <b>{{ total }} registro</b>
-          </p>
-          <p *ngIf="total > 1">
-            Total: <b>{{ total }} registros</b>
-          </p>
-        </div>
-        <div class="col-sm-6">
-          <div class="row justify-content-end">
-            <div class="col-sm-2 text-md-right text-sm-left mt-1">
-              <label for="">Buscar: </label>
-            </div>
-            <div class="col-sm-10">
-              <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+        <div class="row">
+          <div class="col-sm-6 mt-1">
+            <p *ngIf="total == 0">
+              Total: <b>{{ total }} registros</b>
+            </p>
+            <p *ngIf="total == 1">
+              Total: <b>{{ total }} registro</b>
+            </p>
+            <p *ngIf="total > 1">
+              Total: <b>{{ total }} registros</b>
+            </p>
+          </div>
+          <div class="col-sm-6">
+            <div class="row justify-content-end">
+              <div class="col-sm-2 text-md-right text-sm-left mt-1">
+                <label for="">Buscar: </label>
+              </div>
+              <div class="col-sm-10">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                  </div>
+                  <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Usuario a buscar..." (keyup)="fbuscar()" />
                 </div>
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Usuario a buscar..." (keyup)="fbuscar()" />
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="table-responsive" *ngIf="datos?.length > 0">
-        <table class="table table-bordered table-striped table-hover table-sm tabla-usuario">
-          <thead>
-            <tr class="table-info">
-              <th class="text-center">Nro</th>
-              <th class="text-center">Nombre</th>
-              <th class="text-center">Carnet</th>
-              <th class="text-center">Dirección</th>
-              <th class="text-center">Teléfono</th>
-              <th class="text-center">Celular</th>
-              <th class="text-center">Estado</th>
-              <th class="text-center">Operaciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let _item of datos; let i = index">
-              <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
-              <td>{{ _item.persona.primerapellido}} {{_item.persona.segundoapellido}} {{_item.persona.primernombre}} {{_item.persona.segundonombre}}</td>
-              <td>{{ _item.persona.dip }}</td>
-              <td>{{ _item.persona.direccion }}</td>
-              <td>{{ _item.persona.telefono }}</td>
-              <td>{{ _item.persona.celular }}</td>
-              <td class="text-center">
-                <span class="{{ _item.rol.nombrerol == 'ADMINISTRADOR' ? '' : 'estado' }}  badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idusuario, !_item.estado)" *ngIf="esCargoAdministrador || esCargoEncargado || esCargoTecnologia">
-                  {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
-                </span>
-                <span class="badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" *ngIf="!esCargoAdministrador && !esCargoEncargado && !esCargoTecnologia">
-                  {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
-                </span>
-              </td>
-              <td class="text-center">
-                <div class="btn-group" role="group" aria-label="First group">
-                  <button class="btn btn-outline-info btn-sm" title="Ver Informacion" (click)="fver(_item.idusuario, ver)">
-                    <i class="fa fa-eye"></i>
-                  </button>
-                  <button class="btn btn-outline-warning btn-sm" title="Editar Usuario" (click)="fmodificar(_item.idusuario, am)" *ngIf="esCargoAdministrador || esCargoEncargado || esCargoTecnologia">
-                    <i class="fa fa-edit"></i>
-                  </button>
-                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Usuario" (click)="feliminar(_item.idusuario)" *ngIf="esCargoAdministrador || esCargoTecnologia">
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="table-responsive" *ngIf="total == 0">
-        <table class="table table-bordered table-striped table-sm tabla-usuario">
-          <thead>
-            <tr class="table-info">
-              <th class="text-center">Nro</th>
-              <th class="text-center">Nombre</th>
-              <th class="text-center">Carnet</th>
-              <th class="text-center">Dirección</th>
-              <th class="text-center">Teléfono</th>
-              <th class="text-center">Celular</th>
-              <th class="text-center">Estado</th>
-              <th class="text-center">Operaciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colspan="8" class="text-center">No se encontraron registros.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="row mt-2">
-        <div class="col-sm-6">
-          <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+        <div class="table-responsive" *ngIf="datos?.length > 0">
+          <table class="table table-bordered table-striped table-hover table-sm tabla-usuario">
+            <thead>
+              <tr class="table-info">
+                <th class="text-center">Nro</th>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Carnet</th>
+                <th class="text-center">Dirección</th>
+                <th class="text-center">Teléfono</th>
+                <th class="text-center">Celular</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let _item of datos; let i = index">
+                <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
+                <td>{{ _item.persona.primerapellido}} {{_item.persona.segundoapellido}} {{_item.persona.primernombre}} {{_item.persona.segundonombre}}</td>
+                <td class="text-right">
+                  {{ _item.persona.dip }}
+                  <ng-container *ngIf="_item.persona.complementario">
+                    <span>-{{ _item.persona.complementario }}</span>
+                  </ng-container>
+                </td>
+                <td>{{ _item.persona.direccion }}</td>
+                <td class="text-center">
+                  {{ _item.persona.telefono }}
+                </td>
+                <td class="text-center">
+                  {{ _item.persona.celular }}
+                  <ng-container *ngIf="_item.persona.celular && _item.persona.celular.length >= 8">
+                    <a [href]="'https://wa.me/+591' + _item.persona.celular" target="_blank" class="ml-4">
+                      <i class="bi bi-whatsapp text-success" style="font-size: 1.2rem;"></i>
+                    </a>
+                  </ng-container>
+                </td>
+                <td class="text-center">
+                  <span class="{{ _item.rol.nombrerol == 'ADMINISTRADOR' ? '' : 'estado' }}  badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idusuario, !_item.estado)" *ngIf="esCargoAdministrador || esCargoEncargado || esCargoTecnologia">
+                    {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                  </span>
+                  <span class="badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" *ngIf="!esCargoAdministrador && !esCargoEncargado && !esCargoTecnologia">
+                    {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <div class="btn-group" role="group" aria-label="First group">
+                    <button class="btn btn-outline-info btn-sm" title="Ver Informacion" (click)="fver(_item.idusuario, ver)">
+                      <i class="fa fa-eye"></i>
+                    </button>
+                    <button class="btn btn-outline-warning btn-sm" title="Editar Usuario" (click)="fmodificar(_item.idusuario, am)" *ngIf="esCargoAdministrador || esCargoEncargado || esCargoTecnologia">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" title="Eliminar Usuario" (click)="feliminar(_item.idusuario)" *ngIf="esCargoAdministrador || esCargoTecnologia">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="col-sm-6">
-          <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+        <div class="table-responsive" *ngIf="total == 0">
+          <table class="table table-bordered table-striped table-sm tabla-usuario">
+            <thead>
+              <tr class="table-info">
+                <th class="text-center">Nro</th>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Carnet</th>
+                <th class="text-center">Dirección</th>
+                <th class="text-center">Teléfono</th>
+                <th class="text-center">Celular</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="8" class="text-center">No se encontraron registros.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row mt-2">
+          <div class="col-sm-6">
+            <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+          </div>
+          <div class="col-sm-6">
+            <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+          </div>
         </div>
       </div>
     </div>
@@ -136,18 +150,9 @@
 </div>
 
 <ng-template #am>
-  <div class="modal-header">
-    <div class="row col-12">
-      <div class="col-lg-6 col-md-12 text-center">
-        <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Usuario</h4><br>
-      </div>
-      <div class="col-lg-6 col-md-12 alert-info p-3">
-        Los campos remarcados con <b class="text-danger">*</b> son necesarios.
-      </div>
-    </div>
-  </div>
-  <div class="modal-body">
-    <div class="row">
+  <div class="modal-header d-flex flex-column">
+    <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Usuario</h4><br>
+    <div class="wizard-tabs-container mt-2 ">
       <div class="col-sm-12 d-flex justify-content-center position-relative">
         <div class="wizard-tabs">
           <div class="wizard-step" [ngClass]="{'active-step': step === 1, 'completed-step': step > 1}" (click)="goToStep(1)">
@@ -171,7 +176,9 @@
           </div>
         </div>
       </div>
-    </div><hr>
+    </div>
+  </div>
+  <div class="modal-body">
     <form [formGroup]="formulario" (ngSubmit)="faceptar()">
       <div *ngIf="step === 1">
         <div class="row pl-3 justify-content-between">
@@ -234,8 +241,8 @@
           </div>
         </div>
         <div class="row justify-content-between p-3 mt-2">
-          <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
-          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+          <button class="btn btn-sm btn-outline-primary rounded-pill" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+          <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
         </div>
       </div>
       <div *ngIf="step === 2">
@@ -270,10 +277,10 @@
         </div>
         <div class="row justify-content-between p-3 mt-2">
           <div class="div">
-            <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
-            <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill mr-2" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+            <button class="btn btn-sm btn-outline-primary rounded-pill" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
           </div>
-          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+          <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
         </div>
       </div>
       <div *ngIf="step === 3">
@@ -312,58 +319,55 @@
         </div>
         <div class="row justify-content-between p-3 mt-2">
           <div class="div">
-            <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
-            <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill mr-2" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+            <button class="btn btn-sm btn-outline-primary rounded-pill" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
           </div>
-          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+          <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
         </div>
       </div>
       <div *ngIf="step === 4">
         <div class="row pl-3 justify-content-between">
           <h5 class="card-title">IV.- Resumen de datos a guardar</h5>
+          <div class="alert alert-info p-3">
+            Estimado usuario. Los campos remarcados con <b class="text-danger">*</b> son necesarios.
+          </div>
         </div>
-        <div class="table-responsive">
-          <table class="table table-sm table-bordered">
-            <tbody>
-              <tr>
-                <td colspan="10"><strong>DATOS PERSONALES</strong></td>
-              </tr>
-              <tr>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Apellido Paterno:</td><td width="50px"><i *ngIf="this.formulario.value.primerapellido; else noData" class="fa fa-check-circle fa-2x text-success"></i>
-                  <ng-template #noData>
-                    <i class="fa fa-times-circle fa-2x text-danger"></i>
-                  </ng-template>
-                </td>
-                <td class="text-right">Apellido Paterno:</td><td width="50px"><i *ngIf="this.formulario.value.segundoapellido; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Nombre:</td><td width="50px"><i *ngIf="this.formulario.value.primernombre; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Genero:</td><td width="50px"><i *ngIf="this.formulario.value.idtipogenero; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-              </tr>
-              <tr>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Documento:</td><td width="50px"><i *ngIf="this.formulario.value.idtipodocumento; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>DIP:</td><td width="50px"><i *ngIf="this.formulario.value.dip; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right">Complemento:</td><td width="50px"><i *ngIf="this.formulario.value.complementario; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Expedido:</td><td width="50px"><i *ngIf="this.formulario.value.idtipoextension; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-              </tr>
-              <tr>
-                <td colspan="10"><strong>DATOS DE CONTACTO</strong></td>
-              </tr>
-              <tr>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Celular.:</td><td width="50px"><i *ngIf="this.formulario.value.celular; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right">Teléfono:</td><td width="50px"><i *ngIf="this.formulario.value.telefono; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Direccion:</td><td width="50px"><i *ngIf="this.formulario.value.direccion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right">Correo:</td><td width="50px"><i *ngIf="this.formulario.value.correo; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-              </tr>
-              <tr>
-                <td colspan="10"><strong>DATOS DE USUARIO</strong></td>
-              </tr>
-              <tr>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Usuario:</td><td width="50px"><i *ngIf="this.formulario.value.usuario; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Contraseña.:</td><td width="50px"><i *ngIf="this.formulario.value.clave; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Rol:</td><td width="50px"><i *ngIf="this.formulario.value.idrol; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Cargo:</td><td width="50px"><i *ngIf="this.formulario.value.idcargo; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="row mb-3">
+          <div class="col-sm-12"><strong>DATOS PERSONALES</strong></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Apellido Paterno:</div>
+          <div class="col-sm-1"><i *ngIf="this.formulario.value.primerapellido; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right">Apellido Materno:</div>
+          <div class="col-sm-1"><i *ngIf="this.formulario.value.segundoapellido; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Nombre:</div>
+          <div class="col-sm-1"><i *ngIf="this.formulario.value.primernombre; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Genero:</div>
+          <div class="col-sm-1"><i *ngIf="this.formulario.value.idtipogenero; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Documento:</div>
+          <div class="col-sm-1"><i *ngIf="this.formulario.value.idtipodocumento; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>DIP:</div>
+          <div class="col-sm-1"><i *ngIf="this.formulario.value.dip; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right">Complemento:</div>
+          <div class="col-sm-1"><i *ngIf="this.formulario.value.complementario; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Expedido:</div>
+          <div class="col-sm-1"><i *ngIf="this.formulario.value.idtipoextension; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Celular:</div>
+          <div class="col-sm-1"><i *ngIf="this.formulario.value.celular; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right">Teléfono:</div>
+          <div class="col-sm-1"><i *ngIf="this.formulario.value.telefono; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Direccion:</div>
+          <div class="col-sm-1"><i *ngIf="this.formulario.value.direccion; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right">Correo:</div>
+          <div class="col-sm-1"><i *ngIf="this.formulario.value.correo; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Usuario:</div>
+          <div class="col-sm-1"><i *ngIf="this.formulario.value.usuario; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Contraseña:</div>
+          <div class="col-sm-1"><i *ngIf="this.formulario.value.clave; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Rol:</div>
+          <div class="col-sm-1"><i *ngIf="this.formulario.value.idrol; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Cargo:</div>
+          <div class="col-sm-1"><i *ngIf="this.formulario.value.idcargo; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"></div>
+          <div class="col-sm-1"></div>
         </div>
         <div *ngIf="formulario.invalid && formulario.touched" class="alert alert-danger">
           Por favor, completa todos los campos obligatorios.
@@ -381,10 +385,10 @@
         </ng-container>
         <div class="row justify-content-between p-3 mt-2">
           <div class="div">
-            <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
-            <button type="submit" class="btn btn-sm btn-outline-success" [disabled]="!formulario.valid">Guardar <i class="bi bi-floppy"></i></button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill mr-2" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+            <button type="submit" class="btn btn-sm btn-outline-success rounded-pill" [disabled]="!formulario.valid">Guardar <i class="bi bi-floppy"></i></button>
           </div>
-          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+          <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
         </div>
       </div>
     </form>
@@ -392,146 +396,156 @@
 </ng-template>
 
 <ng-template #ver>
-  <div class="modal-header alert-info">
+  <div class="modal-header alert-info" style="background-color: #4A5568;">
     <div class="col-lg-12 col-md-12 text-center ">
-        <h4 class="modal-title pull-left"><i class="fa fa-eye"></i> {{ estado }} Usuario</h4><br>
+        <h4 class="modal-title pull-left text-white"><i class="fa fa-eye"></i> {{ estado }} Usuario</h4><br>
     </div>
   </div>
   <div class="modal-body">
     <div class="row pl-3 pr-3 ">
-      <div class="col-md-4 col-sm-12 pt-3">
-        <div class="row justify-content-center mt-2">
-          <img [src]="imagen" width="200px" class="rounded-circle" (error)="$event.target.src='../../../assets/catalogo/img/avatar.jpg'" />
-        </div>
-        <div class="row justify-content-center mt-5" *ngIf="esCargoAdministrador || esCargoEncargado || esCargoTecnologia">
-          <button class="btn btn-sm btn-outline-info">
-            <i class="fa fa-picture-o"></i> Cambiar imagen
-          </button>
+      <div class="col-lg-4 col-sm-12 pt-3">
+        <div class="col-sm-12">
+          <div class="row justify-content-center">
+            <h4 class="mt-3">Foto de Perfil</h4>
+          </div>
+          <div class="col-sm-12 text-center" *ngFor="let _imgUser of imagenUsuario">
+            <img [src]="sanitizarImagen(_imgUser.data, _imgUser.mimeType)" width="200px" class="rounded-circle icon-usuario" [alt]="_imgUser.filename"/>
+          </div>
         </div>
       </div>
-      <div class="col-md-8 col-sm-12 pt-3">
-        <div class="row">
-          <h5>DATOS PERSONALES:</h5>
-        </div>
-        <div class="row">
-          <div class="col-md-4 text-md-right text-sm-left">
-            <strong>Nombre:</strong>
-          </div>
-          <div class="col-md-8">
-            <label for="">{{ user?.persona?.primerapellido }} {{ user?.persona?.segundoapellido }} {{ user?.persona?.primernombre }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 text-md-right text-sm-left">
-            <strong>Género:</strong>
-          </div>
-          <div class="col-md-8">
-            <label for="">{{ user?.persona?.tipogenero?.tipogenero }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 text-md-right text-sm-left">
-            <strong>Documento:</strong>
-          </div>
-          <div class="col-md-8">
-            <label for="">{{ user?.persona?.tipodocumento?.tipodocumento }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 text-md-right text-sm-left">
-            <strong>DIP:</strong>
-          </div>
-          <div class="col-md-3">
-            <label for="">{{ user?.persona?.dip }}{{ user?.persona.complementario ? '-'+user?.persona.complementario : '' }}</label>
-          </div>
-          <div class="col-md-2 text-md-right text-sm-left">
-            <strong>Exp.:</strong>
-          </div>
-          <div class="col-md-2">
-            <label for="">{{ user?.persona?.tipoextension?.sigla }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <h5>DATOS DE CONTACTO:</h5>
-        </div>
-        <div class="row" *ngIf="user?.persona?.direccion">
-          <div class="col-md-4 text-md-right text-sm-left">
-            <strong>Dirección:</strong>
-          </div>
-          <div class="col-md-8">
-            <label for="">{{ user?.persona?.direccion }}</label>
-          </div>
-        </div>
-        <div class="row" *ngIf="user?.persona?.correo">
-          <div class="col-md-4 text-md-right text-sm-left">
-            <strong>Correo:</strong>
-          </div>
-          <div class="col-md-8">
-            <label for="">{{ user?.persona?.correo }}</label>
-          </div>
-        </div>
-        <div class="row" >
-          <div class="col-md-4 text-md-right text-sm-left" *ngIf="user?.persona?.celular">
-            <strong>Celular:</strong>
-          </div>
-          <div class="col-md-3" *ngIf="user?.persona?.celular">
-            <label for="">{{ user?.persona?.celular }}</label>
-          </div>
-          <div class="col-md-2 text-md-right text-sm-left" *ngIf="user?.persona?.telefono">
-            <strong>Teléfono:</strong>
-          </div>
-          <div class="col-md-3" *ngIf="user?.persona?.telefono">
-            <label for="">{{ user?.persona?.telefono }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <h4>DATOS DE USUARIO:</h4>
-        </div>
-        <div class="row">
-          <div class="col-md-4 text-md-right text-sm-left">
-            <strong>Usuario:</strong>
-          </div>
-          <div class="col-md-8">
-            <label for="">{{ user?.usuario }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 text-md-right text-sm-left">
-            <strong>Clave:</strong>
-          </div>
-          <div class="col-md-4">
-            <label for="">{{ user?.clave ? '************' : '' }}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 text-md-right text-sm-left">
-            <strong>Rol:</strong>
-          </div>
-          <div class="col-md-8">
-            <label for="">{{ user?.rol?.nombrerol }}</label>
-          </div>
-        </div>
-        <div class="row" *ngIf="user?.cargo?.cargo">
-          <div class="col-md-4 text-md-right text-sm-left">
-            <strong>Cargo:</strong>
-          </div>
-          <div class="col-md-8">
-            <label for="">{{ user?.cargo?.cargo }}</label>
-          </div>
-        </div>
-        <div class="row" *ngIf="esCargoAdministrador || esCargoEncargado || esCargoTecnologia">
-          <div class="col-md-12 text-center">
-            <button class="btn btn-sm btn-outline-info" >
-              <i class="fa fa-key"></i> Cambiar clave
+      <div class="col-lg-8 col-sm-12 pt-3">
+        <div class="row justify-content-center">
+          <div class="col-sm-10 text-right" *ngIf="esCargoAdministrador || esCargoEncargado || esCargoTecnologia">
+            <button class="btn btn-sm btn-outline-info rounded-pill" (click)="faceptarcambiarclave(user?.usuario)">
+              <i class="fa fa-key"></i> Restablecer Clave
             </button>
+          </div>
+          <div class="col-sm-10 m-2 p-2" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+            <div class="col-sm-12 text-left">
+              <h4>DATOS PERSONALES:</h4>
+            </div>
+            <div class="row">
+              <div class="col-sm-4 text-sm-right">
+                <strong>Nombre:</strong>
+              </div>
+              <div class="col-sm-8 text-left">
+                <label for="">{{ user?.persona?.primerapellido }} {{ user?.persona?.segundoapellido }} {{ user?.persona?.primernombre }}</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-4 text-sm-right">
+                <strong>Género:</strong>
+              </div>
+              <div class="col-sm-8 text-left">
+                <label for="">{{ user?.persona?.tipogenero?.tipogenero }}</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-4 text-sm-right">
+                <strong>Documento:</strong>
+              </div>
+              <div class="col-sm-8 text-left">
+                <label for="">{{ user?.persona?.tipodocumento?.tipodocumento }}</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-4 text-sm-right">
+                <strong>DIP:</strong>
+              </div>
+              <div class="col-sm-3 text-left">
+                <label for="">{{ user?.persona?.dip }}{{ user?.persona.complementario ? '-'+user?.persona.complementario : '' }}</label>
+              </div>
+              <div class="col-sm-2 text-sm-right">
+                <strong>Exp.:</strong>
+              </div>
+              <div class="col-sm-2 text-left">
+                <label for="">{{ user?.persona?.tipoextension?.sigla }}</label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-10 m-2 p-2" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+            <div class="col-sm-12 text-left">
+              <h4>DATOS DE CONTACTO:</h4>
+            </div>
+            <div class="row" *ngIf="user?.persona?.direccion">
+              <div class="col-sm-4 text-sm-right">
+                <strong>Dirección:</strong>
+              </div>
+              <div class="col-sm-8 text-left">
+                <label for="">{{ user?.persona?.direccion }}</label>
+              </div>
+            </div>
+            <div class="row" *ngIf="user?.persona?.correo">
+              <div class="col-sm-4 text-sm-right">
+                <strong>Correo:</strong>
+              </div>
+              <div class="col-sm-8 text-left">
+                <label for="">{{ user?.persona?.correo }}</label>
+              </div>
+            </div>
+            <div class="row" >
+              <div class="col-sm-4 text-sm-right" *ngIf="user?.persona?.celular">
+                <strong>Celular:</strong>
+              </div>
+              <div class="col-sm-3 text-left" *ngIf="user?.persona?.celular">
+                <label for="">{{ user?.persona?.celular }}</label>
+              </div>
+              <div class="col-sm-2 text-sm-right" *ngIf="user?.persona?.telefono">
+                <strong>Teléfono:</strong>
+              </div>
+              <div class="col-sm-3 text-left" *ngIf="user?.persona?.telefono">
+                <label for="">{{ user?.persona?.telefono }}</label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-10 m-2 p-2" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+            <div class="col-sm-12 text-left">
+              <h4>DATOS DE USUARIO:</h4>
+            </div>
+            <div class="row">
+              <div class="col-sm-4 text-sm-right">
+                <strong>Usuario:</strong>
+              </div>
+              <div class="col-sm-8 text-left">
+                <label for="">{{ user?.usuario }}</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-4 text-sm-right">
+                <strong>Clave:</strong>
+              </div>
+              <div class="col-sm-4 text-left">
+                <label for="">{{ user?.clave ? '************' : '' }}</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-4 text-sm-right">
+                <strong>Rol:</strong>
+              </div>
+              <div class="col-sm-8 text-left">
+                <label for="">{{ user?.rol?.nombrerol }}</label>
+              </div>
+            </div>
+            <div class="row" *ngIf="user?.cargo?.cargo">
+              <div class="col-sm-4 text-sm-right">
+                <strong>Cargo:</strong>
+              </div>
+              <div class="col-sm-8 text-left">
+                <label for="">{{ user?.cargo?.cargo }}</label>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">
+    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">
         <i class="fa fa-times"></i> Cancelar
     </button>
   </div>
+</ng-template>
+
+<ng-template #noData>
+  <i class="fa fa-times-circle fa-2x text-danger"></i>
 </ng-template>

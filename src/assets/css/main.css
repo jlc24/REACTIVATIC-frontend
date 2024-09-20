@@ -89,6 +89,7 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    overflow-x: hidden;
 }
 
 body.offcanvas-open {
@@ -3626,8 +3627,9 @@ input[type="button"].btn-block {
 .dropdown-menu {
     position: absolute;
     top: 100%;
-    left: 0;
-    z-index: 1000;
+    left: auto;
+    right: 0;
+    z-index: 1050;
     display: none;
     float: left;
     min-width: 10rem;
@@ -3641,6 +3643,7 @@ input[type="button"].btn-block {
     background-clip: padding-box;
     border: 0 solid rgba(0, 0, 0, 0.15);
     border-radius: 0.25rem;
+    transform: translateX(-15px);
 }
 
 .dropdown-menu-left {
@@ -3823,9 +3826,9 @@ input[type="button"].btn-block {
 
 .dropdown-item:hover,
 .dropdown-item:focus {
-    color: #16181b;
+  background-color: #babcbf; /* gris claro */
+  color: #212529;
     text-decoration: none;
-    background-color: #f8f9fa;
 }
 
 .dropdown-item.active,
@@ -15499,7 +15502,7 @@ be a descendant of the grid when it is being dragged.
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    background-color: #a51c30;
+    background-color: #960023;
     z-index: 1030;
     padding-right: 15px;
 }
@@ -15517,27 +15520,39 @@ be a descendant of the grid when it is being dragged.
 }
 
 .app-header__logo {
-    -webkit-box-flex: 1;
-    -ms-flex: 1 0 auto;
-    flex: 1 0 auto;
-    color: #fff;
-    text-align: center;
-    font-family: 'Niconnee';
-    padding: 0 15px;
-    font-size: 26px;
-    font-weight: 400;
-    line-height: 50px;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+  color: #fff;
+  text-align: center;
+  font-family: 'Niconnee';
+  padding: 0 15px;
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 50px;
+}
+
+.app-header__logo img {
+  max-height: 50px; /* Controla la altura máxima del logo */
+  width: auto; /* Mantiene la proporción de la imagen */
+  vertical-align: middle; /* Centra la imagen en la línea */
 }
 
 @media (min-width: 768px) {
-    .app-header__logo {
-        -webkit-box-flex: 0;
-        -ms-flex: 0 0 auto;
-        flex: 0 0 auto;
-        display: block;
-        width: 230px;
-        background-color: #64111d;
-    }
+  .app-header__logo {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    display: block;
+    width: 230px;
+    background-color: #64111d;
+    padding: 0; /* Elimina el padding para evitar espacio en blanco alrededor de la imagen */
+}
+
+.app-header__logo img {
+    max-width: 100%; /* Hace que la imagen ocupe todo el ancho en pantallas más grandes */
+    height: auto; /* Mantiene la proporción de la imagen */
+}
 }
 
 .app-header__logo:focus,
@@ -15595,19 +15610,26 @@ be a descendant of the grid when it is being dragged.
 }
 
 .app-nav__item {
-    display: block;
-    padding: 15px;
-    line-height: 20px;
-    color: #fff;
-    -webkit-transition: background-color 0.3s ease;
-    -o-transition: background-color 0.3s ease;
-    transition: background-color 0.3s ease;
+  display: flex; /* Usamos flexbox para alinear contenido */
+  align-items: center; /* Centra verticalmente el contenido */
+  justify-content: center; /* Centra horizontalmente el contenido */
+  padding: 15px;
+  line-height: 20px;
+  color: #fff;
+  text-decoration: none; /* Para asegurar que no haya subrayado en el enlace */
+  -webkit-transition: background-color 0.3s ease;
+  -o-transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .app-nav__item:hover,
 .app-nav__item:focus {
     background: rgba(0, 0, 0, 0.1);
     color: #f6f6f6;
+}
+
+.app-nav__item i {
+  margin-left: 10px; /* Añade espacio entre el texto y el icono */
 }
 
 .app-search {
@@ -15741,7 +15763,7 @@ be a descendant of the grid when it is being dragged.
     width: 230px;
     overflow: auto;
     z-index: 10;
-    background-color: #1ca591;
+    background-color: #4a5568;
     -webkit-box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
     box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
     -webkit-transition: left 0.3s ease, width 0.3s ease;
@@ -15786,11 +15808,16 @@ be a descendant of the grid when it is being dragged.
     color: #fff;
 }
 
-.app-sidebar__user-avatar {
+/* .app-sidebar__user-avatar {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 auto;
     flex: 0 0 auto;
     margin-right: 15px;
+} */
+
+.app-sidebar__user-avatar i {
+  font-size: 5rem; /* Tamaño por defecto grande */
+  border-radius: 50%; /* Añadir el estilo de círculo */
 }
 
 .app-sidebar__user-name {
@@ -15822,20 +15849,22 @@ be a descendant of the grid when it is being dragged.
     align-items: center;
     padding: 12px 15px;
     font-size: 1.08em;
-    border-left: 3px solid transparent;
-    -webkit-transition: border-left-color 0.3s ease, background-color 0.3s ease;
-    -o-transition: border-left-color 0.3s ease, background-color 0.3s ease;
-    transition: border-left-color 0.3s ease, background-color 0.3s ease;
+    border-right: 4px solid transparent;
+    border-bottom: 2px solid transparent;
+    -webkit-transition: border-right-color 0.3s ease, border-bottom-color 0.3s ease, background-color 0.3s ease;
+    -o-transition: border-right-color 0.3s ease, border-bottom-color 0.3s ease, background-color 0.3s ease;
+    transition: border-right-color 0.3s ease, border-bottom-color 0.3s ease, background-color 0.3s ease;
     color: #fff;
 }
 
 .app-menu__item.active,
 .app-menu__item:hover,
 .app-menu__item:focus {
-    background: #116458;
-    border-left-color: #a51c30;
+    background: #fff;
+    border-right-color: #FF5919;
+    border-bottom-color: #4A5568;
     text-decoration: none;
-    color: #fff;
+    color: #000;
 }
 
 .app-menu__icon {
@@ -15853,8 +15882,10 @@ be a descendant of the grid when it is being dragged.
 }
 
 .treeview.is-expanded [data-toggle='treeview'] {
-    border-left-color: #a51c30;
-    background: #116458;
+    border-right-color: #FF5919;
+    border-bottom-color: #4A5568;
+    background: #fff;
+    color: #000;
 }
 
 .treeview.is-expanded .treeview-menu {
@@ -15873,7 +15904,7 @@ be a descendant of the grid when it is being dragged.
     -webkit-transition: max-height 0.3s ease;
     -o-transition: max-height 0.3s ease;
     transition: max-height 0.3s ease;
-    background: #188f7e;
+    background: #fff;
 }
 
 .treeview-item {
@@ -15885,14 +15916,29 @@ be a descendant of the grid when it is being dragged.
     align-items: center;
     padding: 5px 5px 5px 20px;
     font-size: 1em;
-    color: #fff;
+    color: #000;
+    border-right: 4px solid transparent;
+    border-top: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+    -webkit-transition: border-right-color 0.3s ease, border-top-color 0.3s ease, background-color 0.3s ease;
+    -o-transition: border-right-color 0.3s ease, border-top-color 0.3s ease, background-color 0.3s ease;
+    transition: border-right-color 0.3s ease, border-top-color 0.3s ease, background-color 0.3s ease;
 }
 
-.treeview-item.active,
+.treeview-item.active{
+  background-color: #4A5568;
+  border-right-color: #FF5919;
+  border-top-color: #fff;
+  border-bottom-color: #fff;
+  color: #fff;
+}
 .treeview-item:hover,
 .treeview-item:focus {
-    background: #188f7e;
+    background: #4A5568;
     text-decoration: none;
+    border-right-color: #FF5919;
+    border-top-color: #fff;
+    border-bottom-color: #fff;
     color: #fff;
 }
 
@@ -15917,9 +15963,9 @@ be a descendant of the grid when it is being dragged.
     .sidebar-mini.sidenav-toggled .treeview-indicator {
         display: none;
     }
-    .sidebar-mini.sidenav-toggled .app-sidebar__user-avatar {
-        width: 30px;
-        height: 30px;
+    .sidebar-mini.sidenav-toggled .app-sidebar__user-avatar i {
+      font-size: 30px;
+      margin-left: -15px;
     }
     .sidebar-mini.sidenav-toggled .app-content {
         margin-left: 50px;

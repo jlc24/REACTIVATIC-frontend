@@ -5,13 +5,13 @@ import { Clientes } from './clientes';
 
 export class Solicitudes {
   idsolicitud: number;
-  idempresa: number;
   idcliente: number;
   solicitud: string;
-  fecha: Date;
-  hora: Time;
+  idempresa: number;
+  cantidadProductos: number;
   estado: boolean;
+  created_at: Date;
+  
   empresa: Empresas;
   cliente: Clientes;
-  solicitudproductos: Solicitudesproductos[];
 }

@@ -3,129 +3,129 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="tile">
-      <div class="row justify-content-center">
-        <h4>LISTA DE ROLES</h4>
+    <div class="card" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+      <div class="card-header" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
+        <h4 class="text-white">LISTA DE ROLES</h4>
       </div>
-      <div class="row">
-        <div class="col-md-12 mb-2">
-          <div class="input-group justify-content-first">
-            <div class="input-group-prepend">
-              <button class="btn btn-sm btn-outline-success mr-2" type="button" (click)="fadicionar(am)"><i class="fa fa-plus"></i> Agregar Rol</button>
-              <div class="dropdown">
-                  <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-12 mb-2">
+            <div class="input-group justify-content-first">
+              <div class="input-group-prepend">
+                <button class="btn btn-sm btn-outline-success rounded-pill mr-2" type="button" (click)="fadicionar(am)"><i class="fa fa-plus"></i> Agregar Rol</button>
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-outline-info rounded-pill dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-bars"></i> Opciones
                   </button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <button class="dropdown-item"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
                     <button class="dropdown-item"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
                   </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-sm-6 mt-1">
-          <p *ngIf="total == 0">
-            Total: <b>{{ total }} registros</b>
-          </p>
-          <p *ngIf="total == 1">
-            Total: <b>{{ total }} registro</b>
-          </p>
-          <p *ngIf="total > 1">
-            Total: <b>{{ total }} registros</b>
-          </p>
-        </div>
-        <div class="col-sm-6">
-          <div class="row justify-content-end">
-            <div class="col-sm-2 text-md-right text-sm-left mt-1">
-              <label for="">Buscar: </label>
-            </div>
-            <div class="col-sm-10">
-              <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
                 </div>
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Roles a buscar..." (keyup)="fbuscar()" />
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="table-responsive" *ngIf="roles?.length > 0">
-        <table class="table table-bordered table-striped table-hover table-sm tabla-rol">
+        <div class="row">
+          <div class="col-sm-6 mt-1">
+            <p *ngIf="total == 0">
+              Total: <b>{{ total }} registros</b>
+            </p>
+            <p *ngIf="total == 1">
+              Total: <b>{{ total }} registro</b>
+            </p>
+            <p *ngIf="total > 1">
+              Total: <b>{{ total }} registros</b>
+            </p>
+          </div>
+          <div class="col-sm-6">
+            <div class="row justify-content-end">
+              <div class="col-sm-2 text-md-right text-sm-left mt-1">
+                <label for="">Buscar: </label>
+              </div>
+              <div class="col-sm-10">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                  </div>
+                  <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Roles a buscar..." (keyup)="fbuscar()" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive" *ngIf="roles?.length > 0">
+          <table class="table table-bordered table-striped table-hover table-sm tabla-rol">
             <thead>
-                <tr class="table-info">
-                    <th class="text-center">Nro</th>
-                    <th>Rol</th>
-                    <th>Nombre Rol</th>
-                    <th class="text-center">Estado</th>
-                    <th class="text-center">Fecha Creación</th>
-                    <th class="text-center">Operaciones</th>
-                </tr>
+              <tr class="table-info">
+                <th class="text-center">Nro</th>
+                <th>Rol</th>
+                <th>Nombre Rol</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Fecha Creación</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let _item of roles; let i = index">
-                    <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
-                    <td>{{ _item.rol }}</td>
-                    <td>{{ _item.nombrerol }}</td>
-                    <td class="text-center">
-                        <span class="estado badge badge-success" title="Cambiar estado" >
-                            HABILITADO
-                        </span>
-                    </td>
-                    <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
-                    <td class="text-center">
-                        <div class="btn-group" role="group" aria-label="First group">
-                            <button class="btn btn-outline-info btn-sm" title="Ver Usuarios" (click)="fveruser(_item.idrol, verusers)">
-                              <i class="fa fa-eye"></i>
-                            </button>
-                            <button class="btn btn-outline-success btn-sm" title="Ver Enlaces" (click)="fverenlace(_item.idrol, verenlaces)" *ngIf="esCargoAdministrador">
-                              <i class="fa fa-eye"></i>
-                            </button>
-                            <button class="btn btn-outline-secondary btn-sm" title="Ver Cargos" (click)="fverenlace(_item.idrol, vercargos)">
-                              <i class="fa fa-eye"></i>
-                            </button>
-                            <button class="btn btn-outline-warning btn-sm" title="Editar Rol" (click)="fmodificar(_item.idrol, am)">
-                              <i class="fa fa-edit"></i>
-                            </button>
-                            <button class="btn btn-outline-danger btn-sm" title="Eliminar Rol" (click)="feliminar(_item.idrol)" [disabled]="!esCargoAdministrador">
-                              <i class="fa fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+              <tr *ngFor="let _item of roles; let i = index">
+                <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
+                <td>{{ _item.rol }}</td>
+                <td>{{ _item.nombrerol }}</td>
+                <td class="text-center">
+                    <span class="estado badge badge-success" title="Cambiar estado" >
+                        HABILITADO
+                    </span>
+                </td>
+                <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td class="text-center">
+                  <div class="btn-group" role="group" aria-label="First group">
+                    <button class="btn btn-outline-info btn-sm" title="Ver Usuarios" (click)="fveruser(_item.idrol, verusers)">
+                      <i class="fa fa-eye"></i>
+                    </button>
+                    <button class="btn btn-outline-success btn-sm" title="Ver Enlaces" (click)="fverenlace(_item.idrol, verenlaces)" *ngIf="esCargoAdministrador">
+                      <i class="fa fa-eye"></i>
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" title="Ver Cargos" (click)="fverenlace(_item.idrol, vercargos)">
+                      <i class="fa fa-eye"></i>
+                    </button>
+                    <button class="btn btn-outline-warning btn-sm" title="Editar Rol" (click)="fmodificar(_item.idrol, am)">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" title="Eliminar Rol" (click)="feliminar(_item.idrol)" [disabled]="!esCargoAdministrador">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
             </tbody>
-        </table>
-      </div>
-      <div class="table-responsive" *ngIf="total == 0">
-        <table class="table table-bordered table-striped table-sm tabla-rol">
-          <thead>
-            <tr class="table-info">
-              <th class="text-center">Nro</th>
-              <th class="text-center">Rol</th>
-              <th class="text-center">Nombre Rol</th>
-              <th class="text-center">Estado</th>
-              <th class="text-center">Fecha Creación</th>
-              <th class="text-center">Operaciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colspan="6" class="text-center">No se encontraron registros.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="row mt-2">
-        <div class="col-sm-6">
-          <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+          </table>
         </div>
-        <div class="col-sm-6">
-          <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+        <div class="table-responsive" *ngIf="total == 0">
+          <table class="table table-bordered table-striped table-sm tabla-rol">
+            <thead>
+              <tr class="table-info">
+                <th class="text-center">Nro</th>
+                <th class="text-center">Rol</th>
+                <th class="text-center">Nombre Rol</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Fecha Creación</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="6" class="text-center">No se encontraron registros.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row mt-2">
+          <div class="col-sm-6">
+            <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+          </div>
+          <div class="col-sm-6">
+            <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+          </div>
         </div>
       </div>
     </div>
@@ -134,65 +134,65 @@
 
 <ng-template #am>
   <div class="modal-header">
-      <div class="row col-12">
-          <div class="col-lg-6 col-md-12 text-center">
-            <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Rol</h4><br>
-          </div>
-          <div class="col-lg-6 col-md-12 alert-info p-3">
-            Los campos remarcados con <b class="text-danger">*</b> son necesarios.
-          </div>
-      </div>
+    <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Rol</h4><br>
+    <div class="alert alert-info p-1">
+      Los campos remarcados con <b class="text-danger">*</b> son necesarios.
+    </div>
   </div>
   <div class="modal-body">
-      <form [formGroup]="formulario" (ngSubmit)="faceptar()">
-          <div class="row">
-              <div class="form-group col-sm-12">
-                  <label>Rol: <span class="text-danger"><b>*</b></span></label>
-                  <input type="text" class="form-control form-control-sm" formControlName="rol" [class.is-invalid]="f.rol.errors && f.rol.touched" (input)="onInput($event, 'rol', 'letras')" autocomplete="no" required/>
-                  <small *ngIf="f.rol.errors&& f.rol.touched" class="text-danger">
-                      <ng-container *ngIf="f.rol.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="f.rol.errors.pattern">
-                          Solo se permiten letras.
-                      </ng-container>
-                      <ng-container *ngIf="f.rol.errors.minlength">
-                          Debe ser mas de 5 caracteres.
-                      </ng-container>
-                      <ng-container *ngIf="f.rol.errors.maxlength">
-                          No puede exceder los 50 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-              <div class="form-group col-sm-12">
-                  <label>Nombre Rol: <span class="text-danger"><b>*</b></span></label>
-                  <input type="text" class="form-control form-control-sm" formControlName="nombrerol" [class.is-invalid]="f.nombrerol.errors && f.nombrerol.touched" (input)="onInput($event, 'nombrerol', 'letrasyespacios')" autocomplete="no" />
-                  <small *ngIf="f.nombrerol.errors&& f.nombrerol.touched" class="text-danger">
-                      <ng-container *ngIf="f.nombrerol.errors.required">
-                          El dato es obligatorio.
-                      </ng-container>
-                      <ng-container *ngIf="f.nombrerol.errors.pattern">
-                          Solo se permiten letras.
-                      </ng-container>
-                      <ng-container *ngIf="f.nombrerol.errors.minlength">
-                          Debe ser mas de 5 caracteres.
-                      </ng-container>
-                      <ng-container *ngIf="f.nombrerol.errors.maxlength">
-                          No puede exceder los 50 caracteres.
-                      </ng-container>
-                  </small>
-              </div>
-          </div>
+    <form [formGroup]="formulario" (ngSubmit)="faceptar()">
+      <div class="row justify-content-center">
+        <div class="col-sm-4 text-sm-right">
+          <label>Rol: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" formControlName="rol" [class.is-invalid]="f.rol.errors && f.rol.touched" (input)="onInput($event, 'rol', 'letras')" autocomplete="no" required/>
+          <small *ngIf="f.rol.errors&& f.rol.touched" class="invalid-feedback">
+            <ng-container *ngIf="f.rol.errors.required">
+                El dato es obligatorio.
+            </ng-container>
+            <ng-container *ngIf="f.rol.errors.pattern">
+                Solo se permiten letras.
+            </ng-container>
+            <ng-container *ngIf="f.rol.errors.minlength">
+                Debe ser mas de 5 caracteres.
+            </ng-container>
+            <ng-container *ngIf="f.rol.errors.maxlength">
+                No puede exceder los 50 caracteres.
+            </ng-container>
+          </small>
+        </div>
+        <div class="col-sm-4 text-sm-right mt-2">
+          <label>Nombre Rol: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-6 mt-1">
+          <input type="text" class="form-control form-control-sm" formControlName="nombrerol" [class.is-invalid]="f.nombrerol.errors && f.nombrerol.touched" (input)="onInput($event, 'nombrerol', 'letrasyespacios')" autocomplete="no" />
+          <small *ngIf="f.nombrerol.errors&& f.nombrerol.touched" class="invalid-feedback">
+            <ng-container *ngIf="f.nombrerol.errors.required">
+                El dato es obligatorio.
+            </ng-container>
+            <ng-container *ngIf="f.nombrerol.errors.pattern">
+                Solo se permiten letras.
+            </ng-container>
+            <ng-container *ngIf="f.nombrerol.errors.minlength">
+                Debe ser mas de 5 caracteres.
+            </ng-container>
+            <ng-container *ngIf="f.nombrerol.errors.maxlength">
+                No puede exceder los 50 caracteres.
+            </ng-container>
+          </small>
+        </div>
+      </div>
 
-          <div class="text-center">
-              <button type="submit" class="btn btn-sm btn-outline-success m-2" [disabled]="!formulario.valid">
-                  <i class="fa fa-save"></i> Guardar
-              </button>
-              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">
-                  <i class="fa fa-times"></i> Cancelar
-              </button>
-          </div>
-      </form>
+      <div class="text-center">
+        <button type="submit" class="btn btn-sm btn-outline-success rounded-pill m-2" [disabled]="!formulario.valid">
+            <i class="fa fa-save"></i> Guardar
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">
+            <i class="fa fa-times"></i> Cancelar
+        </button>
+      </div>
+    </form>
   </div>
 </ng-template>
 
@@ -230,7 +230,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar</button>
+    <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">Cerrar</button>
   </div>
 </ng-template>
 
@@ -268,7 +268,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar</button>
+    <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">Cerrar</button>
   </div>
 </ng-template>
 
@@ -294,7 +294,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">
+    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">
         <i class="fa fa-times"></i> Cancelar
     </button>
   </div>

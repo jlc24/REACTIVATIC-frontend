@@ -3,120 +3,120 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="tile">
-      <div class="row justify-content-center">
-        <h4>LISTA DE CARGOS</h4>
+    <div class="card"  style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+      <div class="card-header" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
+        <h4 class="text-white">LISTA DE CARGOS</h4>
       </div>
-      <div class="row">
-        <div class="col-md-12 mb-2">
-          <div class="input-group justify-content-first">
-            <div class="input-group-prepend">
-              <button class="btn btn-sm btn-outline-success mr-2" type="button" (click)="fadicionar(am)"><i class="fa fa-plus"></i> Agregar Cargo</button>
-              <div class="dropdown">
-                <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-bars"></i> Opciones
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <button class="dropdown-item"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
-                  <button class="dropdown-item"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-12 mb-2">
+            <div class="input-group justify-content-first">
+              <div class="input-group-prepend">
+                <button class="btn btn-sm btn-outline-success rounded-pill mr-2" type="button" (click)="fadicionar(am)"><i class="fa fa-plus"></i> Agregar Cargo</button>
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-outline-info rounded-pill dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-bars"></i> Opciones
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <button class="dropdown-item"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                    <button class="dropdown-item"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="row">
-        <div class="col-sm-6 mt-1">
-          <p *ngIf="total == 0">
-            Total: <b>{{ total }} registros</b>
-          </p>
-          <p *ngIf="total == 1">
-            Total: <b>{{ total }} registro</b>
-          </p>
-          <p *ngIf="total > 1">
-            Total: <b>{{ total }} registros</b>
-          </p>
-        </div>
-        <div class="col-sm-6">
-          <div class="row justify-content-end">
-            <div class="col-sm-2 text-md-right text-sm-left mt-1">
-              <label for="">Buscar: </label>
-            </div>
-            <div class="col-sm-10">
-              <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+        <div class="row">
+          <div class="col-sm-6 mt-1">
+            <p *ngIf="total == 0">
+              Total: <b>{{ total }} registros</b>
+            </p>
+            <p *ngIf="total == 1">
+              Total: <b>{{ total }} registro</b>
+            </p>
+            <p *ngIf="total > 1">
+              Total: <b>{{ total }} registros</b>
+            </p>
+          </div>
+          <div class="col-sm-6">
+            <div class="row justify-content-end">
+              <div class="col-sm-2 text-md-right text-sm-left mt-1">
+                <label for="">Buscar: </label>
+              </div>
+              <div class="col-sm-10">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                  </div>
+                  <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Cargo a buscar ..." (keyup)="fbuscar()" />
                 </div>
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Cargo a buscar ..." (keyup)="fbuscar()" />
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="table-responsive" *ngIf="cargos?.length > 0">
-        <table class="table table-bordered table-striped table-hover table-sm tabla-cargo">
-          <thead>
-            <tr class="table-info">
-              <th class="text-center">Nro</th>
-              <th class="text-center">Cargo</th>
-              <th class="text-center">estado</th>
-              <th class="text-center">Fecha Creación</th>
-              <th class="text-center">Operaciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let _item of cargos; let i = index">
-              <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
-              <td>{{ _item.cargo }}</td>
-              <td class="text-center">
-                <span class="estado badge badge-success" title="Cambiar estado" >
-                  HABILITADO
-                </span>
-              </td>
-              <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
-              <td class="text-center">
-                <div class="btn-group" role="group" aria-label="First group">
-                  <!-- <button class="btn btn-outline-info btn-sm" title="Ver Enlaces" (click)="fver(_item.idcargo, ver)">
-                    <i class="fa fa-eye"></i>
-                  </button> -->
-                  <button class="btn btn-outline-warning btn-sm" title="Editar Cargo" (click)="fmodificar(_item.idcargo, am)">
-                    <i class="fa fa-edit"></i>
-                  </button>
-                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Cargo" (click)="feliminar(_item.idcargo)">
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="table-responsive" *ngIf="total == 0">
-        <table class="table table-bordered table-striped table-sm tabla-cargo">
-          <thead>
-            <tr class="table-info">
-              <th class="text-center">Nro</th>
-              <th class="text-center">Cargo</th>
-              <th class="text-center">estado</th>
-              <th class="text-center">Fecha Creación</th>
-              <th class="text-center">Operaciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colspan="8" class="text-center">No se encontraron registros.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="row mt-2">
-        <div class="col-sm-6">
-          <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+        <div class="table-responsive" *ngIf="cargos?.length > 0">
+          <table class="table table-bordered table-striped table-hover table-sm tabla-cargo">
+            <thead>
+              <tr class="table-info">
+                <th class="text-center">Nro</th>
+                <th class="text-center">Cargo</th>
+                <th class="text-center">estado</th>
+                <th class="text-center">Fecha Creación</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let _item of cargos; let i = index">
+                <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
+                <td>{{ _item.cargo }}</td>
+                <td class="text-center">
+                  <span class="estado badge badge-success" title="Cambiar estado" >
+                    HABILITADO
+                  </span>
+                </td>
+                <td class="text-center">{{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td class="text-center">
+                  <div class="btn-group" role="group" aria-label="First group">
+                    <!-- <button class="btn btn-outline-info btn-sm" title="Ver Enlaces" (click)="fver(_item.idcargo, ver)">
+                      <i class="fa fa-eye"></i>
+                    </button> -->
+                    <button class="btn btn-outline-warning btn-sm" title="Editar Cargo" (click)="fmodificar(_item.idcargo, am)">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" title="Eliminar Cargo" (click)="feliminar(_item.idcargo)">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="col-sm-6">
-          <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+        <div class="table-responsive" *ngIf="total == 0">
+          <table class="table table-bordered table-striped table-sm tabla-cargo">
+            <thead>
+              <tr class="table-info">
+                <th class="text-center">Nro</th>
+                <th class="text-center">Cargo</th>
+                <th class="text-center">estado</th>
+                <th class="text-center">Fecha Creación</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="8" class="text-center">No se encontraron registros.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row mt-2">
+          <div class="col-sm-6">
+            <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+          </div>
+          <div class="col-sm-6">
+            <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+          </div>
         </div>
       </div>
     </div>
@@ -124,36 +124,36 @@
 </div>
 
 <ng-template #am>
-  <div class="modal-header">
-    <div class="row col-12">
-      <div class="col-lg-6 col-md-12 text-center">
-        <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Cargo</h4><br>
-      </div>
-      <div class="col-lg-6 col-md-12 alert-info p-3">
-        Los campos remarcados con <b class="text-danger">*</b> son necesarios.
-      </div>
-    </div>
+  <div class="modal-header" style="background-color: #4A5568;">
+    <h4 class="modal-title pull-left text-white"><i class="fa fa-edit"></i> {{ estado }} Cargo</h4><br>
   </div>
   <div class="modal-body">
+    <div class="alert alert-info p-1">
+      Los campos remarcados con <b class="text-danger">*</b> son necesarios.
+    </div>
     <form [formGroup]="formCargo" (ngSubmit)="faceptar()">
-      <div class="row">
-        <div class="form-group col-sm-12">
+      <div class="row justify-content-center">
+        <div class="col-sm-3 text-sm-right">
           <label>Rol: <span class="text-danger"><b>*</b></span></label>
-          <select class="form-control form-control-sm" formControlName="idrol" >
+        </div>
+        <div class="col-sm-7">
+          <select class="form-control form-control-sm" formControlName="idrol" [class.is-invalid]="f.idrol.errors && f.idrol.touched">
             <option *ngFor="let _rol of rol" [value]="_rol.idrol">
               {{ _rol.nombrerol }}
             </option>
           </select>
-          <small *ngIf="f.idrol.errors&& f.idrol.touched" class="text-danger">
+          <small *ngIf="f.idrol.errors&& f.idrol.touched" class="invalid-feedback">
             <ng-container *ngIf="f.idrol.errors.required">
               El dato es obligatorio.
             </ng-container>
           </small>
         </div>
-        <div class="form-group col-sm-12">
+        <div class="col-sm-3 text-sm-right mt-3">
           <label>Cargo: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-7 mt-3">
           <input type="text" class="form-control form-control-sm" formControlName="cargo" [class.is-invalid]="f.cargo.errors && f.cargo.touched" (input)="onInput($event, 'cargo', 'letrasynumerosguion')" autocomplete="no" required/>
-          <small *ngIf="f.cargo.errors&& f.cargo.touched" class="text-danger">
+          <small *ngIf="f.cargo.errors&& f.cargo.touched" class="invalid-feedback">
             <ng-container *ngIf="f.cargo.errors.required">
               El dato es obligatorio.
             </ng-container>
@@ -169,25 +169,14 @@
           </small>
         </div>
       </div>
-      <div *ngIf="formCargo.invalid && formCargo.touched" class="alert alert-danger">
+      <div *ngIf="formCargo.invalid && formCargo.touched" class="alert alert-danger mt-2">
         <small>Por favor, completa todos los campos obligatorios.</small>
       </div>
-      <ng-container *ngFor="let field of getFormControls()">
-        <div *ngIf="formCargo.get(field).invalid && formCargo.get(field).touched" class="alert alert-danger">
-          <small><strong>El campo {{ field }} no es válido:</strong></small>
-          <ul>
-            <small><li *ngIf="formCargo.get(field).errors?.required">Este campo es obligatorio.</li></small>
-            <small><li *ngIf="formCargo.get(field).errors?.minlength">Debe tener al menos {{ formCargo.get(field).errors?.minlength.requiredLength }} caracteres.</li></small>
-            <small><li *ngIf="formCargo.get(field).errors?.maxlength">No debe tener más de {{ formCargo.get(field).errors?.maxlength.requiredLength }} caracteres.</li></small>
-            <small><li *ngIf="formCargo.get(field).errors?.pattern">El formato no es válido.</li></small>
-          </ul>
-        </div>
-      </ng-container>
-      <div class="text-center">
-        <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formCargo.valid">
+      <div class="text-center mt-2">
+        <button type="submit" class="btn btn-outline-success rounded-pill m-2" [disabled]="!formCargo.valid">
             <i class="fa fa-save"></i> Guardar
         </button>
-        <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()">
+        <button type="button" class="btn btn-outline-secondary rounded-pill" (click)="fcancelar()">
             <i class="fa fa-times"></i> Cancelar
         </button>
       </div>

@@ -218,9 +218,9 @@ export class MunicipiosComponent implements OnInit {
     this._municipiosService.dato(id).subscribe((data) => {
       this.dato = data;
       this.flocalidades(id);
-      this.modalRefMunicipio = this._modalService.open(content, { 
-        backdrop: 'static', 
-        keyboard: false, 
+      this.modalRefMunicipio = this._modalService.open(content, {
+        backdrop: 'static',
+        keyboard: false,
         size: 'lg',
         scrollable: true
       });
@@ -259,6 +259,11 @@ export class MunicipiosComponent implements OnInit {
         showCancelButton: true,
         cancelButtonText: 'Cancelar',
         confirmButtonText: 'Borrar',
+        customClass: {
+          confirmButton: 'btn btn-success rounded-pill mr-3',
+          cancelButton: 'btn btn-secondary rounded-pill',
+        },
+        buttonsStyling: false,
       })
       .then((result) => {
         if (result.value) {
@@ -275,6 +280,11 @@ export class MunicipiosComponent implements OnInit {
       showCancelButton: true,
       cancelButtonText: 'cancelar',
       confirmButtonText: 'Cambiar',
+      customClass: {
+        confirmButton: 'btn btn-success rounded-pill mr-3',
+        cancelButton: 'btn btn-secondary rounded-pill',
+      },
+      buttonsStyling: false,
     }).then((result) => {
       if (result.value) {
         this._municipiosService.cambiarestado({ idmunicipio, estado }).subscribe( response => {
@@ -293,6 +303,11 @@ export class MunicipiosComponent implements OnInit {
       showCancelButton: true,
       cancelButtonText: 'cancelar',
       confirmButtonText: 'Cambiar',
+      customClass: {
+        confirmButton: 'btn btn-success rounded-pill mr-3',
+        cancelButton: 'btn btn-secondary rounded-pill',
+      },
+      buttonsStyling: false,
     }).then((result) => {
       if (result.value) {
         this._localicadesService.cambiarestado({ idlocalidad, estado }).subscribe( response => {

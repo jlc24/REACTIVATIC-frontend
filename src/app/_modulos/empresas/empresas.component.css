@@ -10,43 +10,34 @@
   box-shadow: 2px 2px 18px 2px #a2a2a2;
 }
 
-.card-header-tabs .nav-link {
-  cursor: pointer;
+:host ::ng-deep .pagination-rounded .page-item {
+  border-radius: 50px;
 }
 
-.nav-tabs .nav-link {
+:host ::ng-deep .pagination-rounded .page-link {
+  border-radius: 50px;
+  color: #960023;
+  background-color: #f8f9fa;
+  border: 1px solid #960023;
+  padding: 10px 16px; /* Aumentar el tamaño del botón */
+  font-size: 1.2rem; /* Aumentar el tamaño del texto */
+}
+
+:host ::ng-deep .pagination-rounded .page-link:hover {
+  background-color: #a01938;
+  color: white;
+}
+
+:host ::ng-deep .pagination-rounded .page-item.active .page-link {
+  background-color: #960023;
+  border-color: #960023;
+  color: white;
+}
+
+.wizard-tabs-container{
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 10px 20px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #6c757d;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.nav-tabs .nav-link.active {
-  background-color: #db4158;
-  color: white;
-  border-color: #db4158;
-}
-
-.nav-tabs .nav-link.completed {
-  color: #28a745;
-}
-
-.nav-tabs .nav-link i {
-  margin-right: 8px;
-  font-size: 1.3rem;
-}
-
-.nav-tabs .nav-link:hover {
-  background-color: #db4158;
-  color: white;
-}
-
-.nav-tabs .nav-link.completed i {
-  color: #28a745;
+  width: 100%;
 }
 
 .wizard-tabs {

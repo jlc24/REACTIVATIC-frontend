@@ -1,1 +1,328 @@
-<p>beneficios works!</p>
+<app-cabeceratitulos [titulo]="'Beneficios'" [descripcion]="'Lista de Beneficios'" [icono]="'book'" [opcion]="'beneficios'">
+</app-cabeceratitulos>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card"  style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+      <div class="card-header" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
+        <h4 class="text-white">LISTA DE BENEFICIOS</h4>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-12 mb-2">
+            <div class="input-group justify-content-first">
+              <div class="input-group-prepend">
+                <button class="btn btn-sm btn-outline-success rounded-pill mr-2" type="button" (click)="fadicionar(am)"><i class="fa fa-plus"></i> Agregar Beneficio</button>
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-outline-info rounded-pill dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-bars"></i> Opciones
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <button class="dropdown-item"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                    <button class="dropdown-item"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 mt-1">
+            <p *ngIf="total == 0">
+              Total: <b>{{ total }} registros</b>
+            </p>
+            <p *ngIf="total == 1">
+              Total: <b>{{ total }} registro</b>
+            </p>
+            <p *ngIf="total > 1">
+              Total: <b>{{ total }} registros</b>
+            </p>
+          </div>
+          <div class="col-sm-6">
+            <div class="row justify-content-end">
+              <div class="col-sm-2 text-md-right text-sm-left mt-1">
+                <label for="">Buscar: </label>
+              </div>
+              <div class="col-sm-10">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                  </div>
+                  <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Beneficio a buscar ..." (keyup)="fbuscar()" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive" *ngIf="beneficios?.length > 0">
+          <table class="table table-bordered table-striped table-hover table-sm tabla-beneficio">
+            <thead>
+              <tr class="table-info">
+                <th class="text-center">Nro</th>
+                <th class="text-center">Beneficio</th>
+                <th class="text-center">Tipo</th>
+                <th class="text-center">Municipio</th>
+                <th class="text-center" width="300px">Direccion</th>
+                <th class="text-center">Fecha Inicio</th>
+                <th class="text-center">Fecha Fin</th>
+                <th class="text-center">Capacidad</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let _ben of beneficios; let i = index">
+                <td class="text-right align-content-center">{{ i + 1 + ((pagina-1)*10) }}</td>
+                <td class=" align-content-center">{{ _ben.beneficio }}</td>
+                <td class=" align-content-center">{{ _ben.tipobeneficio.tipobeneficio }}</td>
+                <td class=" align-content-center">{{ _ben.municipio.municipio }}</td>
+                <td>{{ _ben.direccion }}</td>
+                <td class="text-center  align-content-center">{{ _ben.fechainicio | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td class="text-center  align-content-center">{{ _ben.fechafin | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td class="text-center  align-content-center">{{ _ben.capacidad }}</td>
+                <td class="text-center  align-content-center">
+                  <span class="puntero badge {{ _ben.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" >
+                    {{ _ben.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                  </span>
+                </td>
+                <td class="text-center  align-content-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" data-boundary="viewport" aria-expanded="false">
+                      <i class="bi bi-list"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                      <div class="dropdown-item puntero"><i class="fa fa-eye text-info"></i> Ver</div>
+                      <div class="dropdown-item puntero" (click)="fmodificar(_ben.idbeneficio, am)"><i class="fa fa-edit text-warning"></i> Modificar</div>
+                      <div class="dropdown-item puntero"><i class="fa fa-list"></i> Participantes</div>
+                      <div class="dropdown-divider"></div>
+                      <div class="dropdown-item puntero"><i class="bi bi-trash text-danger"></i> Eliminar</div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-responsive" *ngIf="total == 0">
+          <table class="table table-bordered table-striped table-hover table-sm tabla-beneficio">
+            <thead>
+              <tr class="table-info">
+                <th class="text-center">Nro</th>
+                <th class="text-center">Beneficio</th>
+                <th class="text-center">Tipo</th>
+                <th class="text-center">Municipio</th>
+                <th class="text-center">Direccion</th>
+                <th class="text-center">Fecha Inicio</th>
+                <th class="text-center">Fecha Fin</th>
+                <th class="text-center">Capacidad</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="10" class="text-center">No se encontraron registros.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row mt-2">
+          <div class="col-sm-6">
+            <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+          </div>
+          <div class="col-sm-6">
+            <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #am>
+  <div class="modal-header" style="background-color: #4A5568;">
+    <h4 class="modal-title pull-left text-white"><i class="fa fa-edit"></i> {{ estado }} Beneficio</h4><br>
+  </div>
+  <div class="modal-body">
+    <div class="alert alert-info p-1">
+      Los campos remarcados con <b class="text-danger">*</b> son necesarios.
+    </div>
+    <form [formGroup]="formulario" (ngSubmit)="faceptar()">
+      <div class="row justify-content-center">
+        <div class="col-sm-3 text-sm-right">
+          <label for="beneficio">Beneficio: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-7">
+          <input type="text" class="form-control form-control-sm" id="beneficio" formControlName="beneficio" [class.is-invalid]="f.beneficio.errors && f.beneficio.touched" (input)="onInput($event, 'beneficio', 'direccion')" autocomplete="no" required/>
+          <small *ngIf="f.beneficio.errors&& f.beneficio.touched" class="invalid-feedback">
+            <ng-container *ngIf="f.beneficio.errors.required">
+              El dato es obligatorio.
+            </ng-container>
+            <ng-container *ngIf="f.beneficio.errors.pattern">
+              Solo se permiten letras.
+            </ng-container>
+            <ng-container *ngIf="f.beneficio.errors.minlength">
+              Debe ser mas de 3 caracteres.
+            </ng-container>
+            <ng-container *ngIf="f.beneficio.errors.maxlength">
+              No puede exceder los 20 caracteres.
+            </ng-container>
+          </small>
+        </div>
+        <div class="col-sm-3 text-sm-right mt-3">
+          <label for="descripcion">Descripción: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-7 mt-3">
+          <input type="text" class="form-control form-control-sm" id="descripcion" formControlName="descripcion" (input)="onInput($event, 'descripcion', 'direccion')" autocomplete="no" required/>
+          <small *ngIf="f.descripcion.errors&& f.descripcion.touched" class="invalid-feedback">
+            <ng-container *ngIf="f.descripcion.errors.pattern">
+              Caracter inválido.
+            </ng-container>
+            <ng-container *ngIf="f.descripcion.errors.maxlength">
+              No puede exceder los 255 caracteres.
+            </ng-container>
+          </small>
+        </div>
+        <div class="col-sm-3 text-sm-right mt-3">
+          <label for="idtipobeneficio">Tipo: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-7 mt-3">
+          <select class="form-control form-control-sm" id="idtipobeneficio" formControlName="idtipobeneficio" [class.is-invalid]="f.idtipobeneficio.errors && f.idtipobeneficio.touched">
+            <option *ngFor="let _tipo of tiposbeneficios" [value]="_tipo.idtipobeneficio">
+              {{ _tipo.tipobeneficio }}
+            </option>
+          </select>
+          <small *ngIf="f.idtipobeneficio.errors&& f.idtipobeneficio.touched" class="invalid-feedback">
+            <ng-container *ngIf="f.idtipobeneficio.errors.required">
+              El dato es obligatorio.
+            </ng-container>
+          </small>
+        </div>
+        <div class="col-sm-3 text-sm-right mt-3">
+          <label for="idmunicipio">Municipio: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-7 mt-3">
+          <select class="form-control form-control-sm" id="idmunicipio" formControlName="idmunicipio" [class.is-invalid]="f.idmunicipio.errors && f.idmunicipio.touched">
+            <option *ngFor="let _municipio of municipios" [value]="_municipio.idmunicipio">
+              {{ _municipio.municipio }}
+            </option>
+          </select>
+          <small *ngIf="f.idmunicipio.errors&& f.idmunicipio.touched" class="invalid-feedback">
+            <ng-container *ngIf="f.idmunicipio.errors.required">
+              El dato es obligatorio.
+            </ng-container>
+          </small>
+        </div>
+        <div class="col-sm-3 text-sm-right mt-3">
+          <label for="direccion">Direccion: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-7 mt-3">
+          <input type="text" class="form-control form-control-sm" id="direccion" formControlName="direccion" [class.is-invalid]="f.direccion.errors && f.direccion.touched" (input)="onInput($event, 'direccion', 'direccion')" autocomplete="no" required/>
+          <small *ngIf="f.direccion.errors&& f.direccion.touched" class="invalid-feedback">
+            <ng-container *ngIf="f.direccion.errors.required">
+              El dato es obligatorio.
+            </ng-container>
+            <ng-container *ngIf="f.direccion.errors.pattern">
+              Caracter invalido.
+            </ng-container>
+            <ng-container *ngIf="f.direccion.errors.minlength">
+              Debe ser mas de 3 caracteres.
+            </ng-container>
+            <ng-container *ngIf="f.direccion.errors.maxlength">
+              No puede exceder los 255 caracteres.
+            </ng-container>
+          </small>
+        </div>
+        <div class="col-sm-3 text-sm-right mt-3">
+          <label for="fechainicio">Inicio: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-7 mt-3">
+          <input type="datetime-local" class="form-control form-control-sm" id="fechainicio" formControlName="fechainicio" [class.is-invalid]="f.fechainicio.errors && f.fechainicio.touched" autocomplete="no" required/>
+          <small *ngIf="f.fechainicio.errors&& f.fechainicio.touched" class="invalid-feedback">
+            <ng-container *ngIf="f.fechainicio.errors.required">
+              El dato es obligatorio.
+            </ng-container>
+            <ng-container *ngIf="f.fechainicio.errors.pattern">
+              Solo se permiten letras.
+            </ng-container>
+            <ng-container *ngIf="f.fechainicio.errors.minlength">
+              Debe ser mas de 3 caracteres.
+            </ng-container>
+            <ng-container *ngIf="f.fechainicio.errors.maxlength">
+              No puede exceder los 20 caracteres.
+            </ng-container>
+          </small>
+        </div>
+        <div class="col-sm-3 text-sm-right mt-3">
+          <label for="fechafin">Fin: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-7 mt-3">
+          <input type="datetime-local" class="form-control form-control-sm" id="fechafin" formControlName="fechafin" [class.is-invalid]="f.fechafin.errors && f.fechafin.touched" autocomplete="no" required/>
+          <small *ngIf="f.fechafin.errors&& f.fechafin.touched" class="invalid-feedback">
+            <ng-container *ngIf="f.fechafin.errors.required">
+              El dato es obligatorio.
+            </ng-container>
+            <ng-container *ngIf="f.fechafin.errors.pattern">
+              Solo se permiten letras.
+            </ng-container>
+            <ng-container *ngIf="f.fechafin.errors.minlength">
+              Debe ser mas de 3 caracteres.
+            </ng-container>
+            <ng-container *ngIf="f.fechafin.errors.maxlength">
+              No puede exceder los 20 caracteres.
+            </ng-container>
+          </small>
+        </div>
+        <div class="col-sm-3 text-sm-right mt-3">
+          <label for="idcapacitador">Capacitador:</label>
+        </div>
+        <div class="col-sm-7 mt-3">
+          <select class="form-control form-control-sm" id="idcapacitador" formControlName="idcapacitador">
+            <option *ngFor="let _cap of capacitadores" [value]="_cap.idusuario">
+              {{ _cap.persona?.primerapellido }} {{ _cap.persona?.segundoapellido }} {{ _cap.persona?.primernombre }}
+            </option>
+          </select>
+        </div>
+        <div class="col-sm-3 text-sm-right mt-3">
+          <label for="capacidad">Capacidad: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-7 mt-3">
+          <input type="text" class="form-control form-control-sm" id="capacidad" formControlName="capacidad" [maxlength]="4" [class.is-invalid]="f.capacidad.errors && f.capacidad.touched" (input)="onInput($event, 'capacidad', 'numeros')" autocomplete="no" required/>
+          <small *ngIf="f.capacidad.errors&& f.capacidad.touched" class="invalid-feedback">
+            <ng-container *ngIf="f.capacidad.errors.required">
+              El dato es obligatorio.
+            </ng-container>
+            <ng-container *ngIf="f.capacidad.errors.pattern">
+              Solo se permiten numeros.
+            </ng-container>
+            <ng-container *ngIf="f.capacidad.errors.minlength">
+              Debe ser mas de 1 caracteres.
+            </ng-container>
+            <ng-container *ngIf="f.capacidad.errors.maxlength">
+              No puede exceder los 3 caracteres.
+            </ng-container>
+          </small>
+        </div>
+      </div>
+      <div *ngIf="formulario.invalid && formulario.touched" class="alert alert-danger mt-2 p-2">
+        <small>Por favor, completa todos los campos obligatorios.</small>
+      </div>
+      <div class="text-center mt-2">
+        <button type="submit" class="btn btn-sm btn-outline-success rounded-pill m-2" [disabled]="!formulario.valid">
+            <i class="fa fa-save"></i> Guardar
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">
+            <i class="fa fa-times"></i> Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #am>
+  <div class="modal-header" style="background-color: #4A5568;">
+    <h4 class="modal-title pull-left text-white"><i class="fa fa-edit"></i> {{ estado }} Beneficio</h4><br>
+  </div>
+  <div class="modal-body">
+  </div>
+</ng-template>

@@ -2,12 +2,80 @@
   cursor: pointer;
 }
 
+.btn-outline-custom {
+  color: #FF5919;
+  border-color: #FF5919;
+}
+
+.btn-outline-custom:hover {
+  color: #FFF;
+  background-color: #FF5919;
+  border-color: #FF5919;
+}
+
+.btn-outline-custom:focus,
+.btn-outline-custom.focus {
+  -webkit-box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+  box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+}
+
+.btn-outline-custom.disabled,
+.btn-outline-custom:disabled {
+  color: #FF5919;
+  background-color: transparent;
+}
+
+.btn-outline-custom:not(:disabled):not(.disabled):active,
+.btn-outline-custom:not(:disabled):not(.disabled).active,
+.show>.btn-outline-custom.dropdown-toggle {
+  color: #FFF;
+  background-color: #FF5919;
+  border-color: #FF5919;
+}
+
+.btn-outline-custom:not(:disabled):not(.disabled):active:focus,
+.btn-outline-custom:not(:disabled):not(.disabled).active:focus,
+.show>.btn-outline-custom.dropdown-toggle:focus {
+  -webkit-box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+  box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+}
+
 .tabla-representante{
   box-shadow: 2px 2px 18px 2px #a2a2a2;
 }
 
 .puntero{
   cursor: pointer;
+}
+
+:host ::ng-deep .pagination-rounded .page-item {
+  border-radius: 50px;
+}
+
+:host ::ng-deep .pagination-rounded .page-link {
+  border-radius: 50px;
+  color: #960023;
+  background-color: #f8f9fa;
+  border: 1px solid #960023;
+  padding: 10px 16px; /* Aumentar el tamaño del botón */
+  font-size: 1.2rem; /* Aumentar el tamaño del texto */
+}
+
+:host ::ng-deep .pagination-rounded .page-link:hover {
+  background-color: #a01938;
+  color: white;
+}
+
+:host ::ng-deep .pagination-rounded .page-item.active .page-link {
+  background-color: #960023;
+  border-color: #960023;
+  color: white;
+}
+
+.wizard-tabs-container{
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .wizard-tabs {

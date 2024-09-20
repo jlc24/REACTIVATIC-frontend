@@ -15,10 +15,11 @@ import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { UsuariosService } from 'src/app/_aods/usuarios.service';
 import { Usuarios } from 'src/app/_entidades/usuarios';
 import swal from 'sweetalert2';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Cargos } from 'src/app/_entidades/cargos';
 import { CargosService } from 'src/app/_aods/cargos.service';
 import { ToastrService } from 'ngx-toastr';
+import { UtilsService } from 'src/app/_aods/utils.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -34,6 +35,8 @@ export class UsuariosComponent implements OnInit {
   genero: Tiposgeneros[];
   rol: Roles[];
   cargos: Cargos[];
+
+  imagenUsuario: any[];
 
   pagina: number = 1;
   numPaginas: number = 0;
@@ -69,6 +72,11 @@ export class UsuariosComponent implements OnInit {
 
   step: number = 1;
 
+  attempts: number = 0;
+  maxAttempts: number = 3;
+  lockEndTime: number = 0;
+  intervalId: any;
+
   constructor(
     private _usuariosService: UsuariosService,
     private _personasService: PersonasService,
@@ -78,17 +86,19 @@ export class UsuariosComponent implements OnInit {
     private _accesoService: AccesoService,
     private _rolService: RolesService,
     private _cargosService: CargosService,
-    private _sanitizer: DomSanitizer,
+    private sanitizer: DomSanitizer,
     private _fb: FormBuilder,
     config: NgbModalConfig,
     private _modalService: NgbModal,
-    private _toast: ToastrService
+    private _toast: ToastrService,
+    private utilsService: UtilsService
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
 
   ngOnInit(): void {
+    this.utilsService.mostrarCargando();
     this.fdatos();
     this.fdocumento();
     this.fextension();
@@ -107,6 +117,7 @@ export class UsuariosComponent implements OnInit {
     this.esCargoArtesania = this._accesoService.esCargoArtesania();
     this.esCargoAlimento = this._accesoService.esCargoAlimentos();
     this.esCargoChofer = this._accesoService.esCargoChofer();
+    this.utilsService.cerrarCargando();
   }
 
   nextStep() {
@@ -159,9 +170,9 @@ export class UsuariosComponent implements OnInit {
       });
     }
     if (this.esdpeic) {
-      // this._rolService.listar().subscribe( data => {
-      //   this.rol = data;
-      // });
+      this._rolService.listardpeic().subscribe( data => {
+        this.rol = data;
+      });
     }
     if (this.esreactivatic) {
       this._rolService.listarreactivatic().subscribe( data => {
@@ -193,9 +204,9 @@ export class UsuariosComponent implements OnInit {
       });
     }
     if (this.esdpeic) {
-      // this._rolService.listar().subscribe( data => {
-      //   this.rol = data;
-      // });
+      this._usuariosService.cantidaddpeic(this.buscar).subscribe((data) => {
+        this.total = data;
+      });
     }
     if (this.esreactivatic) {
       this._usuariosService.cantidadreactivatic(this.buscar).subscribe((data) => {
@@ -216,27 +227,27 @@ export class UsuariosComponent implements OnInit {
     this.esreactivatic = this._accesoService.esRolReactivatic();
     if (this.esadmin) {
       this._usuariosService.datos(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
-          this.fcantidad();
-          this.datos = data;
-        });
+        this.fcantidad();
+        this.datos = data;
+      });
     }
     if (this.essddpi) {
       this._usuariosService.datossddpi(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
-          this.fcantidad();
-          this.datos = data;
-        });
+        this.fcantidad();
+        this.datos = data;
+      });
     }
     if (this.esdpeic) {
-      // this._usuariosService.datossddpi(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
-      //     this.fcantidad();
-      //     this.datos = data;
-      //   });
+      this._usuariosService.datosdpeic(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
+        this.fcantidad();
+        this.datos = data;
+      });
     }
     if (this.esreactivatic) {
       this._usuariosService.datosreactivatic(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
-          this.fcantidad();
-          this.datos = data;
-        });
+        this.fcantidad();
+        this.datos = data;
+      });
     }
   }
 
@@ -431,7 +442,12 @@ export class UsuariosComponent implements OnInit {
     this.user.rol = new Roles();
     this.goToStep(1);
     this.fformulario(this.user);
-    this._modalService.open(content, { size: 'lg' });
+    this._modalService.open(content,
+      {
+        size: 'lg',
+        scrollable: true
+      }
+    );
   }
 
   fmodificar(id: number, content: any) {
@@ -441,15 +457,27 @@ export class UsuariosComponent implements OnInit {
       this.user = data;
       this.fformulario(this.user, true);
       this.fcargo(data.rol.idrol);
-      this._modalService.open(content, { size: 'lg' });
+      this._modalService.open(content,
+        {
+          size: 'lg',
+          scrollable: true
+        }
+      );
     });
   }
+
   fver(id: number, content: any) {
     this.estado = 'Ver';
     this._usuariosService.dato(id).subscribe((data) => {
       this.user = data;
       this.fformulario(this.user);
-      this._modalService.open(content, { size: 'lg' });
+      this.fdescargar('usuarios');
+      this._modalService.open(content,
+        {
+          size: 'lg',
+          scrollable: true
+        }
+      );
     });
   }
 
@@ -462,6 +490,11 @@ export class UsuariosComponent implements OnInit {
         showCancelButton: true,
         cancelButtonText: 'No, mantener usuario',
         confirmButtonText: 'Sí, eliminar',
+        customClass: {
+          confirmButton: 'btn btn-success rounded-pill mr-3',
+          cancelButton: 'btn btn-secondary rounded-pill',
+        },
+        buttonsStyling: false,
       })
       .then((result) => {
         if (result.value) {
@@ -483,16 +516,21 @@ export class UsuariosComponent implements OnInit {
       showCancelButton: true,
       cancelButtonText: 'cancelar',
       confirmButtonText: 'Cambiar',
+      customClass: {
+        confirmButton: 'btn btn-success rounded-pill mr-3',
+        cancelButton: 'btn btn-secondary rounded-pill',
+      },
+      buttonsStyling: false,
     }).then((result) => {
       if (result.value) {
         this._usuariosService.cambiarestado({ idusuario, estado }).subscribe(
           (response) => {
             this.fdatos();
-            swal.fire('Cambio realizado', 'El estado del usuario ha sido cambiado con éxito.', 'success');
+            //swal.fire('Cambio realizado', 'El estado del usuario ha sido cambiado con éxito.', 'success');
             this._toast.success('', 'Operación exitosa');
           },
           (error) => {
-            swal.fire('Error', 'Hubo un problema al intentar cambiar el estado del usuario.', 'error');
+            //swal.fire('Error', 'Hubo un problema al intentar cambiar el estado del usuario.', 'error');
             this._toast.error('', 'Error de operación');
           }
         );
@@ -593,19 +631,112 @@ export class UsuariosComponent implements OnInit {
     this.archivoseleccionado = event.target.files[0];
   }
 
-  fcargar() {
-    this._personasService.cargarImagen(this.archivoseleccionado).subscribe(data => {
-      this._modalService.dismissAll();
-      this.fdescargar()
-      swal.fire('Archivo cargado', 'Archivo cargado con exito', 'success')
-    })
+  // fcargar() {
+  //   this._personasService.cargarImagen(this.archivoseleccionado).subscribe(data => {
+  //     this._modalService.dismissAll();
+  //     this.fdescargar()
+  //     swal.fire('Archivo cargado', 'Archivo cargado con exito', 'success')
+  //   })
+  // }
+
+  // fdescargar() {
+  //   this.imagen = null;
+  //   this._personasService.descargarImagen().subscribe(data=>{
+  //     const objectURL = window.URL.createObjectURL(data);
+  //     this.imagen = this._sanitizer.bypassSecurityTrustUrl(objectURL);
+  //   })
+  // }
+
+  fdescargar(rol: string) {
+    if(rol == 'usuarios'){
+      this.imagenUsuario = [];
+      this._personasService.downloadperfil('usuarios').subscribe((data) => {
+        this.imagenUsuario = data;
+      });
+    }
   }
 
-  fdescargar() {
-    this.imagen = null;
-    this._personasService.descargarImagen().subscribe(data=>{
-      const objectURL = window.URL.createObjectURL(data);
-      this.imagen = this._sanitizer.bypassSecurityTrustUrl(objectURL);
+  sanitizarImagen(data: string, mimeType: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(`data:${mimeType};base64,${data}`);
+  }
+
+  faceptarcambiarclave(clave: string) {
+    swal.fire({
+      title: 'Confirmación de clave',
+      html: `
+        <input id="clave-input" class="swal2-input" placeholder="Ingrese su clave" type="password">
+        <div id="intentos-restantes" style="margin-top: 10px;">Intentos restantes: ${this.maxAttempts - this.attempts}</div>
+      `,
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Confirmar',
+      customClass: {
+        confirmButton: 'btn btn-success rounded-pill mr-3',
+        cancelButton: 'btn btn-secondary rounded-pill',
+      },
+      buttonsStyling: false,
+      preConfirm: () => {
+        const clave = (document.getElementById('clave-input') as HTMLInputElement).value;
+        if (!clave) {
+          swal.showValidationMessage('Debe ingresar una clave');
+          return false;
+        }
+        return clave;
+      }
     })
+    .then((result) => {
+      if (result.value) {
+        this._usuariosService.verificar({ clave: result.value }).subscribe(
+          (verificacionResponse) => {
+            this._usuariosService.cambiarclave({ clave }).subscribe(response => {
+              this._toast.success('','Clave correcta.');
+              swal.fire('Clave Restablecida', 'La clave ha sido restablecida con éxito.', 'success');
+              this.attempts = 0;
+            });
+          },
+          (error) => {
+            this.attempts++;
+            if (this.attempts >= this.maxAttempts) {
+              this._toast.error('Se bloqueron los accesos.','Intentos excedidos.');
+              this.blockUI();
+            } else {
+              this._toast.error('','Clave incorrecta.');
+              this.faceptarcambiarclave(clave);
+            }
+          }
+        );
+      }
+    });
+  }
+
+  blockUI() {
+    const remainingTime = 30; // Tiempo de bloqueo en segundos
+    this.lockEndTime = Date.now() + remainingTime * 1000; // Calcular el tiempo de desbloqueo
+
+    swal.fire({
+      title: 'Intentos excedidos',
+      html: `<div>Espere <strong id="countdown">${remainingTime}</strong> segundos para intentar de nuevo.</div>`,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      onBeforeOpen: () => {
+        swal.showLoading(); // Mostrar el ícono de carga
+        this.updateCountdown(); // Actualizar el contador
+      }
+    });
+  }
+
+  updateCountdown() {
+    const interval = 1000; // Intervalo en milisegundos
+    this.intervalId = setInterval(() => {
+      const now = Date.now();
+      const remainingTime = Math.max(0, Math.ceil((this.lockEndTime - now) / 1000));
+      if (remainingTime <= 0) {
+        clearInterval(this.intervalId);
+        swal.close(); // Cerrar el Swal cuando se acabe el tiempo
+        this.attempts = 0; // Reiniciar el contador de intentos
+      } else {
+        document.getElementById('countdown').innerText = remainingTime.toString();
+      }
+    }, interval);
   }
 }

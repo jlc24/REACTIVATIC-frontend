@@ -299,6 +299,10 @@ export class EmpresasComponent implements OnInit {
         icon: 'error',
         text: 'Faltan datos de Representante',
         confirmButtonText: 'Aceptar',
+        customClass: {
+          confirmButton: 'btn btn-success rounded-pill mr-3',
+        },
+        buttonsStyling: false,
       }).then((result) => {
         if (result.value) {
           this.goToStep(1);
@@ -494,7 +498,11 @@ export class EmpresasComponent implements OnInit {
               icon: 'info',
               title: 'Información',
               text: `El representante ya tiene ${empresasRegistradas} empresas registradas.`,
-              confirmButtonText: 'Aceptar'
+              confirmButtonText: 'Aceptar',
+              customClass: {
+                confirmButton: 'btn btn-success rounded-pill mr-3',
+              },
+              buttonsStyling: false,
             });
             this.toast.error('El representante ya tiene empresas registradas', 'Operación fallida');
             this.buscarRep = '';
@@ -1306,6 +1314,11 @@ export class EmpresasComponent implements OnInit {
         showCancelButton: true,
         cancelButtonText: 'Cancelar',
         confirmButtonText: 'Borrar',
+        customClass: {
+          confirmButton: 'btn btn-success rounded-pill mr-3',
+          cancelButton: 'btn btn-secondary rounded-pill',
+        },
+        buttonsStyling: false,
       })
       .then((result) => {
         if (result.value) {
@@ -1325,6 +1338,11 @@ export class EmpresasComponent implements OnInit {
       showCancelButton: true,
       cancelButtonText: 'cancelar',
       confirmButtonText: 'Cambiar',
+      customClass: {
+        confirmButton: 'btn btn-success rounded-pill mr-3',
+        cancelButton: 'btn btn-secondary rounded-pill',
+      },
+      buttonsStyling: false,
     }).then((result) => {
       if (result.value) {
         // this._localicadesService.cambiarestado({ idlocalidad, estado }).subscribe( response => {

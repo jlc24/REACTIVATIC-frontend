@@ -288,6 +288,11 @@ export class CategoriaComponent implements OnInit {
         showCancelButton: true,
         cancelButtonText: 'Cancelar',
         confirmButtonText: 'Borrar',
+        customClass: {
+          confirmButton: 'btn btn-success rounded-pill mr-3',
+          cancelButton: 'btn btn-secondary rounded-pill',
+        },
+        buttonsStyling: false,
       })
       .then((result) => {
         if (result.value) {
@@ -303,6 +308,11 @@ export class CategoriaComponent implements OnInit {
         showCancelButton: true,
         cancelButtonText: 'Cancelar',
         confirmButtonText: 'Borrar',
+        customClass: {
+          confirmButton: 'btn btn-success rounded-pill mr-3',
+          cancelButton: 'btn btn-secondary rounded-pill',
+        },
+        buttonsStyling: false,
       })
       .then((result) => {
         if (result.value) {

@@ -3,139 +3,139 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="tile">
-      <div class="row justify-content-center">
-        <h4>LISTA DE UNIDADES PRODUCTIVAS</h4>
+    <div class="card" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+      <div class="card-header" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
+        <h4 class="text-white">LISTA DE UNIDADES PRODUCTIVAS</h4>
       </div>
-      <div class="row">
-        <div class="col-md-12 mb-2">
-          <div class="input-group justify-content-first">
-            <div class="input-group-prepend">
-              <button class="btn btn-sm btn-outline-success mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Empresa</button>
-              <div class="dropdown">
-                <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-bars"></i> Opciones
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
-                  <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-12 mb-2">
+            <div class="input-group justify-content-first">
+              <div class="input-group-prepend">
+                <button class="btn btn-sm btn-outline-success rounded-pill mr-2" type="button" (click)="fadicionar(ab)"><i class="fa fa-plus"></i> Agregar Empresa</button>
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-outline-info rounded-pill dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-bars"></i> Opciones
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
+                    <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="row">
-        <div class="col-sm-6 mt-1">
-          <p *ngIf="total == 0">
-            Total: <b>{{ total }} registros</b>
-          </p>
-          <p *ngIf="total == 1">
-            Total: <b>{{ total }} registro</b>
-          </p>
-          <p *ngIf="total > 1">
-            Total: <b>{{ total }} registros</b>
-          </p>
-        </div>
-        <div class="col-sm-6">
-          <div class="row justify-content-end">
-            <div class="col-sm-2 text-md-right text-sm-left mt-1">
-              <label for="">Buscar: </label>
-            </div>
-            <div class="col-sm-10">
-              <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+        <div class="row">
+          <div class="col-sm-6 mt-1">
+            <p *ngIf="total == 0">
+              Total: <b>{{ total }} registros</b>
+            </p>
+            <p *ngIf="total == 1">
+              Total: <b>{{ total }} registro</b>
+            </p>
+            <p *ngIf="total > 1">
+              Total: <b>{{ total }} registros</b>
+            </p>
+          </div>
+          <div class="col-sm-6">
+            <div class="row justify-content-end">
+              <div class="col-sm-2 text-md-right text-sm-left mt-1">
+                <label for="">Buscar: </label>
+              </div>
+              <div class="col-sm-10">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                  </div>
+                  <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Empresa a buscar ..." (keyup)="fbuscar()" />
                 </div>
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Empresa a buscar ..." (keyup)="fbuscar()" />
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="table-responsive" *ngIf="datos?.length > 0">
-        <table class="table table-sm table-bordered table-hover table-striped tabla-empresa">
-          <thead>
-            <tr class="table-primary">
-              <th class="text-center">Nro.</th>
-              <th class="text-center">Unidad Productiva</th>
-              <th class="text-center">Logo</th>
-              <th class="text-center">NIT</th>
-              <th class="text-center">Rubro</th>
-              <th class="text-center">Municipio</th>
-              <th class="text-center">Dirección</th>
-              <th class="text-center">Estado</th>
-              <th class="text-center">Operaciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let _item of datos; let i = index">
-              <td class="text-right">{{ pagina > 1 ? (i + 1 + ((pagina-1)*10)) : (i + 1) }}</td>
-              <td>{{ _item.empresa}}</td>
-              <td class="text-center">
-                <div class="main-img text-center">
-                  <img [src]="ruta+_item.idempresa" width="80px" (error)="$event.target.src='../../../assets/imagenes/images/default/404.png'" />
-                </div>
-              </td>
-              <td class="text-center">{{ _item.nit}}</td>
-              <td class="text-center">{{ _item.rubro.rubro}}</td>
-              <td class="text-center">{{ _item.municipio.municipio}}</td>
-              <td>{{ _item.direccion }}</td>
-              <td class="text-center">
-                <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idempresa, !_item.estado)" >
-                  {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
-                </span>
-              </td>
-              <td class="text-center">
-                <div class="btn-group" role="group" aria-label="First group">
-                  <button class="btn btn-outline-info btn-sm" title="Ver Empresa" (click)="fver(_item.idempresa, ver)">
-                    <i class="fa fa-eye"></i>
-                  </button>
-                  <button class="btn btn-outline-warning btn-sm" title="Editar Empresa" (click)="fmodificar(_item.idempresa, ab)">
-                    <i class="fa fa-edit"></i>
-                  </button>
-                  <button class="btn btn-outline-danger btn-sm" title="Eliminar Empresa" (click)="feliminar(_item.idempresa)">
-                    <i class="fa fa-trash"></i>
-                  </button>
-                  <button class="btn btn-outline-dark btn-sm" title="Imrpimir">
-                    <i class="fa fa-print"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="table-responsive" *ngIf="total == 0">
-        <table class="table table-sm table-bordered table-hover tabla-empresa">
-          <thead>
-            <tr class="table-primary">
-              <th class="text-center">Nro.</th>
-              <th class="text-center">Unidad Productiva</th>
-              <th class="text-center">Logo</th>
-              <th class="text-center">NIT</th>
-              <th class="text-center">Rubro</th>
-              <th class="text-center">Municipio</th>
-              <th class="text-center">Dirección</th>
-              <th class="text-center">Estado</th>
-              <th class="text-center">Operaciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colspan="10" class="text-center">No se encontraron registros.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="row mt-2">
-        <div class="col-sm-6">
-          <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+        <div class="table-responsive" *ngIf="datos?.length > 0">
+          <table class="table table-sm table-bordered table-hover table-striped tabla-empresa">
+            <thead>
+              <tr class="table-primary">
+                <th class="text-center">Nro.</th>
+                <th class="text-center">Unidad Productiva</th>
+                <th class="text-center">Logo</th>
+                <th class="text-center">NIT</th>
+                <th class="text-center">Rubro</th>
+                <th class="text-center">Municipio</th>
+                <th class="text-center">Dirección</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let _item of datos; let i = index">
+                <td class="text-right">{{ pagina > 1 ? (i + 1 + ((pagina-1)*10)) : (i + 1) }}</td>
+                <td>{{ _item.empresa}}</td>
+                <td class="text-center">
+                  <div class="main-img text-center">
+                    <img [src]="ruta+_item.idempresa" width="80px" (error)="$event.target.src='assets/imagenes/images/default/404.png'" />
+                  </div>
+                </td>
+                <td class="text-center">{{ _item.nit}}</td>
+                <td class="text-center">{{ _item.rubro.rubro}}</td>
+                <td class="text-center">{{ _item.municipio.municipio}}</td>
+                <td>{{ _item.direccion }}</td>
+                <td class="text-center">
+                  <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idempresa, !_item.estado)" >
+                    {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <div class="btn-group" role="group" aria-label="First group">
+                    <button class="btn btn-outline-info btn-sm" title="Ver Empresa" (click)="fver(_item.idempresa, ver)">
+                      <i class="fa fa-eye"></i>
+                    </button>
+                    <button class="btn btn-outline-warning btn-sm" title="Editar Empresa" (click)="fmodificar(_item.idempresa, ab)">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" title="Eliminar Empresa" (click)="feliminar(_item.idempresa)">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                    <button class="btn btn-outline-dark btn-sm" title="Imrpimir">
+                      <i class="fa fa-print"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="col-sm-6">
-          <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+        <div class="table-responsive" *ngIf="total == 0">
+          <table class="table table-sm table-bordered table-hover tabla-empresa">
+            <thead>
+              <tr class="table-primary">
+                <th class="text-center">Nro.</th>
+                <th class="text-center">Unidad Productiva</th>
+                <th class="text-center">Logo</th>
+                <th class="text-center">NIT</th>
+                <th class="text-center">Rubro</th>
+                <th class="text-center">Municipio</th>
+                <th class="text-center">Dirección</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="10" class="text-center">No se encontraron registros.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row mt-2">
+          <div class="col-sm-6">
+            <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+          </div>
+          <div class="col-sm-6">
+            <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+          </div>
         </div>
       </div>
     </div>
@@ -143,11 +143,9 @@
 </div>
 
 <ng-template #ab>
-    <div class="modal-header">
+    <div class="modal-header d-flex flex-column">
       <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Unidad Productiva</h4>
-    </div>
-    <div class="modal-body">
-      <div class="row">
+      <div class="wizard-tabs-container mt-2">
         <div class="col-sm-12 d-flex justify-content-center position-relative">
           <div class="wizard-tabs">
             <div class="wizard-step" [ngClass]="{'active-step': step === 1, 'completed-step': step > 1}" (click)="goToStep(1)">
@@ -176,7 +174,9 @@
             </div>
           </div>
         </div>
-      </div><hr>
+      </div>
+    </div>
+    <div class="modal-body">
       <div *ngIf="step === 1">
         <div class="row pl-3">
           <h5 class="card-title">I.- Datos del Representante</h5>
@@ -194,7 +194,7 @@
             </datalist>
           </div>
           <div class="col-lg-4 col-sm-3 text-center">
-            <button class="btn btn-sm btn-outline-info mr-2" type="button" (click)="fadicionRep(rep)">
+            <button class="btn btn-sm btn-outline-info rounded-pill mr-2" type="button" (click)="fadicionRep(rep)">
               <i class="fa fa-plus"></i>
               <span class="d-none d-lg-inline">Nuevo Representante</span>
             </button>
@@ -206,7 +206,7 @@
               <button class="btn btn-sm btn-danger" (click)="flimpiarbuscar()" title="Borrar selección"><i class="bi bi-x"></i></button>
             </div>
             <div class="row p-3">
-              <div class="col-lg-3 col-sm-12 text-center">
+              <div class="col-lg-3 col-sm-12 align-content-center">
                 <div class="row justify-content-center mb-3">
                   <div *ngFor="let _imgRepAnv of imagenRepAnverso">
                     <img [src]="sanitizarImagen(_imgRepAnv.data, _imgRepAnv.mimeType)" width="150px" class="icon-carnet" />
@@ -221,7 +221,7 @@
               <div class="col-lg-9 col-sm-12" >
                 <div class="row">
                   <div class="col-md-4 col-sm-6 text-sm-right" hidden>
-                    <strong>ID:</strong>
+                    <strong></strong>
                   </div>
                   <div class="col-md-8 col-sm-6" hidden>
                     {{ representante?.idrepresentante }}
@@ -238,15 +238,23 @@
                     <strong>Carnet: </strong>
                   </div>
                   <div class="col-md-8 col-sm-8">
-                    {{ representante?.persona?.dip }} {{ representante?.persona?.complementario }}
+                    {{ representante?.persona?.dip }}{{ representante?.persona?.complementario ? '-'+representante?.persona?.complementario : '' }}
                   </div>
                 </div>
-                <div class="row">
+                <div class="row" *ngIf="representante?.persona?.celular">
                   <div class="col-md-4 col-sm-4 text-sm-right">
-                    <strong>Telf/Celular:</strong>
+                    <strong>Celular:</strong>
                   </div>
                   <div class="col-md-8 col-sm-8">
                     {{ representante?.persona?.celular }}
+                  </div>
+                </div>
+                <div class="row" *ngIf="representante?.persona?.telefono">
+                  <div class="col-md-4 col-sm-4 text-sm-right">
+                    <strong>Telefono:</strong>
+                  </div>
+                  <div class="col-md-8 col-sm-8">
+                    {{ representante?.persona?.telefono }}
                   </div>
                 </div><br>
                 <div class="row">
@@ -278,8 +286,8 @@
           </div>
         </div>
         <div class="row justify-content-between p-3 mt-2">
-          <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
-          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+          <button class="btn btn-sm btn-outline-primary rounded-pill" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+          <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
         </div>
       </div>
       <form [formGroup]="formEmpresa" (ngSubmit)="faceptar()">
@@ -502,10 +510,10 @@
           </div>
           <div class="row justify-content-between p-3 mt-2">
             <div class="div">
-              <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
-              <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+              <button class="btn btn-sm btn-outline-secondary rounded-pill mr-2" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+              <button class="btn btn-sm btn-outline-primary rounded-pill" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
             </div>
-            <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
           </div>
         </div>
 
@@ -635,10 +643,10 @@
           </div>
           <div class="row justify-content-between p-3 mt-2">
             <div class="div">
-              <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
-              <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+              <button class="btn btn-sm btn-outline-secondary rounded-pill mr-2" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+              <button class="btn btn-sm btn-outline-primary rounded-pill" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
             </div>
-            <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
           </div>
         </div>
 
@@ -648,7 +656,7 @@
           </div>
           <div class="row pl-3 pr-3">
             <div class="col-lg-8 col-sm-12 mt-1">
-              <img src="../../../assets/imagenes/mapa_oruro.png" alt="" width="100%">
+              <img src="assets/imagenes/mapa_oruro.png" alt="" width="100%">
             </div>
             <div class="col-lg-4 col-sm-12 mt-1">
               <div class="row">
@@ -672,76 +680,74 @@
 
           <div class="row justify-content-between p-3 mt-2">
             <div class="div">
-              <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
-              <button class="btn btn-sm btn-outline-primary" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+              <button class="btn btn-sm btn-outline-secondary rounded-pill mr-2" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+              <button class="btn btn-sm btn-outline-primary rounded-pill" (click)="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
             </div>
-            <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
           </div>
         </div>
         <div *ngIf="step === 5">
-          <div class="row justify-content-between pl-3 pr-3">
+          <div class="row justify-content-between pl-3">
             <h5 class="card-title">VI.- Resumen de datos a guardar</h5>
             <div class="alert alert-info" role="alert">
               Estimado usuario. Los campos remarcados con <b class="text-danger">*</b> son necesarios.
             </div>
           </div>
-          <div class="row table-responsive pl-3">
-            <table class="table table-sm table-bordered">
-              <tbody>
-                <tr>
-                  <td colspan="10"><strong>DATOS REPRESENTANTE</strong></td>
-                </tr>
-                <tr>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Nombre:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i>
-                    <ng-template #noData>
-                      <i class="fa fa-times-circle fa-2x text-danger"></i>
-                    </ng-template>
-                  </td>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Carnet:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Celular:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Fomacion:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Est. Civil:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                </tr>
-                <tr>
-                  <td colspan="10"><strong>DATOS UNIDAD PRODUCTIVA</strong></td>
-                </tr>
-                <tr>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Formulario:</td><td width="50px"><i *ngIf="this.formEmpresa.value.nform; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Fecha Reg.:</td><td width="50px"><i *ngIf="this.formEmpresa.value.fechareg; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Nombre Comercial:</td><td width="50px"><i *ngIf="this.formEmpresa.value.empresa; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Razon Social:</td><td width="50px"><i *ngIf="this.formEmpresa.value.razonsocial; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right">Descripción:</td><td width="50px"><i *ngIf="this.formEmpresa.value.descripcion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                </tr>
-                <tr>
-                  <td class="text-right">NIT:</td><td width="50px"><i *ngIf="this.formEmpresa.value.nit; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right">Banca Movil:</td><td width="50px"><i *ngIf="this.formEmpresa.value.bancamovil; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Celular:</td><td width="50px"><i *ngIf="this.formEmpresa.value.celular; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right">Rubro:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idrubro; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <!-- <td class="text-right"><span class="text-danger"><b>*</b></span>Subrubro:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idsubrubro; else noData" class="fa fa-check-circle fa-2x text-success"></i></td> -->
-                </tr>
-                <tr>
-                  <td class="text-right">Servicios:</td><td width="50px"><i *ngIf="this.formEmpresa.value.servicios; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right">Capacidad:</td><td width="50px"><i *ngIf="this.formEmpresa.value.capacidad; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right">Fecha Ap.:</td><td width="50px"><i *ngIf="this.formEmpresa.value.fechaapertura; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right">Motivo:</td><td width="50px"><i *ngIf="this.formEmpresa.value.motivo; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right">Familiar:</td><td width="50px"><i *ngIf="this.formEmpresa.value.familiar; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                </tr>
-                <tr>
-                  <td class="text-right">Involucrados:</td><td width="50px"><i *ngIf="this.formEmpresa.value.involucrados; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right">Trabajadores:</td><td width="50px"><i *ngIf="this.formEmpresa.value.trabajadores; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right">Ferias:</td><td width="50px"><i *ngIf="this.formEmpresa.value.participacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right">Capacitación:</td><td width="50px"><i *ngIf="this.formEmpresa.value.capacitacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right">Municipio:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idmunicipio; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                </tr>
-                <tr>
-                  <!-- <td class="text-right"><span class="text-danger"><b>*</b></span>Localidad:</td><td width="50px"><i *ngIf="this.formEmpresa.value.idlocalidad; else noData" class="fa fa-check-circle fa-2x text-success"></i></td> -->
-                  <td class="text-right">Zona:</td><td width="50px"><i *ngIf="this.formEmpresa.value.zona; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right"><span class="text-danger"><b>*</b></span>Direccion:</td><td width="50px"><i *ngIf="this.formEmpresa.value.direccion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right">Referencia:</td><td width="50px"><i *ngIf="this.formEmpresa.value.referencia; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                  <td class="text-right">Transporte:</td><td width="50px"><i *ngIf="this.formEmpresa.value.transporte; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="row mb-3">
+            <div class="col-sm-12"><strong>DATOS REPRESENTANTE</strong></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Nombre:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Carnet:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Celular:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.idrepresentante; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-sm-12"><strong>DATOS UNIDAD PRODUCTIVA</strong></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Formulario:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.nform; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Fecha Reg.:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.fechareg; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Nombre Comercial:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.empresa; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Razon Social:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.razonsocial; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">Descripción:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.descripcion; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">NIT:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.nit; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">Banca Movil:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.bancamovil; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Celular:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.celular; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">Rubro:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.idrubro; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">Servicios:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.servicios; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">Capacidad:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.capacidad; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">Fecha Ap.:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.fechaapertura; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">Motivo:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.motivo; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">Familiar:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.familiar; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">Involucrados:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.involucrados; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">Trabajadores:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.trabajadores; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">Participación:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.participacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">Capacitación:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.capacitacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">Municipio:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.idmunicipio; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">Zona:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.zona; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Direccion:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.direccion; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">Referencia:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.referencia; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+            <div class="col-lg-3 col-sm-4 text-sm-right">Transporte:</div>
+            <div class="col-sm-1"><i *ngIf="this.formEmpresa.value.transporte; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
           </div>
           <div *ngIf="formEmpresa.invalid && formEmpresa.touched" class="alert alert-danger">
             <small>Por favor, completa todos los campos obligatorios.</small>
@@ -760,10 +766,10 @@
 
           <div class="row justify-content-between p-3 mt-2">
             <div class="div">
-              <button class="btn btn-sm btn-outline-secondary" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
-              <button type="submit" class="btn btn-sm btn-outline-success" [disabled]="!formEmpresa.valid">Guardar <i class="bi bi-floppy"></i></button>
+              <button class="btn btn-sm btn-outline-secondary rounded-pill mr-2" (click)="prevStep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+              <button type="submit" class="btn btn-sm btn-outline-success rounded-pill" [disabled]="!formEmpresa.valid">Guardar <i class="bi bi-floppy"></i></button>
             </div>
-            <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">Cerrar <i class="bi bi-x-lg"></i></button>
           </div>
         </div>
       </form>
@@ -771,18 +777,9 @@
 </ng-template>
 
 <ng-template #rep>
-  <div class="modal-header">
-      <div class="row col-12">
-          <div class="col-lg-6 col-md-12 text-center">
-              <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Representante</h4><br>
-          </div>
-          <div class="col-lg-6 col-md-12 alert-info p-3">
-              Los campos remarcados con <b class="text-danger">*</b> son necesarios.
-          </div>
-      </div>
-  </div>
-  <div class="modal-body">
-    <div class="row">
+  <div class="modal-header d-flex flex-column">
+    <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Representante</h4>
+    <div class="wizard-tabs-container mt-2">
       <div class="col-sm-12 d-flex justify-content-center position-relative">
         <div class="wizard-tabs">
           <div class="wizard-step" [ngClass]="{'active-step': stepRep === 1, 'completed-step': stepRep > 1}" (click)="goToStepRep(1)">
@@ -806,7 +803,9 @@
           </div>
         </div>
       </div>
-    </div><hr>
+    </div>
+  </div>
+  <div class="modal-body">
     <form [formGroup]="formRep" (ngSubmit)="faceptarRep()">
       <div *ngIf="stepRep === 1">
         <div class="row pl-3 justify-content-between">
@@ -906,8 +905,8 @@
           </div>
         </div>
         <div class="row justify-content-between p-3 mt-2">
-          <button class="btn btn-sm btn-outline-primary" (click)="nextStepRep()">Siguiente <i class="bi bi-arrow-right"></i></button>
-          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelarRep()">Cerrar <i class="bi bi-x-lg"></i></button>
+          <button class="btn btn-sm btn-outline-primary rounded-pill" (click)="nextStepRep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+          <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelarRep()">Cerrar <i class="bi bi-x-lg"></i></button>
         </div>
       </div>
       <div *ngIf="stepRep === 2">
@@ -942,10 +941,10 @@
         </div>
         <div class="row justify-content-between p-3 mt-2">
           <div class="div">
-            <button class="btn btn-sm btn-outline-secondary" (click)="prevStepRep()"><i class="bi bi-arrow-left"></i> Anterior</button>
-            <button class="btn btn-sm btn-outline-primary" (click)="nextStepRep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill mr-2" (click)="prevStepRep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+            <button class="btn btn-sm btn-outline-primary rounded-pill" (click)="nextStepRep()">Siguiente <i class="bi bi-arrow-right"></i></button>
           </div>
-          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelarRep()">Cerrar <i class="bi bi-x-lg"></i></button>
+          <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelarRep()">Cerrar <i class="bi bi-x-lg"></i></button>
         </div>
       </div>
       <div *ngIf="stepRep === 3">
@@ -970,66 +969,59 @@
         </div>
         <div class="row justify-content-between p-3 mt-2">
           <div class="div">
-            <button class="btn btn-sm btn-outline-secondary" (click)="prevStepRep()"><i class="bi bi-arrow-left"></i> Anterior</button>
-            <button class="btn btn-sm btn-outline-primary" (click)="nextStepRep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill mr-2" (click)="prevStepRep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+            <button class="btn btn-sm btn-outline-primary rounded-pill" (click)="nextStepRep()">Siguiente <i class="bi bi-arrow-right"></i></button>
           </div>
-          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelarRep()">Cerrar <i class="bi bi-x-lg"></i></button>
+          <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelarRep()">Cerrar <i class="bi bi-x-lg"></i></button>
         </div>
       </div>
       <div *ngIf="stepRep === 4">
         <div class="row pl-3 justify-content-between">
           <h5 class="card-title">IV.- Resumen de datos a guardar</h5>
+          <div class="alert alert-info p-2">
+            Estimado Usuario. Los campos remarcados con <b class="text-danger">*</b> son necesarios.
+          </div>
         </div>
-        <div class="table-responsive">
-          <table class="table table-sm table-bordered">
-            <tbody>
-              <tr>
-                <td colspan="10"><strong>DATOS PERSONALES</strong></td>
-              </tr>
-              <tr>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Apellido Paterno:</td><td width="50px"><i *ngIf="this.formRep.value.primerapellido; else noData" class="fa fa-check-circle fa-2x text-success"></i>
-                  <ng-template #noData>
-                    <i class="fa fa-times-circle fa-2x text-danger"></i>
-                  </ng-template>
-                </td>
-                <td class="text-right">Apellido Paterno:</td><td width="50px"><i *ngIf="this.formRep.value.segundoapellido; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Nombre:</td><td width="50px"><i *ngIf="this.formRep.value.primernombre; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Genero:</td><td width="50px"><i *ngIf="this.formRep.value.idtipogenero; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-              </tr>
-              <tr>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Documento:</td><td width="50px"><i *ngIf="this.formRep.value.idtipodocumento; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>DIP:</td><td width="50px"><i *ngIf="this.formRep.value.dip; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right">Complemento:</td><td width="50px"><i *ngIf="this.formRep.value.complementario; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Expedido:</td><td width="50px"><i *ngIf="this.formRep.value.idtipoextension; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-              </tr>
-              <tr>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Formación:</td><td width="50px"><i *ngIf="this.formRep.value.formacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Estado Civil:</td><td width="50px"><i *ngIf="this.formRep.value.estadocivil; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Hijos:</td><td width="50px"><i *ngIf="this.formRep.value.hijos; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"></td><td width="50px"></td>
-              </tr>
-              <tr>
-                <td colspan="10"><strong>DATOS DE CONTACTO</strong></td>
-              </tr>
-              <tr>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Celular:</td><td width="50px"><i *ngIf="this.formRep.value.celular; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right">Teléfono:</td><td width="50px"><i *ngIf="this.formRep.value.telefono; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Direccion:</td><td width="50px"><i *ngIf="this.formRep.value.direccion; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right">Correo:</td><td width="50px"><i *ngIf="this.formRep.value.correo; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-              </tr>
-              <tr>
-                <td colspan="10"><strong>DATOS DE USUARIO</strong></td>
-              </tr>
-              <tr>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Usuario:</td><td width="50px"><i *ngIf="this.formRep.value.usuario; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"><span class="text-danger"><b>*</b></span>Contraseña:</td><td width="50px"><i *ngIf="this.formRep.value.clave; else noData" class="fa fa-check-circle fa-2x text-success"></i></td>
-                <td class="text-right"></td><td width="50px"></td>
-                <td class="text-right"></td><td width="50px"></td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="row mt-2">
+          <div class="col-sm-12"><strong>DATOS PERSONALES</strong></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Apellido Paterno:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.primerapellido; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right">Apellido Paterno:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.segundoapellido; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Nombre:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.primernombre; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Genero:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.idtipogenero; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Documento:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.idtipodocumento; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>DIP:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.dip; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right">Complemento:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.complementario; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Expedido:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.idtipoextension; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Formación:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.formacion; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Estado Civil:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.estadocivil; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Hijos:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.hijos; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-sm-12"><strong>DATOS DE CONTACTO</strong></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Celular:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.celular; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right">Teléfono:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.telefono; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Direccion:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.direccion; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right">Correo:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.correo; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-sm-12"><strong>DATOS DE USUARIO</strong></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Usuario:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.usuario; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
+          <div class="col-lg-3 col-sm-4 text-sm-right"><span class="text-danger"><b>*</b></span>Clave:</div>
+          <div class="col-sm-1"><i *ngIf="this.formRep.value.clave; else noData" class="fa fa-check-circle fa-2x text-success"></i></div>
         </div>
-        <div *ngIf="formRep.invalid && formRep.touched" class="alert alert-danger">
+        <div *ngIf="formRep.invalid && formRep.touched" class="alert alert-danger mt-2">
           Por favor, completa todos los campos obligatorios.
         </div>
         <ng-container *ngFor="let field of getFormControlsRep()">
@@ -1045,14 +1037,18 @@
         </ng-container>
         <div class="row justify-content-between p-3 mt-2">
           <div class="div">
-            <button class="btn btn-sm btn-outline-secondary" (click)="prevStepRep()"><i class="bi bi-arrow-left"></i> Anterior</button>
-            <button type="submit" class="btn btn-sm btn-outline-success" [disabled]="!formRep.valid">Guardar <i class="bi bi-floppy"></i></button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill mr-2" (click)="prevStepRep()"><i class="bi bi-arrow-left"></i> Anterior</button>
+            <button type="submit" class="btn btn-sm btn-outline-success rounded-pill" [disabled]="!formRep.valid">Guardar <i class="bi bi-floppy"></i></button>
           </div>
-          <button class="btn btn-sm btn-outline-secondary" (click)="fcancelarRep()">Cerrar <i class="bi bi-x-lg"></i></button>
+          <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelarRep()">Cerrar <i class="bi bi-x-lg"></i></button>
         </div>
       </div>
     </form>
   </div>
+</ng-template>
+
+<ng-template #noData>
+  <i class="fa fa-times-circle fa-2x text-danger"></i>
 </ng-template>
 
 <ng-template #ver>
@@ -1081,248 +1077,250 @@
         </div>
       </div>
       <div class="col-lg-8 col-sm-12 mt-2">
-        <div class="col-sm-10 border m-2 p-2" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);">
-          <div class="col-sm-12 text-md-left text-sm-center">
-            <h5>DATOS DE REGISTRO:</h5>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>N° Formulario:</strong>
+        <div class="row justify-content-center">
+          <div class="col-sm-10 m-2 p-2" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+            <div class="col-sm-12 text-md-left text-sm-center">
+              <h6>DATOS DE REGISTRO:</h6>
             </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.nform }}</label>
+            <div class="row">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>N° Formulario:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.nform }}</label>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Fecha Registro:</strong>
-            </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.fechareg | date:'dd/MM/yyyy' }}</label>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-10 border m-2 p-2" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);">
-          <div class="col-sm-12 text-md-left text-sm-center">
-            <h5>DATOS DE LA UNIDAD PRODUCTIVA:</h5>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Nombre Comercial:</strong>
-            </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.empresa }}</label>
+            <div class="row">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Fecha Registro:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.fechareg | date:'dd/MM/yyyy' }}</label>
+              </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Razon Social:</strong>
+          <div class="col-sm-10 m-2 p-2" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+            <div class="col-sm-12 text-md-left text-sm-center">
+              <h6>DATOS DE LA UNIDAD PRODUCTIVA:</h6>
             </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.razonsocial }}</label>
+            <div class="row">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Nombre Comercial:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.empresa }}</label>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Descripción:</strong>
+            <div class="row">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Razon Social:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.razonsocial }}</label>
+              </div>
             </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.descripcion }}</label>
+            <div class="row">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Descripción:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.descripcion }}</label>
+              </div>
             </div>
-          </div>
-          <div class="row" *ngIf="dato?.nit">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>NIT:</strong>
+            <div class="row" *ngIf="dato?.nit">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>NIT:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.nit }}</label>
+              </div>
             </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.nit }}</label>
+            <div class="row">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Banca Movil:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.bancamovil ? 'SI' : 'NO' }}</label>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Banca Movil:</strong>
+            <div class="row" *ngIf="dato?.fechaapertura">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Fecha Apertura:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.fechaapertura | date:'dd/MM/yyyy' }}</label>
+              </div>
             </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.bancamovil ? 'SI' : 'NO' }}</label>
+            <div class="row">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Rubro:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.rubro.rubro }}</label>
+              </div>
             </div>
-          </div>
-          <div class="row" *ngIf="dato?.fechaapertura">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Fecha Apertura:</strong>
+            <div class="row" *ngIf="dato?.servicios">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Servicios:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.servicios }}</label>
+              </div>
             </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.fechaapertura | date:'dd/MM/yyyy' }}</label>
+            <div class="row">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Produccion:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ getCapacidadDescription(dato?.capacidad) }} {{ dato?.unidadmedida }}</label>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Rubro:</strong>
+            <div class="row">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Motivo:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ getMotivoDescription(dato?.motivo) }} {{ dato?.otromotivo }}</label>
+              </div>
             </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.rubro.rubro }}</label>
+            <div class="row">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Familiar:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.familiar ? 'SI' : 'NO' }}</label>
+              </div>
             </div>
-          </div>
-          <div class="row" *ngIf="dato?.servicios">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Servicios:</strong>
+            <div class="row" *ngIf="dato?.familiar">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Involucrados:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ getInvolucradosDescription(dato?.involucrados) }} {{ dato?.otrosinvolucrados }}</label>
+              </div>
             </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.servicios }}</label>
+            <div class="row">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Trabajadores:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ getTrabajadoresDescription(dato?.trabajadores) }}</label>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Produccion:</strong>
+            <div class="row" *ngIf="dato?.familiar">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Ferias:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ getFeriasDescription(dato?.participacion) }}</label>
+              </div>
             </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ getCapacidadDescription(dato?.capacidad) }} {{ dato?.unidadmedida }}</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Motivo:</strong>
-            </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ getMotivoDescription(dato?.motivo) }} {{ dato?.otromotivo }}</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Familiar:</strong>
-            </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.familiar ? 'SI' : 'NO' }}</label>
-            </div>
-          </div>
-          <div class="row" *ngIf="dato?.familiar">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Involucrados:</strong>
-            </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ getInvolucradosDescription(dato?.involucrados) }} {{ dato?.otrosinvolucrados }}</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Trabajadores:</strong>
-            </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ getTrabajadoresDescription(dato?.trabajadores) }}</label>
-            </div>
-          </div>
-          <div class="row" *ngIf="dato?.familiar">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Ferias:</strong>
-            </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ getFeriasDescription(dato?.participacion) }}</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Capacitación:</strong>
-            </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.capacitacion != null ? dato?.capacitacion : 'SIN CAPACITACION' }}</label>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-10 border m-2 p-2" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);">
-          <div class="col-sm-12 text-md-left text-sm-center">
-            <h5>DATOS DE CONTACTO:</h5>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Municipio:</strong>
-            </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.municipio.municipio }}</label>
-            </div>
-          </div>
-          <div class="row" *ngIf="dato?.zona">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Zona:</strong>
-            </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.zona }}</label>
+            <div class="row">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Capacitación:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.capacitacion != null ? dato?.capacitacion : 'SIN CAPACITACION' }}</label>
+              </div>
             </div>
           </div>
-          <div class="row" *ngIf="dato?.direccion">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Dirección:</strong>
+          <div class="col-sm-10 m-2 p-2" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+            <div class="col-sm-12 text-md-left text-sm-center">
+              <h6>DATOS DE CONTACTO:</h6>
             </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.direccion }}</label>
+            <div class="row">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Municipio:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.municipio.municipio }}</label>
+              </div>
             </div>
-          </div>
-          <div class="row" *ngIf="dato?.referencia">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Referencia:</strong>
+            <div class="row" *ngIf="dato?.zona">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Zona:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.zona }}</label>
+              </div>
             </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.referencia }}</label>
+            <div class="row" *ngIf="dato?.direccion">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Dirección:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.direccion }}</label>
+              </div>
             </div>
-          </div>
-          <div class="row" *ngIf="dato?.transporte">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Transporte:</strong>
+            <div class="row" *ngIf="dato?.referencia">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Referencia:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.referencia }}</label>
+              </div>
             </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.transporte }}</label>
+            <div class="row" *ngIf="dato?.transporte">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Transporte:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.transporte }}</label>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-sm-4 text-sm-right" *ngIf="dato?.celular">
-              <strong>Celular:</strong>
+            <div class="row">
+              <div class="col-md-4 col-sm-4 text-sm-right" *ngIf="dato?.celular">
+                <strong>Celular:</strong>
+              </div>
+              <div class="col-md-3 col-sm-8" *ngIf="dato?.celular">
+                <label for="">{{ dato?.celular }}</label>
+              </div>
+              <div class="col-md-2 col-sm-4 text-sm-right" *ngIf="dato?.telefono">
+                <strong>Teléfono:</strong>
+              </div>
+              <div class="col-md-3 col-sm-8" *ngIf="dato?.telefono">
+                <label for="">{{ dato?.telefono }}</label>
+              </div>
             </div>
-            <div class="col-md-3 col-sm-8" *ngIf="dato?.celular">
-              <label for="">{{ dato?.celular }}</label>
+            <div class="row" *ngIf="dato?.correo">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Correo:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.correo }}</label>
+              </div>
             </div>
-            <div class="col-md-2 col-sm-4 text-sm-right" *ngIf="dato?.telefono">
-              <strong>Teléfono:</strong>
+            <div class="row" *ngIf="dato?.facebook">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Facebook:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.facebook }}</label>
+              </div>
             </div>
-            <div class="col-md-3 col-sm-8" *ngIf="dato?.telefono">
-              <label for="">{{ dato?.telefono }}</label>
+            <div class="row" *ngIf="dato?.twitter">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Twitter:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.twitter }}</label>
+              </div>
             </div>
-          </div>
-          <div class="row" *ngIf="dato?.correo">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Correo:</strong>
+            <div class="row" *ngIf="dato?.instagram">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Instagram:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.instagram }}</label>
+              </div>
             </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.correo }}</label>
-            </div>
-          </div>
-          <div class="row" *ngIf="dato?.facebook">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Facebook:</strong>
-            </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.facebook }}</label>
-            </div>
-          </div>
-          <div class="row" *ngIf="dato?.twitter">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Twitter:</strong>
-            </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.twitter }}</label>
-            </div>
-          </div>
-          <div class="row" *ngIf="dato?.instagram">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Instagram:</strong>
-            </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.instagram }}</label>
-            </div>
-          </div>
-          <div class="row" *ngIf="dato?.paginaweb">
-            <div class="col-md-4 col-sm-4 text-sm-right">
-              <strong>Página WEB:</strong>
-            </div>
-            <div class="col-md-8 col-sm-8">
-              <label for="">{{ dato?.paginaweb }}</label>
+            <div class="row" *ngIf="dato?.paginaweb">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Página WEB:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                <label for="">{{ dato?.paginaweb }}</label>
+              </div>
             </div>
           </div>
         </div>
@@ -1330,7 +1328,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-sm btn-outline-secondary" (click)="fcancelar()">Cerrar</button>
+    <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">Cerrar</button>
   </div>
 </ng-template>
 
@@ -1359,10 +1357,10 @@
     </div>
 
     <div class="text-center">
-      <button type="button" class="btn btn-sm btn-outline-success m-2" (click)="fcargar()" [disabled]="!archivoSeleccionado">
+      <button type="button" class="btn btn-sm btn-outline-success rounded-pill m-2" (click)="fcargar()" [disabled]="!archivoSeleccionado">
         <i class="fa fa-save"></i> Grabar
       </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="fcancelarRep()">
+            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelarRep()">
         <i class="fa fa-times"></i> Cancelar
       </button>
     </div>

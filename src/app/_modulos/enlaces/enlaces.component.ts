@@ -116,7 +116,7 @@ export class EnlacesComponent implements OnInit {
         ]
       ],
       iconoenlace: [
-        enlace.iconoenlace,
+        'fa fa-arrow-right',
         [
           Validators.required,
           Validators.pattern('^[a-z\\s-]+$'),
@@ -194,6 +194,11 @@ export class EnlacesComponent implements OnInit {
         showCancelButton: true,
         cancelButtonText: 'Cancelar',
         confirmButtonText: 'Borrar',
+        customClass: {
+          confirmButton: 'btn btn-success rounded-pill mr-3',
+          cancelButton: 'btn btn-secondary rounded-pill',
+        },
+        buttonsStyling: false,
       })
       .then((result) => {
         if (result.value) {

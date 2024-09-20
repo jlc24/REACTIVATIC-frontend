@@ -55,6 +55,12 @@ export class RolesService {
             headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
         });
     }
+    listardpeic(): Observable<Roles[]>{
+        const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+        return this._httpClient.get<Roles[]>(`${this.ruta}/dpeic`, {
+            headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+        });
+    }
     listarreactivatic(): Observable<Roles[]>{
         const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
         return this._httpClient.get<Roles[]>(`${this.ruta}/reactivatic`, {

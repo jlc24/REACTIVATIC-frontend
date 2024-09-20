@@ -56,6 +56,15 @@ export class AccesoService {
     return token;
   }
 
+  esRolCapacitador(){
+    const roles = sessionStorage.getItem(ROLES);
+    if (roles.indexOf('ROLE_CAPACITADOR') >= 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   esRolClientes(){
     const roles = sessionStorage.getItem(ROLES);
     if (roles.indexOf('ROLE_CLIENTES') >= 0) {
@@ -213,9 +222,14 @@ export class AccesoService {
     }
   }
 
-
-
-
+  esCargoCapacitador(){
+    const cargo = sessionStorage.getItem(CARGO);
+    if (cargo.indexOf('CAPACITADOR') >= 0) {
+      return true;
+    }else{
+      return false;
+    }
+  }
 
   cerrarSesion() {
     sessionStorage.clear();

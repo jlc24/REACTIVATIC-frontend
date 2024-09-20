@@ -246,7 +246,6 @@ export class PerfilesComponent implements OnInit {
   }
 
 
-
   fcambiarclave(contenido: any){
     this.estado = 'Actualizar';
     this.crearformulario();
@@ -296,6 +295,11 @@ export class PerfilesComponent implements OnInit {
       showCancelButton: true,
       cancelButtonText: 'Cancelar',
       confirmButtonText: 'Confirmar',
+      customClass: {
+        confirmButton: 'btn btn-success rounded-pill mr-3',
+        cancelButton: 'btn btn-secondary rounded-pill',
+      },
+      buttonsStyling: false,
       preConfirm: () => {
         const clave = (document.getElementById('clave-input') as HTMLInputElement).value;
         if (!clave) {
@@ -454,7 +458,7 @@ export class PerfilesComponent implements OnInit {
       direccion: [
         dato.direccion,
         [
-          Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1\s.,#-]+$'),
+          Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1\\s.,#-]+$'),
           Validators.minLength(8),
           Validators.maxLength(255)
         ]
@@ -523,7 +527,8 @@ export class PerfilesComponent implements OnInit {
       this._modalService.open(content, {
         backdrop: 'static',
         keyboard: false,
-        size: 'lg'
+        size: 'lg',
+        scrollable: true
       });
       this.utilsService.cerrarCargando();
     });
@@ -635,7 +640,6 @@ export class PerfilesComponent implements OnInit {
 
   fformEmpresa(dato: Empresas) {
     this.formEmpresa = this._fbE.group({
-
       nform:[
         dato.nform,
         [
@@ -707,13 +711,7 @@ export class PerfilesComponent implements OnInit {
         ]
       ],
       idrubro: [
-        dato.subrubro?.idrubro
-      ],
-      idsubrubro: [
-        dato.subrubro?.idsubrubro,
-        [
-          Validators.required
-        ]
+        dato.rubro?.idrubro
       ],
       servicios:[
         dato.servicios,
@@ -752,13 +750,7 @@ export class PerfilesComponent implements OnInit {
         dato.capacitacion
       ],
       idmunicipio:[
-        dato.localidad?.idmunicipio
-      ],
-      idlocalidad:[
-        dato.localidad?.idlocalidad,
-        [
-          Validators.required
-        ]
+        dato.municipio?.idmunicipio
       ],
       zona: [
         dato.zona
@@ -843,7 +835,6 @@ export class PerfilesComponent implements OnInit {
     this._empresasService.perfilempresa().subscribe((data) => {
       this.empresa = data;
       this.fformEmpresa(this.empresa);
-      this.fsubrubros(data.subrubro?.idrubro);
       if (data.otromotivo) {
         this.mostrarOtroCampo = true;
       }
@@ -853,12 +844,11 @@ export class PerfilesComponent implements OnInit {
       if (data.otrosinvolucrados) {
         this.mostrarOtro = true;
       }
-      this.flocalidades(data.localidad?.idmunicipio);
       this._modalService.open(content, {
         backdrop: 'static',
         keyboard: false,
         size: 'lg',
-        scrollable: true
+        scrollable: true,
       });
       this.utilsService.cerrarCargando();
     });

@@ -58,7 +58,7 @@ export class AccesoComponent implements OnInit {
             sessionStorage.setItem(NOMBRECLIENTE, decoded['nombrecliente']);
             sessionStorage.setItem(CARGO, decoded['cargo']);
             sessionStorage.setItem(TOKEN, token);
-            this._ruta.navigateByUrl('/escritorio');
+            this._ruta.navigateByUrl('/inicio');
             this._mensajes.success(decoded['nombrecliente'], 'Bienvenido');
             this.estado = false;
           }

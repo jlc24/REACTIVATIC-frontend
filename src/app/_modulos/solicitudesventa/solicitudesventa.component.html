@@ -2,82 +2,152 @@
 </app-cabeceratitulos>
 
 <div class="row">
-    <div class="col-md-12">
-        <div class="tile">
-            <div class="table-responsive" *ngIf="datos?.length > 0">
-                <p class="text-right" *ngIf="total==1">Total: <b>{{total}} registro</b></p>
-                <p class="text-right" *ngIf="total>1">Total: <b>{{total}} registros</b></p>
-                <table class="table table-sm table-bordered table-striped">
-                    <thead>
-                        <tr class="table-primary">
-                            <th class="text-center">Nro.</th>
-                            <th class="text-center">Datos</th>
-                            <th class="text-center">Estado</th>
-                            <th class="text-center">Operaciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let _item of datos; let i = index">
-                            <td>{{ i+1 }}</td>
-                            <td class="text-left">
-                                <b>{{ _item.solicitud }}</b> Fecha: <b>{{ _item.fecha }}</b> Hora: <b>{{ _item.hora }}</b><br>
-                                <table class="table table-sm table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Nro.</th>
-                                            <th>Producto</th>
-                                            <th>Cantidad</th>
-                                            <th>Precio unitario</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let _itemp of _item.solicitudproductos; let i = index">
-                                            <td scope="row"> {{ i+1 }}</td>
-                                            <td>{{_itemp.producto.producto}}</td>
-                                            <td>{{_itemp.cantidad}}</td>
-                                            <td>{{_itemp.precioventa}}</td>
-                                            <td>{{_itemp.total}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <br>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge badge-warning" *ngIf="_item.estado==false">En processo</span>
-                                <span class="badge badge-success" *ngIf="_item.estado">Finalizado</span>
-                            </td>
-                            <td class="text-right">
-                                <button class="btn btn-outline-primary mr-2" (click)="factualizarestado(_item.idsolicitud)"><i class="fa fa-check"></i>Aceptar venta</button>
-                                <button class="btn btn-outline-primary" (click)="fenviarmensaje(_item.cliente.persona.celular)"><i class="fa fa-whatsapp"></i>Enviar Mensaje</button>
-                            </td>
-                        </tr>
-                        <tr *ngIf="total > cantidad">
-                            <td colspan="3">
-                                <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+  <div class="col-md-12">
+    <div class="card" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+      <div class="card-header" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
+        <h4 class="text-white">LISTA DE VENTAS</h4>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-6 mt-1">
+            <p *ngIf="total == 0">
+              Total: <b>{{ total }} registros</b>
+            </p>
+            <p *ngIf="total == 1">
+              Total: <b>{{ total }} registro</b>
+            </p>
+            <p *ngIf="total > 1">
+              Total: <b>{{ total }} registros</b>
+            </p>
+          </div>
+          <div class="col-sm-6">
+            <div class="row justify-content-end">
+              <div class="col-sm-2 text-md-right text-sm-left mt-1">
+                <label for="">Buscar: </label>
+              </div>
+              <div class="col-sm-10">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                  </div>
+                  <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Producto a buscar ..." (keyup)="fbuscar()" />
+                </div>
+              </div>
             </div>
-            <div class="table-responsive" *ngIf="total == 0">
-                <table class="table table-sm table-bordered table-striped">
-                    <thead>
-                        <tr class="table-primary">
-                            <th class="text-center">Nro.</th>
-                            <th class="text-center">Datos</th>
-                            <th class="text-center">Estado</th>
-                            <th class="text-center">Operaciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="4" class="text-center">No se encontraron datos.</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p class="text-center"><b>Sin Solicitudes</b></p>
-            </div>
+          </div>
         </div>
+        <div class="table-responsive" *ngIf="datos?.length > 0">
+          <table class="table table-sm table-bordered">
+            <thead>
+              <tr class="table-primary">
+                <th class="text-center">Nro.</th>
+                <th class="text-center">Cliente</th>
+                <th class="text-center">Fecha y Hora</th>
+                <th class="text-center">Productos</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Lista de Productos</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let _item of datos; let i = index">
+                <td class="text-right align-content-center">{{ i+1 }}</td>
+                <td class="align-content-center">
+                  {{ _item.cliente.persona.primerapellido}} {{ _item.cliente.persona.segundoapellido }} {{ _item.cliente.persona.primernombre }}
+                </td>
+                <td class="text-center align-content-center">
+                  {{ _item.created_at | date:'dd/MM/yyyy HH:mm' }}
+                </td>
+                <td class="text-center align-content-center">
+                  {{ _item.cantidadProductos }}
+                </td>
+                <td class="text-center align-content-center">
+                  <span class="badge badge-warning" *ngIf="_item.estado==false">En processo</span>
+                  <span class="badge badge-success" *ngIf="_item.estado">Vendido</span>
+                </td>
+                <td>
+                  <table class="table table-sm table-bordered table-hover border border-success">
+                    <thead>
+                      <tr class="table-success">
+                        <th>Nro.</th>
+                        <th>Imagen</th>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Color</th>
+                        <th>Material</th>
+                        <th>Tamaño</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody class="border border-success">
+                      <tr *ngFor="let _itemp of _item.solicitudproductos; let i = index">
+                        <td scope="row" class="text-right align-content-center"> {{ i+1 }}</td>
+                        <td><img [src]="rutaproducto+_itemp.producto?.idproducto+'/'+_itemp.imagen" alt="" class="imagen-producto img-fluid mr-2 ml-2"></td>
+                        <td class="align-content-center">{{ _itemp.producto?.producto }}</td>
+                        <td class="text-right align-content-center">{{ _itemp.precio?.precio | number:'1.2-2' }} Bs.</td>
+                        <td class="align-content-center">{{ _itemp.color?.color }}</td>
+                        <td class="align-content-center">{{ _itemp.material?.material }}</td>
+                        <td class="align-content-center">{{ _itemp.tamano?.tamano }}</td>
+                        <td class="text-center align-content-center">{{ _itemp.cantidad }}</td>
+                        <td class="text-right align-content-center"><b>{{ _itemp.precio?.precio*_itemp.cantidad | number:'1.2-2' }} Bs.</b></td>
+                        <td class="text-center align-content-center">
+                          <span class="badge badge-warning" *ngIf="_itemp.estado==false">En processo</span>
+                          <span class="badge badge-success" *ngIf="_itemp.estado">Vendido</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td class="text-center">
+                  <div class="btn-group" role="group" aria-label="First group">
+                    <button class="btn btn-sm btn-outline-secondary" (click)="factualizarestado(_item.idsolicitud, _item.estado)" title="Aceptar Venta" *ngIf="!_item.estado">
+                      <i class="fa fa-check"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-success" (click)="fenviarmensaje(_item.cliente.persona.celular)" title="Enviar Mensaje">
+                      <i class="fa fa-whatsapp"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="total > cantidad">
+                <td colspan="3">
+                  <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-responsive" *ngIf="total == 0">
+          <table class="table table-sm table-bordered table-striped">
+            <thead>
+              <tr class="table-primary">
+                <th class="text-center">Nro.</th>
+                <th class="text-center">Tipo</th>
+                <th class="text-center">Cliente</th>
+                <th class="text-center">Productos</th>
+                <th class="text-center">Fecha y Hora</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="4" class="text-center">Sin Solicitudes.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row mt-2">
+          <div class="col-sm-6">
+            <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+          </div>
+          <div class="col-sm-6">
+            <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

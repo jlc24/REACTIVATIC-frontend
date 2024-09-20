@@ -1,37 +1,5 @@
 a[ng-reflect-router-link] {}
 
-/* tr[ng-reflect-router-link] {
-    cursor: pointer;
-}
-
-.table-responsive {
-  overflow-x: auto;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 1rem;
-  color: var(--text-dark);
-}
-
-thead th {
-  text-align: left;
-  padding: 0.75rem;
-  border-bottom: 2px solid var(--secondary-color);
-}
-
-tbody td {
-  padding: 0.75rem;
-  vertical-align: middle;
-} */
-
-/* .product-image img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-} */
-
 .product-name, .product-price, .product-total {
   text-align: center;
 }
@@ -173,28 +141,6 @@ h1,
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
-/* .product {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  display: block;
-  padding-right: 5px;
-}
-
-.description {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  height: calc(1.2em * 3);
-}
-
-.tarjeta:hover{
-  box-shadow: 1px 5px 15px #a2a2a2;
-} */
-
 .btn-outline-custom {
   color: #FF5919;
   border-color: #FF5919;
@@ -236,7 +182,6 @@ h1,
 .rubro-cantidad {
   margin-left: 8px;
   font-size: 0.875rem;
-  /* color: #6c757d; */
 }
 
 .product-card {
@@ -255,8 +200,8 @@ h1,
 }
 
 .card-header {
-  position: relative; /* Asegura que el contenedor sea el punto de referencia para la transformación */
-  overflow: hidden; /* Oculta cualquier parte de la imagen que se desborde del contenedor */
+  position: relative;
+  overflow: hidden;
   height: 200px;
 }
 
@@ -267,7 +212,7 @@ h1,
 }
 
 .product-image:hover {
-  transform: scale(1.2); /* Escala la imagen al pasar el cursor */
+  transform: scale(1.2);
 }
 
 .product-name {
@@ -275,8 +220,8 @@ h1,
   font-weight: bold;
   margin-bottom: 10px;
   text-align: center;
-  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
-  overflow: hidden; /* Oculta cualquier texto que se desborde */
+  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 
@@ -291,10 +236,10 @@ h1,
   margin-bottom: 15px;
 
   font-size: 0.9rem;
-  line-height: 1.5; /* Altura de línea que definirá el espacio para cada línea */
-  max-height: calc(1.5em * 3); /* Limita la altura máxima a 3 líneas */
-  overflow: hidden; /* Oculta cualquier texto que exceda las 3 líneas */
-  text-overflow: ellipsis; /* Añade puntos suspensivos si el texto es demasiado largo */
+  line-height: 1.5;
+  max-height: calc(1.5em * 3);
+  overflow: hidden;
+  text-overflow: ellipsis;
   min-height: calc(1.5em * 3);
 }
 
@@ -508,7 +453,7 @@ p {
   padding: 1rem;
   background-color: #FF5919;
   color: white;
-  position: relative; /* Asegura que el header no se desplace */
+  position: relative;
   z-index: 1;
 }
 
@@ -518,7 +463,7 @@ p {
 
 .offcanvas-body {
   padding: 1rem;
-  height: calc(100% - 200px); /* Ajusta el tamaño restando el espacio del header y footer */
+  height: calc(100% - 200px);
   overflow-y: auto;
 }
 
@@ -528,15 +473,13 @@ p {
   left: 0;
   width: 100%;
   padding: 1rem;
-  background-color: #f8f9fa; /* Ajusta el color según sea necesario */
-  border-top: 1px solid #dee2e6; /* Opcional: agrega un borde superior */
-  /* display: flex;
-  justify-content: flex-end; */
-  gap: 10px; /* Espacio entre los botones */
+  background-color: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+  gap: 10px;
 }
 
 .offcanvas-footer .btn {
-  border-radius: 50px; /* Opcional: bordes redondeados para los botones */
+  border-radius: 50px;
 }
 
 .backdrop {
@@ -560,6 +503,20 @@ p {
   box-shadow: 0 0 10px rgba(255, 89, 25, 0.5);
 }
 
+.destacado{
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 2px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+.destacado:hover{
+  background-color: #ECECF6;
+}
+
+.imagen-producto-destacado{
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
 .imagen-producto{
   max-width: 100%;
   height: auto;
@@ -568,8 +525,8 @@ p {
 }
 @media (max-width: 576px) {
   .imagen-producto {
-    width: 80px; /* Ajusta el tamaño de la imagen para pantallas pequeñas */
-    height: auto; /* Mantiene la proporción de la imagen */
+    width: 80px;
+    height: auto;
   }
 }
 
@@ -710,71 +667,18 @@ p {
 }
 
 .icon-modal {
-  position: absolute;
-  top: -80px; /* Ajusta esto según el tamaño del ícono */
+  /* position: absolute;
+  top: -80px;
   left: 50%;
-  transform: translateX(-50%);
-  background-color: white; /* Fondo blanco para que el ícono no se mezcle con el borde */
-  border-radius: 50%;
-  padding: 5px 30px;
+  transform: translateX(-50%); */
+  background-color: white;
+  padding: 0px;
 
 }
 
 .icon-modal i {
-  font-size: 100px; /* Tamaño del ícono */
-  color: #007bff; /* Color del ícono */
+  font-size: 50px;
+  color: #FF5919;
   margin: 0;
   padding: 0;
 }
-/* .modal-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.modal-icon {
-  color: #007bff;
-}
-
-.modal-title {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.modal-subtitle {
-  font-size: 1rem;
-  color: #6c757d;
-}
-
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-  border-color: #004085;
-}
-
-.btn-outline-secondary {
-  border-color: #6c757d;
-  color: #6c757d;
-}
-
-.btn-outline-secondary:hover {
-  background-color: #6c757d;
-  color: #fff;
-}
-
-a {
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-} */
