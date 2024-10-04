@@ -182,8 +182,8 @@ p {
 
 .scroll-to-top-btn {
   position: fixed;
-  bottom: 80px;
-  right: 80px;
+  bottom: 10px;
+  right: 10px;
   padding: 10px 20px;
   font-size: 20px;
   background-color: #FF5919;

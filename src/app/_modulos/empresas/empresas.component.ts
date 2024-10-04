@@ -403,7 +403,7 @@ export class EmpresasComponent implements OnInit {
   fmunicipios(){
     this._municipiosService.datosl().subscribe((data) => {
       this.municipios = data;
-    })
+    });
   }
 
   // flocalidades(id: number) {
@@ -713,7 +713,12 @@ export class EmpresasComponent implements OnInit {
     const primerNombre = this.formRep.get('primernombre')?.value || '';
     const dip = this.formRep.get('dip')?.value || '';
 
-    const parteUsuario = primerApellido.slice(0, 2) + segundoApellido.slice(0, 2) + primerNombre.slice(0, 2);
+    let parteUsuario = '';
+    if (segundoApellido) {
+        parteUsuario = primerApellido.slice(0, 2) + segundoApellido.slice(0, 2) + primerNombre.slice(0, 2);
+    } else {
+        parteUsuario = primerApellido.slice(0, 4) + primerNombre.slice(0, 2);
+    }
 
     const parteDIP = dip.slice(-3);
 
@@ -756,7 +761,7 @@ export class EmpresasComponent implements OnInit {
         dato.empresa,
         [
           Validators.required,
-          Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$'),
+          Validators.pattern('^[a-zA-ZÀ-ÿ0-9\u00f1\u00d1\\s.,&-]+$'),
           Validators.minLength(5),
           Validators.maxLength(150)
         ]
@@ -765,7 +770,7 @@ export class EmpresasComponent implements OnInit {
         dato.razonsocial,
         [
           Validators.required,
-          Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$'),
+          Validators.pattern('^[a-zA-ZÀ-ÿ0-9\u00f1\u00d1\\s.,&-]+$'),
           Validators.minLength(5),
           Validators.maxLength(150)
         ]
@@ -784,8 +789,7 @@ export class EmpresasComponent implements OnInit {
       descripcion: [
         dato.descripcion,
         [
-          Validators.required,
-          Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$'),
+          Validators.pattern('^[a-zA-ZÀ-ÿ0-9\u00f1\u00d1\\s.,-]+$'),
           Validators.minLength(8),
           Validators.maxLength(255)
         ]
@@ -948,7 +952,7 @@ export class EmpresasComponent implements OnInit {
         input = input.replace(/[^0-9]/g, '');
         break;
       case 'letrasynumerosguion':
-        input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1\s&.]/g, '');
+        input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1\s.,&-]/g, '');
         break;
       case 'direccion':
         input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1\s.,#-]/g, '');
@@ -1062,6 +1066,8 @@ export class EmpresasComponent implements OnInit {
     this._empresasService.dato(id).subscribe((data) => {
       this.dato = data;
       this.fdescargar(data.idempresa, 'empresas');
+      this.fdescargar(data.representante?.persona?.idpersona, 'repanverso');
+      this.fdescargar(data.representante?.persona?.idpersona, 'repreverso');
       this.modalRefEmpresa = this._modalService.open(content, {
         backdrop: 'static',
         keyboard: false,
@@ -1083,7 +1089,7 @@ export class EmpresasComponent implements OnInit {
     this.dato.descripcion = this.formEmpresa.value.descripcion;
     this.dato.tipo = 'EMPRESA';
     this.dato.direccion = this.formEmpresa.value.direccion;
-    this.dato.telefono = this.formEmpresa.value.celular;
+    this.dato.telefono = this.formEmpresa.value.telefono;
     this.dato.celular = this.formEmpresa.value.celular;
     this.dato.correo = this.formEmpresa.value.correo;
     this.dato.facebook = this.formEmpresa.value.facebook;
@@ -1115,14 +1121,18 @@ export class EmpresasComponent implements OnInit {
     this.dato.registrosenasag = this.formEmpresa.value.registrosenasag;
 
     if (this.estado === 'Modificar') {
+      this.dato.idempresa = this.dato.idempresa;
+
       this._empresasService.modificar(this.dato).subscribe((data) => {
         this.fdatos();
+        this.flimpiarbuscar()
         this.modalRefEmpresa.dismiss();
         swal.fire('Dato modificado', 'Dato modificado con exito', 'success');
       });
     } else {
       this._empresasService.adicionar(this.dato).subscribe((data) => {
         this.fdatos();
+        this.flimpiarbuscar()
         this.mostrarOtro = null;
         this.mostrarOtroCampo = null;
         this.modalRefEmpresa.dismiss();

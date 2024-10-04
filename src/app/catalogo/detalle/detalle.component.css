@@ -188,8 +188,8 @@ h1,
 
 .scroll-to-top-btn {
   position: fixed;
-  bottom: 80px;
-  right: 80px;
+  bottom: 10px;
+  right: 10px;
   padding: 10px 20px;
   font-size: 20px;
   background-color: #fd7e14;
@@ -246,6 +246,15 @@ h1,
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.overlay-image {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 150px; /* Ajusta el tamaño de la imagen sobrepuesta */
+  height: auto;
+  z-index: 10; /* Asegura que la imagen sobrepuesta esté por encima */
 }
 
 .btn-arrow-left, .btn-arrow-right {

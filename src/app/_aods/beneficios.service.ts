@@ -5,6 +5,7 @@ import { Beneficios } from '../_entidades/beneficios';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class BeneficiosService {
   ruta = `${RUTA}/apirest/beneficios`;
 
   constructor(
-    private _httpClient: HttpClient
+    private _httpClient: HttpClient,
+    private toast: ToastrService
   ) { }
 
   datos(pagina: number, cantidad: number, buscar: string, rol: string): Observable<Beneficios[]>{
@@ -85,5 +87,39 @@ export class BeneficiosService {
         return throwError(e);
       })
     );
+  }
+
+  upload(id: string, tipo: string, archivo: File): Observable<any>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    const formData: FormData = new FormData();
+    formData.append('id', id);
+    formData.append('tipo', tipo);
+    formData.append('archivo', archivo);
+    return this._httpClient.post<void>(`${this.ruta}/upload`, formData, {
+      reportProgress: true,
+      observe: 'events',
+      responseType: 'json',
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`)
+    }).pipe(
+      catchError(e => {
+        if (e.status === 400) {
+          this.toast.error('No se ha seleccionado ningún archivo.', 'Error en la carga');
+        } else if (e.status === 401) {
+          this.toast.error('No autorizado. Por favor, inicia sesión.', 'Error de Autenticación');
+        } else if (e.status === 500) {
+          this.toast.error('Error al procesar el archivo en el servidor.', 'Error en el Servidor');
+        } else {
+          this.toast.error('Ocurrió un error desconocido.', 'Error Desconocido');
+        }
+        return throwError(e);
+      })
+    );
+  }
+
+  download(id: number, tipo: string): Observable<any>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get(`${this.ruta}/downloadimage?id=${id}&tipo=${tipo}`,{
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
   }
 }

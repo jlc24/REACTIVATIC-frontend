@@ -5,7 +5,7 @@
     margin-top: 10px;
   }
 
- 
+
   .puntero{
     cursor: pointer;
   }
@@ -153,6 +153,7 @@
   .icon-usuario{
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     border: solid 2px #0000008f;
+    border: 10px;
   }
   .icon-empresa{
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);

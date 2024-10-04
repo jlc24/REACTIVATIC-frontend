@@ -48,7 +48,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
                   </div>
-                  <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Empresa a buscar ..." (keyup)="fbuscar()" />
+                  <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Empresa a buscar ..." (keyup)="fbuscar()" style="text-transform: uppercase;"/>
                 </div>
               </div>
             </div>
@@ -79,8 +79,8 @@
                   </div>
                 </td>
                 <td class="text-center">{{ _item.nit}}</td>
-                <td class="text-center">{{ _item.rubro.rubro}}</td>
-                <td class="text-center">{{ _item.municipio.municipio}}</td>
+                <td class="text-center">{{ _item.rubro?.rubro}}</td>
+                <td class="text-center">{{ _item.municipio?.municipio}}</td>
                 <td>{{ _item.direccion }}</td>
                 <td class="text-center">
                   <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idempresa, !_item.estado)" >
@@ -349,7 +349,7 @@
               <label for="">Descripción:</label>
             </div>
             <div class="col-lg-9 col-md-8 col-sm-12">
-              <input type="text" class="form-control form-control-sm" formControlName="descripcion" (input)="onInput($event, 'descripcion', 'letrasyespacios')" autocomplete="no">
+              <input type="text" class="form-control form-control-sm" formControlName="descripcion" (input)="onInput($event, 'descripcion', 'direccion')" autocomplete="no">
             </div>
           </div>
           <div class="row pl-3 pr-3 mt-1">
@@ -396,7 +396,7 @@
               <label for="">Servicios: </label>
             </div>
             <div class="col-lg-9 col-md-8 col-sm-12">
-              <input type="text" class="form-control form-control-sm" formControlName="servicios" (input)="onInput($event, 'servicios', 'letrasyespacios')" autocomplete="no">
+              <input type="text" class="form-control form-control-sm" formControlName="servicios" (input)="onInput($event, 'servicios', 'direccion')" autocomplete="no">
             </div>
           </div>
           <div class="row pl-3 pr-3 mt-1">
@@ -430,7 +430,7 @@
                 <option value="1">POR INFLUENCIA FAMILIAR</option>
                 <option value="2">POR EXPERIENCIA LABORAL</option>
                 <option value="3">POR DESPIDO DE TRABAJO</option>
-                <option value="4">POR LA DEMANDA LABORAL</option>
+                <option value="4">POR LA DEMANDA DEL MERCADO</option>
                 <option value="5">OTRO</option>
               </select>
             </div>
@@ -1070,9 +1070,63 @@
             </div>
             <div class="row justify-content-center">
               <div *ngFor="let _imgEmp of imagenEmpresa">
-                <img [src]="sanitizarImagen(_imgEmp.data, _imgEmp.mimeType)" width="300px" class="img-fluid icon-empresa" />
+                <img [src]="sanitizarImagen(_imgEmp.data, _imgEmp.mimeType)" width="200px" class="img-fluid icon-empresa" />
               </div>
             </div>
+          </div>
+          <div class="col-sm-12 m-2 p-2" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+            <div class="col-sm-12 text-md-left text-sm-center">
+              <h6>DATOS DEL REPRESENTANTE:</h6>
+            </div>
+            <div class="col-sm-12 text-md-left text-sm-center">
+              <span>CARNET</span>
+            </div>
+            <div class="row justify-content-center mb-3 mt-3">
+              <div *ngFor="let _imgRepAnv of imagenRepAnverso">
+                <img [src]="sanitizarImagen(_imgRepAnv.data, _imgRepAnv.mimeType)" width="150px" class="icon-carnet mr-2" />
+              </div>
+              <div *ngFor="let _imgRepRev of imagenRepReverso">
+                <img [src]="sanitizarImagen(_imgRepRev.data, _imgRepRev.mimeType)" width="150px" class="icon-carnet" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4 col-sm-6 text-sm-right" hidden>
+                <strong></strong>
+              </div>
+              <div class="col-md-8 col-sm-6" hidden>
+                {{ dato.representante?.idrepresentante }}
+              </div>
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <Strong>Nombre: </Strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                {{ dato.representante?.persona?.primerapellido }}
+                {{ dato.representante?.persona?.segundoapellido }}
+                {{ dato.representante?.persona?.primernombre }}
+              </div>
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Carnet: </strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                {{ dato.representante?.persona?.dip }}{{ dato.representante?.persona?.complementario ? '-'+dato.representante?.persona?.complementario : '' }}
+              </div>
+            </div>
+            <div class="row" *ngIf="dato.representante?.persona?.celular">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Celular:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                {{ dato.representante?.persona?.celular }}
+              </div>
+            </div>
+            <div class="row" *ngIf="dato.representante?.persona?.telefono">
+              <div class="col-md-4 col-sm-4 text-sm-right">
+                <strong>Telefono:</strong>
+              </div>
+              <div class="col-md-8 col-sm-8">
+                {{ dato.representante?.persona?.telefono }}
+              </div>
+            </div><br>
           </div>
         </div>
       </div>
@@ -1233,7 +1287,7 @@
                 <strong>Municipio:</strong>
               </div>
               <div class="col-md-8 col-sm-8">
-                <label for="">{{ dato?.municipio.municipio }}</label>
+                <label for="">{{ dato?.municipio?.municipio }}</label>
               </div>
             </div>
             <div class="row" *ngIf="dato?.zona">

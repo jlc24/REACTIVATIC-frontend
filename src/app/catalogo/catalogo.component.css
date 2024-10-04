@@ -215,6 +215,15 @@ h1,
   transform: scale(1.2);
 }
 
+.overlay-image {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 50px; /* Ajusta el tamaño de la imagen sobrepuesta */
+  height: auto;
+  z-index: 10; /* Asegura que la imagen sobrepuesta esté por encima */
+}
+
 .product-name {
   font-size: 1.25rem;
   font-weight: bold;
@@ -334,8 +343,8 @@ p {
 
 .scroll-to-top-btn {
   position: fixed;
-  bottom: 80px;
-  right: 80px;
+  bottom: 10px;
+  right: 10px;
   padding: 10px 20px;
   font-size: 20px;
   background-color: #FF5919;

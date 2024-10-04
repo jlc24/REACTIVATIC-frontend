@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { CarritosService } from 'src/app/_aods/carritos.service';
@@ -8,6 +9,7 @@ import { CatalogosService } from 'src/app/_aods/catalogos.service';
 import { UtilsService } from 'src/app/_aods/utils.service';
 import { RUTA } from 'src/app/_config/application';
 import { Carritos } from 'src/app/_entidades/carritos';
+import { Empresas } from 'src/app/_entidades/empresas';
 import { Procesar } from 'src/app/_entidades/procesar';
 import { Productos } from 'src/app/_entidades/productos';
 import Swal from 'sweetalert2';
@@ -19,6 +21,7 @@ import Swal from 'sweetalert2';
 })
 export class EmpresaComponent implements OnInit {
 
+  ruta = `${RUTA}/catalogos/descargarproducto/`;
   rutaproducto = `${RUTA}/catalogos/descargarimagenproducto/`;
 
   carritoVisible: boolean = false;
@@ -26,6 +29,8 @@ export class EmpresaComponent implements OnInit {
   gestion: number = new Date().getFullYear();
 
   estado: string = '';
+
+  id: number;
 
   datos: Productos[] = [];
   dato: Productos;
@@ -36,8 +41,16 @@ export class EmpresaComponent implements OnInit {
   carritosAgrupados: any = {};
   totalAPagar: number = 0;
 
-  cargando: boolean = true;
+  cargando: boolean = false;
   error: string = '';
+
+  pagina: number = 1;
+  numPaginas: number = 0;
+  maxSize: number = 5;
+  cantidad: number = 12;
+  buscar: string = '';
+  orden: string = 'asc';
+  total: number = 0;
 
   totalencarrito = 0;
   encarrito = "";
@@ -65,7 +78,13 @@ export class EmpresaComponent implements OnInit {
   isShow: boolean;
   topPosToStartShowing = 100;
 
+  empresa: Empresas;
+  productos: Productos[] = [];
+  imagenEmpresa: any[];
+  imagenCarousel: any[];
+
   constructor(
+    private _route: ActivatedRoute,
     private _catalogosService: CatalogosService,
     private _carritosService: CarritosService,
     private _modalService: NgbModal,
@@ -73,7 +92,8 @@ export class EmpresaComponent implements OnInit {
     private _ruta: Router,
     private _mensajes: ToastrService,
     private utilsService: UtilsService,
-    private _toast: ToastrService
+    private _toast: ToastrService,
+    private sanitizer: DomSanitizer
   ) {
     let idcliente = localStorage.getItem('idcliente');
     if (!idcliente) {
@@ -110,8 +130,11 @@ export class EmpresaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.id = this.utilsService.descifrarId(this._route.snapshot.params['id']);
+    this.cargando = true;
     this.fcantidadcarrito();
+    this.fempresa(this.id);
+    this.fproductos(this.id);
   }
 
   @HostListener('window:scroll')
@@ -139,6 +162,13 @@ export class EmpresaComponent implements OnInit {
     }
     this.carritoVisible = !this.carritoVisible;
     this.fdatoscarrito();
+  }
+
+  mostrarMas(evento: any) {
+    this.cargando = true;
+    this.error = '';
+    this.pagina = evento;
+    this.fproductos(this.id);
   }
 
   fdatoscarrito(){
@@ -486,5 +516,165 @@ export class EmpresaComponent implements OnInit {
 
   forgotPassword(){
 
+  }
+
+  fatributos(id: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this._carritosService.atributosproducto(id).subscribe(
+        (data) => {
+          if (data) {
+            this.atributosProducto = data;
+            resolve(data);
+          } else {
+            resolve(null);
+          }
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  }
+
+  fadicionar(producto: any, cantidad: number) {
+    let idcliente = JSON.parse(localStorage.getItem('idcliente'));
+    this.fatributos(producto.idproducto)
+      .then(() => {
+        if (this.atributosProducto) {
+          let nuevoproducto = new Carritos();
+          nuevoproducto.idcliente = idcliente;
+          nuevoproducto.idproducto = producto.idproducto;
+          nuevoproducto.imagen = this.atributosProducto.imagen;
+          nuevoproducto.idprecio = this.atributosProducto.idprecio;
+          nuevoproducto.idcolor = this.atributosProducto.idcolor;
+          nuevoproducto.idmaterial = this.atributosProducto.idmaterial;
+          nuevoproducto.idtamano = this.atributosProducto.idtamano;
+          nuevoproducto.cantidad = cantidad;
+
+          Swal.fire({
+              title: '¿Estás seguro?',
+              text: "¿Quieres agregar este producto al carrito?",
+              icon: 'question',
+              showCancelButton: true,
+              confirmButtonText: 'Sí, agregar',
+              cancelButtonText: 'Cancelar',
+              customClass: {
+                confirmButton: 'btn btn-success rounded-pill mr-3',
+                cancelButton: 'btn btn-secondary rounded-pill',
+              },
+              buttonsStyling: false,
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.utilsService.mostrarCargando();
+                this._carritosService.adicionar(nuevoproducto).subscribe(
+                  data => {
+                    this.fcantidadcarrito();
+                    this._toast.success('El producto ha sido agregado a su carrito.','Agregado')
+                    this.utilsService.cerrarCargando();
+                  },
+                  error => {
+                    this._toast.error('Ha ocurrido un error, no se pudo agregar a su carrito.','Error')
+                  }
+                );
+              }
+            });
+        }else {
+          Swal.fire({
+            icon: 'warning',
+            title: 'No se encontraron atributos',
+            text: 'Los atributos del producto no se encontraron. Por favor, inténtalo de nuevo más tarde.',
+          });
+          this._toast.error('Producto no agregado al carrito.', 'Error');
+        }
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un problema al obtener los atributos del producto. Intenta de nuevo más tarde.',
+        });
+        this._toast.error('Producto no agregado al carrito.', 'Error');
+      });
+  }
+
+  fdescargar(rol: string) {
+    if (rol == 'empresas') {
+      this.imagenEmpresa = [];
+      this._catalogosService.download(this.empresa?.idempresa, rol).subscribe((data) => {
+        this.imagenEmpresa = data;
+      });
+    }
+    if (rol == 'carousel') {
+      this.imagenEmpresa = [];
+      this._catalogosService.download(this.empresa?.idempresa, rol).subscribe((data) => {
+        this.imagenCarousel = data;
+      });
+    }
+  }
+
+  sanitizarImagen(data: string, mimeType: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(`data:${mimeType};base64,${data}`);
+  }
+
+  fempresa(id: number) {
+    this._catalogosService.datoempresa(id).subscribe(
+      (data) => {
+        this.empresa = data;
+        this.fdescargar('empresas');
+        this.fdescargar('carousel');
+        this.cargando = false;
+      },
+      (error) => {
+        this.cargando = false;
+        if (error.status === 0) {
+          this.error = `Error de conexión. Verifica tu conexión a internet.`;
+        } else if (error.status >= 400 && error.status < 500) {
+          this.error = `Error en la solicitud. Por favor revisa los parámetros enviados.`;
+        } else if (error.status >= 500) {
+          this.error = `Error en el servidor. Inténtalo de nuevo más tarde.`;
+        } else {
+          this.error = `Error inesperado. Inténtalo de nuevo más tarde.`;
+        }
+      }
+    );
+  }
+
+  fproductos(id: number) {
+    this._catalogosService.datos(id.toString(),this.pagina, this.cantidad, this.buscar, this.orden).subscribe(
+      (data) => {
+        this.productos = data || [];
+        this.cargando = false;
+        this.scrollToTop();
+      }, (error) => {
+        this.cargando = false;
+        if (error.status === 0) {
+          this.error = `Error de conexión. Verifica tu conexión a internet.`;
+        } else if (error.status === 404) {
+          this.error = `Recurso no encontrado. Por favor, verifica la URL o intenta más tarde.`;
+        } else if (error.status >= 400 && error.status < 500) {
+          this.error = `Error en la solicitud. Por favor revisa los parámetros enviados.`;
+        } else if (error.status >= 500) {
+          this.error = `Error en el servidor. Inténtalo de nuevo más tarde.`;
+        } else {
+          this.error = `Error inesperado. Inténtalo de nuevo más tarde.`;
+        }
+      }
+    );
+  }
+
+  fdetalle(id: number) {
+    this.fatributos(id)
+    .then(() => {
+      const _ruta = `/catalogo/producto/${this.utilsService.cifrarId(id)}`;
+      this._ruta.navigateByUrl(_ruta);
+    })
+    .catch((error) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un problema al ver los detalles del producto. Inténtalo de nuevo más tarde.',
+      });
+      this._toast.error('Producto no encontrado.', 'Error');
+    });
   }
 }

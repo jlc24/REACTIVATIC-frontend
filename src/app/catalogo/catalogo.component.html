@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
   <div class="container ">
-    <a href="" class="navbar-brand"><img src="assets/imagenes/logo.png" class="img-fluid" width="100px"/></a>
+    <a href="https://reactivatic.oruro.gob.bo/reactivaticapp/#/catalogo" class="navbar-brand"><img src="assets/imagenes/logo.png" class="img-fluid" width="100px"/></a>
     <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -108,28 +108,28 @@
         <i class="bi bi-cart" *ngIf="cantidadcarrito == null"></i>
         <span class="toolbar-cart" *ngIf="cantidadcarrito > 0">x{{ cantidadcarrito }}</span>
       </div>
-      <span class="d-none d-sm-inline nombre">Mi Carrito</span>
+      <span class="d-none d-sm-inline nombre"></span>
     </div>
 
     <!-- Iniciar Sesión o Bienvenida -->
     <div *ngIf="localusuario == '' || localusuario == null" class="toolbar-item puntero" (click)="faccesom(accesom)" title="Iniciar Sesión">
       <i class="bi bi-person-fill"></i>
-      <span class="d-none d-sm-inline nombre">Iniciar Sesión</span>
+      <span class="d-none d-sm-inline nombre"></span>
     </div>
     <div *ngIf="localusuario == '' || localusuario == null" class="toolbar-item puntero" (click)="fregistrar(registrar)" title="Registrarse" hidden>
       <i class="bi bi-person-fill-add"></i>
-      <span class="d-none d-sm-inline nombre">Registro</span>
+      <span class="d-none d-sm-inline nombre"></span>
     </div>
 
     <div *ngIf="localusuario" class="toolbar-item puntero" title="Bienvenido">
       <i class="bi bi-person-circle"></i>
-      <span class="d-none d-sm-inline nombre">{{ localusuario }}</span>
+      <span class="d-none d-sm-inline nombre"></span>
     </div>
 
     <!-- Cerrar Sesión -->
     <div *ngIf="localusuario" class="toolbar-item puntero" (click)="fsalir()" title="Cerrar Sesión">
       <i class="bi bi-box-arrow-right"></i>
-      <span class="d-none d-sm-inline nombre">Cerrar Sesión</span>
+      <span class="d-none d-sm-inline nombre"></span>
     </div>
   </div>
 </div>
@@ -253,8 +253,9 @@
         <div class="row">
           <div class="col-sm-6 col-lg-4" *ngFor="let _item of datos; let i = index">
             <div class="card product-card mb-4">
-              <div class="card-header p-0">
+              <div class="card-header p-0 position-relative">
                 <img [src]="ruta+_item.idproducto+'/'" class="card-img-top product-image border" alt="Nombre del Producto" id="imagenProducto">
+                <img src="assets/imagenes/logo.png" class="overlay-image" alt="Imagen sobrepuesta">
               </div>
               <div class="card-body">
                 <h5 class="card-title product-name puntero" (click)="fdetalle(_item.idproducto)" title="{{ _item.producto }}">{{ _item.producto }}</h5>
@@ -307,7 +308,7 @@
   </div><hr>
 </div>
 <div class="container-lg bg-white">
-  <div class="row m-3 p-3 justify-content-between align-items-center">
+  <div class="row m-3 justify-content-center align-items-center">
     <div class="col-sm-3">
       <img src="assets/imagenes/logogadorblack.png"  class="img-fluid imagen-logos" alt="" width="200px">
     </div>

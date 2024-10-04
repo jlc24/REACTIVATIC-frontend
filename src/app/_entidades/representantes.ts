@@ -4,4 +4,5 @@ export class Representantes {
   idpersona: number;
   representante: string;
   persona: Personas;
+  enBeneficio: Boolean;
 }

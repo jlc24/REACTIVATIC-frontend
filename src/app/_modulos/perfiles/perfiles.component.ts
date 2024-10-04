@@ -47,6 +47,7 @@ export class PerfilesComponent implements OnInit {
   imagenRepAnverso: any[];
   imagenRepReverso: any[];
   imagenEmpresa: any[];
+  imagenCarousel: any[];
 
   formulario: FormGroup;
   formUser: FormGroup;
@@ -203,6 +204,7 @@ export class PerfilesComponent implements OnInit {
         this.fdescargar('repanverso');
         this.fdescargar('repreverso');
         this.fdescargar('empresas');
+        this.fdescargar('carousel');
       });
     }else{
       this.fdescargar('usuarios');
@@ -888,6 +890,13 @@ export class PerfilesComponent implements OnInit {
       keyboard: false
     });
   }
+  fimagenCarousel(contenido: any) {
+    this.estado = 'Carousel';
+    this._modalService.open(contenido, {
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
 
   fcargar() {
     swal.fire({
@@ -956,8 +965,24 @@ export class PerfilesComponent implements OnInit {
           swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
         } else if (event.type === HttpEventType.Response) {
           swal.close();
-          this.toast.success('', 'Carnet Reverso cambiado.');
+          this.toast.success('', 'Logo de empresa agregado.');
           this.fdescargar('empresas');
+          this._modalService.dismissAll();
+          this.archivoSeleccionado = null;
+        }
+      }, error => {
+        swal.close();
+        swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
+      });
+    }else if (this.estado === 'Carousel') {
+      this._empresasService.upload(this.empresa.idempresa.toString(), 'carousel', this.archivoSeleccionado).subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const progreso = Math.round((event.loaded / event.total) * 100);
+          swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
+        } else if (event.type === HttpEventType.Response) {
+          swal.close();
+          this.toast.success('', 'Imagen para carousel cargado.');
+          this.fdescargar('carousel');
           this._modalService.dismissAll();
           this.archivoSeleccionado = null;
         }
@@ -971,25 +996,31 @@ export class PerfilesComponent implements OnInit {
   fdescargar(rol: string) {
     if (rol == 'empresas') {
       this.imagenEmpresa = [];
-      this._empresasService.download(this.empresa?.idempresa, 'empresas').subscribe((data) => {
+      this._empresasService.download(this.empresa?.idempresa, rol).subscribe((data) => {
         this.imagenEmpresa = data;
+      });
+    }
+    if (rol == 'carousel') {
+      this.imagenCarousel = [];
+      this._empresasService.download(this.empresa?.idempresa, rol).subscribe((data) => {
+        this.imagenCarousel = data;
       });
     }
     if(rol == 'usuarios'){
       this.imagenUsuario = [];
-      this._personasService.downloadperfil('usuarios').subscribe((data) => {
+      this._personasService.downloadperfil(rol).subscribe((data) => {
         this.imagenUsuario = data;
       });
     }
     if (rol == 'repanverso') {
       this.imagenRepAnverso = [];
-      this._personasService.downloadperfil('repanverso').subscribe((data) => {
+      this._personasService.downloadperfil(rol).subscribe((data) => {
         this.imagenRepAnverso = data;
       });
     }
     if (rol == 'repreverso') {
       this.imagenRepReverso = [];
-      this._personasService.downloadperfil('repreverso').subscribe((data) => {
+      this._personasService.downloadperfil(rol).subscribe((data) => {
         this.imagenRepReverso = data;
       });
     }

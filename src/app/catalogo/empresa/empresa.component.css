@@ -2,6 +2,17 @@
   cursor: pointer;
 }
 
+.reveal {
+  opacity: 0; /* ocultar por defecto */
+  transform: translateY(20px); /* desplazar hacia abajo */
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* transiciones suaves */
+}
+
+.reveal.visible {
+  opacity: 1; /* hacer visible */
+  transform: translateY(0); /* mover a su posición original */
+}
+
 .container-fluid {
   padding-left: 0;
   padding-right: 0;
@@ -182,8 +193,8 @@ p {
 
 .scroll-to-top-btn {
   position: fixed;
-  bottom: 80px;
-  right: 80px;
+  bottom: 10px;
+  right: 10px;
   padding: 10px 20px;
   font-size: 20px;
   background-color: #FF5919;
@@ -477,4 +488,242 @@ p {
   color: #FF5919;
   margin: 0;
   padding: 0;
+}
+
+:host ::ng-deep .pagination-rounded .page-item {
+  border-radius: 50px;
+}
+
+:host ::ng-deep .pagination-rounded .page-link {
+  border-radius: 50px;
+  color: #FF5919;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  padding: 10px 16px; /* Aumentar el tamaño del botón */
+  font-size: 1.2rem; /* Aumentar el tamaño del texto */
+}
+
+:host ::ng-deep .pagination-rounded .page-link:hover {
+  background-color: #fc895b;
+  color: white;
+}
+
+:host ::ng-deep .pagination-rounded .page-item.active .page-link {
+  background-color: #FF5919;
+  border-color: #FF5919;
+  color: white;
+}
+
+.product-card {
+  width: 100%;
+  max-width: 300px;
+  margin: auto;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.6s ease, box-shadow 0.3s, border 0.6s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.product-card:hover{
+  transform: scale(1.05);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  border: 1px solid #FF5919;
+}
+
+.card-header {
+  position: relative;
+  overflow: hidden;
+  height: 200px;
+}
+
+.product-image {
+  height: auto;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.product-image:hover {
+  transform: scale(1.2);
+}
+
+.overlay-image {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 50px; /* Ajusta el tamaño de la imagen sobrepuesta */
+  height: auto;
+  z-index: 10; /* Asegura que la imagen sobrepuesta esté por encima */
+}
+
+.product-name {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-description {
+
+  color: #555;
+
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  margin-bottom: 15px;
+
+  font-size: 0.9rem;
+  line-height: 1.5;
+  max-height: calc(1.5em * 3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: calc(1.5em * 3);
+}
+
+.product-price {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.icon-empresa{
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  border: solid 2px #0000004f;
+}
+
+.empresa-nombre {
+  font-family: 'Georgia', serif; /* Cambia 'Arial' por la fuente que prefieras */
+  font-size: 2.5rem; /* Ajusta el tamaño según tus necesidades */
+  font-weight: bold; /* Si quieres un peso de fuente más grueso */
+  color: #333; /* Cambia el color si es necesario */
+}
+
+.empresa-servicio {
+  font-family: 'Arial', sans-serif; /* Cambia 'Georgia' por la fuente que prefieras */
+  font-size: 1.5rem; /* Ajusta el tamaño según tus necesidades */
+  font-style: italic; /* Aplica cursiva si lo prefieres */
+  color: #777; /* Un color más suave para el servicio */
+}
+
+.contacto-info {
+  background-color: #f4f6f9; /* Fondo suave y agradable */
+  border-radius: 8px; /* Bordes redondeados */
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.contacto-texto {
+  font-family: 'Roboto', sans-serif; /* Fuente para el texto de contacto */
+  font-size: 1.25rem; /* Tamaño del texto */
+  color: #fff; /* Color del texto */
+}
+
+.contacto-icono {
+  font-size: 1.5rem; /* Tamaño del ícono */
+  color: #fff; /* Color del ícono */
+  margin-right: 10px;
+}
+
+.contacto-info a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.contacto-info a:hover {
+  text-decoration: underline;
+}
+
+.carousel-item img {
+  height: 500px; /* Ajusta la altura según tu diseño */
+  object-fit: cover; /* Mantiene la relación de aspecto de la imagen */
+}
+
+.descripcion-texto {
+  font-size: 1.5rem; /* Tamaño de fuente más grande */
+  font-weight: bold; /* Negrita */
+  color: #706d6b; /* Color de texto llamativo */
+  background-color: #F0F0F0; /* Fondo claro */
+  padding: 15px; /* Espaciado interno */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+.benefits-section {
+  background-color: #f9f9f9;
+  padding: 10px 0;
+}
+
+.benefit-item {
+  margin-bottom: 30px;
+}
+
+.icon-circle {
+  display: inline-block;
+  width: 80px; /* Aumenta el tamaño del círculo */
+  height: 80px; /* Aumenta el tamaño del círculo */
+  border-radius: 50%; /* Hace el fondo circular */
+  background-color: #EEEBEE; /* Color de fondo del círculo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 15px; /* Centra el círculo y espacio entre el ícono y el título */
+}
+
+.benefit-icon {
+  font-size: 40px; /* Aumenta el tamaño del ícono */
+  color: #FF5919; /* Color principal para los íconos */
+}
+
+.benefit-title {
+  font-size: 20px; /* Aumenta el tamaño del título */
+  font-weight: bold;
+  color: #FF5919;
+  margin-bottom: 5px; /* Espacio ajustado */
+}
+
+.benefit-desc {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.productos-empresa {
+  border: 2px solid #ddd; /* Borde gris claro */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  border-radius: 15px; /* Bordes redondeados */
+  padding: 20px; /* Espaciado interno */
+  background-color: #fff; /* Fondo blanco */
+  margin-bottom: 20px; /* Margen inferior para separar de otros elementos */
+}
+
+.product-title {
+  background-color: #4CAF50; /* Verde similar al estilo de la imagen */
+  color: white; /* Texto en blanco */
+  font-weight: bold; /* Negrita */
+  padding: 15px 30px; /* Espaciado interno */
+  text-align: center; /* Centrando el texto */
+  border-radius: 15px; /* Bordes redondeados */
+  font-size: 2rem; /* Tamaño de fuente */
+  margin: 10px auto; /* Margen superior e inferior centrado */
+  text-transform: uppercase; /* Texto en mayúsculas */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para dar relieve */
+  width: fit-content; /* Ajusta el ancho según el contenido */
+}
+
+.product-card-title {
+  background-color: #4CAF50; /* Verde similar */
+  color: white; /* Texto en blanco */
+  font-weight: bold; /* Negrita */
+  padding: 8px 15px; /* Espaciado interno más pequeño */
+  text-align: center; /* Centrado */
+  border-radius: 10px; /* Bordes redondeados */
+  font-size: 1rem; /* Tamaño de fuente más pequeño */
+  margin-top: 10px; /* Margen superior */
+  margin-bottom: 10px; /* Margen inferior */
+  text-transform: uppercase; /* Texto en mayúsculas */
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1); /* Sombra */
+  width: 100%; /* Ajusta al ancho del contenedor */
 }

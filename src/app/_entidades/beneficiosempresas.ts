@@ -5,6 +5,7 @@ export class Beneficiosempresas {
   idbeneficioempresa: number;
   idbeneficio: number;
   idempresa: number;
+  
   beneficios: Beneficios;
   empresas: Empresas;
 }

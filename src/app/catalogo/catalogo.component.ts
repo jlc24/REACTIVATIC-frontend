@@ -250,7 +250,7 @@ export class CatalogoComponent implements OnInit {
   }
 
   fdatos() {
-    this._catalogosService.datos(this.pagina, this.cantidad, this.buscar, this.orden).subscribe(
+    this._catalogosService.datos('',this.pagina, this.cantidad, this.buscar, this.orden).subscribe(
       (data) => {
         this.fcantidad();
         this.datos = data || [];
@@ -725,7 +725,7 @@ export class CatalogoComponent implements OnInit {
   fdetalle(id: number) {
     this.fatributos(id)
     .then(() => {
-      const _ruta = '/catalogo/producto/' + id;
+      const _ruta = `/catalogo/producto/${this.utilsService.cifrarId(id)}`;
       this._ruta.navigateByUrl(_ruta);
     })
     .catch((error) => {
@@ -741,7 +741,7 @@ export class CatalogoComponent implements OnInit {
   fempresa(id: number){
     this._catalogosService.datoempresa(id).subscribe(
       (data) => {
-      const ruta = `/catalogo/empresa/${id}`;
+      const ruta = `/catalogo/empresa/${this.utilsService.cifrarId(id)}`;
       this._ruta.navigateByUrl(ruta);
       },
       (error) => {

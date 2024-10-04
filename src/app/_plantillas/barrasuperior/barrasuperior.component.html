@@ -3,7 +3,7 @@
     <div class="app-sidebar__toggle puntero" data-toggle="sidebar" aria-label="Hide Sidebar"></div>
     <ul class="app-nav">
       <li class="dropdown">
-        <div class="app-nav__item puntero"  data-toggle="dropdown" aria-label="Open Profile Menu" style="text-decoration: none;">{{ nombrecliente }} {{ nombre }} <i class="fa fa-user-circle-o fa-2x"></i></div>
+        <div class="app-nav__item puntero"  data-toggle="dropdown" aria-label="Open Profile Menu" style="text-decoration: none;"> {{ nombre }} {{ nombrecliente }} <i class="fa fa-user-circle-o fa-2x"></i></div>
         <div class="dropdown-menu settings-menu dropdown-menu-right">
           <div class="dropdown-item puntero" [routerLink]="[ '/perfiles' ]"><i class="fa fa-user fa-lg"></i> Perfil</div>
           <div class="dropdown-item puntero" (click)="fsalir()"><i class="fa fa-sign-out fa-lg"></i> Cerrar sesión</div>

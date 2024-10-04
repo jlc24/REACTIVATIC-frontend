@@ -213,4 +213,21 @@ export class PersonasService {
       })
     )
   }
+
+  generar(dato: { id: number }): Observable<any>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.post<void>(`${this.ruta}/generarusuario`, dato, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    })
+  }
+
+  carnetPDF(id: number): Observable<any>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get(`${this.ruta}/carnet/${id}`, {
+      responseType: "blob",
+      headers: new HttpHeaders()
+        .set("Authorization", `bearer ${access_token}`)
+        .set("Content-Type", "application/json")
+    });
+  }
 }

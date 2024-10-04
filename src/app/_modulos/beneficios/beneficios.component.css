@@ -28,3 +28,79 @@
   border-color: #960023;
   color: white;
 }
+
+.icon-beneficio{
+  border: 1px solid #727479;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.beneficio-container{
+  position: relative;
+  display: inline-block;
+}
+
+.btn-beneficio{
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  border-radius: 50%;
+  padding: 5px 7px;
+  width: auto;
+  height: auto;
+}
+
+.dropzone {
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  /* transition: background-color 0.3s; */
+}
+
+.dropzone:hover {
+  background-color: #f1f1f1;
+}
+
+.dropzone.dragover {
+  background-color: #f0f8ff;
+  border-color: #007bff;
+}
+
+.preview-container {
+  position: relative;
+  display: inline-block;
+}
+
+.thumbnail {
+  max-width: 100px;
+  max-height: 100px;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+.preview-container button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #6C757D;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-info p {
+  margin: 0;
+}
+
+.file-info button {
+  align-self: flex-end;
+}

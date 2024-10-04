@@ -2,7 +2,7 @@ import { FormGroup } from '@angular/forms';
 
 export const RUTA = 'http://localhost:8678/reactivaticapp';
 // export const RUTA = 'http://192.168.129.170:8678/reactivaticapp';
-// export const RUTA = 'https://desarrolla.oruro.gob.bo:8443/mipymesapp';
+// export const RUTA = 'https://reactivatic.oruro.gob.bo:8443/reactivaticapp';
 export const TOKEN = 'access_token';
 export const TOKEN_USUARIO = 'reactivaticapp';
 // export const TOKEN_USUARIO = 'mipymesapp';

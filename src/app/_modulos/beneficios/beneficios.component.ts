@@ -1,14 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpEventType } from '@angular/common/http';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { AccesoService } from 'src/app/_aods/acceso.service';
 import { BeneficiosService } from 'src/app/_aods/beneficios.service';
+import { BeneficiosempresasService } from 'src/app/_aods/beneficiosempresas.service';
+import { EmpresasService } from 'src/app/_aods/empresas.service';
 import { MunicipiosService } from 'src/app/_aods/municipios.service';
+import { RepresentantesService } from 'src/app/_aods/representantes.service';
 import { TiposbeneficiosService } from 'src/app/_aods/tiposbeneficios.service';
 import { UsuariosService } from 'src/app/_aods/usuarios.service';
+import { UtilsService } from 'src/app/_aods/utils.service';
 import { Beneficios } from 'src/app/_entidades/beneficios';
+import { Beneficiosempresas } from 'src/app/_entidades/beneficiosempresas';
 import { Municipios } from 'src/app/_entidades/municipios';
+import { Representantes } from 'src/app/_entidades/representantes';
 import { Tiposbeneficios } from 'src/app/_entidades/tiposbeneficios';
 import { Usuarios } from 'src/app/_entidades/usuarios';
 import Swal from 'sweetalert2';
@@ -20,8 +28,14 @@ import Swal from 'sweetalert2';
 })
 export class BeneficiosComponent implements OnInit {
 
+  caracteresMaximos: number = 255;
+  caracteresRestantes: number = this.caracteresMaximos;
+
   beneficios: Beneficios[];
   beneficio: Beneficios;
+  beneficiosempresas: Beneficiosempresas[];
+  cantidadbeneficio: number;
+  representantes: Representantes[];
   tiposbeneficios: Tiposbeneficios[];
   municipios: Municipios[];
   capacitadores: Usuarios[];
@@ -34,10 +48,33 @@ export class BeneficiosComponent implements OnInit {
   total: number = 0;
   estado: string = '';
 
+  paginaRep: number = 1;
+  numPaginasRep: number = 0;
+  cantidadRep: number = 10;
+  buscarRep: string = '';
+  totalRep: number = 0;
+
+  paginaEmp: number = 1;
+  numPaginasEmp: number = 0;
+  cantidadEmp: number = 5;
+  buscarEmp: string = '';
+  totalEmp: number = 0;
+
   formulario: FormGroup;
   submitted: boolean = false;
 
   modalRefBeneficio: NgbModalRef;
+  modalRefImagen: NgbModalRef;
+
+  convocatoria: any[];
+  afiche: any[];
+
+  @ViewChild('archivoInput') archivoInput: ElementRef;
+  archivoSeleccionado: File = null;
+  miniaturaUrl: string | ArrayBuffer = null;
+  sizeFileFormat: string | null = null;
+  cargando: boolean = false;
+  progreso: number = 0;
 
   esadmin: boolean = false;
   essddpi: boolean = false;
@@ -52,15 +89,20 @@ export class BeneficiosComponent implements OnInit {
   esCargoMarketing: boolean = false;
   esCapacitador: boolean = false;
 
+
   constructor(
     private _accesoService: AccesoService,
     private _beneficiosService: BeneficiosService,
+    private _beneficiosempresasService: BeneficiosempresasService,
     private _tiposbeneficiosService: TiposbeneficiosService,
     private _municipiosService: MunicipiosService,
     private _usuariosService: UsuariosService,
+    private _representantesService: RepresentantesService,
+    private utilsService: UtilsService,
     private _fB: FormBuilder,
     private _modalService: NgbModal,
-    private _toast: ToastrService
+    private _toast: ToastrService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
@@ -82,6 +124,7 @@ export class BeneficiosComponent implements OnInit {
     this.esCargoEncargado = this._accesoService.esCargoEncargado();
     this.esCargoMarketing = this._accesoService.esCargoMarketing();
     this.esCapacitador = this._accesoService.esCargoCapacitador();
+
   }
 
   ftiposbeneficios(){
@@ -174,8 +217,7 @@ export class BeneficiosComponent implements OnInit {
       descripcion:[
         beneficio.descripcion,
         [
-          Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1\\s.,#-]+$'),
-          Validators.maxLength(255)
+          Validators.maxLength(this.caracteresMaximos)
         ]
       ],
       idtipobeneficio:[
@@ -222,6 +264,10 @@ export class BeneficiosComponent implements OnInit {
         ]
       ],
     });
+
+    this.formulario.get('descripcion').valueChanges.subscribe(value => {
+      this.caracteresRestantes = this.caracteresMaximos - (value ? value.length : 0);
+    });
   }
 
   get f() { return this.formulario.controls; }
@@ -255,10 +301,13 @@ export class BeneficiosComponent implements OnInit {
   fadicionar(content: any){
     this.estado = 'Adicionar';
     this.beneficio = new Beneficios();
+    this.fdescargar(0, 'Convocatoria');
+    this.fdescargar(0, 'Afiche');
     this.fformulario(this.beneficio);
     this.modalRefBeneficio = this._modalService.open(content, {
       backdrop: 'static',
       keyboard: false,
+      size: 'lg',
       scrollable: true
     });
   }
@@ -267,22 +316,14 @@ export class BeneficiosComponent implements OnInit {
     this.estado = 'Modificar';
     this._beneficiosService.dato(id).subscribe((data) => {
       this.beneficio = data;
+      this.fdescargar(data.idbeneficio, 'Convocatoria');
+      this.fdescargar(data.idbeneficio, 'Afiche');
       this.fformulario(this.beneficio);
       this.modalRefBeneficio = this._modalService.open(content, {
         backdrop: 'static',
-        keyboard: false
-      });
-    });
-  }
-
-  fver(id: number, content: any){
-    this.estado = 'Ver';
-    this._beneficiosService.dato(id).subscribe((data) => {
-      this.beneficio = data;
-      this.fformulario(this.beneficio);
-      this.modalRefBeneficio = this._modalService.open(content, {
-        backdrop: 'static',
-        keyboard: false
+        keyboard: false,
+        size: 'lg',
+        scrollable: true
       });
     });
   }
@@ -320,4 +361,289 @@ export class BeneficiosComponent implements OnInit {
   fcancelar(){
     this.modalRefBeneficio.dismiss();
   }
+
+  fcancelarImagen(){
+    this.modalRefImagen.dismiss();
+    this.archivoSeleccionado = null;
+  }
+
+  fconvocatoria(contenido: any) {
+    this.estado = 'Convocatoria';
+    this.modalRefImagen = this._modalService.open(contenido, {
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+  fafiche(contenido: any) {
+    this.estado = 'Afiche';
+    this.modalRefImagen = this._modalService.open(contenido, {
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  fseleccionarArchivo(event) {
+    const archivo = event.target.files[0];
+    if (!archivo) {
+      return;
+    }
+
+    const tamañoMaximoMB = 2;
+    const tamañoMaximoBytes = tamañoMaximoMB * 1024 * 1024;
+    if (archivo.size > tamañoMaximoBytes) {
+      this._toast.error(`El archivo supera el límite de ${tamañoMaximoMB} MB.`, 'Tamaño de archivo no permitido');
+      this.fremoverArchivo();
+      return;
+    }
+
+    const tipoArchivo = archivo.type;
+    if (tipoArchivo !== 'image/png' && tipoArchivo !== 'image/jpeg') {
+      this._toast.error('Solo se permiten archivos PNG o JPG.', 'Formato no soportado');
+      this.fremoverArchivo();
+      return;
+    }
+
+    this.archivoSeleccionado = archivo;
+    this.sizeFileFormat = this.fformatearTamañoArchivo(archivo.size);
+    this.fcrearMiniatura();
+  }
+
+  fformatearTamañoArchivo(tamañoBytes: number): string {
+    const tamañoMB = tamañoBytes / (1024 * 1024);
+    return `${tamañoMB.toFixed(2)} MB`;
+  }
+
+  farrastrarSobre(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    (event.currentTarget as HTMLElement).classList.add('dragover');
+  }
+
+  farrastrarFuera(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    (event.currentTarget as HTMLElement).classList.remove('dragover');
+  }
+
+  fsoltarArchivo(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    (event.currentTarget as HTMLElement).classList.remove('dragover');
+
+    if (event.dataTransfer.files.length > 0) {
+      this.archivoSeleccionado = event.dataTransfer.files[0];
+      this.fcrearMiniatura();
+    }
+  }
+
+  fcrearMiniatura() {
+    if (this.archivoSeleccionado) {
+      const reader = new FileReader();
+      reader.onload = (e) => this.miniaturaUrl = reader.result;
+      reader.readAsDataURL(this.archivoSeleccionado);
+    }
+  }
+
+  fremoverArchivo() {
+    this.archivoSeleccionado = null;
+    this.miniaturaUrl = null;
+  }
+
+  fcargar() {
+    Swal.fire({
+      title: 'Cargando archivo...',
+      html: 'Progreso: <b>0%</b>',
+      allowOutsideClick: false,
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      }
+    });
+    if (this.estado === 'Convocatoria') {
+      this._beneficiosService.upload(this.beneficio.idbeneficio.toString(), this.estado.toLowerCase(), this.archivoSeleccionado).subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const progreso = Math.round((event.loaded / event.total) * 100);
+          Swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
+        } else if (event.type === HttpEventType.Response) {
+          Swal.close();
+          Swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
+          this._toast.success('', 'Carnet Anverso cambiado.');
+          this.fdescargar(this.beneficio.idbeneficio, this.estado);
+          this.archivoSeleccionado = null;
+          this.modalRefImagen.dismiss();
+        }
+      }, error => {
+        Swal.close();
+        Swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
+      });
+    }else if (this.estado === 'Afiche') {
+      this._beneficiosService.upload(this.beneficio.idbeneficio.toString(), this.estado.toLowerCase(), this.archivoSeleccionado).subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const progreso = Math.round((event.loaded / event.total) * 100);
+          Swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
+        } else if (event.type === HttpEventType.Response) {
+          Swal.close();
+          Swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
+          this._toast.success('', 'Carnet Reverso cambiado.');
+          this.fdescargar(this.beneficio.idbeneficio, this.estado);
+          this.archivoSeleccionado = null;
+          this.modalRefImagen.dismiss();
+        }
+      }, error => {
+        Swal.close();
+        Swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
+      });
+    }
+  }
+
+  fdescargar(id: number, rol: string) {
+    if (rol == 'Convocatoria') {
+      this.convocatoria = [];
+      this._beneficiosService.download(id, rol.toLowerCase()).subscribe((data) => {
+        this.convocatoria = data;
+      });
+    }
+    if (rol == 'Afiche') {
+      this.afiche = [];
+      this._beneficiosService.download(id, rol.toLowerCase()).subscribe((data) => {
+        this.afiche = data;
+      });
+    }
+  }
+
+  sanitizarImagen(data: string, mimeType: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(`data:${mimeType};base64,${data}`);
+  }
+
+  fbuscarRep() {
+    this.paginaRep = 0;
+    this.frepresentantes();
+  }
+
+
+  mostrarMasRep(evento: any){
+    this.paginaRep = evento;
+    this.frepresentantes();
+  }
+
+  limpiarRep() {
+    this.paginaRep = 0;
+    this.buscarRep = '';
+    this.frepresentantes();
+  }
+
+  fcantidaddatosl(){
+    this._representantesService.cantidaddatosl(this.buscarRep).subscribe((data) => {
+      this.totalRep = data;
+    })
+  }
+
+  fcantidadbeneficio(id: number){
+    this._beneficiosempresasService.cantidad(id).subscribe((data) => {
+      this.cantidadbeneficio = data;
+    });
+  }
+
+  frepresentantes(){
+    this._representantesService.datosl(this.paginaRep, this.cantidadRep, this.buscarRep).subscribe((data) => {
+      this.representantes = data;
+      this.fcantidaddatosl();
+    });
+  }
+
+  fparticipantes(id: number, content: any){
+    this.utilsService.mostrarCargando();
+    this.estado = 'Inscripción';
+    this._beneficiosService.dato(id).subscribe((data) => {
+      this.modalRefBeneficio = this._modalService.open(content, {
+        backdrop: 'static',
+        keyboard: false,
+        size: 'lg'
+      });
+      this.beneficio = data;
+      this.frepresentantes();
+      this.fcantidadbeneficio(data.idbeneficio);
+      this.utilsService.cerrarCargando();
+    });
+  }
+
+  festadobeneficio(event: any, idrepresentante: number){
+    const checked = event.target.checked;
+    const dato: any = {
+      idbeneficio: this.beneficio.idbeneficio,
+      idrepresentante: idrepresentante,
+    };
+
+    if (checked) {
+      this._beneficiosempresasService.adicionar(dato).subscribe({
+        next: (response) => {
+          this.frepresentantes();
+          this.fcantidadbeneficio(this.beneficio.idbeneficio);
+          this.limpiarRep();
+          this._toast.success('Representante agregado al Beneficio', 'Hecho');
+        },
+        error: (error) => {
+          this._toast.error('No se pudo agregar al Representante', 'Error');
+        }
+      });
+    }else{
+      this._beneficiosempresasService.eliminar(dato).subscribe({
+        next: (response) => {
+          this.frepresentantes();
+          this.fcantidadbeneficio(this.beneficio.idbeneficio);
+          this.limpiarRep();
+          this._toast.success('Representante eliminado del beneficio', 'Hecho');
+        },
+        error: (error) => {
+          this._toast.error('No se pudo elimnar al Representante', 'Error');
+        }
+      });
+    }
+  }
+
+  fbuscarEmp(id: number) {
+    this.paginaEmp = 0;
+    this.fbeneficiosempresas(id);
+  }
+
+
+  mostrarMasEmp(evento: any, id: number){
+    this.paginaEmp = evento;
+    this.fbeneficiosempresas(id);
+  }
+
+  limpiarEmp(id: number) {
+    this.paginaEmp = 1;
+    this.buscarEmp = '';
+    this.fbeneficiosempresas(id);
+  }
+
+  fcantidadempresas(id: number){
+    this._beneficiosempresasService.cantidadbeneficio(this.buscarEmp, id).subscribe((data) => {
+      this.totalEmp = data;
+    })
+  }
+  fbeneficiosempresas(id: number){
+    this._beneficiosempresasService.datos(this.paginaEmp, this.cantidadEmp, this.buscarEmp, id).subscribe((data) => {
+      this.beneficiosempresas = data;
+      this.fcantidadempresas(id);
+    });
+  }
+
+  fver(id: number, content: any){
+    this.estado = 'Ver';
+    this.limpiarEmp(id);
+    this._beneficiosService.dato(id).subscribe((data) => {
+      this.beneficio = data;
+      this.fdescargar(data.idbeneficio, 'Convocatoria');
+      this.fdescargar(data.idbeneficio, 'Afiche');
+      this.fcantidadbeneficio(data.idbeneficio);
+      this.fbeneficiosempresas(data.idbeneficio);
+      this.modalRefBeneficio = this._modalService.open(content, {
+        backdrop: 'static',
+        keyboard: false,
+        size: 'lg'
+      });
+    });
+  }
+
 }

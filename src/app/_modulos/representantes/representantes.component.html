@@ -48,7 +48,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
                   </div>
-                  <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Representante a buscar ..." (keyup)="fbuscar()" />
+                  <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Representante a buscar ..." (keyup)="fbuscar()" style="text-transform: uppercase;"/>
                 </div>
               </div>
             </div>
@@ -74,7 +74,7 @@
                   <td>
                     {{ _item.persona.primerapellido }} {{ _item.persona.segundoapellido }} {{ _item.persona.primernombre }}
                   </td>
-                  <td class="text-center">{{ _item.persona.dip }}</td>
+                  <td class="text-center">{{ _item.persona.dip }} {{ _item.persona.complementario ? '-' +_item.persona.complementario : _item.persona.complementario }}</td>
                   <td class="text-center">{{ _item.persona.tipogenero?.tipogenero }}</td>
                   <td class="text-right">
                     {{ _item.persona.celular }}
@@ -102,7 +102,7 @@
                       <button class="btn btn-outline-danger btn-sm" title="Eliminar Representante" (click)="feliminar(_item.persona.idpersona)" [disabled]="!esCargoAdministrador && !esCargoTecnologia">
                         <i class="fa fa-trash"></i>
                       </button>
-                      <button class="btn btn-outline-dark btn-sm" title="Imrpimir">
+                      <button class="btn btn-outline-dark btn-sm" title="Imrpimir Carnet" (click)="fimprimir(_item.persona.idpersona, carnet)">
                         <i class="fa fa-print"></i>
                       </button>
                     </div>
@@ -426,13 +426,19 @@
     <div class="row pl-3 pr-3">
       <div class="col-lg-5 col-sm-12 pt-3 align-content-center">
         <div class="row justify-content-center mb-3 mt-3">
-          <div *ngFor="let _imgRepAnv of imagenRepAnverso">
+          <div class="carnet-container" *ngFor="let _imgRepAnv of imagenRepAnverso">
             <img [src]="sanitizarImagen(_imgRepAnv.data, _imgRepAnv.mimeType)" width="250px" class="icon-carnet" />
+            <button class="btn btn-info btn-sm btn-carnet" (click)="fimagenRepA(cargarimagen)" title="Cambiar Carnet Anverso">
+              <i class="bi bi-arrow-clockwise"></i>
+            </button>
           </div>
         </div>
         <div class="row justify-content-center mb-3">
-          <div *ngFor="let _imgRepRev of imagenRepReverso">
+          <div class="carnet-container" *ngFor="let _imgRepRev of imagenRepReverso">
             <img [src]="sanitizarImagen(_imgRepRev.data, _imgRepRev.mimeType)" width="250px" class="icon-carnet" />
+            <button class="btn btn-info btn-sm btn-carnet" (click)="fimagenRepR(cargarimagen)" title="Cambiar Carnet Reverso">
+              <i class="bi bi-arrow-clockwise"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -565,13 +571,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-footer justify-content-between">
-    <button class="btn btn-outline-info btn-sm rounded-pill mr-3" (click)="fimagenRepA(cargarimagen)">
-      <i class="fa fa-picture-o"></i> Cambiar Carnet Reverso
-    </button>
-    <button class="btn btn-outline-info btn-sm rounded-pill mr-3" (click)="fimagenRepR(cargarimagen)">
-      <i class="fa fa-picture-o"></i> Cambiar Carnet Reverso
-    </button>
+  <div class="modal-footer justify-content-end">
     <button class="btn btn-sm btn-outline-custom rounded-pill mr-3" (click)="fcambiarclave(user.usuario)">
       <i class="fa fa-key"></i> Restablecer clave
     </button>
@@ -615,4 +615,17 @@
 
 <ng-template #noData>
   <i class="fa fa-times-circle fa-2x text-danger"></i>
+</ng-template>
+
+<ng-template #carnet>
+  <div class="modal-header" style="background-color: #4A5568;">
+    <h4 class="modal-title pull-left text-white">{{ estado }} Carnet del Representante</h4>
+    <button type="button" class="close" aria-label="Close" (click)="this.modalRefCarnet.dismiss()">
+      <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="max-height: 80vh; padding: 0;">
+    <iframe *ngIf="pdfUrl" [src]="pdfUrl"  style="width: 100%; height: 80vh; border: none; display: block;" frameborder="0"></iframe>
+    <p *ngIf="!pdfUrl">Cargando PDF...</p>
+  </div>
 </ng-template>

@@ -26,8 +26,8 @@ export class CatalogosService {
 
   constructor(private _httpClient: HttpClient) { }
 
-  datos(pagina: number, cantidad: number, buscar: string, orden: string): Observable<Productos[]> {
-    return this._httpClient.get<Productos[]>(`${this.ruta}/?pagina=${pagina}&cantidad=${cantidad}&buscar=${buscar}&orden=${orden}`);
+  datos(empresa: string, pagina: number, cantidad: number, buscar: string, orden: string): Observable<Productos[]> {
+    return this._httpClient.get<Productos[]>(`${this.ruta}/?empresa=${empresa}&pagina=${pagina}&cantidad=${cantidad}&buscar=${buscar}&orden=${orden}`);
   }
 
   cantidad(buscar: string): Observable<number> {
@@ -65,6 +65,7 @@ export class CatalogosService {
   datoempresa(id: number): Observable<Empresas> {
     return this._httpClient.get<Empresas>(`${this.ruta}/empresa/${id}`);
   }
+
   datoperfil(id: number): Observable<Empresas> {
     return this._httpClient.get<Empresas>(`${this.ruta}/perfil/${id}`);
   }

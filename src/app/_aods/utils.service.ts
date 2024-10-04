@@ -7,7 +7,6 @@ import Swal from 'sweetalert2';
 
 export class UtilsService {
 
-
   constructor() { }
 
   mostrarCargando() {
@@ -24,23 +23,23 @@ export class UtilsService {
     Swal.close();
   }
 
-  // cifrarXOR(id: number, clave: string): string {
-  //   const idString = id.toString();
-  //   let resultado = '';
-  //   for (let i = 0; i < idString.length; i++) {
-  //     resultado += String.fromCharCode(idString.charCodeAt(i) ^ clave.charCodeAt(i % clave.length));
-  //   }
-  //   return Buffer.from(resultado).toString('hex'); // Convertimos a hexadecimal para mayor longitud
-  // }
+  cifrarId(id: number): string {
+    const claveSecreta = 'Re4ct!v4T¡C';
+    const idConClave = `${id}-${claveSecreta}`;
+    return btoa(idConClave)
+  }
 
-  // descifrarXOR(cifrado: string, clave: string): number {
-  //   const cifradoString = Buffer.from(cifrado, 'hex').toString(); // Convertimos de hexadecimal
-  //   let resultado = '';
-  //   for (let i = 0; i < cifradoString.length; i++) {
-  //     resultado += String.fromCharCode(cifradoString.charCodeAt(i) ^ clave.charCodeAt(i % clave.length));
-  //   }
-  //   return parseInt(resultado, 10);
-  // }
+  descifrarId(cifrado: string): number {
+    const claveSecreta = 'Re4ct!v4T¡C';
+    const decodificado = atob(cifrado);
+    const [id, clave] = decodificado.split('-');
 
+    if (clave === claveSecreta) {
+      return parseInt(id, 10);
+    } else {
+      throw new Error('Clave secreta no coincide');
+    }
+    //return parseInt(atob(cifrado));
+  }
 
 }

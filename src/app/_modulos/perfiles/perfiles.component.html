@@ -51,7 +51,7 @@
                     </button>
                   </div>
                   <div class="col-sm-12 text-center" *ngFor="let _imgUser of imagenUsuario">
-                    <img [src]="sanitizarImagen(_imgUser.data, _imgUser.mimeType)" width="300px" class="rounded-circle icon-usuario" [alt]="_imgUser.filename"/>
+                    <img [src]="sanitizarImagen(_imgUser.data, _imgUser.mimeType)" width="300px" class="icon-usuario" [alt]="_imgUser.filename"/>
                   </div>
                 </div>
               </div>
@@ -244,6 +244,19 @@
                   <div class="row justify-content-center">
                     <div *ngFor="let _imgEmp of imagenEmpresa">
                       <img [src]="sanitizarImagen(_imgEmp.data, _imgEmp.mimeType)" width="300px" class="icon-empresa" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="row justify-content-center">
+                    <h3 class="mt-3">Carousel</h3>
+                    <button class="btn btn-sm btn-outline-info m-3" (click)="fimagenCarousel(cargarimagen)">
+                      <i class="fa fa-image"></i>
+                    </button>
+                  </div>
+                  <div class="row justify-content-center">
+                    <div *ngFor="let _imgCar of imagenCarousel">
+                      <img [src]="sanitizarImagen(_imgCar.data, _imgCar.mimeType)" width="100px" class="icon-empresa" />
                     </div>
                   </div>
                 </div>

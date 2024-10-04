@@ -1,7 +1,7 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { AccesoService } from 'src/app/_aods/acceso.service';
@@ -58,6 +58,7 @@ export class RepresentantesComponent implements OnInit {
   modalRefRep: NgbModalRef;
   modalRefImagen: NgbModalRef;
   modalRefClave: NgbModalRef;
+  modalRefCarnet: NgbModalRef;
 
   formacionMap: { [key: number]: string } = {
     1: 'INICIAL',
@@ -111,6 +112,8 @@ export class RepresentantesComponent implements OnInit {
   maxAttempts: number = 3;
   lockEndTime: number = 0;
   intervalId: any;
+
+  pdfUrl: SafeResourceUrl | null = null;
 
   constructor(
     private _usuariosService: UsuariosService,
@@ -367,8 +370,12 @@ export class RepresentantesComponent implements OnInit {
     const primerNombre = this.formulario.get('primernombre')?.value || '';
     const dip = this.formulario.get('dip')?.value || '';
 
-    const parteUsuario = primerApellido.slice(0, 2) + segundoApellido.slice(0, 2) + primerNombre.slice(0, 2);
-
+    let parteUsuario = '';
+    if (segundoApellido) {
+        parteUsuario = primerApellido.slice(0, 2) + segundoApellido.slice(0, 2) + primerNombre.slice(0, 2);
+    } else {
+        parteUsuario = primerApellido.slice(0, 4) + primerNombre.slice(0, 2);
+    }
     const parteDIP = dip.slice(-3);
 
     const usuario = parteUsuario.toLowerCase() + parteDIP;
@@ -459,10 +466,10 @@ export class RepresentantesComponent implements OnInit {
     );
   }
 
-  fverrep(id: number, content: any) {
+  fverrep(idpersona: number, content: any) {
     this.utilsService.mostrarCargando();
     this.estado = 'Ver';
-    this._usuariosService.datorep(id).subscribe(
+    this._usuariosService.datorep(idpersona).subscribe(
       (data) => {
         this.user = data;
         this.fdescargar('repanverso');
@@ -494,25 +501,19 @@ export class RepresentantesComponent implements OnInit {
             buttonsStyling: false,
           }).then((result) => {
             if (result.isConfirmed) {
-              // Llamar a la ruta correspondiente para generar usuario y clave
-              // this._usuariosService.adicionar(id).subscribe(
-              //   () => {
-              //     swal.fire('Éxito', 'Usuario y clave generados exitosamente', 'success');
-              //     this.toast.success('', 'Usuario y clave generados.');
-              //   },
-              //   (error) => {
-              //     swal.fire('Error', 'Ocurrió un error al generar el usuario y la clave.', 'error');
-              //     this.toast.error('', 'Error al generar usuario y clave.');
-              //   }
-              // );
+              this._personasService.generar({ id: idpersona }).subscribe(
+                (data) => {
+                  swal.fire('Éxito', 'Usuario y clave generados exitosamente', 'success');
+                  this._toast.success('', 'Usuario y clave generados.');
+                },
+                (error) => {
+                  swal.fire('Error', 'Ocurrió un error al generar el usuario y la clave.', 'error');
+                  this._toast.error('', 'Error al generar usuario y clave.');
+                }
+              );
             }
           });
         }
-        // swal.fire({
-        //     icon: 'error',
-        //     title: 'Error',
-        //     text: 'Ocurrió un error al cargar los datos. Por favor, intente nuevamente.'
-        // });
       }
     );
   }
@@ -534,7 +535,7 @@ export class RepresentantesComponent implements OnInit {
     this.dato.dip = this.formulario.value.dip;
     this.dato.complementario = toUpperCaseDefined(this.formulario.value.complementario);
     this.dato.idtipoextension = this.formulario.value.idtipoextension;
-    this.dato.telefono = this.formulario.value.celular;
+    this.dato.telefono = this.formulario.value.telefono;
     this.dato.celular = this.formulario.value.celular;
     this.dato.formacion = this.formulario.value.formacion;
     this.dato.estadocivil = this.formulario.value.estadocivil;
@@ -544,12 +545,14 @@ export class RepresentantesComponent implements OnInit {
 
     if (this.estado === 'Modificar') {
       this.utilsService.mostrarCargando();
+      this.dato.idpersona = this.user.persona?.idpersona;
+
       this._personasService.modificar(this.dato).subscribe((data) => {
         this.fdatos();
         this.modalRefRep.dismiss();
         this.utilsService.cerrarCargando();
         swal.fire('Exito', 'Representante modificado con exito', 'success');
-        this._toast.error('','Operacion exitosa');
+        this._toast.success('','Operacion exitosa');
       });
     } else {
       this.utilsService.mostrarCargando();
@@ -558,7 +561,7 @@ export class RepresentantesComponent implements OnInit {
         this.modalRefRep.dismiss();
         this.utilsService.cerrarCargando();
         swal.fire('Exito', 'Representante registrado con exito', 'success');
-        this._toast.error('','Operacion exitosa');
+        this._toast.success('','Operacion exitosa');
       });
     }
   }
@@ -581,67 +584,104 @@ export class RepresentantesComponent implements OnInit {
   }
 
   feliminar(id: number) {
-    swal.fire({
-      title: '¿Estás seguro?',
-      icon: 'warning',
-      text: 'No podrás revertir el borrado de este dato!',
-      showCancelButton: true,
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Borrar',
-      customClass: {
-        confirmButton: 'btn btn-success rounded-pill mr-3',
-        cancelButton: 'btn btn-secondary rounded-pill',
-      },
-      buttonsStyling: false,
-    }).then((result) => {
-      if (result.value) {
+    this._usuariosService.datorep(id).subscribe(
+      (data) => {
         swal.fire({
-          title: 'Confirmación de clave',
-          html: `
-            <input id="clave-input" class="swal2-input" placeholder="Ingrese su clave" type="password">
-            <div id="intentos-restantes" style="margin-top: 10px;">Intentos restantes: ${this.maxAttempts - this.attempts}</div>
-          `,
+          title: '¿Estás seguro?',
+          icon: 'warning',
+          text: 'No podrás revertir el borrado de este dato!',
           showCancelButton: true,
           cancelButtonText: 'Cancelar',
-          confirmButtonText: 'Confirmar',
+          confirmButtonText: 'Borrar',
           customClass: {
             confirmButton: 'btn btn-success rounded-pill mr-3',
             cancelButton: 'btn btn-secondary rounded-pill',
           },
           buttonsStyling: false,
-          preConfirm: () => {
-            const clave = (document.getElementById('clave-input') as HTMLInputElement).value;
-            if (!clave) {
-              swal.showValidationMessage('Debe ingresar una clave');
-              return false;
-            }
-            return clave;
-          }
-        }).then((claveResult) => {
-          if (claveResult.value) {
-            if (!this.esCargoPasante) {
-              this._usuariosService.eliminarrep(id).subscribe(
-                (data) => {
-                  this.fdatos();
-                },
-                (error) => {
-                  this.attempts++;
-                  if (this.attempts >= this.maxAttempts) {
-                    this._toast.error('Se bloqueron los accesos.','Intentos excedidos.');
-                    this.blockUI();
-                  } else {
-                    this._toast.error('','Clave incorrecta.');
-                    this.feliminar(id);
-                  }
+        }).then((result) => {
+          if (result.value) {
+            swal.fire({
+              title: 'Confirmación de clave',
+              html: `
+                <input id="clave-input" class="swal2-input" placeholder="Ingrese su clave" type="password">
+                <div id="intentos-restantes" style="margin-top: 10px;">Intentos restantes: ${this.maxAttempts - this.attempts}</div>
+              `,
+              showCancelButton: true,
+              cancelButtonText: 'Cancelar',
+              confirmButtonText: 'Confirmar',
+              customClass: {
+                confirmButton: 'btn btn-success rounded-pill mr-3',
+                cancelButton: 'btn btn-secondary rounded-pill',
+              },
+              buttonsStyling: false,
+              preConfirm: () => {
+                const clave = (document.getElementById('clave-input') as HTMLInputElement).value;
+                if (!clave) {
+                  swal.showValidationMessage('Debe ingresar una clave');
+                  return false;
                 }
-              );
-            }else{
-              swal.fire('Error', 'Procedimiento NO autorizado, por favor contacte al Administrador', 'error');
-            }
+                return clave;
+              }
+            }).then((claveResult) => {
+              if (claveResult.value) {
+                if (!this.esCargoPasante) {
+                  this._usuariosService.eliminarrep(id).subscribe(
+                    (data) => {
+                      this.fdatos();
+                      swal.fire('Exito', 'Representante elimnado con exito', 'success');
+                      this._toast.success('','Operacion exitosa');
+                    },
+                    (error) => {
+                      this.attempts++;
+                      if (this.attempts >= this.maxAttempts) {
+                        this._toast.error('Se bloqueron los accesos.','Intentos excedidos.');
+                        this.blockUI();
+                      } else {
+                        this._toast.error('','Clave incorrecta.');
+                        this.feliminar(id);
+                      }
+                    }
+                  );
+                }else{
+                  swal.fire('Error', 'Procedimiento NO autorizado, por favor contacte al Administrador', 'error');
+                }
+              }
+            });
           }
         });
+      },
+      (error) => {
+        if (error.status === 404) {
+          swal.fire('Error en los datos', 'Usuario no encontrado', 'error');
+        }
       }
-    });
+    );
+  }
+
+  fimprimir(id: number, content: any){
+    this._personasService.carnetPDF(id).subscribe(
+      data => {
+        const url = window.URL.createObjectURL(data);
+        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+        this.modalRefCarnet =  this._modalService.open(content, {
+          backdrop: 'static',
+          keyboard: false,
+          size: 'xl'
+        });
+      },
+      error => {
+        const mensaje = error.error?.mensaje || 'Error desconocido. Intenta nuevamente.';
+
+        // Mostramos el SweetAlert con el mensaje de error
+        swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: mensaje,
+          confirmButtonText: 'Aceptar'
+        });
+        this._toast.error('', 'Error desconocido');
+      }
+    );
   }
 
   fcambiarestado(idpersona: number, estado: boolean){
@@ -957,7 +997,7 @@ export class RepresentantesComponent implements OnInit {
           swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
           this._toast.success('', 'Carnet Anverso cambiado.');
           this.fdescargar('repanverso');
-          this._modalService.dismissAll();
+          this.modalRefImagen.dismiss();
           this.archivoSeleccionado = null;
         }
       }, error => {
@@ -974,7 +1014,7 @@ export class RepresentantesComponent implements OnInit {
           swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
           this._toast.success('', 'Carnet Reverso cambiado.');
           this.fdescargar('repreverso');
-          this._modalService.dismissAll();
+          this.modalRefImagen.dismiss();
           this.archivoSeleccionado = null;
         }
       }, error => {

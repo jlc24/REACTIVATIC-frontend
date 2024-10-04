@@ -155,14 +155,14 @@ export class DetalleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.id = this._route.snapshot.params['id'];
+    this.id = this.utilsService.descifrarId(this._route.snapshot.params['id']);
     this.cargando = true;
     this.error = '';
     this.fdato(this.id);
     this.fcantidadcarrito();
     this.imagenActual = this.imagenes[0];
     this.fdescargar(this.id);
-    console.log(this.localusuario);
+    //console.log(this.localusuario);
 
   }
 
@@ -229,7 +229,7 @@ export class DetalleComponent implements OnInit {
 
   selectPrecio(idprecio: number): void {
     this.selectedPrecio = idprecio;
-    console.log(this.selectedPrecio);
+    //console.log(this.selectedPrecio);
 
   }
 
@@ -247,7 +247,7 @@ export class DetalleComponent implements OnInit {
       this.selectedColorName = colorSeleccionado.color;
     }
 
-    console.log(this.selectedColor, this.selectedColorName);
+    //console.log(this.selectedColor, this.selectedColorName);
   }
 
   fmateriales(id: number){
@@ -258,7 +258,7 @@ export class DetalleComponent implements OnInit {
 
   selectMaterial(idmaterial: number): void {
     this.selectedMaterial = idmaterial;
-    console.log(this.selectedMaterial);
+    //console.log(this.selectedMaterial);
   }
 
   ftamanos(id: number){
@@ -272,7 +272,7 @@ export class DetalleComponent implements OnInit {
     if (!(idtamano in this.cantidadesPorTamano)) {
       this.cantidadesPorTamano[idtamano] = 1;
     }
-    console.log(this.selectedTamano + ' ' + this.cantidadesPorTamano[idtamano]);
+    //console.log(this.selectedTamano + ' ' + this.cantidadesPorTamano[idtamano]);
   }
 
   fatributos(id: number){
@@ -347,7 +347,7 @@ export class DetalleComponent implements OnInit {
   mostrarImagen(indice: number) {
     clearInterval(this.intervalo);
     this.imagenActual = this.imagenes[indice];
-    console.log(this.imagenActual.filename);
+    //console.log(this.imagenActual.filename);
 
   }
 
@@ -359,7 +359,7 @@ export class DetalleComponent implements OnInit {
     if (this.imagenes.length > 0) {
       this.imagenActualIndex = (this.imagenActualIndex - 1 + this.imagenes.length) % this.imagenes.length;
       this.imagenActual = this.imagenes[this.imagenActualIndex];
-      console.log(this.imagenActual.filename);
+      //console.log(this.imagenActual.filename);
     }
   }
 
@@ -367,14 +367,14 @@ export class DetalleComponent implements OnInit {
     if (this.imagenes.length > 0) {
       this.imagenActualIndex = (this.imagenActualIndex + 1) % this.imagenes.length;
       this.imagenActual = this.imagenes[this.imagenActualIndex];
-      console.log(this.imagenActual.filename);
+      //console.log(this.imagenActual.filename);
     }
   }
 
   fmas(idtamano: number): void {
     if (idtamano === this.selectedTamano) {
       this.cantidadesPorTamano[idtamano] = (this.cantidadesPorTamano[idtamano] || 1) + 1;
-      console.log(this.selectedTamano + ' ' + this.cantidadesPorTamano[idtamano]);
+      //console.log(this.selectedTamano + ' ' + this.cantidadesPorTamano[idtamano]);
       this.cantProd = this.cantidadesPorTamano[idtamano];
     }
   }
@@ -384,7 +384,7 @@ export class DetalleComponent implements OnInit {
 
     if (idtamano === this.selectedTamano) {
       this.cantidadesPorTamano[idtamano] = input ? parseInt(input, 10) : 0;
-      console.log(this.selectedTamano + ' ' + this.cantidadesPorTamano[idtamano]);
+      //console.log(this.selectedTamano + ' ' + this.cantidadesPorTamano[idtamano]);
       this.cantProd = this.cantidadesPorTamano[idtamano];
     }
     event.target.value = this.cantidadesPorTamano[idtamano];
@@ -393,7 +393,7 @@ export class DetalleComponent implements OnInit {
   fmenos(idtamano: number): void {
     if (idtamano === this.selectedTamano) {
       this.cantidadesPorTamano[idtamano] = Math.max((this.cantidadesPorTamano[idtamano] || 1) - 1, 0);
-      console.log(this.selectedTamano + ' ' + this.cantidadesPorTamano[idtamano]);
+      //console.log(this.selectedTamano + ' ' + this.cantidadesPorTamano[idtamano]);
       this.cantProd = this.cantidadesPorTamano[idtamano];
     }
   }
@@ -410,7 +410,7 @@ export class DetalleComponent implements OnInit {
     nuevoproducto.idtamano = this.selectedTamano;
     nuevoproducto.cantidad = this.cantProd;
 
-    console.log(nuevoproducto);
+    //console.log(nuevoproducto);
 
     Swal.fire({
       title: '¿Estás seguro?',

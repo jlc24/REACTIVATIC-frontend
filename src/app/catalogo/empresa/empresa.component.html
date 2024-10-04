@@ -113,17 +113,17 @@
         <i class="bi bi-cart" *ngIf="cantidadcarrito == null"></i>
         <span class="toolbar-cart" *ngIf="cantidadcarrito > 0">x{{ cantidadcarrito }}</span>
       </div>
-      <span class="d-none d-sm-inline nombre">Mi Carrito</span>
+      <span class="d-none d-sm-inline nombre"></span>
     </div>
 
     <!-- Iniciar Sesión o Bienvenida -->
     <div *ngIf="localusuario == '' || localusuario == null" class="toolbar-item puntero" (click)="faccesom(accesom)" title="Iniciar Sesión">
       <i class="bi bi-person-fill"></i>
-      <span class="d-none d-sm-inline nombre">Iniciar Sesión</span>
+      <span class="d-none d-sm-inline nombre"></span>
     </div>
     <div *ngIf="localusuario == '' || localusuario == null" class="toolbar-item puntero" (click)="fregistrar(registrar)" title="Registrarse" hidden>
       <i class="bi bi-person-fill-add"></i>
-      <span class="d-none d-sm-inline nombre">Registro</span>
+      <span class="d-none d-sm-inline nombre"></span>
     </div>
 
     <div *ngIf="localusuario" class="toolbar-item puntero" title="Bienvenido">
@@ -134,7 +134,7 @@
     <!-- Cerrar Sesión -->
     <div *ngIf="localusuario" class="toolbar-item puntero" (click)="fsalir()" title="Cerrar Sesión">
       <i class="bi bi-box-arrow-right"></i>
-      <span class="d-none d-sm-inline nombre">Cerrar Sesión</span>
+      <span class="d-none d-sm-inline nombre"></span>
     </div>
   </div>
 </div>
@@ -151,12 +151,12 @@
     </div>
   </div>
   <div class="row m-1">
-    <div class="col-12 alert alert-info py-3 px-4 d-flex justify-content-end align-items-center">
+    <div class="col-12 alert alert-info py-3 px-4 d-flex justify-content-first align-items-center">
       <span (click)="finicio()" class="back-link puntero d-flex align-items-center">
         <i class="bi bi-border-style back-icon"></i>
         <span class="ml-2">Catálogo</span>
       </span>
-      <span class="current-page">/empresa</span>
+      <span class="current-page">/Empresa</span>
     </div>
   </div>
   <div *ngIf="cargando  && !error" class="text-center my-5">
@@ -177,6 +177,141 @@
     <div class="error-texto">
       <h5 class="text-danger" [innerHTML]="error"></h5>
     </div>
+  </div>
+  <div class="col-sm-12" *ngIf="!cargando && !error">
+    <div class="row align-items-center justify-content-center text-md-left">
+      <!-- Columna del logo -->
+      <div class="col-md-4 text-center">
+        <div *ngFor="let _imgEmp of imagenEmpresa">
+          <img [src]="sanitizarImagen(_imgEmp.data, _imgEmp.mimeType)" width="200px" class="icon-empresa" />
+        </div>
+      </div>
+      <div class="col-md-8 bg-light" >
+        <h1 class="empresa-nombre">{{ empresa?.empresa || empresa?.razonsocial || 'Nombre de la Empresa' }}</h1>
+        <p class="empresa-servicio">{{ empresa?.servicios || 'Descripción del servicio' }}</p>
+      </div>
+    </div>
+
+    <div class="row contacto-info mt-4 justify-content-center bg-success">
+      <div class="col-sm-4 text-center">
+        <i class="bi bi-telephone-fill contacto-icono mr-2"></i>
+        <span class="contacto-texto">{{ empresa?.telefono || empresa?.celular || 'Teléfono no disponible' }}</span>
+      </div>
+      <div class="col-sm-4 text-center">
+        <i class="bi bi-envelope-fill contacto-icono mr-2"></i>
+        <span class="contacto-texto">{{ empresa?.correo || 'Correo no disponible' }}</span>
+      </div>
+      <div class="col-sm-4 text-center">
+        <i class="bi bi-globe contacto-icono mr-2"></i>
+        <span *ngIf="empresa?.paginaweb" class="contacto-texto"><a [href]="empresa.paginaweb" target="_blank">{{ empresa.paginaweb }}</a></span>
+        <span *ngIf="!empresa?.paginaweb" class="contacto-texto">Página web no disponible</span>
+      </div>
+    </div>
+
+    <div id="carouselExample" class="carousel slide mt-5" data-ride="carousel" data-interval="3000">
+      <div class="carousel-inner">
+        <div *ngFor="let imagen of imagenCarousel; let i = index"
+             class="carousel-item"
+             [ngClass]="{'active': i === 0}">
+          <img [src]="sanitizarImagen(imagen.data, imagen.mimeType)"
+               class="d-block w-100"
+               alt="Imagen de la empresa">
+        </div>
+      </div>
+    </div>
+
+    <div class="empresa-descripcion text-justify my-4">
+      <p class="descripcion-texto">{{ empresa?.descripcion || 'Esta es una descripción detallada de la empresa...' }}</p>
+    </div>
+
+    <div class="benefits-section my-5">
+      <div class="row text-center">
+        <div class="col-md-3 benefit-item">
+          <div class="icon-circle">
+            <i class="bi bi-hand-thumbs-up-fill benefit-icon"></i>
+          </div>
+          <h5 class="benefit-title">EMPRESA CONFIABLE</h5>
+          <p class="benefit-desc">Tienes la seguridad en cada transacción</p>
+        </div>
+        <div class="col-md-3 benefit-item">
+          <div class="icon-circle">
+            <i class="bi bi-clock-fill benefit-icon"></i>
+          </div>
+          <h5 class="benefit-title">ENTREGA RÁPIDA</h5>
+          <p class="benefit-desc">Delivery, Courier </p>
+        </div>
+        <div class="col-md-3 benefit-item">
+          <div class="icon-circle">
+            <i class="bi bi-headset benefit-icon"></i>
+          </div>
+          <h5 class="benefit-title">SOPORTE 24/7</h5>
+          <p class="benefit-desc">Siempre a tu servicio</p>
+        </div>
+        <div class="col-md-3 benefit-item">
+          <div class="icon-circle">
+            <i class="bi bi-wallet-fill benefit-icon"></i>
+          </div>
+          <h5 class="benefit-title">MÉTODO DE PAGO</h5>
+          <p class="benefit-desc">Transferencia, QR</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="productos-empresa m-2">
+      <div class="product-title">Productos</div>
+      <div class="row p-3">
+        <div class="col-sm-6 col-lg-3" *ngFor="let _item of productos; let i = index">
+          <div class="card product-card mb-4">
+            <div class="card-header p-0 position-relative">
+              <img [src]="ruta+_item.idproducto+'/'" class="card-img-top product-image border" alt="Nombre del Producto" id="imagenProducto">
+              <img src="assets/imagenes/logo.png" class="overlay-image" alt="Imagen sobrepuesta">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title product-name puntero" (click)="fdetalle(_item.idproducto)" title="{{ _item.producto }}">{{ _item.producto }}</h5>
+              <p class="card-text product-description">
+                {{ _item.descripcion }}
+              </p>
+              <div class="product-price font-weight-bold text-left">Bs. {{
+                (_item.minPrecio === _item.maxPrecio)
+                ? (_item.minPrecio | number:'1.2-2')
+                : ((_item.minPrecio | number:'1.2-2') + ' - Bs. ' + (_item.maxPrecio | number:'1.2-2'))
+                }}
+              </div>
+              <div class="d-flex justify-content-end text-right mt-2">
+                <button class="btn btn-sm btn-outline-custom add-to-cart-btn rounded-pill" (click)="fadicionar(_item, 1)">
+                  <i class="bi bi-cart-plus"></i> Agregar al Carrito
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Paginación de Productos -->
+      <div class="row mt-3">
+        <div class="col-sm-12">
+          <ngb-pagination
+            class="d-flex justify-content-center pagination-rounded"
+            [collectionSize]="total"
+            [(page)]="pagina"
+            [maxSize]="maxSize"
+            [pageSize]="12"
+            [rotate]="false"
+            [ellipses]="false"
+            [boundaryLinks]="true"
+            (pageChange)="mostrarMas($event)"
+          ></ngb-pagination>
+        </div>
+      </div>
+      <div *ngIf="productos.length === 0" class="text-center my-5">
+        <div class="error-icon mb-3">
+          <i class="bi bi-search text-muted" style="font-size: 4rem;"></i>
+        </div>
+        <div class="error-texto">
+          <h5 class="text-muted">Esta empresa no tiene productos en este momento.</h5>
+        </div>
+      </div>
+    </div><br>
+    <!-- Direccion -->
   </div>
 </div>
 <div class="container-lg bg-white">

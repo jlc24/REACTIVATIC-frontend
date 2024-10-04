@@ -103,17 +103,17 @@
         <i class="bi bi-cart" *ngIf="cantidadcarrito == null"></i>
         <span class="toolbar-cart" *ngIf="cantidadcarrito > 0">x{{ cantidadcarrito }}</span>
       </div>
-      <span class="d-none d-sm-inline nombre">Mi Carrito</span>
+      <span class="d-none d-sm-inline nombre"></span>
     </div>
 
     <!-- Iniciar Sesión o Bienvenida -->
     <div *ngIf="localusuario == '' || localusuario == null" class="toolbar-item puntero" (click)="faccesom(accesom)" title="Iniciar Sesión">
       <i class="bi bi-person-fill"></i>
-      <span class="d-none d-sm-inline nombre">Iniciar Sesión</span>
+      <span class="d-none d-sm-inline nombre"></span>
     </div>
     <div *ngIf="localusuario == '' || localusuario == null" class="toolbar-item puntero" (click)="fregistrar(registrar)" title="Registrarse" hidden>
       <i class="bi bi-person-fill-add"></i>
-      <span class="d-none d-sm-inline nombre">Registro</span>
+      <span class="d-none d-sm-inline nombre"></span>
     </div>
 
     <div *ngIf="localusuario" class="toolbar-item puntero" title="Bienvenido">
@@ -124,7 +124,7 @@
     <!-- Cerrar Sesión -->
     <div *ngIf="localusuario" class="toolbar-item puntero" (click)="fsalir()" title="Cerrar Sesión">
       <i class="bi bi-box-arrow-right"></i>
-      <span class="d-none d-sm-inline nombre">Cerrar Sesión</span>
+      <span class="d-none d-sm-inline nombre"></span>
     </div>
   </div>
 </div>
@@ -140,20 +140,20 @@
     </div>
   </div>
   <div class="row m-1">
-    <div class="col-12 alert alert-info py-3 px-4 d-flex justify-content-end align-items-center">
+    <div class="col-12 alert alert-info py-3 px-4 d-flex justify-content-first align-items-center">
       <span (click)="finicio()" class="back-link puntero d-flex align-items-center">
         <i class="bi bi-border-style back-icon"></i>
         <span class="ml-2">Catálogo</span>
       </span>
-      <span class="current-page">/producto</span>
+      <span class="current-page">/Producto</span>
     </div>
   </div>
   <div *ngIf="cargando  && !error" class="text-center my-5">
     <div class="spinner-border spinner-large mb-3" role="status">
-      <span class="sr-only">Cargando datos de Producto ...</span>
+      <span class="sr-only">Cargando datos del Producto ...</span>
     </div>
     <div class="mt-3 cargando-texto">
-      <span class="">Cargando datos de Empresa</span>
+      <span class="">Cargando datos del Producto</span>
       <span class="dot-one mt-2"><i class="bi bi-circle-fill"></i></span>
       <span class="dot-two mt-2"><i class="bi bi-circle-fill"></i></span>
       <span class="dot-three mt-2"><i class="bi bi-circle-fill"></i></span>
@@ -187,6 +187,7 @@
             <i class="bi bi-chevron-left"></i>
           </button>
           <img *ngIf="imagenActual" [src]="imagenActual.data" class="imagen-grande" width="auto" />
+          <img src="assets/imagenes/logo.png" class="overlay-image" alt="Imagen sobrepuesta">
           <button class="btn btn-arrow-right" (click)="desplazarDerecha()">
             <i class="bi bi-chevron-right"></i>
           </button>
