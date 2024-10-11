@@ -36,6 +36,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { UtilsService } from 'src/app/_aods/utils.service';
 import { switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-empresas',
@@ -209,7 +210,8 @@ export class EmpresasComponent implements OnInit {
     private toast: ToastrService,
     private _mensajes: ToastrService,
     private sanitizer: DomSanitizer,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -557,11 +559,19 @@ export class EmpresasComponent implements OnInit {
     }else{
       this.rubro = ''
     }
-    this._empresasService.datos(this.pagina, this.cantidad, this.buscar, this.rubro).subscribe((data) => {
-      this.fcantidad();
-      this.datos = data;
-      this.utilsService.cerrarCargando();
-    });
+    this._empresasService.datos(this.pagina, this.cantidad, this.buscar, this.rubro).subscribe(
+      (data) => {
+        this.fcantidad();
+        this.datos = data;
+        this.utilsService.cerrarCargando();
+      },
+      (error) => {
+        swal.fire('Error', error, 'error');
+        this.toast.error('Error en la carga de datos', 'Error');
+        this.utilsService.cerrarCargando();
+        this.router.navigate(['/acceso']);
+      }
+    );
   }
 
   limpiar() {
@@ -754,7 +764,7 @@ export class EmpresasComponent implements OnInit {
       fechareg: [
         dato.fechareg,
         [
-          //Validators.required,
+          Validators.required,
         ]
       ],
       empresa: [
@@ -1269,6 +1279,7 @@ export class EmpresasComponent implements OnInit {
         this.fdatos();
         swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
         this.modalRefPersona.dismiss();
+        this.archivoSeleccionado = null;
       }
     }, error => {
       swal.close();

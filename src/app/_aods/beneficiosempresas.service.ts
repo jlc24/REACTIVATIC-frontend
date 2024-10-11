@@ -80,5 +80,25 @@ export class BeneficiosempresasService {
     );
   }
 
+  planillaReg(id: number) {
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN))
+      .access_token;
+    return this._httpClient.get(`${this.ruta}/planillaregistro/${id}`, {
+      responseType: "blob",
+      headers: new HttpHeaders()
+        .set("Authorization", `bearer ${access_token}`)
+        .set("Content-Type", "application/json")
+    });
+  }
+  planillaInsc(id: number) {
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN))
+      .access_token;
+    return this._httpClient.get(`${this.ruta}/planillainscripcion/${id}`, {
+      responseType: "blob",
+      headers: new HttpHeaders()
+        .set("Authorization", `bearer ${access_token}`)
+        .set("Content-Type", "application/json")
+    });
+  }
 
 }

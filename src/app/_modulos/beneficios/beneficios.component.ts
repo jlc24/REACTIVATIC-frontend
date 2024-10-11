@@ -1,7 +1,7 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { AccesoService } from 'src/app/_aods/acceso.service';
@@ -47,6 +47,7 @@ export class BeneficiosComponent implements OnInit {
   buscar: string = '';
   total: number = 0;
   estado: string = '';
+  estadotipo: string = '';
 
   paginaRep: number = 1;
   numPaginasRep: number = 0;
@@ -65,6 +66,7 @@ export class BeneficiosComponent implements OnInit {
 
   modalRefBeneficio: NgbModalRef;
   modalRefImagen: NgbModalRef;
+  modalRefPlanilla: NgbModalRef;
 
   convocatoria: any[];
   afiche: any[];
@@ -89,6 +91,7 @@ export class BeneficiosComponent implements OnInit {
   esCargoMarketing: boolean = false;
   esCapacitador: boolean = false;
 
+  pdfUrl: SafeResourceUrl | null = null;
 
   constructor(
     private _accesoService: AccesoService,
@@ -644,6 +647,117 @@ export class BeneficiosComponent implements OnInit {
         size: 'lg'
       });
     });
+  }
+
+  fplanilla(id: number, tipo: string, content: any){
+    this.estadotipo = tipo;
+
+    if (this.estadotipo == 'Registro') {
+      this._beneficiosempresasService.planillaReg(id).subscribe(
+        data => {
+          const url = window.URL.createObjectURL(data);
+          this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+          this.modalRefPlanilla =  this._modalService.open(content, {
+            backdrop: 'static',
+            keyboard: false,
+            size: 'xl'
+          });
+        },
+        error => {
+          const mensaje = error.error?.mensaje || 'Error desconocido. Intenta nuevamente.';
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: mensaje,
+            confirmButtonText: 'Aceptar'
+          });
+          this._toast.error('', 'Error desconocido');
+        }
+      );
+    }
+    if (this.estadotipo == 'Inscripcion') {
+      this._beneficiosempresasService.planillaInsc(id).subscribe(
+        data => {
+          const url = window.URL.createObjectURL(data);
+          this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+          this.modalRefPlanilla =  this._modalService.open(content, {
+            backdrop: 'static',
+            keyboard: false,
+            size: 'xl'
+          });
+        },
+        error => {
+          const mensaje = error.error?.mensaje || 'Error desconocido. Intenta nuevamente.';
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: mensaje,
+            confirmButtonText: 'Aceptar'
+          });
+          this._toast.error('', 'Error desconocido');
+        }
+      );
+    }
+    if (this.estadotipo == 'Asistencia') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'El beneficio no tiene asistencias generadas, debe generar Asistencia.',
+        confirmButtonText: 'Aceptar'
+      });
+      this._toast.error('', 'Error desconocido');
+      // this._beneficiosempresasService.planillaInsc(id).subscribe(
+      //   data => {
+      //     const url = window.URL.createObjectURL(data);
+      //     this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      //     this.modalRefPlanilla =  this._modalService.open(content, {
+      //       backdrop: 'static',
+      //       keyboard: false,
+      //       size: 'xl'
+      //     });
+      //   },
+      //   error => {
+      //     const mensaje = error.error?.mensaje || 'Error desconocido. Intenta nuevamente.';
+      //     Swal.fire({
+      //       icon: 'error',
+      //       title: 'Oops...',
+      //       text: mensaje,
+      //       confirmButtonText: 'Aceptar'
+      //     });
+      //     this._toast.error('', 'Error desconocido');
+      //   }
+      // );
+    }
+    if (this.estadotipo == 'Evaluacion') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'El beneficio no tiene evaluaciones generadas, debe generar Evaluación.',
+        confirmButtonText: 'Aceptar'
+      });
+      this._toast.error('', 'Error desconocido');
+      // this._beneficiosempresasService.planillaInsc(id).subscribe(
+      //   data => {
+      //     const url = window.URL.createObjectURL(data);
+      //     this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      //     this.modalRefPlanilla =  this._modalService.open(content, {
+      //       backdrop: 'static',
+      //       keyboard: false,
+      //       size: 'xl'
+      //     });
+      //   },
+      //   error => {
+      //     const mensaje = error.error?.mensaje || 'Error desconocido. Intenta nuevamente.';
+      //     Swal.fire({
+      //       icon: 'error',
+      //       title: 'Oops...',
+      //       text: mensaje,
+      //       confirmButtonText: 'Aceptar'
+      //     });
+      //     this._toast.error('', 'Error desconocido');
+      //   }
+      // );
+    }
   }
 
 }
