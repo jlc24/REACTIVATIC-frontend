@@ -27,9 +27,9 @@ export class RepresentantesService {
     });
   }
 
-  datosl(pagina: number, cantidad: number, buscar: string): Observable<Representantes[]> {
+  datosl(pagina: number, cantidad: number, buscar: string, beneficio: number): Observable<Representantes[]> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
-    return this._httpClient.get<Representantes[]>(`${this.ruta}/l?pagina=${pagina}&cantidad=${cantidad}&buscar=${buscar}`, {
+    return this._httpClient.get<Representantes[]>(`${this.ruta}/l?pagina=${pagina}&cantidad=${cantidad}&buscar=${buscar}&beneficio=${beneficio}`, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
   }

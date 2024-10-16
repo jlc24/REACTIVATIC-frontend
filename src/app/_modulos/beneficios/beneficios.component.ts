@@ -363,6 +363,7 @@ export class BeneficiosComponent implements OnInit {
 
   fcancelar(){
     this.modalRefBeneficio.dismiss();
+    this.limpiarRep();
   }
 
   fcancelarImagen(){
@@ -547,7 +548,7 @@ export class BeneficiosComponent implements OnInit {
   }
 
   frepresentantes(){
-    this._representantesService.datosl(this.paginaRep, this.cantidadRep, this.buscarRep).subscribe((data) => {
+    this._representantesService.datosl(this.paginaRep, this.cantidadRep, this.buscarRep, this.beneficio.idbeneficio).subscribe((data) => {
       this.representantes = data;
       this.fcantidaddatosl();
     });

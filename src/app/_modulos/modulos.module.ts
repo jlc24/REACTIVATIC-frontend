@@ -44,12 +44,13 @@ import { ExtensionesComponent } from './extensiones/extensiones.component';
 import { GenerosComponent } from './generos/generos.component';
 import { RolesComponent } from './roles/roles.component';
 import { CargosComponent } from './cargos/cargos.component';
+import { ReporteunidadesComponent } from './reporteunidades/reporteunidades.component';
 
 
 
 
 @NgModule({
-  declarations: [EscritorioComponent, PerfilesComponent, ConfiguracionesComponent, E401Component, RubrosComponent, MunicipiosComponent, LocalidadesComponent, SubrubrosComponent, AsociacionesComponent, UsuariosComponent, EmpresasComponent, RepresentantesComponent, ProductosComponent, SolicitudesventaComponent, SolicitudescompraComponent, ReportesComponent, SeguimientosComponent, ClientesnoregistradosComponent, ClientesregistradosComponent, ProductosmasvendidosComponent, ClientesconmascomprasComponent, EmpresasmassolicitadasComponent, CategoriaComponent, BeneficiosComponent, ColoresComponent, ComentariosComponent, MaterialesComponent, OfertasComponent, PreciosComponent, TamanosComponent, DocumentosComponent, EnlacesComponent, ExtensionesComponent, GenerosComponent, RolesComponent, CargosComponent],
+  declarations: [EscritorioComponent, PerfilesComponent, ConfiguracionesComponent, E401Component, RubrosComponent, MunicipiosComponent, LocalidadesComponent, SubrubrosComponent, AsociacionesComponent, UsuariosComponent, EmpresasComponent, RepresentantesComponent, ProductosComponent, SolicitudesventaComponent, SolicitudescompraComponent, ReportesComponent, SeguimientosComponent, ClientesnoregistradosComponent, ClientesregistradosComponent, ProductosmasvendidosComponent, ClientesconmascomprasComponent, EmpresasmassolicitadasComponent, CategoriaComponent, BeneficiosComponent, ColoresComponent, ComentariosComponent, MaterialesComponent, OfertasComponent, PreciosComponent, TamanosComponent, DocumentosComponent, EnlacesComponent, ExtensionesComponent, GenerosComponent, RolesComponent, CargosComponent, ReporteunidadesComponent],
   imports: [
     CommonModule,
     ModulosRoutingModule,

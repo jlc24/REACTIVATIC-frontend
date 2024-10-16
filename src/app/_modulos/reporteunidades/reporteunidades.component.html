@@ -1,0 +1,147 @@
+<app-cabeceratitulos [titulo]="'Reportes'" [descripcion]="'Lista de representantes'" [icono]="'file'" [opcion]="'Reporte Unidades Productivas'">
+</app-cabeceratitulos>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+      <div class="card-header" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
+        <h4 class="text-white">Reporte de Unidades Productivas registradas</h4>
+      </div>
+      <div class="card-body">
+        <div class="row justify-content-end">
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" data-boundary="viewport" aria-expanded="false">
+              Generar Reporte <i class="bi bi-list"></i>
+            </button>
+            <div class="dropdown-menu">
+              <div class="dropdown-item puntero" (click)="fdatoPDF()"><i class="bi bi-filetype-pdf text-primary"></i> Reporte PDF</div>
+              <div class="dropdown-item puntero" (click)="fdatoXLS()"><i class="bi bi-filetype-xlsx text-success"></i> Reporte EXCEL</div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 col-sm-12">
+            <div class="row ml-1">
+              <h4>Seleccionar Columnas:</h4>
+            </div>
+            <div class="row justify-content-center">
+              <div class="col-lg-6 col-sm-12 mb-3 border">
+                <h5 class="mb-3">Representante</h5>
+                <div class="row justify-content-center">
+                  <div class="col-md-6 col-sm-10">
+                    <div class="form-check mb-3">
+                      <input class="form-check-input" type="checkbox" id="selectAllRep" [checked]="allSelectedRep" (change)="toggleAllSelectionsRep($event)">
+                      <label class="form-check-label" for="selectAllRep">
+                        Seleccionar todas
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-10">
+                    <div class="d-flex flex-wrap">
+                      <div class="form-check mr-3 mb-2" *ngFor="let option of optionsRep">
+                        <input class="form-check-input" type="checkbox" [id]="option.id" [(ngModel)]="option.selected" (change)="checkIfAllSelectedRep()">
+                        <label class="form-check-label" [for]="option.id">
+                          {{ option.label }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 col-sm-12 border">
+                <h5 class="mb-3">Unidad Productiva</h5>
+                <div class="row justify-content-center">
+                  <div class="col-md-6 col-sm-10">
+                    <div class="form-check mr-3 mb-2">
+                      <input class="form-check-input" type="checkbox" id="selectAllEmp" [checked]="allSelectedEmp" (change)="toggleAllSelectionsEmp($event)">
+                      <label class="form-check-label" for="selectAllEmp">
+                        Seleccionar todas
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-10">
+                    <div class="form-check mr-3 mb-2" *ngFor="let option of optionsEmp">
+                      <input class="form-check-input" type="checkbox" [id]="option.id" [(ngModel)]="option.selected" (change)="checkIfAllSelectedEmp()">
+                      <label class="form-check-label" [for]="option.id">
+                        {{ option.label }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-sm-12">
+            <div class="row ml-3">
+              <h4>Seleccionar Datos:</h4>
+            </div>
+            <div class="row justify-content-center">
+              <div class="col-sm-5 border">
+                <div class="col-sm-12">
+                  <div class="form-group mb-2">
+                    <label for="municipios">Municipio</label>
+                    <select class="form-control" id="municipios" [(ngModel)]="selectedMunicipio">
+                      <option value="allM">Todos los Municipios</option>
+                      <option *ngFor="let _mun of municipios" [value]="_mun.idmunicipio">{{ _mun.municipio }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="form-group mb-2">
+                    <label for="rubros">Rubro</label>
+                    <select class="form-control" id="rubros" [(ngModel)]="selectedRubro">
+                      <option value="allR">Todos los Rubros</option>
+                      <option *ngFor="let _rub of rubros" [value]="_rub.idrubro">{{ _rub.rubro }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="form-group mb-2">
+                    <label for="registro">Año de Registro</label>
+                    <select class="form-control" id="registro" [(ngModel)]="selectedFecharegistro">
+                      <option value="allReg">Todas los años</option>
+                      <option *ngFor="let _year of fechaRegistro" [value]="_year.entidad">{{ _year.entidad }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="form-group mb-2">
+                    <label for="orden">Orden</label>
+                    <select class="form-control" id="orden" [(ngModel)]="selectedOrden">
+                      <option value="e.fechareg">Año de Registro</option>
+                      <option value="e.empresa">Empresas</option>
+                      <option value="m.idmunicipio">Municipios</option>
+                      <option value="r.idrubro">Rubros</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="form-group mb-2">
+                    <label for="forma">Direccion</label>
+                    <select class="form-control" id="forma" [(ngModel)]="selectedDireccion">
+                      <option value="DESC">Descendente</option>
+                      <option value="ASC">Ascendente</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="row justify-content-end">
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" data-boundary="viewport" aria-expanded="false">
+              Generar Reporte <i class="bi bi-list"></i>
+            </button>
+            <div class="dropdown-menu">
+              <div class="dropdown-item puntero" (click)="fdatoPDF()"><i class="bi bi-filetype-pdf text-primary"></i> Reporte PDF</div>
+              <div class="dropdown-item puntero" (click)="fdatoXLS()"><i class="bi bi-filetype-xlsx text-success"></i> Reporte EXCEL</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

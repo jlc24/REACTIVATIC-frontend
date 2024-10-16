@@ -1376,16 +1376,16 @@ export class EmpresasComponent implements OnInit {
   }
 
   fdatosXLS() {
-    this._empresasService.datosXLS(this.buscar).subscribe(data => {
-      const url = window.URL.createObjectURL(data);
-      const a = document.createElement("a");
-      a.setAttribute("style", "display:none;");
-      document.body.appendChild(a);
-      a.href = url;
-      a.download = "datos.xlsx";
-      a.click();
-      return url;
-    });
+    // this._empresasService.datosXLS(this.buscar).subscribe(data => {
+    //   const url = window.URL.createObjectURL(data);
+    //   const a = document.createElement("a");
+    //   a.setAttribute("style", "display:none;");
+    //   document.body.appendChild(a);
+    //   a.href = url;
+    //   a.download = "datos.xlsx";
+    //   a.click();
+    //   return url;
+    // });
   }
 
   fdatosPDF() {

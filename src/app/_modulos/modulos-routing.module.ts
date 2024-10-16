@@ -31,6 +31,7 @@ import { PreciosComponent } from './precios/precios.component';
 import { TamanosComponent } from './tamanos/tamanos.component';
 import { CategoriaComponent } from './categoria/categoria.component';
 import { CargosComponent } from './cargos/cargos.component';
+import { ReporteunidadesComponent } from './reporteunidades/reporteunidades.component';
 
 const routes: Routes = [
   {
@@ -168,6 +169,14 @@ const routes: Routes = [
   {
     path: 'beneficios',
     component: BeneficiosComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
+    path: 'reporteunidades',
+    component: ReporteunidadesComponent,
     canActivate: [GuardianGuard],
     data: {
       rol: 'ROLE_TODOS'

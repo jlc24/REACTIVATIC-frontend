@@ -99,13 +99,36 @@ export class EmpresasService {
     });
   }
 
-  datosXLS(buscar: string) {
-    const access_token = JSON.parse(sessionStorage.getItem(TOKEN))
-      .access_token;
-    return this._httpClient.get(`${this.ruta}/datosXLS?&buscar=${buscar}`, {
+  datosXLS(
+    columnsemp: string[],
+    columnsrub: string[],
+    columnsmun: string[],
+    columnsrep: string[],
+    columnsper: string[],
+    municipio: string,
+    rubro: string,
+    fecharegistro: string,
+    orden: string,
+    direccion: string
+  ):Observable <Blob> {
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    const queryParams = new URLSearchParams({
+      columnsemp: columnsemp.join(','),
+      columnsrub: columnsrub.join(','),
+      columnsmun: columnsmun.join(','),
+      columnsrep: columnsrep.join(','),
+      columnsper: columnsper.join(','),
+      municipio,
+      rubro,
+      fecharegistro,
+      orden,
+      direccion
+    }).toString();
+
+    return this._httpClient.get(`${this.ruta}/reporteXLS?${queryParams}`, {
       responseType: "blob",
       headers: new HttpHeaders()
-        .set("Authorization", `bearer ${access_token}`)
+        .set("Authorization", `Bearer ${access_token}`)
         .set("Content-Type", "application/json")
     });
   }
