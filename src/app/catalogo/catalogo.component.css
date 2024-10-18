@@ -576,7 +576,7 @@ p {
 .toolbar {
   position: fixed;
   left: 0;
-  top: 30%;
+  top: 40%;
   transform: translateY(-50%);
   width: 60px;
   background-color: #FF5919;

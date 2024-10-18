@@ -19,6 +19,13 @@ export class BeneficiosService {
     private toast: ToastrService
   ) { }
 
+  lista(): Observable<Beneficios[]> {
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Beneficios[]>(`${this.ruta}/l`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+
   datos(pagina: number, cantidad: number, buscar: string, rol: string): Observable<Beneficios[]>{
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
     return this._httpClient.get<Beneficios[]>(`${this.ruta}?pagina=${pagina}&cantidad=${cantidad}&buscar=${buscar}&rol=${rol}`, {

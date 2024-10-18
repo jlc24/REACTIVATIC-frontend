@@ -32,6 +32,7 @@ import { TamanosComponent } from './tamanos/tamanos.component';
 import { CategoriaComponent } from './categoria/categoria.component';
 import { CargosComponent } from './cargos/cargos.component';
 import { ReporteunidadesComponent } from './reporteunidades/reporteunidades.component';
+import { ReportebeneficiosComponent } from './reportebeneficios/reportebeneficios.component';
 
 const routes: Routes = [
   {
@@ -177,6 +178,14 @@ const routes: Routes = [
   {
     path: 'reporteunidades',
     component: ReporteunidadesComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
+    path: 'reportebeneficios',
+    component: ReportebeneficiosComponent,
     canActivate: [GuardianGuard],
     data: {
       rol: 'ROLE_TODOS'

@@ -1,0 +1,26 @@
+<app-cabeceratitulos [titulo]="'Reportes'" [descripcion]="'Lista de representantes'" [icono]="'file'" [opcion]="'Reporte Beneficios'">
+</app-cabeceratitulos>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+      <div class="card-header" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
+        <h4 class="text-white">Reporte de Beneficios registrados</h4>
+      </div>
+      <div class="card-body">
+        <div class="row justify-content-end">
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" data-boundary="viewport" aria-expanded="false">
+              Generar Reporte <i class="bi bi-list"></i>
+            </button>
+            <div class="dropdown-menu">
+              <div class="dropdown-item puntero" ><i class="bi bi-filetype-pdf text-primary"></i> Reporte PDF</div>
+              <div class="dropdown-item puntero" ><i class="bi bi-filetype-xlsx text-success"></i> Reporte EXCEL</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
