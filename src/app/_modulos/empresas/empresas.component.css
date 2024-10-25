@@ -179,3 +179,27 @@
   border-radius: 10px;
   border: solid 2px #0000004f;
 }
+
+.benefit-card {
+  border: 1px solid #0000004f;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  background-color: #fff;
+}
+
+.benefit-header {
+  font-size: 1.1em;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.benefit-details p {
+  margin: 4px 0;
+  font-size: 0.95em;
+  color: #555;
+}
+
+.benefit-details strong {
+  color: #222;
+}

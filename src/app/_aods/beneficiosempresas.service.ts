@@ -24,6 +24,13 @@ export class BeneficiosempresasService {
     });
   }
 
+  datosl(id: number): Observable<Beneficiosempresas[]>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Beneficiosempresas[]>(`${this.ruta}/l/${id}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+
   cantidadbeneficio(buscar: string, beneficio: number): Observable<number>{
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
     return this._httpClient.get<number>(`${this.ruta}/cantidad?buscar=${buscar}&beneficio=${beneficio}`, {
@@ -57,6 +64,20 @@ export class BeneficiosempresasService {
         return throwError(e);
       })
     );
+  }
+
+  beneficios(buscar: string, empresa: number): Observable<Beneficiosempresas[]>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Beneficiosempresas[]>(`${this.ruta}/beneficios?buscar=${buscar}&empresa=${empresa}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+
+  cantidadbe(buscar: string, empresa: number): Observable<number>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<number>(`${this.ruta}/beneficios/cantidad?buscar=${buscar}&empresa=${empresa}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
   }
 
   eliminar(dato: Beneficiosempresas): Observable<any>{
@@ -94,6 +115,17 @@ export class BeneficiosempresasService {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN))
       .access_token;
     return this._httpClient.get(`${this.ruta}/planillainscripcion/${id}`, {
+      responseType: "blob",
+      headers: new HttpHeaders()
+        .set("Authorization", `bearer ${access_token}`)
+        .set("Content-Type", "application/json")
+    });
+  }
+
+  planillaXLS(id: number) {
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN))
+      .access_token;
+    return this._httpClient.get(`${this.ruta}/planillaXLS/${id}`, {
       responseType: "blob",
       headers: new HttpHeaders()
         .set("Authorization", `bearer ${access_token}`)

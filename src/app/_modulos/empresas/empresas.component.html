@@ -89,19 +89,20 @@
                   </span>
                 </td>
                 <td class="text-center">
-                  <div class="btn-group" role="group" aria-label="First group">
-                    <button class="btn btn-outline-info btn-sm" title="Ver Empresa" (click)="fver(_item.idempresa, ver)">
-                      <i class="fa fa-eye"></i>
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" data-boundary="viewport" aria-expanded="false">
+                      <i class="bi bi-list"></i>
                     </button>
-                    <button class="btn btn-outline-warning btn-sm" title="Editar Empresa" (click)="fmodificar(_item.idempresa, ab)">
-                      <i class="fa fa-edit"></i>
-                    </button>
-                    <button class="btn btn-outline-danger btn-sm" title="Eliminar Empresa" (click)="feliminar(_item.idempresa)">
-                      <i class="fa fa-trash"></i>
-                    </button>
-                    <button class="btn btn-outline-dark btn-sm" title="Imrpimir">
-                      <i class="fa fa-print"></i>
-                    </button>
+                    <div class="dropdown-menu">
+                      <div class="dropdown-item puntero" (click)="fver(_item.idempresa, ver)"><i class="fa fa-eye text-info"></i> Ver</div>
+                      <div class="dropdown-item puntero" (click)="fmodificar(_item.idempresa, ab)"><i class="fa fa-edit text-warning"></i> Modificar</div>
+                      <div class="dropdown-item puntero" (click)="fbeneficios(_item.idempresa, beneficios)"><i class="fa fa-book text-success"></i> Beneficios</div>
+                      <div class="dropdown-divider"></div>
+                      <div class="dropdown-item puntero" ><i class="fa fa-print"></i> Formulario</div>
+                      <div class="dropdown-item puntero" ><i class="fa fa-print"></i> Carnet</div>
+                      <div class="dropdown-divider"></div>
+                      <div class="dropdown-item puntero" (click)="feliminar(_item.idempresa)"><i class="bi bi-trash text-danger"></i> Eliminar</div>
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -506,7 +507,7 @@
               <label for="">Capacitación:</label>
             </div>
             <div class="col-lg-9 col-md-8 col-sm-12">
-              <input type="text" class="form-control form-control-sm" formControlName="capacitacion" (input)="onInput($event, 'capacitacion', 'letrasyespacios')" autocomplete="no">
+              <input type="text" class="form-control form-control-sm" formControlName="capacitacion" (input)="onInput($event, 'capacitacion', 'letrasynumerosguion')" autocomplete="no">
             </div>
           </div>
           <div class="row justify-content-between p-3 mt-2">
@@ -1053,10 +1054,11 @@
 </ng-template>
 
 <ng-template #ver>
-  <div class="modal-header alert-info">
-    <div class="col-lg-12 col-md-12 text-center ">
-        <h4 class="modal-title pull-left"><i class="fa fa-eye"></i> {{ estado }} Informacion de la Empresa "{{ dato.empresa }}"</h4><br>
-    </div>
+  <div class="modal-header" style="background-color: #4A5568;">
+    <h4 class="modal-title pull-left text-white"><i class="fa fa-eye"></i> {{ estado }} Información de la Empresa "{{ dato.empresa }}"</h4>
+    <button type="button" class="close" aria-label="Close" (click)="fcancelar()">
+      <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
   </div>
   <div class="modal-body">
     <div class="row pl-3 pr-3">
@@ -1382,8 +1384,112 @@
       </div>
     </div>
   </div>
-  <div class="modal-footer">
-    <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">Cerrar</button>
+</ng-template>
+
+<ng-template #beneficios>
+  <div class="modal-header" style="background-color: #4A5568;">
+      <h4 class="modal-title pull-left text-white">Lista de Beneficios</h4>
+      <button type="button" class="close" aria-label="Close" (click)="fcancelar()">
+        <span aria-hidden="true" class="text-white">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+    <div class="row justify-content-center mt-2">
+      <div class="col-sm-3 mt-1">
+        <p *ngIf="totalbe == 0">
+          Total: <b>{{ totalbe }} beneficios</b>
+        </p>
+        <p *ngIf="totalbe == 1">
+          Total: <b>{{ totalbe }} benficio</b>
+        </p>
+        <p *ngIf="totalbe > 1">
+          Total: <b>{{ totalbe }} beneficios</b>
+        </p>
+      </div>
+      <div class="col-sm-9">
+        <div class="row justify-content-end">
+          <div class="col-sm-2 text-md-right text-sm-left mt-1">
+            <label for="">Buscar: </label>
+          </div>
+          <div class="col-sm-8">
+            <div class="input-group input-group-sm">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+              </div>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="buscarbeneficio" placeholder="Beneficios a buscar ..." (keyup)="fbuscarbeneficios()" style="text-transform: uppercase;"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center mt-2" *ngIf="beneficiosempresas.length > 0">
+      <div *ngFor="let _ben of beneficiosempresas; let i = index" class="col-sm-10 benefit-card mb-3">
+        <div class="benefit-header">
+          <strong>{{ i + 1 }}. {{ _ben.beneficio.beneficio }}</strong>
+        </div>
+        <div class="benefit-details">
+          <div class="row justify-content-center">
+            <div class="col-sm-10">
+              <div class="row border">
+                <div class="col-sm-4">
+                  <p><strong>Tipo de beneficios:</strong></p>
+                </div>
+                <div class="col-sm-8">
+                  <p>{{ _ben.beneficio.tipobeneficio.tipobeneficio }}</p>
+                </div>
+              </div>
+              <div class="row border">
+                <div class="col-sm-4">
+                  <p><strong>Fecha Inicio:</strong></p>
+                </div>
+                <div class="col-sm-8">
+                  <p>{{ _ben.beneficio.fechainicio | date: 'dd/MM/yyyy HH:mm' }}</p>
+                </div>
+              </div>
+              <div class="row border">
+                <div class="col-sm-4">
+                  <p><strong>Fecha Fin:</strong></p>
+                </div>
+                <div class="col-sm-8">
+                  <p>{{ _ben.beneficio.fechafin | date: 'dd/MM/yyyy HH:mm' }}</p>
+                </div>
+              </div>
+              <div class="row border">
+                <div class="col-sm-4">
+                  <p><strong>Dirección:</strong></p>
+                </div>
+                <div class="col-sm-8">
+                  <p>{{ _ben.beneficio.direccion }}</p>
+                </div>
+              </div>
+              <div class="row border">
+                <div class="col-sm-4">
+                  <p><strong>Municipio:</strong></p>
+                </div>
+                <div class="col-sm-8">
+                  <p>{{ _ben.beneficio.municipio.municipio }}</p>
+                </div>
+              </div>
+              <div class="row border" *ngIf="_ben.beneficio.capacitador">
+                <div class="col-sm-4">
+                  <p><strong>Capacitador:</strong></p>
+                </div>
+                <div class="col-sm-8">
+                  <p>
+                    {{ _ben.beneficio.capacitador?.persona.primerapellido }}
+                    {{ _ben.beneficio.capacitador?.persona.segundoapellido }}
+                    {{ _ben.beneficio.capacitador?.persona.primernombre }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center mt-2" *ngIf="beneficiosempresas.length === 0">
+      <h2><strong>La Unidad Productiva no tiene Beneficios registrados.</strong></h2>
+    </div>
   </div>
 </ng-template>
 

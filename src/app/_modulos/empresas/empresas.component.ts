@@ -37,6 +37,8 @@ import { UtilsService } from 'src/app/_aods/utils.service';
 import { switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { Route, Router } from '@angular/router';
+import { Beneficiosempresas } from 'src/app/_entidades/beneficiosempresas';
+import { BeneficiosempresasService } from 'src/app/_aods/beneficiosempresas.service';
 
 @Component({
   selector: 'app-empresas',
@@ -73,15 +75,18 @@ export class EmpresasComponent implements OnInit {
   representante: Representantes;
   imagenRepAnverso: any[];
   imagenRepReverso: any[];
+  beneficiosempresas: Beneficiosempresas[] = [];
+  buscarbeneficio: string = '';
+  totalbe: number = 0;
 
-  pagina:number = 0;
-  numPaginas:number = 0;
-  cantidad:number = 10;
-  buscar:string = '';
+  pagina: number = 0;
+  numPaginas: number = 0;
+  cantidad: number = 10;
+  buscar: string = '';
   rubro: string = '';
-  buscarRep:string = '';
-  total:number = 0;
-  estado:string = '';
+  buscarRep: string = '';
+  total: number = 0;
+  estado: string = '';
 
   formEmpresa: FormGroup;
   formRep: FormGroup;
@@ -203,6 +208,7 @@ export class EmpresasComponent implements OnInit {
     private _localidadesService: LocalidadesService,
     private _representantesService: RepresentantesService,
     private _asociacionesService : AsociacionesService,
+    private _beneficiosempresasService: BeneficiosempresasService,
     private _fb: FormBuilder,
     private _fbE: FormBuilder,
     private _fbR: FormBuilder,
@@ -798,11 +804,6 @@ export class EmpresasComponent implements OnInit {
       ],
       descripcion: [
         dato.descripcion,
-        [
-          Validators.pattern('^[a-zA-ZÀ-ÿ0-9\u00f1\u00d1\\s.,-]+$'),
-          Validators.minLength(8),
-          Validators.maxLength(255)
-        ]
       ],
       idasociacion: [
         dato.asociacion?.idasociacion
@@ -1086,6 +1087,42 @@ export class EmpresasComponent implements OnInit {
       });
       this.utilsService.cerrarCargando();
     })
+  }
+
+  flimpiarbuscarbeneficios(){
+    this.buscarbeneficio = '';
+    this.fdatosbeneficios(this.dato.idempresa);
+  }
+
+  fbuscarbeneficios() {
+    this.fdatosbeneficios(this.dato.idempresa);
+  }
+
+  fcantidadbe(id: number){
+    this._beneficiosempresasService.cantidadbe(this.buscarbeneficio, id).subscribe(data => {
+      this.totalbe = data;
+    });
+  }
+
+  fdatosbeneficios(id: number) {
+    this._beneficiosempresasService.beneficios(this.buscarbeneficio, id).subscribe((data) => {
+      this.beneficiosempresas = data;
+      this.fcantidadbe(id);
+    });
+  }
+
+  fbeneficios(id: number, content: any){
+    this._empresasService.dato(id).subscribe((data) => {
+      this.dato = data;
+      this.buscarbeneficio = '';
+      this.fdatosbeneficios(id);
+      this.modalRefEmpresa = this._modalService.open(content, {
+        backdrop: 'static',
+        keyboard: false,
+        scrollable: true,
+        size: 'lg'
+      });
+    });
   }
 
   faceptar(): void {

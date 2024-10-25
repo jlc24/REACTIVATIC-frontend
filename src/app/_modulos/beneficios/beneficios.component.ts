@@ -5,6 +5,8 @@ import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browse
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { AccesoService } from 'src/app/_aods/acceso.service';
+import { AsistenciasService } from 'src/app/_aods/asistencias.service';
+import { AsistenciasempresasService } from 'src/app/_aods/asistenciasempresas.service';
 import { BeneficiosService } from 'src/app/_aods/beneficios.service';
 import { BeneficiosempresasService } from 'src/app/_aods/beneficiosempresas.service';
 import { EmpresasService } from 'src/app/_aods/empresas.service';
@@ -13,6 +15,8 @@ import { RepresentantesService } from 'src/app/_aods/representantes.service';
 import { TiposbeneficiosService } from 'src/app/_aods/tiposbeneficios.service';
 import { UsuariosService } from 'src/app/_aods/usuarios.service';
 import { UtilsService } from 'src/app/_aods/utils.service';
+import { Asistencias } from 'src/app/_entidades/asistencias';
+import { Asistenciasempresas } from 'src/app/_entidades/asistenciasempresas';
 import { Beneficios } from 'src/app/_entidades/beneficios';
 import { Beneficiosempresas } from 'src/app/_entidades/beneficiosempresas';
 import { Municipios } from 'src/app/_entidades/municipios';
@@ -34,12 +38,16 @@ export class BeneficiosComponent implements OnInit {
   beneficios: Beneficios[];
   beneficio: Beneficios;
   beneficiosempresas: Beneficiosempresas[];
+  beneficiosempresaslista: Beneficiosempresas[];
   cantidadbeneficio: number;
   representantes: Representantes[];
   tiposbeneficios: Tiposbeneficios[];
   municipios: Municipios[];
   capacitadores: Usuarios[];
   rol: string = '';
+  asistencia: Asistencias;
+  fechasasistencia: Asistenciasempresas[];
+  asistenciasempresas: Asistenciasempresas[];
 
   pagina: number = 1;
   numPaginas: number = 0;
@@ -62,6 +70,7 @@ export class BeneficiosComponent implements OnInit {
   totalEmp: number = 0;
 
   formulario: FormGroup;
+  formAsistencia: FormGroup;
   submitted: boolean = false;
 
   modalRefBeneficio: NgbModalRef;
@@ -101,8 +110,11 @@ export class BeneficiosComponent implements OnInit {
     private _municipiosService: MunicipiosService,
     private _usuariosService: UsuariosService,
     private _representantesService: RepresentantesService,
+    private _asistenciasService: AsistenciasService,
+    private _asistenciasempresasService: AsistenciasempresasService,
     private utilsService: UtilsService,
     private _fB: FormBuilder,
+    private _fBA: FormBuilder,
     private _modalService: NgbModal,
     private _toast: ToastrService,
     private sanitizer: DomSanitizer
@@ -128,6 +140,23 @@ export class BeneficiosComponent implements OnInit {
     this.esCargoMarketing = this._accesoService.esCargoMarketing();
     this.esCapacitador = this._accesoService.esCargoCapacitador();
 
+    this.formAsistencia = this._fBA.group({
+      idbeneficio: [''],
+      dias: [''],
+      diracion: ['']
+    });
+
+    this.formulario = this._fB.group({
+      beneficio: [''],
+      descripcion:[''],
+      idtipobeneficio:[''],
+      idmunicipio: [''],
+      direccion:[''],
+      fechainicio:[''],
+      fechafin: [''],
+      idcapacitador:[''],
+      capacidad:[''],
+    });
   }
 
   ftiposbeneficios(){
@@ -212,7 +241,7 @@ export class BeneficiosComponent implements OnInit {
         beneficio.beneficio,
         [
           Validators.required,
-          Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1\\s.,-]+$'),
+          Validators.pattern('^[a-zA-Z0-9À-ÿ\u00f1\u00d1\\s.,-]+$'),
           Validators.minLength(5),
           Validators.maxLength(150)
         ]
@@ -239,7 +268,7 @@ export class BeneficiosComponent implements OnInit {
         beneficio.direccion,
         [
           Validators.required,
-          Validators.pattern('^[a-zA-Z0-9\u00f1\u00d1\\s.,#-]+$'),
+          Validators.pattern('^[a-zA-Z0-9À-ÿ\u00f1\u00d1\\s.,#-]+$'),
         ]
       ],
       fechainicio:[
@@ -294,7 +323,12 @@ export class BeneficiosComponent implements OnInit {
         input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1\s.,#-]/g, '');
         break;
     }
-    this.formulario.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
+    if (this.formulario?.get(controlName)) {
+      this.formulario.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
+    }
+    if (this.formAsistencia?.get(controlName)) {
+      this.formAsistencia.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
+    }
   }
 
   getFormControls(): string[] {
@@ -349,21 +383,23 @@ export class BeneficiosComponent implements OnInit {
         this.fdatos();
         this.modalRefBeneficio.dismiss();
         Swal.fire('Exito', 'Beneficio modificado correctamente', 'success');
-        this._toast.success('','Operación exitosa')
+        this._toast.success('','Operación exitosa');
       });
     }else{
       this._beneficiosService.adicionar(this.beneficio).subscribe(data => {
         this.fdatos();
         this.modalRefBeneficio.dismiss();
         Swal.fire('Exito', 'Beneficio adicionado correctamente', 'success');
-        this._toast.success('','Operación exitosa')
-      })
+        this._toast.success('','Operación exitosa');
+      });
     }
   }
 
   fcancelar(){
     this.modalRefBeneficio.dismiss();
-    this.limpiarRep();
+    if (this.representantes) {
+      this.limpiarRep();
+    }
   }
 
   fcancelarImagen(){
@@ -624,7 +660,7 @@ export class BeneficiosComponent implements OnInit {
   fcantidadempresas(id: number){
     this._beneficiosempresasService.cantidadbeneficio(this.buscarEmp, id).subscribe((data) => {
       this.totalEmp = data;
-    })
+    });
   }
   fbeneficiosempresas(id: number){
     this._beneficiosempresasService.datos(this.paginaEmp, this.cantidadEmp, this.buscarEmp, id).subscribe((data) => {
@@ -642,12 +678,183 @@ export class BeneficiosComponent implements OnInit {
       this.fdescargar(data.idbeneficio, 'Afiche');
       this.fcantidadbeneficio(data.idbeneficio);
       this.fbeneficiosempresas(data.idbeneficio);
+      if (data.tipobeneficio.tipobeneficio !== 'FERIA') {
+        this.fasistencias(data.idbeneficio);
+      }
       this.modalRefBeneficio = this._modalService.open(content, {
         backdrop: 'static',
         keyboard: false,
         size: 'lg'
       });
     });
+  }
+
+  fbeneficiosasistencias(id: number){
+    this._beneficiosempresasService.datosl(id).subscribe((data) => {
+      this.beneficiosempresaslista = data;
+    });
+  }
+
+  ffechasasistencia(id: number){
+    this._asistenciasempresasService.fechas(id).subscribe((data) => {
+      this.fechasasistencia = data;
+    });
+  }
+
+  fdatosasistencias(id:number){
+    this._asistenciasempresasService.datos(id).subscribe((data) => {
+      this.asistenciasempresas = data;
+    });
+  }
+
+  fasistencias(id: number){
+    this._asistenciasService.dato(id).subscribe(
+      data => {
+      this.asistencia = data;
+      },
+      error => {
+        if (error.status === 404) {
+          this.asistencia = null;
+        }
+      }
+    );
+  }
+
+  fformAsistencia(asistencia: Asistencias){
+    this.formAsistencia = this._fBA.group({
+      idbeneficio:[
+        asistencia.idbeneficio,
+        [
+          Validators.required,
+        ]
+      ],
+      dias:[
+        asistencia.dias,
+        [
+          Validators.required,
+          Validators.pattern('^[0-9]+$'),
+        ]
+      ],
+      duraciondias:[
+        asistencia.duraciondias,
+        [
+          Validators.required,
+          Validators.pattern('^[0-9]+$')
+        ]
+      ],
+      duracioncurso:[
+        asistencia.duracioncurso,
+        [
+          Validators.required,
+          Validators.pattern('^[0-9]+$')
+        ]
+      ],
+    });
+  }
+
+  get fA() { return this.formAsistencia.controls; }
+
+  calculoDias(fechainicio: string, fechafin: string): number {
+    const inicio = new Date(fechainicio);
+    const fin = new Date(fechafin);
+
+    let totalDias = 0;
+
+    for (let date = inicio; date <= fin; date.setDate(date.getDate() + 1)) {
+      const day = date.getDay();
+      if (day >= 1 && day <= 5) {
+        totalDias++;
+      }
+    }
+
+    return totalDias;
+  }
+  calcularDuracionCurso(){
+    const duracionPorDia = this.formAsistencia.get('duraciondias').value;
+    const dias = this.asistencia.dias;
+
+    if (duracionPorDia && dias) {
+      const duracionCursoTotal = duracionPorDia * dias;
+      this.formAsistencia.get('duracioncurso').setValue(duracionCursoTotal);
+    }
+  }
+
+  fcrearasistencia(id: number, content: any){
+    this.estadotipo = 'Crear';
+    this.asistencia = new Asistencias();
+    this.asistencia.idbeneficio = this.beneficio.idbeneficio;
+    const fechainicio = new Date(this.beneficio.fechainicio).toISOString();
+    const fechafin = new Date(this.beneficio.fechafin).toISOString();
+    this.asistencia.dias = this.calculoDias(fechainicio, fechafin);
+    this.fformAsistencia(this.asistencia);
+    this.modalRefPlanilla = this._modalService.open(content, {
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  fregasistencia(id: number, content: any){
+    this.estadotipo = 'Registrar';
+    this._asistenciasService.dato(id).subscribe((data) => {
+      this.asistencia = data;
+      this.fbeneficiosasistencias(this.beneficio.idbeneficio);
+      this.ffechasasistencia(this.asistencia.idasistencia);
+      this.fdatosasistencias(this.asistencia.idasistencia);
+      this.modalRefPlanilla = this._modalService.open(content, {
+        backdrop: 'static',
+        keyboard: false,
+        size:'lg',
+        scrollable: true
+      });
+    });
+  }
+
+  faceptarAsistencia(){
+    this.submitted = true;
+
+    this.asistencia.idbeneficio = this.beneficio.idbeneficio;
+    this.asistencia.dias = this.formAsistencia.value.dias;
+    this.asistencia.duraciondias = this.formAsistencia.value.duraciondias;
+    this.asistencia.duracioncurso = this.formAsistencia.value.duracioncurso;
+
+    if (this.estadotipo == 'Modificar') {
+      this.asistencia.idasistencia = this.asistencia.idasistencia;
+      this._asistenciasService.modificar(this.asistencia).subscribe((data) => {
+        this.fasistencias(this.beneficio.idbeneficio);
+        this.modalRefPlanilla.dismiss();
+        Swal.fire('Exito', 'Asistencia modificada correctamente', 'success');
+        this._toast.success('','Operación exitosa');
+      });
+    }else{
+      this._asistenciasService.adicionar(this.asistencia).subscribe((data) => {
+        this.fasistencias(this.beneficio.idbeneficio);
+        this.modalRefPlanilla.dismiss();
+        Swal.fire('Exito', 'Asistencia creada correctamente', 'success');
+        this._toast.success('','Operación exitosa');
+      })
+    }
+  }
+
+
+  fplanillaxls(id: number, tipo: string, content: any){
+    if (tipo == 'Registro') {
+      this._beneficiosempresasService.planillaXLS(id).subscribe(
+        blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.setAttribute("style", "display:none;");
+          document.body.appendChild(a);
+          a.href = url;
+          a.download = "Planilla_Registro_Beneficio.xlsx";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+          return url;
+        }, error => {
+          this._toast.error('Error al descargar el archivo', 'Error');
+        });
+    }
   }
 
   fplanilla(id: number, tipo: string, content: any){
@@ -700,34 +907,30 @@ export class BeneficiosComponent implements OnInit {
       );
     }
     if (this.estadotipo == 'Asistencia') {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'El beneficio no tiene asistencias generadas, debe generar Asistencia.',
-        confirmButtonText: 'Aceptar'
-      });
-      this._toast.error('', 'Error desconocido');
-      // this._beneficiosempresasService.planillaInsc(id).subscribe(
-      //   data => {
-      //     const url = window.URL.createObjectURL(data);
-      //     this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-      //     this.modalRefPlanilla =  this._modalService.open(content, {
-      //       backdrop: 'static',
-      //       keyboard: false,
-      //       size: 'xl'
-      //     });
-      //   },
-      //   error => {
-      //     const mensaje = error.error?.mensaje || 'Error desconocido. Intenta nuevamente.';
-      //     Swal.fire({
-      //       icon: 'error',
-      //       title: 'Oops...',
-      //       text: mensaje,
-      //       confirmButtonText: 'Aceptar'
-      //     });
-      //     this._toast.error('', 'Error desconocido');
-      //   }
-      // );
+      this._asistenciasService.dato(id).subscribe(
+        (data) => {
+          //this.asistencia = data;
+        },
+        (error) => {
+          if (error.status === 404) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'El beneficio no tiene asistencias generadas, debe generar Asistencia.',
+              confirmButtonText: 'Aceptar'
+            });
+            this._toast.error('Asistencias no encontradas', 'Error');
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Ha ocurrido un error inesperado.',
+              confirmButtonText: 'Aceptar'
+            });
+            this._toast.error('', 'Error desconocido');
+          }
+        }
+      );
     }
     if (this.estadotipo == 'Evaluacion') {
       Swal.fire({

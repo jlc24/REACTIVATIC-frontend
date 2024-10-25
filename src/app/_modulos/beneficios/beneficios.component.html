@@ -48,7 +48,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
                   </div>
-                  <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Beneficio a buscar ..." (keyup)="fbuscar()" />
+                  <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Beneficio a buscar ..." (keyup)="fbuscar()" style="text-transform: uppercase;"/>
                 </div>
               </div>
             </div>
@@ -215,9 +215,9 @@
         <form [formGroup]="formulario" (ngSubmit)="faceptar()">
           <div class="row justify-content-center">
             <div class="col-sm-3 text-sm-right">
-              <label for="beneficio">Beneficio: <span class="text-danger"><b>*</b></span></label>
+              <label for="beneficio"><strong>Beneficio:</strong><span class="text-danger"><b>*</b></span></label>
             </div>
-            <div class="col-sm-7">
+            <div class="col-sm-9">
               <input type="text" class="form-control form-control-sm" id="beneficio" formControlName="beneficio" [class.is-invalid]="f.beneficio.errors && f.beneficio.touched" (input)="onInput($event, 'beneficio', 'direccion')" autocomplete="no" required/>
               <small *ngIf="f.beneficio.errors&& f.beneficio.touched" class="invalid-feedback">
                 <ng-container *ngIf="f.beneficio.errors.required">
@@ -235,9 +235,9 @@
               </small>
             </div>
             <div class="col-sm-3 text-sm-right mt-3">
-              <label for="descripcion">Descripción:</label>
+              <label for="descripcion"><strong>Descripción:</strong></label>
             </div>
-            <div class="col-sm-7 mt-3">
+            <div class="col-sm-9 mt-3">
               <!-- <input type="text" class="form-control form-control-sm" id="descripcion" formControlName="descripcion" (input)="onInput($event, 'descripcion', 'direccion')" required/> -->
               <textarea class="form-control form-control-sm" id="descripcion" formControlName="descripcion" [maxlength]="255" rows="2"></textarea>
               <small *ngIf="f.descripcion.errors&& f.descripcion.touched" class="invalid-feedback">
@@ -253,9 +253,9 @@
               </small>
             </div>
             <div class="col-sm-3 text-sm-right mt-3">
-              <label for="idtipobeneficio">Tipo: <span class="text-danger"><b>*</b></span></label>
+              <label for="idtipobeneficio"><strong>Tipo:</strong><span class="text-danger"><b>*</b></span></label>
             </div>
-            <div class="col-sm-7 mt-3">
+            <div class="col-sm-9 mt-3">
               <select class="form-control form-control-sm" id="idtipobeneficio" formControlName="idtipobeneficio" [class.is-invalid]="f.idtipobeneficio.errors && f.idtipobeneficio.touched">
                 <option *ngFor="let _tipo of tiposbeneficios" [value]="_tipo.idtipobeneficio">
                   {{ _tipo.tipobeneficio }}
@@ -268,9 +268,9 @@
               </small>
             </div>
             <div class="col-sm-3 text-sm-right mt-3">
-              <label for="idmunicipio">Municipio: <span class="text-danger"><b>*</b></span></label>
+              <label for="idmunicipio"><strong>Municipio:</strong><span class="text-danger"><b>*</b></span></label>
             </div>
-            <div class="col-sm-7 mt-3">
+            <div class="col-sm-9 mt-3">
               <select class="form-control form-control-sm" id="idmunicipio" formControlName="idmunicipio" [class.is-invalid]="f.idmunicipio.errors && f.idmunicipio.touched">
                 <option *ngFor="let _municipio of municipios" [value]="_municipio.idmunicipio">
                   {{ _municipio.municipio }}
@@ -283,9 +283,9 @@
               </small>
             </div>
             <div class="col-sm-3 text-sm-right mt-3">
-              <label for="direccion">Direccion: <span class="text-danger"><b>*</b></span></label>
+              <label for="direccion"><strong>Direccion:</strong><span class="text-danger"><b>*</b></span></label>
             </div>
-            <div class="col-sm-7 mt-3">
+            <div class="col-sm-9 mt-3">
               <input type="text" class="form-control form-control-sm" id="direccion" formControlName="direccion" [class.is-invalid]="f.direccion.errors && f.direccion.touched" (input)="onInput($event, 'direccion', 'direccion')" autocomplete="no" required/>
               <small *ngIf="f.direccion.errors&& f.direccion.touched" class="invalid-feedback">
                 <ng-container *ngIf="f.direccion.errors.required">
@@ -303,9 +303,9 @@
               </small>
             </div>
             <div class="col-sm-3 text-sm-right mt-3">
-              <label for="fechainicio">Inicio: <span class="text-danger"><b>*</b></span></label>
+              <label for="fechainicio"><strong>Inicio:</strong><span class="text-danger"><b>*</b></span></label>
             </div>
-            <div class="col-sm-7 mt-3">
+            <div class="col-sm-9 mt-3">
               <input type="datetime-local" class="form-control form-control-sm" id="fechainicio" formControlName="fechainicio" [class.is-invalid]="f.fechainicio.errors && f.fechainicio.touched" autocomplete="no" required/>
               <small *ngIf="f.fechainicio.errors&& f.fechainicio.touched" class="invalid-feedback">
                 <ng-container *ngIf="f.fechainicio.errors.required">
@@ -323,9 +323,9 @@
               </small>
             </div>
             <div class="col-sm-3 text-sm-right mt-3">
-              <label for="fechafin">Fin: <span class="text-danger"><b>*</b></span></label>
+              <label for="fechafin"><strong>Fin:</strong><span class="text-danger"><b>*</b></span></label>
             </div>
-            <div class="col-sm-7 mt-3">
+            <div class="col-sm-9 mt-3">
               <input type="datetime-local" class="form-control form-control-sm" id="fechafin" formControlName="fechafin" [class.is-invalid]="f.fechafin.errors && f.fechafin.touched" autocomplete="no" required/>
               <small *ngIf="f.fechafin.errors&& f.fechafin.touched" class="invalid-feedback">
                 <ng-container *ngIf="f.fechafin.errors.required">
@@ -343,9 +343,9 @@
               </small>
             </div>
             <div class="col-sm-3 text-sm-right mt-3">
-              <label for="idcapacitador">Capacitador:</label>
+              <label for="idcapacitador"><strong>Capacitador:</strong></label>
             </div>
-            <div class="col-sm-7 mt-3">
+            <div class="col-sm-9 mt-3">
               <select class="form-control form-control-sm" id="idcapacitador" formControlName="idcapacitador">
                 <option *ngFor="let _cap of capacitadores" [value]="_cap.idusuario">
                   {{ _cap.persona?.primerapellido }} {{ _cap.persona?.segundoapellido }} {{ _cap.persona?.primernombre }}
@@ -353,9 +353,9 @@
               </select>
             </div>
             <div class="col-sm-3 text-sm-right mt-3">
-              <label for="capacidad">Capacidad: <span class="text-danger"><b>*</b></span></label>
+              <label for="capacidad"><strong>Capacidad:</strong><span class="text-danger"><b>*</b></span></label>
             </div>
-            <div class="col-sm-7 mt-3">
+            <div class="col-sm-9 mt-3">
               <input type="text" class="form-control form-control-sm" id="capacidad" formControlName="capacidad" [maxlength]="4" [class.is-invalid]="f.capacidad.errors && f.capacidad.touched" (input)="onInput($event, 'capacidad', 'numeros')" autocomplete="no" required/>
               <small *ngIf="f.capacidad.errors&& f.capacidad.touched" class="invalid-feedback">
                 <ng-container *ngIf="f.capacidad.errors.required">
@@ -409,7 +409,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
               </div>
-              <input type="text" class="form-control form-control-sm" [(ngModel)]="buscarRep" placeholder="Representante a buscar ..." (keyup)="fbuscarRep()" [disabled]="(beneficio.capacidad - cantidadbeneficio) == 0" />
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="buscarRep" placeholder="Representante a buscar ..." (keyup)="fbuscarRep()" [disabled]="(beneficio.capacidad - cantidadbeneficio) == 0" style="text-transform: uppercase;"/>
             </div>
           </div>
         </div>
@@ -558,6 +558,33 @@
       </div>
     </div><hr>
     <div class="row justify-content-end mr-2">
+      <div *ngIf="beneficio.tipobeneficio.tipobeneficio !== 'FERIA' ">
+        <button type="button" class="btn btn-sm btn-info mr-2 " *ngIf="asistencia" (click)="fregasistencia(beneficio.idbeneficio, regasistencia)" title="Registrar Asistencia">
+          Aistencias <i class="bi bi-filetype-xls"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-info mr-2 " *ngIf="!asistencia" (click)="fcrearasistencia(beneficio.idbeneficio, crearAsistencia)" title="Crear Asistencia" >
+          Aistencias <i class="bi bi-filetype-xls"></i>
+        </button>
+      </div>
+      <button type="button" class="btn btn-sm btn-secondary mr-2 ">
+        Evaluaciones <i class="bi bi-filetype-xls"></i>
+      </button>
+      <div class="btn-group mr-2">
+        <button type="button" class="btn btn-sm btn-warning dropdown-toggle" data-toggle="dropdown" data-boundary="viewport" aria-expanded="false">
+          Planillas EXCEL <i class="bi bi-filetype-xls"></i>
+        </button>
+        <div class="dropdown-menu">
+          <div class="dropdown-item puntero" (click)="fplanillaxls(beneficio.idbeneficio, 'Registro', planilla)">
+            <i class="bi bi-book text-primary"></i> Planilla de Registro
+          </div>
+          <div class="dropdown-item puntero" (click)="fplanilla(beneficio.idbeneficio, 'Asistencia', planilla)">
+            <i class="bi bi-people text-success"></i> Planilla de Asistencia
+          </div>
+          <div class="dropdown-item puntero" (click)="fplanilla(beneficio.idbeneficio, 'Evaluacion', planilla)">
+            <i class="bi bi-check-circle text-danger"></i> Planilla de Evaluación
+          </div>
+        </div>
+      </div>
       <div class="btn-group">
         <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" data-boundary="viewport" aria-expanded="false">
           Planillas PDF <i class="bi bi-filetype-pdf"></i>
@@ -589,7 +616,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
               </div>
-              <input type="text" class="form-control form-control-sm" [(ngModel)]="buscarEmp" placeholder="Representante a buscar ..." (keyup)="fbuscarEmp(beneficio.idbeneficio)" />
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="buscarEmp" placeholder="Representante a buscar ..." (keyup)="fbuscarEmp(beneficio.idbeneficio)" style="text-transform: uppercase;"/>
             </div>
           </div>
         </div>
@@ -674,5 +701,137 @@
   <div class="modal-body" style="max-height: 80vh; padding: 0;">
     <iframe *ngIf="pdfUrl" [src]="pdfUrl"  style="width: 100%; height: 80vh; border: none; display: block;" frameborder="0"></iframe>
     <p *ngIf="!pdfUrl">Cargando PDF...</p>
+  </div>
+</ng-template>
+
+<ng-template #crearAsistencia>
+  <div class="modal-header" style="background-color: #4A5568;">
+    <h4 class="modal-title pull-left text-white">Crear de Asistencia del Beneficio</h4>
+    <button type="button" class="close" aria-label="Close" (click)="this.modalRefPlanilla.dismiss(); this.fasistencias(beneficio.idbeneficio);">
+      <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="formAsistencia" (ngSubmit)="faceptarAsistencia()">
+      <div class="row justify-content-center">
+        <div class="col-sm-4 text-right mt-2">
+          <label for="beneficio">Beneficio: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-7 mt-2">
+          <label for="">{{ beneficio.beneficio }}</label>
+          <input type="text" formControlName="idbeneficio" hidden>
+        </div>
+        <div class="col-sm-4 text-right mt-2">
+          <label for="beneficio">Inicio: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-7 mt-2">
+          <label for="">{{ beneficio.fechainicio | date:'dd/MM/yyyy HH:mm' }}</label>
+        </div>
+        <div class="col-sm-4 text-right mt-2">
+          <label for="beneficio">Fin: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-7 mt-2">
+          <label for="">{{ beneficio.fechafin | date:'dd/MM/yyyy HH:mm' }}</label>
+        </div>
+        <div class="col-sm-4 text-right mt-3">
+          <label for="dias">Dias: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-5 mt-2">
+          <input type="text" class="form-control form-control-sm" id="dias" [maxlength]="3" formControlName="dias" [class.is-invalid]="fA.dias.errors && fA.dias.touched" (input)="onInput($event, 'dias', 'numeros')" autocomplete="no" required/>
+        </div>
+        <div class="col-sm-2 mt-2">
+        </div>
+        <div class="col-sm-4 text-right mt-3">
+          <label for="duraciondias">Duracion por dia: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-5 mt-2">
+          <input type="text" class="form-control form-control-sm" id="duraciondias" [maxlength]="3" formControlName="duraciondias" [class.is-invalid]="fA.duraciondias.errors && fA.duraciondias.touched" (input)="onInput($event, 'duraciondias', 'numeros')" (input)="calcularDuracionCurso()" autocomplete="no" required/>
+        </div>
+        <div class="col-sm-2 mt-3">
+          <label for="">Hrs.</label>
+        </div>
+        <div class="col-sm-4 text-right mt-3">
+          <label for="duracioncurso">Duracion del curso: <span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-sm-5 mt-2">
+          <input type="text" class="form-control form-control-sm" id="duracioncurso" maxlength="3" formControlName="duracioncurso" [class.is-invalid]="fA.duracioncurso.errors && fA.duracioncurso.touched" (input)="onInput($event, 'duracioncurso', 'numeros')" autocomplete="no" required/>
+        </div>
+        <div class="col-sm-2 mt-3">
+          <label for="">Hrs.</label>
+        </div>
+      </div>
+      <div class="text-right mt-2">
+        <button type="submit" class="btn btn-sm btn-outline-success rounded-pill m-2" [disabled]="!formAsistencia.valid">
+            <i class="fa fa-save"></i> Guardar
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" (click)="this.modalRefPlanilla.dismiss(); this.fasistencias(beneficio.idbeneficio);">
+            <i class="fa fa-times"></i> Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #regasistencia>
+  <div class="modal-header" style="background-color: #4A5568;">
+    <h4 class="modal-title pull-left text-white">Registro de Asistencia del Beneficio</h4>
+    <button type="button" class="close" aria-label="Close" (click)="this.modalRefPlanilla.dismiss(); this.fasistencias(beneficio.idbeneficio);">
+      <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row bg-secondary text-white align-items-center">
+      <div class="col-lg-5 col-sm-12">
+        <h4>{{ beneficio.beneficio }}</h4>
+      </div>
+      <div class="col-lg-7 col-sm-12">
+        <div class="row justify-content-between m-2">
+          <label for=""><strong>Fecha Inicio:</strong> {{ beneficio.fechainicio | date:'dd/MM/yyyy HH:mm' }}</label>
+          <label for=""><strong>Fecha fin</strong>: {{ beneficio.fechafin | date:'dd/MM/yyyy HH:mm' }}</label>
+        </div>
+        <div class="row justify-content-between m-2">
+          <label for=""><strong>Dias:</strong> {{ asistencia.dias }}</label>
+          <label for=""><strong>Duracion por Dia:</strong> {{ asistencia.duraciondias }} (Hrs.)</label>
+          <label for=""><strong>Duracion Curso:</strong> {{ asistencia.duracioncurso }} (Hrs.)</label>
+        </div>
+        <div class="row justify-content-end">
+          <button class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></button>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center mt-2">
+      <table class="table table-sm table-bordered table-striped table-hover" style="width: auto;">
+        <thead>
+          <tr>
+            <th>Nro</th>
+            <th>Nombre Completo</th>
+            <th>Carnet</th>
+            <th>Rubro</th>
+            <th *ngFor="let fechas of fechasasistencia" >{{ fechas.fecha | date:'dd/MM/yyyy' }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let _rep of beneficiosempresaslista; let i = index">
+            <td class="text-right align-content-center">
+              {{ i + 1 + ((paginaEmp-1)*cantidadEmp) }}
+            </td>
+            <td class=" align-content-center" style="font-size: 10px;">
+              {{ _rep.empresa.representante?.persona?.primerapellido }} {{ _rep.empresa.representante?.persona?.segundoapellido }} {{ _rep.empresa.representante?.persona?.primernombre }}
+            </td>
+            <td class=" align-content-center text-right" style="font-size: 10px;">
+              {{ _rep.empresa.representante?.persona?.dip }} {{ _rep.empresa.representante?.persona?.complementario ? '-' +_rep.empresa.representante?.persona?.complementario : _rep.empresa.representante?.persona?.complementario }}
+            </td>
+            <td class=" align-content-center text-center"  style="font-size: 10px;">
+              {{ _rep.empresa.rubro?.rubro }}
+            </td>
+            <td *ngFor="let fecha of fechasasistencia" class="text-center">
+              <input
+                type="checkbox"
+                [value]="asistenciasempresas[i]?.asistencia || false" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </ng-template>
