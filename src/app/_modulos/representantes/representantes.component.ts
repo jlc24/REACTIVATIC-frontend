@@ -659,7 +659,8 @@ export class RepresentantesComponent implements OnInit {
   }
 
   fimprimir(id: number, content: any){
-    this._personasService.carnetPDF(id).subscribe(
+    this.utilsService.mostrarCargando();
+    this._personasService.documentoPDF(id, 'carnet').subscribe(
       data => {
         const url = window.URL.createObjectURL(data);
         this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
@@ -668,10 +669,11 @@ export class RepresentantesComponent implements OnInit {
           keyboard: false,
           size: 'xl'
         });
+        this.utilsService.cerrarCargando();
       },
       error => {
         const mensaje = error.error?.mensaje || 'Error desconocido. Intenta nuevamente.';
-
+        this.utilsService.cerrarCargando();
         // Mostramos el SweetAlert con el mensaje de error
         swal.fire({
           icon: 'error',
@@ -680,6 +682,7 @@ export class RepresentantesComponent implements OnInit {
           confirmButtonText: 'Aceptar'
         });
         this._toast.error('', 'Error desconocido');
+
       }
     );
   }

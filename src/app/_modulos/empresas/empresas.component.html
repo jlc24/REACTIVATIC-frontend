@@ -98,8 +98,8 @@
                       <div class="dropdown-item puntero" (click)="fmodificar(_item.idempresa, ab)"><i class="fa fa-edit text-warning"></i> Modificar</div>
                       <div class="dropdown-item puntero" (click)="fbeneficios(_item.idempresa, beneficios)"><i class="fa fa-book text-success"></i> Beneficios</div>
                       <div class="dropdown-divider"></div>
-                      <div class="dropdown-item puntero" ><i class="fa fa-print"></i> Formulario</div>
-                      <div class="dropdown-item puntero" ><i class="fa fa-print"></i> Carnet</div>
+                      <div class="dropdown-item puntero" (click)="fimprimir(_item.idempresa, 'Formulario', pdf)"><i class="fa fa-print"></i> Formulario</div>
+                      <div class="dropdown-item puntero" (click)="fimprimir(_item.representante.persona?.idpersona, 'Carnet', pdf)"><i class="fa fa-print"></i> Carnet</div>
                       <div class="dropdown-divider"></div>
                       <div class="dropdown-item puntero" (click)="feliminar(_item.idempresa)"><i class="bi bi-trash text-danger"></i> Eliminar</div>
                     </div>
@@ -301,11 +301,11 @@
             <div class="col-lg-3 col-md-4 col-sm-2 mt-1 text-md-right text-sm-left">
               <label for="">Form.:</label>
             </div>
-            <div class="col-md-2 col-sm-2  ">
-              <input type="text" [maxLength]="4" class="form-control form-control-sm text-center" formControlName="nform" (input)="onInput($event, 'nform', 'numeros')" autocomplete="no">
+            <div class="col-md-4 col-sm-2  ">
+              <input type="text" [maxLength]="20" class="form-control form-control-sm" formControlName="nform" (input)="onInput($event, 'nform', 'formulario')" autocomplete="no">
               <input type="text" class="form-control form-control-sm text-center" formControlName="idrepresentante" hidden>
             </div>
-            <div class="col-md-4 col-sm-6 mt-1 text-sm-right">
+            <div class="col-md-3 col-sm-6 mt-1 text-sm-right">
               <label class="form-label">Seleccionar Rep.:</label>
             </div>
             <div class="col-sm-1 text-md-left text-sm-right">
@@ -1131,6 +1131,10 @@
               </div>
             </div><br>
           </div>
+          <div class="col-sm-12 text-center mt-2">
+            <button class="btn btn-sm btn-outline-custom rounded-pill mr-2" (click)="fimagenFormA(cargarimagen)" title="Agregar formulario anverso">Formulario A</button>
+            <button class="btn btn-sm btn-outline-custom rounded-pill" (click)="fimagenFormB(cargarimagen)" title="Agregar formulario reverso">Formulario B</button>
+          </div>
         </div>
       </div>
       <div class="col-lg-8 col-sm-12 mt-2">
@@ -1525,5 +1529,18 @@
         <i class="fa fa-times"></i> Cancelar
       </button>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #pdf>
+  <div class="modal-header" style="background-color: #4A5568;">
+    <h4 class="modal-title pull-left text-white">{{ estado == 'Carnet' ? estado + ' del Representante' : estado + ' de la Unidad Productiva' }} </h4>
+    <button type="button" class="close" aria-label="Close" (click)="this.modalRefCarnet.dismiss()">
+      <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="max-height: 80vh; padding: 0;">
+    <iframe *ngIf="pdfUrl" [src]="pdfUrl"  style="width: 100%; height: 80vh; border: none; display: block;" frameborder="0"></iframe>
+    <p *ngIf="!pdfUrl">Cargando PDF...</p>
   </div>
 </ng-template>

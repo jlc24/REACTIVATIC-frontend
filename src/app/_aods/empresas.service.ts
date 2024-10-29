@@ -192,4 +192,16 @@ export class EmpresasService {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
   }
+
+  documentoPDF(id: number, doc: string): Observable<any>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    if (doc == 'formulario') {
+      return this._httpClient.get(`${this.ruta}/formulario/${id}`, {
+        responseType: "blob",
+        headers: new HttpHeaders()
+          .set("Authorization", `bearer ${access_token}`)
+          .set("Content-Type", "application/json")
+      });
+    }
+  }
 }

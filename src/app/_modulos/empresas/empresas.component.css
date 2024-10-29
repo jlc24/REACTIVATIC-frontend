@@ -203,3 +203,41 @@
 .benefit-details strong {
   color: #222;
 }
+
+.btn-outline-custom {
+  color: #FF5919;
+  border-color: #FF5919;
+}
+
+.btn-outline-custom:hover {
+  color: #FFF;
+  background-color: #FF5919;
+  border-color: #FF5919;
+}
+
+.btn-outline-custom:focus,
+.btn-outline-custom.focus {
+  -webkit-box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+  box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+}
+
+.btn-outline-custom.disabled,
+.btn-outline-custom:disabled {
+  color: #FF5919;
+  background-color: transparent;
+}
+
+.btn-outline-custom:not(:disabled):not(.disabled):active,
+.btn-outline-custom:not(:disabled):not(.disabled).active,
+.show>.btn-outline-custom.dropdown-toggle {
+  color: #FFF;
+  background-color: #FF5919;
+  border-color: #FF5919;
+}
+
+.btn-outline-custom:not(:disabled):not(.disabled):active:focus,
+.btn-outline-custom:not(:disabled):not(.disabled).active:focus,
+.show>.btn-outline-custom.dropdown-toggle:focus {
+  -webkit-box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+  box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+}

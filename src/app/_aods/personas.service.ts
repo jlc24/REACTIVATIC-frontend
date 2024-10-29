@@ -218,16 +218,26 @@ export class PersonasService {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
     return this._httpClient.post<void>(`${this.ruta}/generarusuario`, dato, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
-    })
+    });
   }
 
-  carnetPDF(id: number): Observable<any>{
+  documentoPDF(id: number, doc: string): Observable<any>{
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
-    return this._httpClient.get(`${this.ruta}/carnet/${id}`, {
-      responseType: "blob",
-      headers: new HttpHeaders()
-        .set("Authorization", `bearer ${access_token}`)
-        .set("Content-Type", "application/json")
-    });
+    if (doc == 'carnet') {
+      return this._httpClient.get(`${this.ruta}/carnet/${id}`, {
+        responseType: "blob",
+        headers: new HttpHeaders()
+          .set("Authorization", `bearer ${access_token}`)
+          .set("Content-Type", "application/json")
+      });
+    }
+    if (doc == 'formulario') {
+      return this._httpClient.get(`${this.ruta}/formulario/${id}`, {
+        responseType: "blob",
+        headers: new HttpHeaders()
+          .set("Authorization", `bearer ${access_token}`)
+          .set("Content-Type", "application/json")
+      });
+    }
   }
 }

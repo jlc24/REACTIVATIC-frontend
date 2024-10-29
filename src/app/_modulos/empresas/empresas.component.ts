@@ -32,7 +32,7 @@ import { Rubros } from 'src/app/_entidades/rubros';
 import { RubrosService } from 'src/app/_aods/rubros.service';
 import { MunicipiosService } from 'src/app/_aods/municipios.service';
 import { HttpEventType } from '@angular/common/http';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { UtilsService } from 'src/app/_aods/utils.service';
 import { switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
@@ -98,6 +98,7 @@ export class EmpresasComponent implements OnInit {
 
   modalRefEmpresa: NgbModalRef;
   modalRefPersona: NgbModalRef;
+  modalRefCarnet: NgbModalRef;
 
   step: number = 1;
   stepRep: number = 1;
@@ -191,6 +192,8 @@ export class EmpresasComponent implements OnInit {
 
   imagenEmpresa: any[];
   imagenEmpresas: { [key: number]: { filename: string, data: any, mimeType: string } } = {};
+
+  pdfUrl: SafeResourceUrl | null = null;
 
 
   constructor(
@@ -740,7 +743,6 @@ export class EmpresasComponent implements OnInit {
 
     const usuario = parteUsuario.toLowerCase() + parteDIP;
     const clave = parteUsuario.toLowerCase() + parteDIP;
-
     this.formRep.patchValue({
       usuario: usuario,
       clave: clave
@@ -762,9 +764,8 @@ export class EmpresasComponent implements OnInit {
         dato.nform,
         [
           Validators.required,
-          Validators.pattern('^[0-9]+$'),
           Validators.minLength(1),
-          Validators.maxLength(4)
+          Validators.maxLength(20)
         ]
       ],
       fechareg: [
@@ -911,6 +912,8 @@ export class EmpresasComponent implements OnInit {
         dato.longitud
       ]
     });
+    this.formEmpresa.get('fechareg')?.valueChanges.subscribe(() => this.generateFormEmpresa());
+    this.formEmpresa.get('idrubro')?.valueChanges.subscribe(() => this.generateFormEmpresa());
     this.formEmpresa.get('copiarDatos')?.valueChanges.subscribe((value) => {
       this.copiarDatosRepresentante(value);
     });
@@ -948,9 +951,42 @@ export class EmpresasComponent implements OnInit {
     this.mostrarOtro = value === '6';
   }
 
+  generateFormEmpresa() {
+    const programa = 'RTIC';
+
+      const rubroSelect = this.formEmpresa.get('idrubro')?.value || '';
+
+      let rubroAbrev = '';
+
+      switch (rubroSelect) {
+        case '1':
+          rubroAbrev = 'ARTES';
+          break;
+        case '2':
+          rubroAbrev = 'TXTIL';
+          break;
+        case '3':
+          rubroAbrev = 'ALMTS';
+          break;
+        default:
+          rubroAbrev = rubroSelect;
+          break;
+      }
+
+      const fechaReg = this.formEmpresa.get('fechareg')?.value || '';
+      const año = fechaReg ? fechaReg.slice(0, 4) : '0000';
+
+      // Retornar la cadena generada
+      const codigoFormulario = `${programa}-${rubroAbrev}-${año}-0000`;
+
+      this.formEmpresa.patchValue({
+        nform: codigoFormulario,
+      });
+  }
+
   get f() { return this.formEmpresa.controls; }
 
-  onInput(event: any, controlName: string, type: 'letras' | 'letrasyespacios' | 'numeros' | 'letrasynumerosguion' | 'direccion'): void {
+  onInput(event: any, controlName: string, type: 'letras' | 'letrasyespacios' | 'numeros' | 'letrasynumerosguion' | 'direccion' | 'formulario'): void {
     let input = event.target.value;
     switch (type) {
       case 'letras':
@@ -967,6 +1003,9 @@ export class EmpresasComponent implements OnInit {
         break;
       case 'direccion':
         input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1\s.,#-]/g, '');
+        break;
+      case 'formulario':
+        input = input.replace(/[^a-zA-Z0-9-]/g, '');
         break;
     }
     if (this.formEmpresa.get(controlName)) {
@@ -1305,23 +1344,58 @@ export class EmpresasComponent implements OnInit {
         swal.showLoading();
       }
     });
-
-    this._empresasService.upload(this.dato?.idempresa.toString(), 'empresas', this.archivoSeleccionado).subscribe(event => {
-      if (event.type === HttpEventType.UploadProgress) {
-        const progreso = Math.round((event.loaded / event.total) * 100);
-        swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
-      } else if (event.type === HttpEventType.Response) {
+    if (this.estado === 'Formulario A') {
+      this._empresasService.upload(this.dato?.idempresa.toString(), 'formularioA', this.archivoSeleccionado).subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const progreso = Math.round((event.loaded / event.total) * 100);
+          swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
+        } else if (event.type === HttpEventType.Response) {
+          swal.close();
+          this.fdescargar(this.dato?.idempresa, 'empresas')
+          this.fdatos();
+          swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
+          this.modalRefPersona.dismiss();
+          this.archivoSeleccionado = null;
+        }
+      }, error => {
         swal.close();
-        this.fdescargar(this.dato?.idempresa, 'empresas')
-        this.fdatos();
-        swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
-        this.modalRefPersona.dismiss();
-        this.archivoSeleccionado = null;
-      }
-    }, error => {
-      swal.close();
-      swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
-    });
+        swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
+      });
+    }else if (this.estado === 'Formulario B') {
+      this._empresasService.upload(this.dato?.idempresa.toString(), 'formularioB', this.archivoSeleccionado).subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const progreso = Math.round((event.loaded / event.total) * 100);
+          swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
+        } else if (event.type === HttpEventType.Response) {
+          swal.close();
+          this.fdescargar(this.dato?.idempresa, 'empresas')
+          this.fdatos();
+          swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
+          this.modalRefPersona.dismiss();
+          this.archivoSeleccionado = null;
+        }
+      }, error => {
+        swal.close();
+        swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
+      });
+    }else {
+      this._empresasService.upload(this.dato?.idempresa.toString(), 'empresas', this.archivoSeleccionado).subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const progreso = Math.round((event.loaded / event.total) * 100);
+          swal.getHtmlContainer().querySelector('b').textContent = `${progreso}%`;
+        } else if (event.type === HttpEventType.Response) {
+          swal.close();
+          this.fdescargar(this.dato?.idempresa, 'empresas')
+          this.fdatos();
+          swal.fire('Archivo cargado', 'Archivo cargado con éxito', 'success');
+          this.modalRefPersona.dismiss();
+          this.archivoSeleccionado = null;
+        }
+      }, error => {
+        swal.close();
+        swal.fire('Error', 'Ocurrió un error durante la subida, por favor contacte al ADMINISTRADOR', 'error');
+      });
+    }
   }
 
   fdescargar(id: number, rol: string) {
@@ -1444,6 +1518,78 @@ export class EmpresasComponent implements OnInit {
       backdrop: 'static',
       keyboard: false
     });
+  }
+
+  fimagenFormA(contenido: any) {
+    this.estado = 'Formulario A';
+    this.modalRefPersona = this._modalService.open(contenido, {
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+  fimagenFormB(contenido: any) {
+    this.estado = 'Formulario B';
+    this.modalRefPersona = this._modalService.open(contenido, {
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  fimprimir(id: number, tipo: string, content: any){
+    this.estado = tipo;
+    this.utilsService.mostrarCargando();
+    if (this.estado === 'Carnet') {
+      this._personasService.documentoPDF(id, 'carnet').subscribe(
+        data => {
+          const url = window.URL.createObjectURL(data);
+          this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+          this.modalRefCarnet =  this._modalService.open(content, {
+            backdrop: 'static',
+            keyboard: false,
+            size: 'xl'
+          });
+          this.utilsService.cerrarCargando();
+        },
+        error => {
+          const mensaje = error.error?.mensaje || 'Error desconocido. Intente nuevamente o consulte con el Administrador.';
+          this.utilsService.cerrarCargando();
+          // Mostramos el SweetAlert con el mensaje de error
+          swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: mensaje,
+            confirmButtonText: 'Aceptar'
+          });
+          this.toast.error('', 'Error desconocido');
+        }
+      );
+    }
+    if (this.estado == 'Formulario') {
+      this._empresasService.documentoPDF(id, 'formulario').subscribe(
+        data => {
+          const url = window.URL.createObjectURL(data);
+          this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+          this.modalRefCarnet =  this._modalService.open(content, {
+            backdrop: 'static',
+            keyboard: false,
+            size: 'xl'
+          });
+          this.utilsService.cerrarCargando();
+        },
+        error => {
+          const mensaje = error.error?.mensaje || 'Error desconocido. Intente nuevamente o consulte con el Administrador.';
+          this.utilsService.cerrarCargando();
+          // Mostramos el SweetAlert con el mensaje de error
+          swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: mensaje,
+            confirmButtonText: 'Aceptar'
+          });
+          this.toast.error('', 'Error desconocido');
+        }
+      );
+    }
   }
 
 
