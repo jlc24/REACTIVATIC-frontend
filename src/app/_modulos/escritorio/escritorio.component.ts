@@ -8,6 +8,8 @@ import { ProductosService } from 'src/app/_aods/productos.service';
 import { SolicitudesService } from 'src/app/_aods/solicitudes.service';
 import { ReportesService } from 'src/app/_aods/reportes.service';
 import { Reportes } from 'src/app/_entidades/reportes';
+import { Chart } from 'angular-highcharts';
+import { Graficos } from 'src/app/_entidades/graficos';
 
 @Component({
   selector: 'app-escritorio',
@@ -16,6 +18,8 @@ import { Reportes } from 'src/app/_entidades/reportes';
 })
 export class EscritorioComponent implements OnInit {
 
+  chart1: Chart;
+  series1: Array<Graficos> = [];
   empresasgestion: Reportes[];
 
   escliente: boolean =false;
@@ -29,7 +33,8 @@ export class EscritorioComponent implements OnInit {
   totalempresas: number = 0;
   totalmunicipios: number = 0;
   totalproductos: number = 0;
-  totalsolicitudesventa: number = 0;
+  totalsolicitudesventaP: number = 0;
+  totalsolicitudesventaR: number = 0;
 
   esCargoAdministrador: boolean = false;
   esCargoSecretario: boolean = false;
@@ -66,8 +71,10 @@ export class EscritorioComponent implements OnInit {
     this.fcantidadempresas();
     this.fcantidadmunicipios();
     this.fcantidadproductos();
+    this.fempresasgestion();
     if (this.esempresa) {
-      this.fcantidadsventa();
+      this.fcantidadventap();
+      this.fcantidadventar();
     }
 
     this.esCargoAdministrador = this._accesoService.esCargoAdministrador();
@@ -144,37 +151,102 @@ export class EscritorioComponent implements OnInit {
     }
     this._empresasService.cantidad(this.buscar, this.rubro).subscribe((data) => {
       this.totalempresas = data;
-    })
+    });
   }
 
   fcantidadmunicipios() {
     this._municipiosService.cantidad(this.buscar).subscribe((data) => {
       this.totalmunicipios = data;
-    })
+    });
   }
 
   fcantidadproductos(){
     if (this.esempresa) {
       this._productosService.cantidad(this.buscar).subscribe((data) => {
         this.totalproductos = data;
-      })
+      });
     }else{
       this._productosService.cantidadtotal(this.buscar).subscribe((data) => {
         this.totalproductos = data;
-      })
+      });
     }
   }
 
-  fcantidadsventa(){
-    this._solicitudesService.cantidade().subscribe((data) => {
-      this.totalsolicitudesventa = data;
-    })
+  fcantidadventap(){
+    this._solicitudesService.cantidadvp().subscribe((data) => {
+      this.totalsolicitudesventaP = data;
+    });
+  }
+
+  fcantidadventar(){
+    this._solicitudesService.cantidadvr().subscribe((data) => {
+      this.totalsolicitudesventaR = data;
+    });
   }
 
   fempresasgestion(){
     this._reportesService.empresasporgestion().subscribe((data) => {
       this.empresasgestion = data;
-    })
+      this.fgraficos(this.empresasgestion);
+    });
+  }
+
+  fgraficos(datos: { entidad: string, cantidad: number }[]) {
+    for (let index = 0; index < datos.length; index++) {
+      let serie = new Graficos();
+      serie.name = datos[index].entidad;
+      serie.y = datos[index].cantidad;
+      this.series1.push(serie);
+    }
+    this.series1 = [];
+
+    datos.forEach(dato => {
+      let color = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+      let serie = { name: dato.entidad, y: dato.cantidad, color: color };
+      this.series1.push(serie);
+    });
+
+    this.chart1 = new Chart({
+      chart: {
+        type: 'column'
+      },
+      title: {
+        text: ''
+      },
+      xAxis: {
+        categories: datos.map(d => d.entidad),
+        title: {
+          text: 'Año'
+        }
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: 'Cantidad de Empresas'
+        }
+      },
+      plotOptions: {
+        column: {
+          depth: 35,
+          colorByPoint: true,
+          // enableMouseTracking: false,
+          // allowPointSelect: false
+        },
+        series: {
+          states: {
+            inactive: {
+              opacity: 1
+            }
+          }
+        }
+      },
+      series: [{
+        name: 'Empresas',
+        type: 'column',
+        data: this.series1,
+        showInLegend: false 
+      }]
+    });
   }
 
 }

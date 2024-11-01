@@ -209,6 +209,12 @@ export class PerfilesComponent implements OnInit {
     }else{
       this.fdescargar('usuarios');
     }
+
+    this.formulario = this._fb.group({
+      aclave: ['', [Validators.required]],
+      nclave: ['', [Validators.required]],
+      cclave: ['', [Validators.required]]
+    });
   }
 
   getFormacionDescription(value: number): string {
@@ -259,7 +265,7 @@ export class PerfilesComponent implements OnInit {
 
   crearformulario() {
     this.formulario = this._fb.group ({
-      cclave: [
+      aclave: [
         '',
         [
           Validators.required,
@@ -268,7 +274,7 @@ export class PerfilesComponent implements OnInit {
           Validators.maxLength(50)
         ]
       ],
-      clave: [
+      nclave: [
         '',
         [
           Validators.required,
@@ -276,10 +282,19 @@ export class PerfilesComponent implements OnInit {
           Validators.minLength(8),
           Validators.maxLength(50)
         ]
+      ],
+      cclave: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('[a-zA-Z0-9]*'),
+          Validators.minLength(8),
+          Validators.maxLength(50),
+        ]
       ]
     },
     {
-      validator: MustMatch('clave', 'cclave')
+      validator: MustMatch('nclave', 'cclave')
     });
   }
 
@@ -287,53 +302,75 @@ export class PerfilesComponent implements OnInit {
     return this.formulario.controls;
   }
 
-  faceptarcambiarclave(clave: string) {
-    swal.fire({
-      title: 'Confirmación de clave',
-      html: `
-        <input id="clave-input" class="swal2-input" placeholder="Ingrese su clave" type="password">
-        <div id="intentos-restantes" style="margin-top: 10px;">Intentos restantes: ${this.maxAttempts - this.attempts}</div>
-      `,
-      showCancelButton: true,
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Confirmar',
-      customClass: {
-        confirmButton: 'btn btn-success rounded-pill mr-3',
-        cancelButton: 'btn btn-secondary rounded-pill',
+  faceptarcambiarclave() {
+    this.submitted = true;
+
+    let aclave = this.formulario.value.aclave;
+    let nclave = this.formulario.value.nclave;
+
+    this._usuariosService.verificar({ clave: aclave }).subscribe(
+      (response) => {
+        this.toast.success('Clave correcta.','Éxito');
+        this._usuariosService.cambiarclave({ idusuario: null, clave: nclave }).subscribe(response => {
+          swal.fire('Cambio de Clave', 'La clave ha sido cambiada con éxito.', 'success');
+          this._modalService.dismissAll();
+          this.formulario.reset();
+          this.submitted = false;
+        });
       },
-      buttonsStyling: false,
-      preConfirm: () => {
-        const clave = (document.getElementById('clave-input') as HTMLInputElement).value;
-        if (!clave) {
-          swal.showValidationMessage('Debe ingresar una clave');
-          return false;
-        }
-        return clave;
+      (error) => {
+        this.toast.error('Clave incorrecta, vuelva a intentarlo','Error');
+        this.formulario.get('aclave')?.reset();
+        this.formulario.get('nclave')?.reset();
+        this.formulario.get('cclave')?.reset();
       }
-    })
-    .then((result) => {
-      if (result.value) {
-        this._usuariosService.verificar({ clave: result.value }).subscribe(
-          (verificacionResponse) => {
-            this._usuariosService.cambiarclave({ clave }).subscribe(response => {
-              this.toast.success('','Clave correcta.');
-              swal.fire('Clave Restablecida', 'La clave ha sido restablecida con éxito.', 'success');
-              this.attempts = 0;
-            });
-          },
-          (error) => {
-            this.attempts++;
-            if (this.attempts >= this.maxAttempts) {
-              this.toast.error('Se bloqueron los accesos.','Intentos excedidos.');
-              this.blockUI();
-            } else {
-              this.toast.error('','Clave incorrecta.');
-              this.faceptarcambiarclave(clave);
-            }
-          }
-        );
-      }
-    });
+    );
+    // swal.fire({
+    //   title: 'Confirmación de clave',
+    //   html: `
+    //     <input id="clave-input" class="swal2-input" placeholder="Ingrese su clave" type="password">
+    //     <div id="intentos-restantes" style="margin-top: 10px;">Intentos restantes: ${this.maxAttempts - this.attempts}</div>
+    //   `,
+    //   showCancelButton: true,
+    //   cancelButtonText: 'Cancelar',
+    //   confirmButtonText: 'Confirmar',
+    //   customClass: {
+    //     confirmButton: 'btn btn-success rounded-pill mr-3',
+    //     cancelButton: 'btn btn-secondary rounded-pill',
+    //   },
+    //   buttonsStyling: false,
+    //   preConfirm: () => {
+    //     const clave = (document.getElementById('clave-input') as HTMLInputElement).value;
+    //     if (!clave) {
+    //       swal.showValidationMessage('Debe ingresar una clave');
+    //       return false;
+    //     }
+    //     return clave;
+    //   }
+    // })
+    // .then((result) => {
+    //   if (result.value) {
+    //     this._usuariosService.verificar({ clave: result.value }).subscribe(
+    //       (verificacionResponse) => {
+    //         this._usuariosService.cambiarclave({ clave }).subscribe(response => {
+    //           this.toast.success('','Clave correcta.');
+    //           swal.fire('Clave Restablecida', 'La clave ha sido restablecida con éxito.', 'success');
+    //           this.attempts = 0;
+    //         });
+    //       },
+    //       (error) => {
+    //         this.attempts++;
+    //         if (this.attempts >= this.maxAttempts) {
+    //           this.toast.error('Se bloqueron los accesos.','Intentos excedidos.');
+    //           this.blockUI();
+    //         } else {
+    //           this.toast.error('','Clave incorrecta.');
+    //           this.faceptarcambiarclave(clave);
+    //         }
+    //       }
+    //     );
+    //   }
+    // });
   }
 
   blockUI() {
@@ -488,7 +525,7 @@ export class PerfilesComponent implements OnInit {
 
   get fU() { return this.formUser.controls; }
 
-  onInput(event: any, controlName: string, type: 'letras' | 'letrasyespacios' | 'numeros' | 'letrasynumerosguion' | 'direccion' | 'correo'): void {
+  onInput(event: any, controlName: string, type: 'letras' | 'letrasyespacios' | 'numeros' | 'letrasynumerosguion' | 'letrasynumeros' | 'direccion' | 'correo'): void {
     let input = event.target.value;
     switch (type) {
       case 'letras':
@@ -503,6 +540,9 @@ export class PerfilesComponent implements OnInit {
       case 'letrasynumerosguion':
         input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1]/g, '');
         break;
+      case 'letrasynumeros':
+        input = input.replace(/[^a-zA-Z0-9]/g, '');
+        break;
       case 'direccion':
         input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1\s.,#-]/g, '');
         break;
@@ -510,11 +550,11 @@ export class PerfilesComponent implements OnInit {
         input = input.replace(/[^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$]/g, '');
         break;
     }
-    // this.formulario.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
-    if (this.formUser.get(controlName)) {
+    if (this.formulario.get(controlName)) {
+      this.formulario.get(controlName)?.setValue(input, { emitEvent: false });
+    }else if (this.formUser.get(controlName)) {
       this.formUser.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
-    }
-    if (this.formEmpresa.get(controlName)) {
+    }else if (this.formEmpresa.get(controlName)) {
       this.formEmpresa.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
     }
   }

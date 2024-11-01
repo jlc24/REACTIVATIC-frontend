@@ -32,7 +32,7 @@ export class AsistenciasempresasService {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
   }
-  modificarasistencia(dato: Asistenciasempresas): Observable<any>{
+  modificarasistencia(dato: any): Observable<any>{
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
     return this._httpClient.put<void>(`${this.ruta}`, dato, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')

@@ -207,7 +207,7 @@ export class UsuariosService {
     )
   }
 
-  cambiarclave(dato: { clave: string }): Observable<any> {
+  cambiarclave(dato: { idusuario: number, clave: string }): Observable<any> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
     return this._httpClient.put<void>(`${this.ruta}/cambiarclave`, dato, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')

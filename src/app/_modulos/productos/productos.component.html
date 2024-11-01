@@ -145,6 +145,9 @@
 <ng-template #ab>
     <div class="modal-header" style="background-color: #4A5568;">
         <h4 class="modal-title pull-left text-white"><i class="fa fa-edit"></i> {{ estado }} Producto</h4>
+        <button type="button" class="close" aria-label="Close" (click)="fcancelar()">
+          <span aria-hidden="true" class="text-white">&times;</span>
+        </button>
     </div>
     <div class="modal-body">
       <div class="alert alert-info" role="alert">
@@ -188,12 +191,9 @@
                     </ng-container>
               </small>
             </div>
-            <div class="text-center">
+            <div class="text-right">
               <button type="submit" class="btn btn-sm btn-outline-success rounded-pill mr-2" [disabled]="!formulario.valid">
                 <i class="fa fa-save"></i> Guardar
-              </button>
-              <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">
-                <i class="fa fa-times"></i> Cancelar
               </button>
             </div>
         </form>
@@ -203,6 +203,9 @@
 <ng-template #ver>
   <div class="modal-header" style="background-color: #4A5568; ">
       <h4 class="modal-title pull-left text-white"><i class="fa fa-edit"></i> {{ estado }} detalle del Producto "{{ dato.producto }}"</h4>
+      <button type="button" class="close" aria-label="Close" (click)="fcancelar()">
+        <span aria-hidden="true" class="text-white">&times;</span>
+      </button>
   </div>
   <div class="modal-body">
     <div class="row">
@@ -350,9 +353,6 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">Cerrar</button>
   </div>
 </ng-template>
 

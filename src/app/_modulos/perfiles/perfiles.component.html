@@ -62,8 +62,8 @@
                   <button class="btn btn-sm btn-outline-success rounded-pill mr-3" (click)="fmodificar(modUser)">
                     <i class="bi bi-pencil-square"></i> Actualizar Datos
                   </button>
-                  <button class="btn btn-sm btn-outline-info rounded-pill" (click)="faceptarcambiarclave(perfil?.usuario?.usuario)">
-                    <i class="fa fa-key"></i> Restablecer Clave
+                  <button class="btn btn-sm btn-outline-info rounded-pill" (click)="fcambiarclave(cambiarclave)">
+                    <i class="fa fa-key"></i> Cambiar Clave
                   </button>
                 </div>
                 <div class="col-sm-10 m-2 p-2" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
@@ -519,6 +519,50 @@
       </div>
     </div>
 </div>
+
+<ng-template #cambiarclave>
+  <div class="modal-header" style="background-color: #4A5568;">
+      <h4 class="modal-title pull-left text-white">Cambiar Clave de Acceso</h4>
+      <button type="button" class="close" aria-label="Close" (click)="fcancelar()">
+        <span aria-hidden="true" class="text-white">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="formulario" (ngSubmit)="faceptarcambiarclave()">
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+          <label for="aclave">Clave anterior:<span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
+          <input type="password" class="form-control form-control-sm" id="aclave" formControlName="aclave" [class.is-invalid]="f.aclave.errors && f.aclave.touched" (input)="onInput($event, 'aclave', 'letrasynumeros')" autocomplete="no" required/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+          <label for="nclave">Nueva Clave:<span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
+          <input type="password" class="form-control form-control-sm" id="nclave" formControlName="nclave" [class.is-invalid]="f.nclave.errors && f.nclave.touched" (input)="onInput($event, 'nclave', 'letrasynumeros')" autocomplete="no" required/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
+          <label for="cclave">Confirmar Clave:<span class="text-danger"><b>*</b></span></label>
+        </div>
+        <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
+          <input type="password" class="form-control form-control-sm" id="cclave" formControlName="cclave" [class.is-invalid]="f.cclave.errors && f.cclave.touched" (input)="onInput($event, 'cclave', 'letrasynumeros')" autocomplete="no" required/>
+          <div *ngIf="formulario.hasError('mustMatch', ['nclave', 'cclave']) && (f.cclave.touched || f.nclave.touched)" class="text-danger">
+            Las claves no coinciden.
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row justify-content-end">
+        <button class="btn btn-sm btn-success" [disabled]="!formulario.valid">Cambiar Clave</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
 
 <ng-template #cargarimagen>
   <div class="modal-header">

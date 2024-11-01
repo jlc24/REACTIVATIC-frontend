@@ -79,7 +79,7 @@
                   <td class="text-center">{{ _item.persona.tipogenero?.tipogenero }}</td>
                   <td class="text-right">
                     {{ _item.persona.celular }}
-                    <a [href]="'https://wa.me/+591' + _item.persona.celular" target="_blank" class="ml-4">
+                    <a [href]="'https://api.whatsapp.com/send?phone=591' + _item.persona.celular" target="_blank" class="ml-4">
                       <i class="bi bi-whatsapp text-success" style="font-size: 1.2rem;"></i>
                     </a>
                   </td>
@@ -303,7 +303,7 @@
             <label>Correo:</label>
           </div>
           <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
-            <input type="text" class="form-control form-control-sm" formControlName="correo" [class.is-invalid]="f.correo.errors && f.correo.touched" autocomplete="no"/>
+            <input type="email" class="form-control form-control-sm" formControlName="correo" [class.is-invalid]="f.correo.errors && f.correo.touched" autocomplete="no"/>
           </div>
         </div>
         <div class="row justify-content-between p-3 mt-2">
@@ -415,10 +415,11 @@
 </ng-template>
 
 <ng-template #ver>
-  <div class="modal-header table-info">
-      <div class="row col-12">
-        <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Datos de Representante</h4><br>
-      </div>
+  <div class="modal-header" style="background-color: #4A5568;">
+    <h4 class="modal-title pull-left text-white"><i class="fa fa-edit"></i> {{ estado }} Datos de Representante</h4>
+    <button type="button" class="close" aria-label="Close" (click)="fcancelar()">
+      <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
   </div>
   <div class="modal-body">
     <div class="row pl-3 pr-3">
@@ -560,20 +561,19 @@
               <div class="col-sm-4 text-sm-right">
                 <strong>Clave:</strong>
               </div>
-              <div class="col-sm-4 text-left">
-                <label for="">{{ user.clave ? '************' : '' }}</label>
+              <div class="col-sm-3 text-left">
+                <label for="">{{ user.clave ? '********' : '' }}</label>
+              </div>
+              <div class="col-sm-5 text-right">
+                <button class="btn btn-sm btn-outline-custom rounded-pill mr-3" (click)="fcambiarclave(user.idusuario, user.usuario)">
+                  <i class="fa fa-key"></i> Restablecer clave
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="modal-footer justify-content-end">
-    <button class="btn btn-sm btn-outline-custom rounded-pill mr-3" (click)="fcambiarclave(user.usuario)">
-      <i class="fa fa-key"></i> Restablecer clave
-    </button>
-    <button class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelar()">Cerrar</button>
   </div>
 </ng-template>
 

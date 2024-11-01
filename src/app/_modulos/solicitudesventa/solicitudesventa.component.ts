@@ -86,54 +86,62 @@ export class SolicitudesventaComponent implements OnInit {
       buttonsStyling: false,
     }).then((result) => {
       if (result.value) {
-        swal.fire({
-          title: 'Confirmación de clave',
-          html: `
-            <input id="clave-input" class="swal2-input form-control form-control-sm" placeholder="Ingrese su clave" type="password" maxlength="20">
-            <div id="intentos-restantes" style="margin-top: 10px;">Intentos restantes: ${this.maxAttempts - this.attempts}</div>
-          `,
-          showCancelButton: true,
-          cancelButtonText: 'Cancelar',
-          confirmButtonText: 'Confirmar',
-          customClass: {
-            confirmButton: 'btn btn-success rounded-pill mr-3',
-            cancelButton: 'btn btn-secondary rounded-pill',
-          },
-          buttonsStyling: false,
-          preConfirm: () => {
-            const clave = (document.getElementById('clave-input') as HTMLInputElement).value;
-            if (!clave) {
-              swal.showValidationMessage('Debe ingresar una clave');
-              return false;
-            }
-            return clave;
-          }
-        }).then((claveResult) => {
-          if (claveResult.value) {
-            this._usuariosService.verificar({ clave: claveResult.value }).subscribe(
-              (verificacionResponse) => {
-                let actualizasolicitud: Solicitudes = new Solicitudes();
+        let actualizasolicitud: Solicitudes = new Solicitudes();
                 actualizasolicitud.idsolicitud = id;
                 this._solicitudesService.actualizarestado(actualizasolicitud).subscribe( data=> {
                   this.fdatos();
                   this._toast.success('','Clave correcta.');
-                  swal.fire('Solicitud finalizada', "Su solicitud finalizó con éxito", 'success');
+                  swal.fire('Solicitud finalizada', "Producto vendido con éxito", 'success');
                   this.attempts = 0;
                 });
-              },
-              (error) => {
-                this.attempts++;
-                if (this.attempts >= this.maxAttempts) {
-                  this._toast.error('Se bloqueron los accesos.','Intentos excedidos.');
-                  this.blockUI();
-                } else {
-                  this._toast.error('','Clave incorrecta.');
-                  this.factualizarestado(id, estado);
-                }
-              }
-            );
-          }
-        });
+        // swal.fire({
+        //   title: 'Confirmación de clave',
+        //   html: `
+        //     <input id="clave-input" class="swal2-input form-control form-control-sm" placeholder="Ingrese su clave" type="password" maxlength="20">
+        //     <div id="intentos-restantes" style="margin-top: 10px;">Intentos restantes: ${this.maxAttempts - this.attempts}</div>
+        //   `,
+        //   showCancelButton: true,
+        //   cancelButtonText: 'Cancelar',
+        //   confirmButtonText: 'Confirmar',
+        //   customClass: {
+        //     confirmButton: 'btn btn-success rounded-pill mr-3',
+        //     cancelButton: 'btn btn-secondary rounded-pill',
+        //   },
+        //   buttonsStyling: false,
+        //   preConfirm: () => {
+        //     const clave = (document.getElementById('clave-input') as HTMLInputElement).value;
+        //     if (!clave) {
+        //       swal.showValidationMessage('Debe ingresar una clave');
+        //       return false;
+        //     }
+        //     return clave;
+        //   }
+        // }).then((claveResult) => {
+        //   if (claveResult.value) {
+        //     this._usuariosService.verificar({ clave: claveResult.value }).subscribe(
+        //       (verificacionResponse) => {
+        //         let actualizasolicitud: Solicitudes = new Solicitudes();
+        //         actualizasolicitud.idsolicitud = id;
+        //         this._solicitudesService.actualizarestado(actualizasolicitud).subscribe( data=> {
+        //           this.fdatos();
+        //           this._toast.success('','Clave correcta.');
+        //           swal.fire('Solicitud finalizada', "Su solicitud finalizó con éxito", 'success');
+        //           this.attempts = 0;
+        //         });
+        //       },
+        //       (error) => {
+        //         this.attempts++;
+        //         if (this.attempts >= this.maxAttempts) {
+        //           this._toast.error('Se bloqueron los accesos.','Intentos excedidos.');
+        //           this.blockUI();
+        //         } else {
+        //           this._toast.error('','Clave incorrecta.');
+        //           this.factualizarestado(id, estado);
+        //         }
+        //       }
+        //     );
+        //   }
+        // });
       }
     });
   }

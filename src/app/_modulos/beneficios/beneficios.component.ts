@@ -317,10 +317,10 @@ export class BeneficiosComponent implements OnInit {
         input = input.replace(/[^0-9]/g, '');
         break;
       case 'letrasynumerosguion':
-        input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1\s.,-]/g, '');
+        input = input.replace(/[^a-zA-Z0-9À-ÿ\u00f1\u00d1\s.,-]/g, '');
         break;
       case 'direccion':
-        input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1\s.,#-]/g, '');
+        input = input.replace(/[^a-zA-Z0-9À-ÿ\u00f1\u00d1\s.,#-]/g, '');
         break;
     }
     if (this.formulario?.get(controlName)) {
@@ -835,6 +835,18 @@ export class BeneficiosComponent implements OnInit {
     }
   }
 
+  fasistenciabeneficio(id: number, estado: boolean){
+    this._asistenciasempresasService.modificarasistencia({ idasistenciaempresa: id, asistencia: estado }).subscribe(
+      (data) => {
+        this.fdatosasistencias(this.asistencia.idasistencia);
+        this._toast.success('','Operación exitosa');
+      },
+      (error) => {
+        this.fdatosasistencias(this.asistencia.idasistencia);
+        this._toast.error('', 'Error desconocido');
+      }
+    );
+  }
 
   fplanillaxls(id: number, tipo: string, content: any){
     if (tipo == 'Registro') {

@@ -104,3 +104,81 @@
 .file-info button {
   align-self: flex-end;
 }
+
+.btn-outline-custom {
+  color: #FF5919;
+  border-color: #FF5919;
+}
+
+.btn-outline-custom:hover {
+  color: #FFF;
+  background-color: #FF5919;
+  border-color: #FF5919;
+}
+
+.btn-outline-custom:focus,
+.btn-outline-custom.focus {
+  -webkit-box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+  box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+}
+
+.btn-outline-custom.disabled,
+.btn-outline-custom:disabled {
+  color: #FF5919;
+  background-color: transparent;
+}
+
+.btn-outline-custom:not(:disabled):not(.disabled):active,
+.btn-outline-custom:not(:disabled):not(.disabled).active,
+.show>.btn-outline-custom.dropdown-toggle {
+  color: #FFF;
+  background-color: #FF5919;
+  border-color: #FF5919;
+}
+
+.btn-outline-custom:not(:disabled):not(.disabled):active:focus,
+.btn-outline-custom:not(:disabled):not(.disabled).active:focus,
+.show>.btn-outline-custom.dropdown-toggle:focus {
+  -webkit-box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+  box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+}
+
+.btn-custom {
+  color: #FFF; /* Color del texto */
+  background-color: #FF5919; /* Color de fondo */
+  border-color: #FF5919; /* Color del borde */
+}
+
+.btn-custom:hover {
+  color: #FFF; /* Color del texto al pasar el mouse */
+  background-color: #FF4A12; /* Un tono más oscuro para el hover */
+  border-color: #FF4A12; /* Color del borde al pasar el mouse */
+}
+
+.btn-custom:focus,
+.btn-custom.focus {
+  -webkit-box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+  box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+}
+
+.btn-custom.disabled,
+.btn-custom:disabled {
+  color: #FFF; /* Color del texto en estado deshabilitado */
+  background-color: #FF5919; /* Color de fondo en estado deshabilitado */
+  opacity: 0.65; /* Cambiar la opacidad en estado deshabilitado */
+}
+
+.btn-custom:not(:disabled):not(.disabled):active,
+.btn-custom:not(:disabled):not(.disabled).active,
+.show>.btn-custom.dropdown-toggle {
+  color: #FFF; /* Color del texto al presionar */
+  background-color: #FF4A12; /* Color de fondo al presionar */
+  border-color: #FF4A12; /* Color del borde al presionar */
+}
+
+.btn-custom:not(:disabled):not(.disabled):active:focus,
+.btn-custom:not(:disabled):not(.disabled).active:focus,
+.show>.btn-custom.dropdown-toggle:focus {
+  -webkit-box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+  box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+}

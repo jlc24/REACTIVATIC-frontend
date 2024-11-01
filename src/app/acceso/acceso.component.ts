@@ -21,6 +21,10 @@ export class AccesoComponent implements OnInit {
   error = '';
   estado: boolean = false;
 
+  intentosFallidos: number = 0;
+  maxIntentos: number = 3;
+  tiempoEspera: number = 30;
+
   constructor(
     private _fb: FormBuilder,
     private _ruta: Router,
@@ -44,6 +48,10 @@ export class AccesoComponent implements OnInit {
   }
 
   faceptar() {
+    if (this.intentosFallidos >= this.maxIntentos) {
+      this.mostrarCuentaRegresiva();
+      return;
+    }
     this.estado = true;
     this.submitted = true;
     this._accesoService
@@ -58,9 +66,18 @@ export class AccesoComponent implements OnInit {
             sessionStorage.setItem(NOMBRECLIENTE, decoded['nombrecliente']);
             sessionStorage.setItem(CARGO, decoded['cargo']);
             sessionStorage.setItem(TOKEN, token);
-            this._ruta.navigateByUrl('/inicio');
-            this._mensajes.success(decoded['nombrecliente'], 'Bienvenido');
+            //this._ruta.navigateByUrl('/inicio');
+            swal.fire({
+              title: 'Bienvenido al Sistema de Administración de la Tienda Virtual!!!',
+              text: `Hola, ${decoded['nombre']} ${decoded['nombrecliente']}, has iniciado sesión con éxito.`,
+              icon: 'success',
+              confirmButtonText: 'Aceptar'
+            }).then(() => {
+              this._ruta.navigateByUrl('/inicio');
+            });
+            this._mensajes.success(`${decoded['nombre']} ${decoded['nombrecliente']}`, 'Bienvenido');
             this.estado = false;
+            this.intentosFallidos = 0;
           }
         },
         (err) => {
@@ -68,12 +85,55 @@ export class AccesoComponent implements OnInit {
             swal.fire('Verifica tu conexión!', 'Sin conexión al sistema', 'error');
           }
           if (err.status === 400) {
-            swal.fire('Verifica tus datos!', 'Usuario o Contraseña incorrectos', 'warning');
+            this.intentosFallidos++;
+            const intentosRestantes = this.maxIntentos - this.intentosFallidos;
+            swal.fire('Verifica tus datos!', `Usuario o Contraseña incorrectos. Intentos restantes: ${intentosRestantes}`, 'warning');
+            if (this.intentosFallidos >= this.maxIntentos) {
+              this.mostrarCuentaRegresiva();
+            }
           }
           this.f.usuario.setValue('');
           this.f.clave.setValue('');
           this.estado = false;
         }
       );
+  }
+
+  mostrarCuentaRegresiva() {
+    let tiempoEspera = this.intentosFallidos * 30;
+    let minutos: number, segundos: number;
+
+    swal.fire({
+      title: 'Demasiados intentos fallidos',
+      html: `Espera <strong>${this.formatearTiempo(tiempoEspera)}</strong> minutos para volver a intentar.`,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      onBeforeOpen: () => {
+        swal.showLoading();
+        const interval = setInterval(() => {
+          tiempoEspera--;
+          minutos = Math.floor(tiempoEspera / 60);
+          segundos = tiempoEspera % 60;
+
+          swal.getHtmlContainer().querySelector('strong')!.textContent = this.formatearTiempo(tiempoEspera);
+
+          if (tiempoEspera <= 0) {
+            clearInterval(interval);
+            swal.close();
+            this.intentosFallidos = 0;
+          }
+        }, 1000);
+      },
+    });
+  }
+
+  formatearTiempo(tiempoEnSegundos: number): string {
+    const minutos = Math.floor(tiempoEnSegundos / 60);
+    const segundos = tiempoEnSegundos % 60;
+    return `${this.agregarCero(minutos)}:${this.agregarCero(segundos)}`;
+  }
+
+  agregarCero(valor: number): string {
+    return valor < 10 ? '0' + valor : valor.toString();
   }
 }

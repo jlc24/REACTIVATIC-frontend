@@ -81,7 +81,7 @@
       <strong>{{ totalAPagar | number:'1.2-2' }} Bs.</strong>
     </div>
     <div class="d-flex justify-content-end" [ngClass]="carritos?.length > 0 ? ' border-top' : ''">
-      <button class="btn btn-outline-success mr-2" [ngClass]="carritos?.length > 0 ? 'mt-3' : ''" (click)="fprocesa(registrar)" [disabled]="!(carritos?.length > 0)">
+      <button class="btn btn-outline-success mr-2" [ngClass]="carritos?.length > 0 ? 'mt-3' : ''" (click)="verificarUsuario(accesom)" [disabled]="!(carritos?.length > 0)">
         <span><i class="fa fa-cogs"></i> Realizar Pedido</span>
       </button>
       <button class="btn btn-outline-secondary mr-2" [ngClass]="carritos?.length > 0 ? 'mt-3' : ''" (click)="toggleCarrito()">
@@ -439,7 +439,7 @@
         </div>
         <div class="contact-item">
             <i class="bi bi-envelope-fill text-white"></i>
-            <p class="text-white"><a href="mailto:reactivatic24@gmail.com">reactivatic24@gmail.com</a></p>
+            <p class="text-white"><a href="mailto:reactivatic24@gmail.com">reactivatic24&#64;gmail.com</a></p>
         </div>
         <div class="contact-item">
             <i class="bi bi-globe text-white"></i>

@@ -66,6 +66,7 @@
                 <th class="text-center">Rubro</th>
                 <th class="text-center">Municipio</th>
                 <th class="text-center">Dirección</th>
+                <th class="text-center">Celular</th>
                 <th class="text-center">Estado</th>
                 <th class="text-center">Operaciones</th>
               </tr>
@@ -83,6 +84,12 @@
                 <td class="text-center">{{ _item.rubro?.rubro}}</td>
                 <td class="text-center">{{ _item.municipio?.municipio}}</td>
                 <td>{{ _item.direccion }}</td>
+                <td class="text-right">
+                  {{ _item.celular }}
+                  <a [href]="'https://api.whatsapp.com/send?phone=591' + _item.celular" target="_blank" class="ml-4">
+                    <i class="bi bi-whatsapp text-success" style="font-size: 1.2rem;"></i>
+                  </a>
+                </td>
                 <td class="text-center">
                   <span class="estado badge {{ _item.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" (click)="fcambiarestado(_item.idempresa, !_item.estado)" >
                     {{ _item.estado ? 'HABILITADO' : 'INHABILITADO' }}

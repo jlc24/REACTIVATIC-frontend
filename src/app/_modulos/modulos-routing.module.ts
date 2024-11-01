@@ -208,7 +208,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'clientesregistrados',
+    path: 'clientes',
     component: ClientesregistradosComponent,
     canActivate: [GuardianGuard],
     data: {

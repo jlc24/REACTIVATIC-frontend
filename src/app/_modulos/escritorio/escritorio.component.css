@@ -24,18 +24,25 @@
     box-shadow: 1px 5px 15px #a2a2a2;
 }
 .card-header-fourth{
-    background: linear-gradient(-90deg, #f1cf84, #FFC239);
+  background: linear-gradient(-90deg, #f8b76d, #FF9234);
     box-shadow: 1px 1px 20px #d2d2d2;
 }
 .card-header-fourth:hover{
     box-shadow: 1px 5px 15px #a2a2a2;
 }
 .card-header-fifth{
-    background: linear-gradient(-90deg, #88a5e9, #2C6AF6);
+  background: linear-gradient(-90deg, #f1cf84, #FFC239);
     box-shadow: 1px 1px 20px #d2d2d2;
 }
 .card-header-fifth:hover{
     box-shadow: 1px 5px 15px #a2a2a2;
+}
+.card-header-seventh {
+  background: linear-gradient(-90deg, #b287f5, #6f42c1); /* tonos púrpura */
+  box-shadow: 1px 1px 20px #d2d2d2;
+}
+.card-header-seventh:hover {
+  box-shadow: 1px 5px 15px #a2a2a2;
 }
 .card-stadistic {
     background: linear-gradient(-90deg, #f5f6f7, #f5f6f7);

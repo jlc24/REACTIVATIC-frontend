@@ -537,6 +537,8 @@ export class RepresentantesComponent implements OnInit {
     this.dato.idtipoextension = this.formulario.value.idtipoextension;
     this.dato.telefono = this.formulario.value.telefono;
     this.dato.celular = this.formulario.value.celular;
+    this.dato.direccion = this.formulario.value.direccion;
+    this.dato.correo = this.formulario.value.correo;
     this.dato.formacion = this.formulario.value.formacion;
     this.dato.estadocivil = this.formulario.value.estadocivil;
     this.dato.hijos = this.formulario.value.hijos;
@@ -808,7 +810,7 @@ export class RepresentantesComponent implements OnInit {
     });
   }
 
-  fcambiarclave(clave: string){
+  fcambiarclave(id: number, clave: string){
     swal.fire({
       title: 'Confirmación de clave',
       html: `
@@ -835,7 +837,7 @@ export class RepresentantesComponent implements OnInit {
       if (claveResult.value) {
         this._usuariosService.verificar({ clave: claveResult.value }).subscribe(
           (verificacionResponse) => {
-            this._usuariosService.cambiarclave({ clave }).subscribe(response => {
+            this._usuariosService.cambiarclave({ idusuario: id, clave: clave }).subscribe(response => {
               this.fdatos();
               this._toast.success('','Clave correcta.');
               swal.fire('Clave Restablecida', 'La clave ha sido restablecida con éxito.', 'success');
@@ -849,7 +851,7 @@ export class RepresentantesComponent implements OnInit {
               this.blockUI();
             } else {
               this._toast.error('','Clave incorrecta.');
-              this.fcambiarclave(clave);
+              this.fcambiarclave(id, clave);
             }
           }
         );

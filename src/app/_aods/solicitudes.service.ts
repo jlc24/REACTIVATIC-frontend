@@ -36,9 +36,16 @@ export class SolicitudesService {
     });
   }
 
-  cantidade(): Observable<number> {
+  cantidadvp(): Observable<number> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
-    return this._httpClient.get<number>(`${this.ruta}/cantidade`, {
+    return this._httpClient.get<number>(`${this.ruta}/cantidadvp`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+
+  cantidadvr(): Observable<number> {
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<number>(`${this.ruta}/cantidadvr`, {
       headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
   }

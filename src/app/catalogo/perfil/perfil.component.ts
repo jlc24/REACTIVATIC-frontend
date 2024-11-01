@@ -188,7 +188,15 @@ export class PerfilComponent implements OnInit {
     });
   }
 
-  fprocesa(contenido: any) {
+  verificarUsuario(contenido: any) {
+    if (!this.localusuario) {
+      this.faccesom(contenido);
+    } else {
+      this.fprocesa();
+    }
+  }
+
+  fprocesa() {
     this.estado = 'Procesar';
     if (this.localusuario) {
       let dato = new Procesar();
@@ -200,13 +208,6 @@ export class PerfilComponent implements OnInit {
       dato.correo = this.localcorreo;
       this.fformulario(dato);
       this.faceptar();
-    } else {
-      this.fformulario(this.procesar);
-      this._modalService.open(contenido, {
-        backdrop: 'static',
-        keyboard: false,
-        size: 'lg'
-      });
     }
   }
 
@@ -310,6 +311,7 @@ export class PerfilComponent implements OnInit {
     this.procesar.usuario = this.formulario.value.usuario;
 
     if (this.estado == 'Procesar') {
+      this.utilsService.mostrarCargando();
       this.procesar.clave = this.formulario.value.clave;
 
       this._catalogosService.procesar(this.procesar).subscribe(data => {
@@ -329,6 +331,7 @@ export class PerfilComponent implements OnInit {
 
         let idcliente = Math.floor((Math.random() * 1000000) + 1);
         localStorage.setItem('idcliente', JSON.stringify(idcliente));
+        this.utilsService.cerrarCargando();
         Swal.fire('Proceso completado', 'La Unidad productora se comunicara con usted ya se mediante whastapp o su correo electrónico, gracias.', 'success');
         this.fdatoscarrito();
         this.fcantidadcarrito();

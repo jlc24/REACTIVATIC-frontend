@@ -88,9 +88,28 @@
             <div class="card-body">
                 <div class="row pb-2">
                     <div class="col-12 text-white align-content-center">
-                        <h2 class="card-title">{{ totalsolicitudesventa }}</h2>
-                        <h5 class="card-subtitle mb-2" *ngIf="totalsolicitudesventa == 1">Solicitudes de venta</h5>
-                        <h5 class="card-subtitle mb-2" *ngIf="totalsolicitudesventa > 1 || totalsolicitudesventa == 0">Solicitudes de venta</h5>
+                        <h2 class="card-title">{{ totalsolicitudesventaP }}</h2>
+                        <h5 class="card-subtitle mb-2" *ngIf="totalsolicitudesventaP == 1">Solicitudes de venta pendientes</h5>
+                        <h5 class="card-subtitle mb-2" *ngIf="totalsolicitudesventaP > 1 || totalsolicitudesventaP == 0">Solicitudes de venta pendientes</h5>
+                    </div>
+                    <i class="small-box-icon fa fa-shopping-cart fa-5x"></i>
+                </div>
+            </div>
+            <div class="card-footer m-0 p-1">
+                <div class="col-12 text-white text-right align-content-center">
+                    <i class="fa fa-arrow-circle-o-right fa-3x boton-info" title="Ver mas" (click)="fmisventas()"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mt-1" *ngIf="esempresa">
+        <div class="card card-header-seventh">
+            <div class="card-body">
+                <div class="row pb-2">
+                    <div class="col-12 text-white align-content-center">
+                        <h2 class="card-title">{{ totalsolicitudesventaR }}</h2>
+                        <h5 class="card-subtitle mb-2" *ngIf="totalsolicitudesventaR == 1">Solicitudes de venta realizadas</h5>
+                        <h5 class="card-subtitle mb-2" *ngIf="totalsolicitudesventaR > 1 || totalsolicitudesventaR == 0">Solicitudes de venta realizadas</h5>
                     </div>
                     <i class="small-box-icon fa fa-shopping-cart fa-5x"></i>
                 </div>
@@ -110,7 +129,7 @@
                 <h3 class="card-title"><i class="fa fa-bar-chart"></i> Unidades Productivas por Gestión</h3>
             </div>
             <div class="card-body">
-              
+              <div [chart]="chart1"></div>
             </div>
         </div>
     </div>
@@ -125,7 +144,7 @@
         </div>
     </div>
 </div>
-<div class="row mt-3" *ngIf="esempresa || esadmin || esreactivatic || essddpi">
+<div class="row mt-3" *ngIf="esempresa || esadmin || esreactivatic || essddpi" hidden>
     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
         <div class="card card-stadistic">
             <div class="card-header">

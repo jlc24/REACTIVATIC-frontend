@@ -218,7 +218,7 @@
               <label for="beneficio"><strong>Beneficio:</strong><span class="text-danger"><b>*</b></span></label>
             </div>
             <div class="col-sm-9">
-              <input type="text" class="form-control form-control-sm" id="beneficio" formControlName="beneficio" [class.is-invalid]="f.beneficio.errors && f.beneficio.touched" (input)="onInput($event, 'beneficio', 'direccion')" autocomplete="no" required/>
+              <input type="text" class="form-control form-control-sm" id="beneficio" formControlName="beneficio" [class.is-invalid]="f.beneficio.errors && f.beneficio.touched" (input)="onInput($event, 'beneficio', 'letrasyespacios')" autocomplete="no" required/>
               <small *ngIf="f.beneficio.errors&& f.beneficio.touched" class="invalid-feedback">
                 <ng-container *ngIf="f.beneficio.errors.required">
                   El dato es obligatorio.
@@ -567,7 +567,10 @@
         </button>
       </div>
       <button type="button" class="btn btn-sm btn-secondary mr-2 ">
-        Evaluaciones <i class="bi bi-filetype-xls"></i>
+        Evaluaciones <i class="bi bi-file-earmark-text"></i>
+      </button>
+      <button type="button" class="btn btn-sm btn-custom mr-2 " *ngIf="beneficio.tipobeneficio.tipobeneficio !== 'FERIA' ">
+        Certificados <i class="bi bi-file-earmark-check"></i>
       </button>
       <div class="btn-group mr-2">
         <button type="button" class="btn btn-sm btn-warning dropdown-toggle" data-toggle="dropdown" data-boundary="viewport" aria-expanded="false">
@@ -800,38 +803,42 @@
       </div>
     </div>
     <div class="row justify-content-center mt-2">
-      <table class="table table-sm table-bordered table-striped table-hover" style="width: auto;">
-        <thead>
-          <tr>
-            <th>Nro</th>
-            <th>Nombre Completo</th>
-            <th>Carnet</th>
-            <th>Rubro</th>
-            <th *ngFor="let fechas of fechasasistencia" >{{ fechas.fecha | date:'dd/MM/yyyy' }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let _rep of beneficiosempresaslista; let i = index">
-            <td class="text-right align-content-center">
-              {{ i + 1 + ((paginaEmp-1)*cantidadEmp) }}
-            </td>
-            <td class=" align-content-center" style="font-size: 10px;">
-              {{ _rep.empresa.representante?.persona?.primerapellido }} {{ _rep.empresa.representante?.persona?.segundoapellido }} {{ _rep.empresa.representante?.persona?.primernombre }}
-            </td>
-            <td class=" align-content-center text-right" style="font-size: 10px;">
-              {{ _rep.empresa.representante?.persona?.dip }} {{ _rep.empresa.representante?.persona?.complementario ? '-' +_rep.empresa.representante?.persona?.complementario : _rep.empresa.representante?.persona?.complementario }}
-            </td>
-            <td class=" align-content-center text-center"  style="font-size: 10px;">
-              {{ _rep.empresa.rubro?.rubro }}
-            </td>
-            <td *ngFor="let fecha of fechasasistencia" class="text-center">
-              <input
-                type="checkbox"
-                [value]="asistenciasempresas[i]?.asistencia || false" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive" style="overflow-x: auto;">
+        <table class="table table-sm table-bordered table-striped table-hover" style="width: auto;">
+          <thead>
+            <tr>
+              <th>Nro</th>
+              <th>Nombre Completo</th>
+              <th>Carnet</th>
+              <!-- <th>Rubro</th> -->
+              <th *ngFor="let fechas of fechasasistencia" >{{ fechas.fecha | date:'dd/MM/yyyy' }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let _rep of beneficiosempresaslista; let i = index">
+              <td class="text-right align-content-center">
+                {{ i + 1 + ((paginaEmp-1)*cantidadEmp) }}
+              </td>
+              <td class=" align-content-center" style="font-size: 10px;">
+                {{ _rep.empresa.representante?.persona?.primerapellido }} {{ _rep.empresa.representante?.persona?.segundoapellido }} {{ _rep.empresa.representante?.persona?.primernombre }}
+              </td>
+              <td class=" align-content-center text-right" style="font-size: 10px;">
+                {{ _rep.empresa.representante?.persona?.dip }} {{ _rep.empresa.representante?.persona?.complementario ? '-' +_rep.empresa.representante?.persona?.complementario : _rep.empresa.representante?.persona?.complementario }}
+              </td>
+              <!-- <td class=" align-content-center text-center"  style="font-size: 10px;">
+                {{ _rep.empresa.rubro?.rubro }}
+              </td> -->
+              <td *ngFor="let fecha of fechasasistencia; let fechaIndex = index" class="text-center">
+                <input
+                  type="checkbox"
+                  [checked]="asistenciasempresas[i * fechasasistencia.length + fechaIndex]?.asistencia || false"
+                  (change)="fasistenciabeneficio(asistenciasempresas[i * fechasasistencia.length + fechaIndex]?.idasistenciaempresa, $event.target.checked)"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </ng-template>
