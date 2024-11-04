@@ -46,12 +46,13 @@ import { RolesComponent } from './roles/roles.component';
 import { CargosComponent } from './cargos/cargos.component';
 import { ReporteunidadesComponent } from './reporteunidades/reporteunidades.component';
 import { ReportebeneficiosComponent } from './reportebeneficios/reportebeneficios.component';
+import { NegociosComponent } from './negocios/negocios.component';
 
 
 
 
 @NgModule({
-  declarations: [EscritorioComponent, PerfilesComponent, ConfiguracionesComponent, E401Component, RubrosComponent, MunicipiosComponent, LocalidadesComponent, SubrubrosComponent, AsociacionesComponent, UsuariosComponent, EmpresasComponent, RepresentantesComponent, ProductosComponent, SolicitudesventaComponent, SolicitudescompraComponent, ReportesComponent, SeguimientosComponent, ClientesnoregistradosComponent, ClientesregistradosComponent, ProductosmasvendidosComponent, ClientesconmascomprasComponent, EmpresasmassolicitadasComponent, CategoriaComponent, BeneficiosComponent, ColoresComponent, ComentariosComponent, MaterialesComponent, OfertasComponent, PreciosComponent, TamanosComponent, DocumentosComponent, EnlacesComponent, ExtensionesComponent, GenerosComponent, RolesComponent, CargosComponent, ReporteunidadesComponent, ReportebeneficiosComponent],
+  declarations: [EscritorioComponent, PerfilesComponent, ConfiguracionesComponent, E401Component, RubrosComponent, MunicipiosComponent, LocalidadesComponent, SubrubrosComponent, AsociacionesComponent, UsuariosComponent, EmpresasComponent, RepresentantesComponent, ProductosComponent, SolicitudesventaComponent, SolicitudescompraComponent, ReportesComponent, SeguimientosComponent, ClientesnoregistradosComponent, ClientesregistradosComponent, ProductosmasvendidosComponent, ClientesconmascomprasComponent, EmpresasmassolicitadasComponent, CategoriaComponent, BeneficiosComponent, ColoresComponent, ComentariosComponent, MaterialesComponent, OfertasComponent, PreciosComponent, TamanosComponent, DocumentosComponent, EnlacesComponent, ExtensionesComponent, GenerosComponent, RolesComponent, CargosComponent, ReporteunidadesComponent, ReportebeneficiosComponent, NegociosComponent],
   imports: [
     CommonModule,
     ModulosRoutingModule,

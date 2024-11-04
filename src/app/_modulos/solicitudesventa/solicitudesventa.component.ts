@@ -45,7 +45,7 @@ export class SolicitudesventaComponent implements OnInit {
   }
 
   fcantidad() {
-    this._solicitudesService.cantidade().subscribe((data) => {
+    this._solicitudesService.cantidadvp().subscribe((data) => {
       this.total = data;
     });
   }

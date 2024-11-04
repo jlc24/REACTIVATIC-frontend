@@ -660,7 +660,7 @@ export class UsuariosComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustUrl(`data:${mimeType};base64,${data}`);
   }
 
-  faceptarcambiarclave(clave: string) {
+  faceptarcambiarclave(id: number, clave: string) {
     swal.fire({
       title: 'Confirmación de clave',
       html: `
@@ -688,7 +688,7 @@ export class UsuariosComponent implements OnInit {
       if (result.value) {
         this._usuariosService.verificar({ clave: result.value }).subscribe(
           (verificacionResponse) => {
-            this._usuariosService.cambiarclave({ clave }).subscribe(response => {
+            this._usuariosService.cambiarclave({ idusuario:id, clave: clave }).subscribe(response => {
               this._toast.success('','Clave correcta.');
               swal.fire('Clave Restablecida', 'La clave ha sido restablecida con éxito.', 'success');
               this.attempts = 0;
@@ -701,7 +701,7 @@ export class UsuariosComponent implements OnInit {
               this.blockUI();
             } else {
               this._toast.error('','Clave incorrecta.');
-              this.faceptarcambiarclave(clave);
+              this.faceptarcambiarclave(id,clave);
             }
           }
         );

@@ -1,91 +1,208 @@
-<app-cabeceratitulos [titulo]="'Reportes'" [descripcion]="'Clientes registrados con solicitudes'" [icono]="'pie-chart'" [opcion]="'reportes'">
+<app-cabeceratitulos [titulo]="'Clientes'" [descripcion]="'Clientes de clientes registrados'" [icono]="'user'" [opcion]="'clientes'">
 </app-cabeceratitulos>
 
 <div class="row">
-    <div class="col-md-12">
-        <div class="tile">
-            <div class="row">
-                <div class="col-md-12 mb-2">
-                    <div class="input-group justify-content-end">
-                        <div class="input-group-prepend">
-                            <div class="dropdown">
-                                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-bars"></i> Opciones
-                  </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <button class="dropdown-item" (click)="fdatosPDF()"><i class="fa fa-file-pdf-o"></i> Reporte PDF</button>
-                                    <button class="dropdown-item" (click)="fdatosXLS()"><i class="fa fa-file-excel-o"></i> Reporte Excel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  <div class="col-md-12">
+    <div class="card" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+      <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
+        <h4 class="text-white">LISTA DE CLIENTES</h4>
+        <button class="btn btn-sm btn-outline-light rounded-pill mr-2" type="button" (click)="fadicionar(am)"><i class="fa fa-plus"></i> Agregar Cliente</button>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-6 mt-1">
+            <p *ngIf="total == 0">
+              Total: <b>{{ total }} registros</b>
+            </p>
+            <p *ngIf="total == 1">
+              Total: <b>{{ total }} registro</b>
+            </p>
+            <p *ngIf="total > 1">
+              Total: <b>{{ total }} registros</b>
+            </p>
+          </div>
+          <div class="col-sm-6">
+            <div class="row justify-content-end">
+              <div class="col-sm-2 text-md-right text-sm-left mt-1">
+                <label for="">Buscar: </label>
+              </div>
+              <div class="col-sm-10">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                  </div>
+                  <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Cliente a buscar ..." (keyup)="fbuscar()" style="text-transform: uppercase;"/>
                 </div>
+              </div>
             </div>
-            <div class="form-group row">
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control mr-2" [(ngModel)]="buscar" placeholder="Cliente a buscar..." (keyup.enter)="fbuscar()" />
-                        <span class="input-group-prepend">
-                    <button class="btn btn-outline-primary mr-2" (click)="fbuscar()">
-                        <i class="fa fa-search"></i> Buscar
-                    </button>
-                    <button class="btn btn-outline-dark" (click)="limpiar()">
-                        <i class="fa fa-list"></i> Limpiar
-                    </button>
-                </span>
-                    </div>
-                </div>
-                <div class="col-md-6 mt-1" *ngIf="total > cantidad">
-                    <ngb-pagination class="d-flex justify-content-end align-items-baseline pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)" size="sm"></ngb-pagination>
-                </div>
-            </div>
-            <div class="table-responsive" *ngIf="datos?.length > 0">
-                <p class="text-right" *ngIf="total == 1">
-                    Total: <b>{{ total }} registro</b>
-                </p>
-                <p class="text-right" *ngIf="total > 1">
-                    Total: <b>{{ total }} registros</b>
-                </p>
-                <!-- Mostrando del registro {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de un total de {{total}} datos -->
-                <table class="table table-sm">
-                    <thead>
-                        <tr class="table-primary">
-                            <th class="text-center">Nro</th>
-                            <th class="text-center">Fecha</th>
-                            <th class="text-center">Cliente</th>
-                            <th class="text-center">Empresa</th>
-                            <th class="text-center">Productos</th>
-                            <th class="text-center">Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let _item of datos; let i = index">
-                            <td>{{ i+1 }}</td>
-                            <td>{{_item.fecha }}</td>
-                            <td>{{_item.cliente.persona.primerapellido }}</td>
-                            <td>{{_item.empresa.empresa}}</td>
-                            <td>
-                                <ul>
-                                    <li *ngFor="let _itemp of _item.solicitudproductos; let i = index">Producto: <b>{{_itemp.producto.producto}}</b>, Cantidad: <b>{{_itemp.cantidad}}</b>, Precio de venta: <b>{{_itemp.precioventa}} Bs.</b>, Total: <b>{{_itemp.total}} Bs.</b></li>
-                                </ul>
-                            </td>
-                            <td>
-                                <span class="badge badge-warning" *ngIf="_item.estado==false">En processo</span>
-                                <span class="badge badge-success" *ngIf="_item.estado">Finalizado</span>
-                            </td>
-                        </tr>
-
-                        <tr *ngIf="total > cantidad">
-                            <td colspan="5">
-                                <ngb-pagination class="d-flex justify-content-center pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="table-responsive" *ngIf="total == 0">
-                <p class="text-center"><b>Sin productos</b></p>
-            </div>
+          </div>
         </div>
+        <div class="table-responsive" *ngIf="clientes?.length > 0">
+          <table class="table table-sm table-bordered table-hover table-striped tabla-representante">
+            <thead>
+              <tr class="table-primary">
+                <th class="text-center">Nro</th>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Celular</th>
+                <th class="text-center">Dirección</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Fecha Registro</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+              <tbody>
+                <tr *ngFor="let _item of clientes; let i = index">
+                  <td class="text-right">{{ i + 1 + ((pagina-1)*10) }}</td>
+                  <td>
+                    {{ _item.persona.primerapellido }} {{ _item.persona.segundoapellido }} {{ _item.persona.primernombre }}
+                  </td>
+                  <td class="text-right">
+                    {{ _item.persona.celular }}
+                    <a [href]="'https://api.whatsapp.com/send?phone=591' + _item.persona.celular" target="_blank" class="ml-4">
+                      <i class="bi bi-whatsapp text-success" style="font-size: 1.2rem;"></i>
+                    </a>
+                  </td>
+                  <td class="text-center">{{ _item.persona.direccion }}</td>
+                  <td class="text-center">
+                    <span class="estado badge {{ _item.persona.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" >
+                      {{ _item.persona.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                    </span>
+                  </td>
+                  <td class="text-right">{{ _item.persona.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+                  <td class="text-center">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" data-boundary="viewport" aria-expanded="false">
+                        <i class="bi bi-list"></i>
+                      </button>
+                      <div class="dropdown-menu">
+                        <div class="dropdown-item puntero" *ngIf="_item.usuario?.usuario !== null && _item.usuario?.usuario !== undefined && _item.usuario?.usuario !== ''"><i class="fa fa-eye text-danger"></i> Generar</div>
+                        <!-- <div class="dropdown-item puntero" (click)="fverrep(_item.persona.idpersona, ver)"><i class="fa fa-eye text-info"></i> Ver</div> -->
+                        <div class="dropdown-item puntero" (click)="fmodificar(_item.persona.idpersona, am)"><i class="fa fa-edit text-warning"></i> Modificar</div>
+                        <div class="dropdown-divider"></div>
+                        <!-- <div class="dropdown-item puntero" (click)="fimprimir(_item.persona.idpersona, carnet)"><i class="fa fa-print"></i> Carnet</div> -->
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item puntero"><i class="bi bi-trash text-danger"></i> Eliminar</div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+        <div class="table-responsive" *ngIf="total == 0">
+          <table class="table table-sm table-bordered table-hover tabla-representante">
+            <thead>
+              <tr class="table-primary">
+                <th class="text-center">Nro</th>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Carnet de Identidad</th>
+                <th class="text-center">Genero</th>
+                <th class="text-center">Teléfono/Celular</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Fecha Registro</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="8" class="text-center">No se encontraron registros.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row mt-2">
+          <div class="col-sm-6">
+            <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+          </div>
+          <div class="col-sm-6">
+            <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
+
+<ng-template #am>
+    <div class="modal-header" style="background-color: #4A5568;">
+      <h4 class="modal-title pull-left text-white"><i class="bi bi-person-fill-add" style="font-size: 2rem;"></i> Registrar Datos de Cliente</h4>
+      <button type="button" class="close" aria-label="Close" (click)="fcancelar()">
+        <span aria-hidden="true" class="text-white">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="formulario" (ngSubmit)="faceptar()">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="primerapellido">Apellido Paterno: <span class="text-danger">*</span></label>
+              <input type="text" id="primerapellido" class="form-control form-control-sm" formControlName="primerapellido"
+                [class.is-invalid]="fC.primerapellido.errors && fC.primerapellido.touched"
+                (input)="onInputRegister($event, 'primerapellido', 'letrasyespacios')"
+                autocomplete="no" placeholder="Ingrese su apellido paterno" required/>
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="segundoapellido">Apellido Materno:</label>
+              <input type="text" id="segundoapellido" class="form-control form-control-sm" formControlName="segundoapellido"
+                [class.is-invalid]="fC.segundoapellido.errors && fC.segundoapellido.touched"
+                (input)="onInputRegister($event, 'segundoapellido', 'letrasyespacios')"
+                autocomplete="no" placeholder="Ingrese su apellido materno"/>
+              <div class="invalid-feedback">Este campo no es obligatorio.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="primernombre">Nombres: <span class="text-danger">*</span></label>
+              <input type="text" id="primernombre" class="form-control form-control-sm" formControlName="primernombre"
+                [class.is-invalid]="fC.primernombre.errors && fC.primernombre.touched"
+                (input)="onInputRegister($event, 'primernombre', 'letrasyespacios')"
+                autocomplete="no" placeholder="Ingrese su nombre" required/>
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="celular">Celular: <span class="text-danger">*</span></label>
+              <input type="text" id="celular" class="form-control form-control-sm" formControlName="celular"
+                [class.is-invalid]="fC.celular.errors && fC.celular.touched"
+                (input)="onInputRegister($event, 'celular', 'numeros')"
+                autocomplete="no" placeholder="Ingrese su número de celular"/>
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="direccion">Dirección:</label>
+              <input type="text" id="direccion" class="form-control form-control-sm" formControlName="direccion"
+                [class.is-invalid]="fC.direccion.errors && fC.direccion.touched"
+                (input)="onInputRegister($event, 'direccion', 'direccion')"
+                autocomplete="no" placeholder="Ingrese su dirección"/>
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="correo">Correo:</label>
+              <input type="email" id="correo" class="form-control form-control-sm" formControlName="correo"
+                [class.is-invalid]="fC.correo.errors && fC.correo.touched"
+                autocomplete="no" placeholder="Ingrese su correo electrónico"/>
+              <div class="invalid-feedback">Por favor ingrese un correo válido.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="usuario">Usuario:</label>
+              <input type="text" id="usuario" class="form-control form-control-sm" formControlName="usuario"
+                [class.is-invalid]="fC.usuario.errors && fC.usuario.touched"
+                autocomplete="no" placeholder="Ingrese su usuario"/>
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="clave">Clave:</label>
+              <input type="password" id="clave" class="form-control form-control-sm" formControlName="clave"
+                [class.is-invalid]="fC.clave.errors && fC.clave.touched"
+                autocomplete="no" placeholder="Ingrese su clave"/>
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formulario.valid" style="border-radius: 50px;">
+              <i class="bi bi-floppy"></i> Registrar datos
+            </button>
+              <button type="button" class="btn btn-outline-secondary" (click)="fcancelar()" style="border-radius: 50px;">
+                <i class="bi bi-x"></i> Cancelar
+            </button>
+          </div>
+        </form>
+    </div>
+</ng-template>

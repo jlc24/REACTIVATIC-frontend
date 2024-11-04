@@ -33,6 +33,7 @@ import { CategoriaComponent } from './categoria/categoria.component';
 import { CargosComponent } from './cargos/cargos.component';
 import { ReporteunidadesComponent } from './reporteunidades/reporteunidades.component';
 import { ReportebeneficiosComponent } from './reportebeneficios/reportebeneficios.component';
+import { NegociosComponent } from './negocios/negocios.component';
 
 const routes: Routes = [
   {
@@ -146,6 +147,14 @@ const routes: Routes = [
   {
     path: 'empresas',
     component: EmpresasComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
+    path: 'negocios',
+    component: NegociosComponent,
     canActivate: [GuardianGuard],
     data: {
       rol: 'ROLE_TODOS'

@@ -129,6 +129,32 @@ export class UsuariosService {
       })
     );
   }
+  datocli(id: number): Observable<Usuarios> {
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Usuarios>(`${this.ruta}/clientes/${id}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    }).pipe(
+      catchError(e => {
+        if (e.status === 400) {
+          swal.fire('Error en los datos', 'Los datos no son correctos', 'error');
+          this.toast.error('','Error 400');
+        }else if (e.status === 404) {
+          swal.fire('Error en los datos', 'El representante NO tiene usuario registrado.', 'error');
+          this.toast.error('','Error 404');
+        } else if (e.status === 409) {
+          const errorMsg = e.error.mensaje || 'Conflicto en los datos';
+          swal.fire('Error de Conflicto', errorMsg, 'error');
+          this.toast.error('','Error 409');
+        } else if (e.status === 500) {
+          swal.fire('Error en el Servidor', 'Error al realizar la consulta en la Base de Datos', 'error');
+          this.toast.error('','Error 500');
+        } else {
+          swal.fire('Error', 'Ocurrió un error desconocido', 'error');
+        }
+        return throwError(e);
+      })
+    );
+  }
 
   adicionar(dato: Usuarios): Observable<any> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
