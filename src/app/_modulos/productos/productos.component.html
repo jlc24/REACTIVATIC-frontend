@@ -178,7 +178,7 @@
             </div>
             <div class="form-group">
                 <label>Descripción:<span class="text-danger"><b>*</b></span></label>
-                <textarea class="form-control form-control-sm" formControlName="descripcion" [class.is-invalid]="f.descripcion.errors && f.descripcion.touched" (input)="onInput($event, 'descripcion', 'letrasynumerosguion')" autocomplete="no" required></textarea>
+                <textarea class="form-control form-control-sm" formControlName="descripcion" [class.is-invalid]="f.descripcion.errors && f.descripcion.touched" autocomplete="no" required></textarea>
                 <small *ngIf="f.descripcion.errors&& f.descripcion.touched" class="text-danger">
                     <ng-container *ngIf="f.descripcion.errors.required">
                         El dato es obligatorio.

@@ -27,6 +27,8 @@
                             "node_modules/bootstrap/dist/css/bootstrap.min.css",
                             "node_modules/font-awesome/css/font-awesome.css",
                             "node_modules/ngx-toastr/toastr.css",
+                            "src/assets/js/libs/calendarjs/calendar.js.css",
+                            "src/assets/js/libs/fullcalendar/main.css",
                             "src/styles.css"
                         ],
                         "scripts": [
@@ -34,6 +36,9 @@
                             "src/assets/js/popper.min.js",
                             "src/assets/js/bootstrap.min.js",
                             "src/assets/js/plugins/pace.min.js",
+                            "src/assets/js/libs/calendarjs/calendar.js",
+                            "src/assets/js/libs/moment/moment.min.js",
+                            "src/assets/js/libs/fullcalendar/main.js",
                             "node_modules/@ckeditor/ckeditor5-build-classic/build/translations/es.js"
                         ]
                     },

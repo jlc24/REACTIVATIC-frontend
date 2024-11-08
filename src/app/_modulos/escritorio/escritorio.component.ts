@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccesoService } from 'src/app/_aods/acceso.service';
 import { UsuariosService } from 'src/app/_aods/usuarios.service';
@@ -10,17 +10,22 @@ import { ReportesService } from 'src/app/_aods/reportes.service';
 import { Reportes } from 'src/app/_entidades/reportes';
 import { Chart } from 'angular-highcharts';
 import { Graficos } from 'src/app/_entidades/graficos';
+import { BeneficiosService } from 'src/app/_aods/beneficios.service';
+import { Beneficios } from 'src/app/_entidades/beneficios';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-escritorio',
   templateUrl: './escritorio.component.html',
   styleUrls: ['./escritorio.component.css'],
 })
-export class EscritorioComponent implements OnInit {
+export class EscritorioComponent implements OnInit, AfterViewInit {
 
   chart1: Chart;
   series1: Array<Graficos> = [];
   empresasgestion: Reportes[];
+
+  beneficios: Beneficios[];
 
   escliente: boolean =false;
   esempresa: boolean =false;
@@ -50,8 +55,14 @@ export class EscritorioComponent implements OnInit {
   esCargoChofer: boolean = false;
   esCargoPasante: boolean = false;
 
+  @ViewChild('calendar', { static: false }) calendarE1: ElementRef;
+
+  currColor: string = '#3c8dbc';
+  calendar: any;
+
   constructor(
     private _usuariosService: UsuariosService,
+    private _beneficiosService: BeneficiosService,
     private _empresasService: EmpresasService,
     private _municipiosService: MunicipiosService,
     private _productosService: ProductosService,
@@ -89,6 +100,79 @@ export class EscritorioComponent implements OnInit {
     this.esCargoArtesania = this._accesoService.esCargoArtesania();
     this.esCargoAlimento = this._accesoService.esCargoAlimentos();
     this.esCargoChofer = this._accesoService.esCargoChofer();
+  }
+
+  ngAfterViewInit() {
+    this.initializeCalendar();
+  }
+
+  beneficioColors = {
+    "CAPACITACION TECNICA": "#f56954",
+    "CURSO": "#960023",
+    "TALLER": "#0073b7",
+    "FERIA": "#FF5919",
+    "SEMINARIO": "#00a65a",
+    "CAPACITACION ESPECIALIZADA": "#3c8dbc",
+    "RUEDA DE NEGOCIOS": "#d81b60"
+  };
+
+  fbeneficios(){
+    this._beneficiosService.lista().subscribe((data) => {
+      const events = data.map(item => ({
+        id: item.idbeneficio,
+        title: item.beneficio,
+        start: item.fechainicio,
+        end: item.fechafin,
+        description: item.descripcion,
+        location: item.direccion,
+        backgroundColor: this.beneficioColors[item.tipobeneficio?.tipobeneficio] || '#000',
+        borderColor: this.beneficioColors[item.tipobeneficio?.tipobeneficio] || '#000'
+      }));
+
+      this.calendar?.removeAllEvents();
+      events.forEach(event => this.calendar.addEvent(event));
+    });
+  }
+
+  initializeCalendar() {
+    const calendarEl = this.calendarE1.nativeElement;
+    const FullCalendar = (window as any).FullCalendar;
+
+    this.calendar = new FullCalendar.Calendar(calendarEl, {
+      headerToolbar: {
+        left: 'prev',
+        center: 'title',
+        right: 'next'
+      },
+      locale: 'es',
+      editable: false,
+      droppable: false,
+      selectable: false,
+      selectMirror: false,
+
+      eventClick: (arg) => {
+        const event = arg.event;
+        Swal.fire({
+          title: event.title,
+          html: `<strong>Ubicación:</strong> ${event.extendedProps.location}<br>
+                 <strong>Fecha Inicio:</strong> ${event.start?.toLocaleString()}<br>
+                 <strong>Fecha Fin:</strong> ${event.end?.toLocaleString()}`,
+          icon: 'info',
+          confirmButtonText: 'Cerrar',
+          confirmButtonColor: '#007bff'
+        });
+      }
+    });
+
+    this.calendar.render();
+    this.fbeneficios();
+  }
+
+  setColor(color: string) {
+    this.currColor = color;
+    const addNewEventBtn = document.getElementById('add-new-event') as HTMLButtonElement;
+    addNewEventBtn.style.backgroundColor = color;
+    addNewEventBtn.style.borderColor = color;
   }
 
   fmiscompras() {
@@ -244,7 +328,7 @@ export class EscritorioComponent implements OnInit {
         name: 'Empresas',
         type: 'column',
         data: this.series1,
-        showInLegend: false 
+        showInLegend: false
       }]
     });
   }

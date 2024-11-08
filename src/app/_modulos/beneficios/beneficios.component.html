@@ -218,7 +218,7 @@
               <label for="beneficio"><strong>Beneficio:</strong><span class="text-danger"><b>*</b></span></label>
             </div>
             <div class="col-sm-9">
-              <input type="text" class="form-control form-control-sm" id="beneficio" formControlName="beneficio" [class.is-invalid]="f.beneficio.errors && f.beneficio.touched" (input)="onInput($event, 'beneficio', 'letrasyespacios')" autocomplete="no" required/>
+              <input type="text" class="form-control form-control-sm" id="beneficio" formControlName="beneficio" [class.is-invalid]="f.beneficio.errors && f.beneficio.touched" (input)="onInput($event, 'beneficio', 'letrasynumerosguion')" autocomplete="no" required/>
               <small *ngIf="f.beneficio.errors&& f.beneficio.touched" class="invalid-feedback">
                 <ng-container *ngIf="f.beneficio.errors.required">
                   El dato es obligatorio.

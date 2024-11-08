@@ -390,6 +390,7 @@ export class ProductosComponent implements OnInit {
 
   faceptar(): void {
     this.submitted = true;
+
     if (!this.esRolEmpresa) {
       this.dato.idempresa = this.formulario.value.idempresa;
     }
@@ -398,12 +399,14 @@ export class ProductosComponent implements OnInit {
     this.dato.precioventa = this.formulario.value.precioventa;
 
     if (this.estado === 'Modificar') {
+      this.dato.idproducto = this.dato.idproducto;
+
       this._productosService.modificar(this.dato).subscribe(
         (data) => {
           this.fdatos();
           this.modalRefProducto.dismiss();
           swal.fire('Dato modificado', 'Dato modificado con exito', 'success');
-          this._toast.success('', 'Operación exitosa')
+          this._toast.success('', 'Operación exitosa');
         },
         (error) => {
           swal.fire('Error de modificación', 'Hubo un problema al intentar modificar el dato. Por favor, intenta nuevamente.', 'error');

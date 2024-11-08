@@ -1,0 +1,19 @@
+#external-events {
+  max-width: 300px; /* Ajusta el ancho del contenedor */
+  overflow-y: auto;  /* Altura máxima del contenedor */
+}
+
+.external-event {
+  padding: 10px; /* Espaciado interno */
+  margin-bottom: 10px; /* Espaciado entre eventos */
+  border-radius: 5px; /* Bordes redondeados */
+  color: #fff; /* Color del texto */
+  font-weight: bold; /* Texto en negrita */
+  cursor: pointer; /* Cambia el cursor al pasar por encima */
+  transition: background-color 0.3s ease; /* Transición suave al cambiar el color de fondo */
+}
+
+/* Cambia el color de fondo al pasar el mouse */
+.external-event:hover {
+  opacity: 0.8; /* Reduce la opacidad al pasar el mouse */
+}
