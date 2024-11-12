@@ -534,7 +534,7 @@
           <label for="aclave">Clave anterior:<span class="text-danger"><b>*</b></span></label>
         </div>
         <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
-          <input type="password" class="form-control form-control-sm" id="aclave" formControlName="aclave" [class.is-invalid]="f.aclave.errors && f.aclave.touched" (input)="onInput($event, 'aclave', 'letrasynumeros')" autocomplete="no" required/>
+          <input type="password" class="form-control form-control-sm" id="aclave" formControlName="aclave" [class.is-invalid]="f.aclave.errors && f.aclave.touched" (input)="onInputClave($event, 'aclave', 'letrasynumeros')" autocomplete="no" required/>
         </div>
       </div>
       <div class="row">
@@ -542,7 +542,7 @@
           <label for="nclave">Nueva Clave:<span class="text-danger"><b>*</b></span></label>
         </div>
         <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
-          <input type="password" class="form-control form-control-sm" id="nclave" formControlName="nclave" [class.is-invalid]="f.nclave.errors && f.nclave.touched" (input)="onInput($event, 'nclave', 'letrasynumeros')" autocomplete="no" required/>
+          <input type="password" class="form-control form-control-sm" id="nclave" formControlName="nclave" [class.is-invalid]="f.nclave.errors && f.nclave.touched" (input)="onInputClave($event, 'nclave', 'letrasynumeros')" autocomplete="no" required/>
         </div>
       </div>
       <div class="row">
@@ -550,7 +550,7 @@
           <label for="cclave">Confirmar Clave:<span class="text-danger"><b>*</b></span></label>
         </div>
         <div class="col-lg-7 col-md-6 col-sm-12 mt-1">
-          <input type="password" class="form-control form-control-sm" id="cclave" formControlName="cclave" [class.is-invalid]="f.cclave.errors && f.cclave.touched" (input)="onInput($event, 'cclave', 'letrasynumeros')" autocomplete="no" required/>
+          <input type="password" class="form-control form-control-sm" id="cclave" formControlName="cclave" [class.is-invalid]="f.cclave.errors && f.cclave.touched" (input)="onInputClave($event, 'cclave', 'letrasynumeros')" autocomplete="no" required/>
           <div *ngIf="formulario.hasError('mustMatch', ['nclave', 'cclave']) && (f.cclave.touched || f.nclave.touched)" class="text-danger">
             Las claves no coinciden.
           </div>
@@ -634,19 +634,19 @@
             <label for="primerapellido">Apellido Paterno:<span class="text-danger"><b>*</b></span></label>
           </div>
           <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
-            <input type="text" class="form-control form-control-sm" id="primerapellido" formControlName="primerapellido" [class.is-invalid]="fU.primerapellido.errors && fU.primerapellido.touched" (input)="onInput($event, 'primerapellido', 'letrasyespacios')" autocomplete="no" required/>
+            <input type="text" class="form-control form-control-sm" id="primerapellido" formControlName="primerapellido" [class.is-invalid]="fU.primerapellido.errors && fU.primerapellido.touched" (input)="onInputUser($event, 'primerapellido', 'letrasyespacios')" autocomplete="no" required/>
           </div>
           <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
             <label for="segundoapellido">Apellido Materno:</label>
           </div>
           <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
-            <input type="text" class="form-control form-control-sm" id="segundoapellido" formControlName="segundoapellido" [class.is-invalid]="fU.segundoapellido.errors && fU.segundoapellido.touched" (input)="onInput($event, 'segundoapellido', 'letrasyespacios')" autocomplete="no" />
+            <input type="text" class="form-control form-control-sm" id="segundoapellido" formControlName="segundoapellido" [class.is-invalid]="fU.segundoapellido.errors && fU.segundoapellido.touched" (input)="onInputUser($event, 'segundoapellido', 'letrasyespacios')" autocomplete="no" />
           </div>
           <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left" >
             <label for="primernombre">Nombres:<span class="text-danger"><b>*</b></span></label>
           </div>
           <div class="col-lg-4 col-md-6 col-sm-12 mt-1">
-            <input type="text" class="form-control form-control-sm" id="primernombre" formControlName="primernombre" [class.is-invalid]="fU.primernombre.errors && fU.primernombre.touched" (input)="onInput($event, 'primernombre', 'letrasyespacios')" autocomplete="no" required/>
+            <input type="text" class="form-control form-control-sm" id="primernombre" formControlName="primernombre" [class.is-invalid]="fU.primernombre.errors && fU.primernombre.touched" (input)="onInputUser($event, 'primernombre', 'letrasyespacios')" autocomplete="no" required/>
           </div>
           <div class="col-lg-2 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
             <label for="idtipogenero">Genero:<span class="text-danger"><b>*</b></span></label>
@@ -668,13 +668,13 @@
             <label for="dip">DIP:<span class="text-danger"><b>*</b></span></label>
           </div>
           <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
-            <input type="text" class="form-control form-control-sm" id="dip" formControlName="dip" [class.is-invalid]="fU.dip.errors && fU.dip.touched" (input)="onInput($event, 'dip', 'numeros')" autocomplete="no" required/>
+            <input type="text" class="form-control form-control-sm" id="dip" formControlName="dip" [class.is-invalid]="fU.dip.errors && fU.dip.touched" (input)="onInputUser($event, 'dip', 'numeros')" autocomplete="no" required/>
           </div>
           <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
             <label for="complementario">Complemento:</label>
           </div>
           <div class="col-lg-3 col-md-6 col-sm-12 mt-1">
-            <input type="text" [maxlength]="5" class="form-control form-control-sm" id="complementario" formControlName="complementario" [class.is-invalid]="fU.complementario.errors && fU.complementario.touched" (input)="onInput($event, 'complementario', 'letrasynumerosguion')" autocomplete="no" />
+            <input type="text" [maxlength]="5" class="form-control form-control-sm" id="complementario" formControlName="complementario" [class.is-invalid]="fU.complementario.errors && fU.complementario.touched" (input)="onInputUser($event, 'complementario', 'letrasynumerosguion')" autocomplete="no" />
           </div>
           <div class="col-lg-3 col-md-4 col-sm-12 mt-2 text-md-right text-sm-left">
               <label for="idtipoextension">Expedido:<span class="text-danger"><b>*</b></span></label>
@@ -869,8 +869,8 @@
             <div class="col-lg-3 col-md-4 col-sm-2 mt-1 text-md-right text-sm-left">
               <label for="">Form.:</label>
             </div>
-            <div class="col-md-2 col-sm-2 ">
-              <input type="text" [maxLength]="4" class="form-control form-control-sm text-center" formControlName="nform" (input)="onInput($event, 'nform', 'numeros')" autocomplete="no" readonly>
+            <div class="col-md-4 col-sm-2 ">
+              <input type="text" [maxLength]="20" class="form-control form-control-sm " formControlName="nform" (input)="onInput($event, 'nform', 'formulario')" autocomplete="no" readonly>
             </div>
           </div>
           <div class="row mt-1 pl-3 pr-3">
@@ -878,13 +878,13 @@
               <label for="">Fecha Registro:</label>
             </div>
             <div class="col-lg-3 col-md-8 col-sm-12">
-              <input type="date" class="form-control form-control-sm text-center" formControlName="fechareg" readonly>
+              <input type="date" class="form-control form-control-sm " formControlName="fechareg" readonly>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-12 mt-1 text-md-right text-sm-left">
               <label for="">Fecha Apertura:</label>
             </div>
             <div class="col-lg-3 col-md-8 col-sm-12">
-              <input type="date" class="form-control form-control-sm text-center" formControlName="fechaapertura">
+              <input type="date" class="form-control form-control-sm " formControlName="fechaapertura">
             </div>
           </div>
           <div class="row mt-1 pl-3 pr-3">
@@ -945,7 +945,7 @@
               <label for="">Rubro:</label>
             </div>
             <div class="col-lg-4 col-md-8 col-sm-12">
-              <select class="custom-select custom-select-sm" formControlName="idrubro">
+              <select class="custom-select custom-select-sm" formControlName="idrubro" [attr.disabled]="true">
                 <option *ngFor="let _rubro of rubros" [value]="_rubro.idrubro">{{ _rubro.rubro }}</option>
               </select>
             </div>

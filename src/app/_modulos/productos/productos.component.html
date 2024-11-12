@@ -186,9 +186,6 @@
                     <ng-container *ngIf="f.descripcion.errors.pattern">
                         Solo se permiten letras.
                     </ng-container>
-                    <ng-container *ngIf="f.descripcion.errors.maxlength">
-                        No puede exceder los 50 caracteres.
-                    </ng-container>
               </small>
             </div>
             <div class="text-right">
@@ -222,28 +219,7 @@
         <label for="">{{ dato.descripcion }}</label>
       </div>
     </div><hr>
-    <div class="row">
-      <div class="col-lg-3 col-sm-4 text-lg-right text-sm-left">
-        <h5><strong>Precio:</strong></h5>
-      </div>
-      <div class="col-lg-9 col-sm-8 text-sm-right">
-        <button class="btn btn-sm btn-outline-success rounded-pill mr-2" (click)="fadicionarPrecio(precio)"><i class="bi bi-plus-lg"></i> Añadir</button>
-      </div>
-      <div class="col-lg-3 col-sm-12 d-none d-lg-flex justify-content-center align-items-center">
-        <strong><i class="bi bi-currency-dollar icon-opacity" *ngIf="precios && precios.length > 0"></i></strong>
-      </div>
-      <div class="col-lg-8 col-sm-12 mt-3 mb-1 ml-2">
-        <div class="row">
-          <div class="material-card-container mr-4" *ngFor="let _precio of precios">
-            <div class="material-card">
-              <p>Cantidad: <b>{{ _precio.cantidad }}</b></p>
-              <p>Precio: Bs <b>{{ _precio.precio | number:'1.2-2' }}</b></p>
-            </div>
-            <button class="delete-btn" title="Quitar Precio" (click)="feliminarPrecio(_precio.idprecio)"><i class="bi bi-dash"></i></button>
-          </div>
-        </div>
-      </div>
-    </div><hr>
+
     <div class="row">
       <div class="col-lg-3 col-sm-4 text-lg-right text-sm-left">
         <h5><strong>Color:</strong></h5>
@@ -267,7 +243,7 @@
     </div><hr>
     <div class="row">
       <div class="col-lg-3 col-sm-4 text-lg-right text-sm-left">
-        <h5><strong>Material:</strong></h5>
+        <h5><strong>Material/Sabores:</strong></h5>
       </div>
       <div class="col-lg-9 col-sm-8 text-sm-right">
         <button class="btn btn-sm btn-outline-success rounded-pill mr-2" (click)="fadicionarMaterial(material)"><i class="bi bi-plus-lg"></i> Añadir</button>
@@ -286,7 +262,7 @@
     </div><hr>
     <div class="row">
       <div class="col-lg-3 col-sm-4 text-lg-right text-sm-left">
-        <h5><strong>Tamaño o Talla:</strong></h5>
+        <h5><strong>Medidas:</strong></h5>
       </div>
       <div class="col-lg-9 col-sm-8 text-sm-right">
         <button class="btn btn-sm btn-outline-success rounded-pill mr-2" (click)="fadicionarTamano(tamano)"><i class="bi bi-plus-lg"></i> Añadir</button>
@@ -299,6 +275,28 @@
           <div class="material-card-container mr-4 mb-2" *ngFor="let _talla of tamanos">
             <div class="material-card">{{ _talla.tamano }}</div>
             <button class="delete-btn" title="Quitar Color" (click)="feliminarTamano(_talla.idtamano)"><i class="bi bi-dash"></i></button>
+          </div>
+        </div>
+      </div>
+    </div><hr>
+    <div class="row">
+      <div class="col-lg-3 col-sm-4 text-lg-right text-sm-left">
+        <h5><strong>Precio:</strong></h5>
+      </div>
+      <div class="col-lg-9 col-sm-8 text-sm-right">
+        <button class="btn btn-sm btn-outline-success rounded-pill mr-2" (click)="fadicionarPrecio(precio)"><i class="bi bi-plus-lg"></i> Añadir</button>
+      </div>
+      <div class="col-lg-3 col-sm-12 d-none d-lg-flex justify-content-center align-items-center">
+        <strong><i class="bi bi-currency-dollar icon-opacity" *ngIf="precios && precios.length > 0"></i></strong>
+      </div>
+      <div class="col-lg-8 col-sm-12 mt-3 mb-1 ml-2">
+        <div class="row">
+          <div class="material-card-container mr-4" *ngFor="let _precio of precios">
+            <div class="material-card">
+              <p>Cantidad: <b>{{ _precio.cantidad }}</b></p>
+              <p>Precio: Bs <b>{{ _precio.precio | number:'1.2-2' }}</b></p>
+            </div>
+            <button class="delete-btn" title="Quitar Precio" (click)="feliminarPrecio(_precio.idprecio)"><i class="bi bi-dash"></i></button>
           </div>
         </div>
       </div>
@@ -348,7 +346,7 @@
             <div class="image-card">
               <img [src]="sanitizarImagen(_imagen.data, _imagen.mimeType)" alt="Imagen 1" class="image">
             </div>
-            <button class="delete-btn" title="Quitar Imagen"><i class="bi bi-dash"></i></button>
+            <button class="delete-btn" (click)="feliminarimagen(dato.idproducto, _imagen.filename, 'productos')" title="Quitar Imagen"><i class="bi bi-dash"></i></button>
           </div>
         </div>
       </div>
@@ -372,6 +370,31 @@
           <div class="form-group">
               <label>Precio:<span class="text-danger"><b>*</b></span></label>
               <input type="text" class="form-control form-control-sm" formControlName="precio" [class.is-invalid]="fP.precio.errors && fP.precio.touched" (input)="onInputPrecio($event, 'precio', 'precio')" placeholder="0.00" autocomplete="no" required/>
+          </div>
+          <div class="row justify-content-between m-3">
+            <label>Asignar a:</label>
+            <div class="form-check form-check-inline">
+              <input type="checkbox" class="form-check-input" id="medidaCheckbox" (change)="onCheckChange('tamano', $event)">
+              <label class="form-check-label" for="medidaCheckbox">Medida</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input type="checkbox" class="form-check-input" id="materialCheckbox" (change)="onCheckChange('material', $event)">
+              <label class="form-check-label" for="materialCheckbox">Material</label>
+            </div>
+          </div>
+          <div class="form-group mt-3" *ngIf="showTamano">
+            <label for="selectMedida">Seleccione Medida:</label>
+            <select id="selectMedida" class="form-control form-control-sm" formControlName="idtamano">
+              <option value="">Seleccionar una Medida</option>
+              <option *ngFor="let tamano of tamanos" [value]="tamano.idtamano">{{ tamano.tamano }}</option>
+            </select>
+          </div>
+          <div class="form-group mt-3" *ngIf="showMaterial">
+            <label for="selectMaterial">Seleccione Material:</label>
+            <select id="selectMaterial" class="form-control form-control-sm" formControlName="idmaterial">
+              <option value="">Seleccionar un Material</option>
+              <option *ngFor="let material of materiales" [value]="material.idmaterial">{{ material.material }}</option>
+            </select>
           </div>
           <div *ngIf="formPrecio.invalid && formPrecio.touched" class="alert alert-danger">
             Por favor, completa todos los campos obligatorios.
@@ -459,7 +482,7 @@
 
 <ng-template #material>
   <div class="modal-header">
-      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Material del Producto</h4>
+      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Material/Sabores del Producto</h4>
   </div>
   <div class="modal-body">
     <div class="alert alert-info p-2" role="alert">
@@ -467,7 +490,7 @@
     </div>
       <form [formGroup]="formMaterial" (ngSubmit)="faceptarMaterial()">
           <div class="form-group">
-              <label>Material:<span class="text-danger"><b>*</b></span></label>
+              <label>Material/Sabores:<span class="text-danger"><b>*</b></span></label>
               <input type="text" class="form-control form-control-sm" formControlName="material" [class.is-invalid]="fM.material.errors && fM.material.touched" (input)="onInputMaterial($event, 'material', 'material')" autocomplete="no" required/>
           </div>
           <div *ngIf="formMaterial.invalid && formMaterial.touched" class="alert alert-danger">
@@ -498,7 +521,7 @@
 
 <ng-template #tamano>
   <div class="modal-header">
-      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Tamaño o Talla del Producto</h4>
+      <h4 class="modal-title pull-left"><i class="fa fa-edit"></i> {{ estado }} Medidas del Producto</h4>
   </div>
   <div class="modal-body">
     <div class="alert alert-info p-2" role="alert">
@@ -506,7 +529,7 @@
     </div>
       <form [formGroup]="formTamano" (ngSubmit)="faceptarTamano()">
           <div class="form-group">
-              <label>Tamaño o Talla:<span class="text-danger"><b>*</b></span></label>
+              <label>Tamaño/Talla/Peso/Volúmen:<span class="text-danger"><b>*</b></span></label>
               <input type="text" class="form-control form-control-sm" formControlName="tamano" [class.is-invalid]="fT.tamano.errors && fT.tamano.touched" (input)="onInputTamano($event, 'tamano', 'tamano')" autocomplete="no" required/>
           </div>
           <div *ngIf="formTamano.invalid && formTamano.touched" class="alert alert-danger">

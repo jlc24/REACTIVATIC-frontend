@@ -4405,7 +4405,7 @@ input[type="button"].btn-block {
 }
 
 .custom-select:disabled {
-    color: #1ca591;
+    color: #000;
     background-color: #e9ecef;
 }
 

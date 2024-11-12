@@ -325,52 +325,18 @@ export class PerfilesComponent implements OnInit {
         this.formulario.get('cclave')?.reset();
       }
     );
-    // swal.fire({
-    //   title: 'Confirmación de clave',
-    //   html: `
-    //     <input id="clave-input" class="swal2-input" placeholder="Ingrese su clave" type="password">
-    //     <div id="intentos-restantes" style="margin-top: 10px;">Intentos restantes: ${this.maxAttempts - this.attempts}</div>
-    //   `,
-    //   showCancelButton: true,
-    //   cancelButtonText: 'Cancelar',
-    //   confirmButtonText: 'Confirmar',
-    //   customClass: {
-    //     confirmButton: 'btn btn-success rounded-pill mr-3',
-    //     cancelButton: 'btn btn-secondary rounded-pill',
-    //   },
-    //   buttonsStyling: false,
-    //   preConfirm: () => {
-    //     const clave = (document.getElementById('clave-input') as HTMLInputElement).value;
-    //     if (!clave) {
-    //       swal.showValidationMessage('Debe ingresar una clave');
-    //       return false;
-    //     }
-    //     return clave;
-    //   }
-    // })
-    // .then((result) => {
-    //   if (result.value) {
-    //     this._usuariosService.verificar({ clave: result.value }).subscribe(
-    //       (verificacionResponse) => {
-    //         this._usuariosService.cambiarclave({ clave }).subscribe(response => {
-    //           this.toast.success('','Clave correcta.');
-    //           swal.fire('Clave Restablecida', 'La clave ha sido restablecida con éxito.', 'success');
-    //           this.attempts = 0;
-    //         });
-    //       },
-    //       (error) => {
-    //         this.attempts++;
-    //         if (this.attempts >= this.maxAttempts) {
-    //           this.toast.error('Se bloqueron los accesos.','Intentos excedidos.');
-    //           this.blockUI();
-    //         } else {
-    //           this.toast.error('','Clave incorrecta.');
-    //           this.faceptarcambiarclave(clave);
-    //         }
-    //       }
-    //     );
-    //   }
-    // });
+  }
+
+  onInputClave(event: any, controlName: string, type: 'letrasynumeros' ): void{
+    let input = event.target.value;
+    switch (type) {
+      case 'letrasynumeros':
+        input = input.replace(/[^a-zA-Z0-9]/g, '');
+        break;
+    }
+    if (this.formulario.get(controlName)) {
+      this.formulario.get(controlName)?.setValue(input, { emitEvent: false });
+    }
   }
 
   blockUI() {
@@ -525,7 +491,7 @@ export class PerfilesComponent implements OnInit {
 
   get fU() { return this.formUser.controls; }
 
-  onInput(event: any, controlName: string, type: 'letras' | 'letrasyespacios' | 'numeros' | 'letrasynumerosguion' | 'letrasynumeros' | 'direccion' | 'correo'): void {
+  onInputUser(event: any, controlName: string, type: 'letras' | 'letrasyespacios' | 'numeros' | 'letrasynumerosguion' | 'letrasynumeros' | 'direccion' | 'correo' | 'formulario'): void{
     let input = event.target.value;
     switch (type) {
       case 'letras':
@@ -549,15 +515,16 @@ export class PerfilesComponent implements OnInit {
       case 'correo':
         input = input.replace(/[^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$]/g, '');
         break;
+      case 'formulario':
+        input = input.replace(/[^a-zA-Z0-9-]/g, '');
+        break;
     }
-    if (this.formulario.get(controlName)) {
-      this.formulario.get(controlName)?.setValue(input, { emitEvent: false });
-    }else if (this.formUser.get(controlName)) {
+    if (this.formUser.get(controlName)) {
       this.formUser.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
-    }else if (this.formEmpresa.get(controlName)) {
-      this.formEmpresa.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
     }
   }
+
+
 
   fmodificar(content: any) {
     this.utilsService.mostrarCargando();
@@ -686,9 +653,8 @@ export class PerfilesComponent implements OnInit {
         dato.nform,
         [
           Validators.required,
-          Validators.pattern('^[0-9]+$'),
           Validators.minLength(1),
-          Validators.maxLength(4)
+          Validators.maxLength(20)
         ]
       ],
       fechareg: [
@@ -701,7 +667,7 @@ export class PerfilesComponent implements OnInit {
         dato.empresa,
         [
           Validators.required,
-          Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$'),
+          Validators.pattern('^[a-zA-ZÀ-ÿ0-9\u00f1\u00d1\\s.,&-\']+$'),
           Validators.minLength(5),
           Validators.maxLength(150)
         ]
@@ -710,7 +676,7 @@ export class PerfilesComponent implements OnInit {
         dato.razonsocial,
         [
           Validators.required,
-          Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$'),
+          Validators.pattern('^[a-zA-ZÀ-ÿ0-9\u00f1\u00d1\\s.,&-\']+$'),
           Validators.minLength(5),
           Validators.maxLength(150)
         ]
@@ -728,12 +694,6 @@ export class PerfilesComponent implements OnInit {
       ],
       descripcion: [
         dato.descripcion,
-        [
-          Validators.required,
-          Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$'),
-          Validators.minLength(8),
-          Validators.maxLength(255)
-        ]
       ],
       idasociacion: [
         dato.asociacion?.idasociacion
@@ -741,19 +701,24 @@ export class PerfilesComponent implements OnInit {
       celular: [
         dato.celular,
         [
-          Validators.required,
-          Validators.pattern('^[0-9]+$')
+          //Validators.required,
+          Validators.pattern('^[0-9]+$'),
+          Validators.maxLength(20)
         ]
       ],
       telefono: [
         dato.telefono,
         [
-          Validators.required,
-          Validators.pattern('^[0-9]+$')
+          //Validators.required,
+          Validators.pattern('^[0-9]+$'),
+          Validators.maxLength(20)
         ]
       ],
       idrubro: [
-        dato.rubro?.idrubro
+        dato.rubro?.idrubro,
+        [
+          Validators.required
+        ]
       ],
       servicios:[
         dato.servicios,
@@ -792,7 +757,10 @@ export class PerfilesComponent implements OnInit {
         dato.capacitacion
       ],
       idmunicipio:[
-        dato.municipio?.idmunicipio
+        dato.municipio?.idmunicipio,
+        [
+          Validators.required
+        ]
       ],
       zona: [
         dato.zona
@@ -870,6 +838,39 @@ export class PerfilesComponent implements OnInit {
 
   get fE() { return this.formEmpresa.controls; }
 
+  onInput(event: any, controlName: string, type: 'letras' | 'letrasyespacios' | 'numeros' | 'letrasynumerosguion' | 'letrasynumeros' | 'direccion' | 'correo' | 'formulario'): void {
+    let input = event.target.value;
+    switch (type) {
+      case 'letras':
+        input = input.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1]/g, '');
+        break;
+      case 'letrasyespacios':
+        input = input.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1\s]/g, '');
+        break;
+      case 'numeros':
+        input = input.replace(/[^0-9]/g, '');
+        break;
+      case 'letrasynumerosguion':
+        input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1\s-\']/g, '');
+        break;
+      case 'letrasynumeros':
+        input = input.replace(/[^a-zA-Z0-9]/g, '');
+        break;
+      case 'direccion':
+        input = input.replace(/[^a-zA-Z0-9\u00f1\u00d1\s.,#-]/g, '');
+        break;
+      case 'correo':
+        input = input.replace(/[^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$]/g, '');
+        break;
+      case 'formulario':
+        input = input.replace(/[^a-zA-Z0-9-]/g, '');
+        break;
+    }
+    if (this.formEmpresa.get(controlName)) {
+      this.formEmpresa.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
+    }
+  }
+
   fmodificarEmpresa(content: any) {
     this.utilsService.mostrarCargando();
     this.estado = 'Modificar';
@@ -899,6 +900,54 @@ export class PerfilesComponent implements OnInit {
   faceptarEmp(){
     this.submitted = true;
 
+    this.empresa.idrubro = this.formEmpresa.value.idrubro;
+    this.empresa.idmunicipio = this.formEmpresa.value.idmunicipio;
+    this.empresa.idasociacion = this.formEmpresa.value.idasociacion;
+    this.empresa.empresa = this.formEmpresa.value.empresa;
+    this.empresa.descripcion = this.formEmpresa.value.descripcion;
+    this.empresa.tipo = 'EMPRESA';
+    this.empresa.direccion = this.formEmpresa.value.direccion;
+    this.empresa.telefono = this.formEmpresa.value.telefono;
+    this.empresa.celular = this.formEmpresa.value.celular;
+    this.empresa.correo = this.formEmpresa.value.correo;
+    this.empresa.facebook = this.formEmpresa.value.facebook;
+    this.empresa.twitter = this.formEmpresa.value.twitter;
+    this.empresa.instagram = this.formEmpresa.value.instagram;
+    this.empresa.paginaweb = this.formEmpresa.value.paginaweb;
+    this.empresa.nform = this.formEmpresa.value.nform;
+    this.empresa.latitud = this.formEmpresa.value.latitud;
+    this.empresa.longitud = this.formEmpresa.value.longitud;
+    this.empresa.nit = this.formEmpresa.value.nit;
+    this.empresa.bancamovil = this.formEmpresa.value.bancamovil;
+    this.empresa.fechaapertura = this.formEmpresa.value.fechaapertura;
+    this.empresa.servicios = this.formEmpresa.value.servicios;
+    this.empresa.capacidad = this.formEmpresa.value.capacidad;
+    this.empresa.unidadmedida = this.formEmpresa.value.unidadmedida;
+    this.empresa.motivo = this.formEmpresa.value.motivo;
+    this.empresa.otromotivo = this.formEmpresa.value.otromotivo;
+    this.empresa.familiar = this.formEmpresa.value.familiar;
+    this.empresa.involucrados = this.formEmpresa.value.involucrados;
+    this.empresa.otrosinvolucrados = this.formEmpresa.value.otrosinvolucrados;
+    this.empresa.trabajadores = this.formEmpresa.value.trabajadores;
+    this.empresa.participacion = this.formEmpresa.value.participacion;
+    this.empresa.capacitacion = this.formEmpresa.value.capacitacion;
+    this.empresa.zona = this.formEmpresa.value.zona;
+    this.empresa.referencia = this.formEmpresa.value.referencia;
+    this.empresa.transporte = this.formEmpresa.value.transporte;
+    this.empresa.fechareg = this.formEmpresa.value.fechareg;
+    this.empresa.razonsocial = this.formEmpresa.value.razonsocial;
+    this.empresa.registrosenasag = this.formEmpresa.value.registrosenasag;
+
+
+    if (this.estado === 'Modificar') {
+      this.empresa.idempresa = this.empresa.idempresa;
+
+      this._empresasService.modificar(this.empresa).subscribe((data) => {
+        this.fdato();
+        this._modalService.dismissAll();
+        swal.fire('Dato modificado', 'Dato modificado con exito', 'success');
+      });
+    }
 
   }
 

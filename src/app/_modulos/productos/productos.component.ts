@@ -22,6 +22,7 @@ import { Empresas } from 'src/app/_entidades/empresas';
 import { EmpresasService } from 'src/app/_aods/empresas.service';
 import { UtilsService } from 'src/app/_aods/utils.service';
 import { HttpEventType } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-productos',
@@ -44,6 +45,8 @@ export class ProductosComponent implements OnInit {
   color: Colores;
   materiales: Materiales[];
   material: Materiales;
+  showTamano = false;
+  showMaterial = false;
   tamanos: Tamanos[];
   tamano: Tamanos;
   atributos: Atributos[];
@@ -68,6 +71,9 @@ export class ProductosComponent implements OnInit {
   submitted: boolean = false;
 
   //imagen: any;
+
+  caracteresMaximos: number = 255;
+  caracteresRestantes: number = this.caracteresMaximos;
 
   imageSrc: string;
 
@@ -105,6 +111,7 @@ export class ProductosComponent implements OnInit {
     { name: 'Negro', code: '#000000' },
     { name: 'Burdeos', code: '#800000' },
     { name: 'Marrón', code: '#A52A2A' },
+    { name: 'Ladrillo', code: '#B22222' },
     { name: 'Chocolate', code: '#D2691E' },
     { name: 'Cobre', code: '#B87333' },
     { name: 'Caramelo', code: '#AF6E4D' },
@@ -112,12 +119,14 @@ export class ProductosComponent implements OnInit {
     { name: 'Vino', code: '#722F37' },
     { name: 'Naranja', code: '#FFA500' },
     { name: 'Rojo', code: '#FF0000' },
+    { name: 'Rojo Carmesí', code: '#D50032' },
     { name: 'Salmón', code: '#FA8072' },
     { name: 'Tomate', code: '#FF6347' },
     { name: 'Coral', code: '#FF7F50' },
     { name: 'Arena', code: '#C2B280' },
     { name: 'Mostaza', code: '#FFDB58' },
     { name: 'Oro viejo', code: '#CFB53B' },
+    { name: 'Verde militar', code: '#4B5320' },
     { name: 'Verde bosque', code: '#228B22' },
     { name: 'Oliva', code: '#808000' },
     { name: 'Verde', code: '#008000' },
@@ -141,9 +150,11 @@ export class ProductosComponent implements OnInit {
     { name: 'Violeta', code: '#EE82EE' },
     { name: 'Fucsia', code: '#FF0080' },
     { name: 'Magenta', code: '#FF00FF' },
+    { name: 'Palo de Rosa', code: '#d2a4a4' },
     { name: 'Rosa', code: '#FFC0CB' },
     { name: 'Rosa claro', code: '#FFB6C1' },
     { name: 'Gris', code: '#808080' },
+    { name: 'Gris oscuro', code: '#4F4F4F' },
     { name: 'Plateado', code: '#C0C0C0' },
     { name: 'Blanco', code: '#FFFFFF' },
     { name: 'Marfil', code: '#FFFFF0' },
@@ -175,7 +186,8 @@ export class ProductosComponent implements OnInit {
     private _modalService: NgbModal,
     private _toast: ToastrService,
     private sanitizer: DomSanitizer,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -237,17 +249,33 @@ export class ProductosComponent implements OnInit {
       }else{
         this.rubro = ''
       }
-      this._productosService.datosAdmin(this.pagina, this.cantidad, this.buscar, this.rubro).subscribe((data) => {
-        this.fcantidadAdmin();
-        this.datos = data;
-        this.utilsService.cerrarCargando();
-      })
+      this._productosService.datosAdmin(this.pagina, this.cantidad, this.buscar, this.rubro).subscribe(
+        (data) => {
+          this.fcantidadAdmin();
+          this.datos = data;
+          this.utilsService.cerrarCargando();
+        },
+        (error) => {
+          swal.fire('Error', error, 'error');
+          this._toast.error('Error en la carga de datos', 'Error');
+          this.utilsService.cerrarCargando();
+          this.router.navigate(['/acceso']);
+        }
+      )
     }else{
-      this._productosService.datos(this.pagina, this.cantidad, this.buscar).subscribe((data) => {
-        this.fcantidad();
-        this.datos = data;
-        this.utilsService.cerrarCargando();
-      });
+      this._productosService.datos(this.pagina, this.cantidad, this.buscar).subscribe(
+        (data) => {
+          this.fcantidad();
+          this.datos = data;
+          this.utilsService.cerrarCargando();
+        },
+        (error) => {
+          swal.fire('Error', error, 'error');
+          this._toast.error('Error en la carga de datos', 'Error');
+          this.utilsService.cerrarCargando();
+          this.router.navigate(['/acceso']);
+        }
+      );
     }
   }
 
@@ -315,10 +343,11 @@ export class ProductosComponent implements OnInit {
         dato.descripcion,
         [
           Validators.required,
-          Validators.pattern('^[a-zA-Z0-9.,\u00f1\u00d1\\s]+$'),
-          Validators.maxLength(255)
         ]
       ]
+    });
+    this.formulario.get('descripcion').valueChanges.subscribe(value => {
+      this.caracteresRestantes = this.caracteresMaximos - (value ? value.length : 0);
     });
   }
 
@@ -492,7 +521,7 @@ export class ProductosComponent implements OnInit {
         precio.cantidad,
         [
           Validators.required,
-          Validators.pattern('^\\d+(\\.\\d+)?\\s*(-\\s*\\d+(\\.\\d+)?)?$'),
+          Validators.pattern('^[><]?\\d+(\\.\\d+)?\\s*(-\\s*\\d+(\\.\\d+)?)?$')
         ]
       ],
       precio:[
@@ -501,7 +530,14 @@ export class ProductosComponent implements OnInit {
           Validators.required,
           Validators.pattern('^[0-9]+([.,][0-9]{1,2})?$'),
         ]
-      ]
+      ],
+      idtamano:[
+        precio.idtamano
+      ],
+      idmaterial:[
+        precio.idtamano
+      ],
+
     });
   }
 
@@ -511,14 +547,13 @@ export class ProductosComponent implements OnInit {
     let input = event.target.value;
     switch (type) {
       case 'cantidad':
-        input = input.replace(/[^0-9\s\.-]/g, '');
+        input = input.replace(/[^0-9\s\.\-<>]/g, '');
+        input = input.replace(/(?!^)[><]/g, '');
         break;
       case 'precio':
-        // Permitir números, comas, puntos y espacios
         input = input.replace(/[^0-9.,\s]/g, '');
-        // Asegurarse de no permitir múltiples puntos o comas
-        input = input.replace(/(\..*)\./g, '$1');  // Solo un punto decimal permitido
-        input = input.replace(/(,.*),/g, '$1');   // Solo una coma decimal permitida
+        input = input.replace(/(\..*)\./g, '$1');
+        input = input.replace(/(,.*),/g, '$1');
         break;
     }
     this.formPrecio.get(controlName)?.setValue(input, { emitEvent: false });
@@ -526,6 +561,24 @@ export class ProductosComponent implements OnInit {
 
   getFormControlsPrecio(): string[] {
     return Object.keys(this.formPrecio.controls);
+  }
+
+  onCheckChange(type: string, event: Event) {
+    const checkbox = event.target as HTMLInputElement;
+
+    if (type === 'tamano') {
+      this.showTamano = checkbox.checked;
+      if (this.showTamano) {
+        this.ftamanos(this.dato.idproducto);  // Cambia el 1 por el ID que necesites
+      }
+    }
+
+    if (type === 'material') {
+      this.showMaterial = checkbox.checked;
+      if (this.showMaterial) {
+        this.fmateriales(this.dato.idproducto);  // Cambia el 1 por el ID que necesites
+      }
+    }
   }
 
   fadicionarPrecio(content: any){
@@ -556,6 +609,8 @@ export class ProductosComponent implements OnInit {
     this.precio.idproducto = this.dato.idproducto;
     this.precio.precio = this.formPrecio.value.precio;
     this.precio.cantidad = this.formPrecio.value.cantidad;
+    this.precio.idtamano = this.formPrecio.value.idtamano;
+    this.precio.idmaterial = this.formPrecio.value.idmaterial;
 
     if (this.estado === 'Adicionar') {
       this._preciosService.adicionar(this.precio).subscribe(
@@ -620,7 +675,7 @@ export class ProductosComponent implements OnInit {
         material.material,
         [
           Validators.required,
-          Validators.pattern('^[a-zA-ZÀ-ÿ0-9\u00f1\u00d1\\s%]+$'),
+          Validators.pattern('^[a-zA-ZÀ-ÿ0-9\u00f1\u00d1\\s.,%-]+$'),
         ]
       ]
     });
@@ -632,7 +687,7 @@ export class ProductosComponent implements OnInit {
     let input = event.target.value;
     switch (type) {
       case 'material':
-        input = input.replace(/[^a-zA-ZÀ-ÿ0-9\u00f1\u00d1\s%]/g, '');
+        input = input.replace(/[^a-zA-ZÀ-ÿ0-9\u00f1\u00d1\s.,%\-]/g, '');
         break;
     }
     this.formMaterial.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
@@ -690,7 +745,7 @@ export class ProductosComponent implements OnInit {
         tamano.tamano,
         [
           Validators.required,
-          Validators.pattern('^[a-zA-ZÀ-ÿ0-9\u00f1\u00d1\\s]+$'),
+          Validators.pattern('^[a-zA-ZÀ-ÿ0-9.,\u00f1\u00d1\\s]+$'),
         ]
       ]
     });
@@ -702,7 +757,7 @@ export class ProductosComponent implements OnInit {
     let input = event.target.value;
     switch (type) {
       case 'tamano':
-        input = input.replace(/[^a-zA-ZÀ-ÿ0-9\u00f1\u00d1\s]/g, '');
+        input = input.replace(/[^a-zA-ZÀ-ÿ0-9.,\u00f1\u00d1\s]/g, '');
         break;
     }
     this.formTamano.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
@@ -767,7 +822,7 @@ export class ProductosComponent implements OnInit {
         atributo.detalle,
         [
           Validators.required,
-          Validators.pattern('^[a-zA-ZÀ-ÿ0-9\u00f1\u00d1\\s]+$')
+          Validators.pattern('^[a-zA-ZÀ-ÿ0-9\u00f1\u00d1\\s.,%-]+$')
         ]
       ]
     });
@@ -779,7 +834,7 @@ export class ProductosComponent implements OnInit {
     let input = event.target.value;
     switch (type) {
       case 'atributo':
-        input = input.replace(/[^a-zA-ZÀ-ÿ0-9\u00f1\u00d1\s]/g, '');
+        input = input.replace(/[^a-zA-ZÀ-ÿ0-9\u00f1\u00d1\s.,%\-]/g, '');
         break;
     }
     this.formAtributo.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
@@ -851,7 +906,6 @@ export class ProductosComponent implements OnInit {
         swal.showLoading();
       }
     });
-    console.log(this.archivoSeleccionado);
 
     this._productosService.upload(this.dato.idproducto.toString(), 'productos', this.archivoSeleccionado).subscribe(event => {
       if (event.type === HttpEventType.UploadProgress) {
@@ -871,6 +925,12 @@ export class ProductosComponent implements OnInit {
     this.imagenes = [];
     this._productosService.download(id, 'productos').subscribe((data) => {
       this.imagenes = data;
+    });
+  }
+
+  feliminarimagen(id: number, archivo: string, tipo: string){
+    this._productosService.eliminarImagenp(id, archivo, tipo).subscribe(data => {
+      this.fdescargar(id);
     });
   }
 

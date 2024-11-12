@@ -174,10 +174,12 @@ export class ProductosService {
     });
   }
 
-  eliminarImagenp(id: number): Observable<any>{
+  eliminarImagenp(id: number, archivo: string, tipo: string): Observable<any> {
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
-    return this._httpClient.delete<void>(`${this.ruta}/eliminarp/${id}`, {
-      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    return this._httpClient.post<void>(`${this.ruta}/eliminarp`, { id, archivo, tipo }, {
+      headers: new HttpHeaders()
+        .set('Authorization', `Bearer ${access_token}`)
+        .set('Content-Type', 'application/json')
     });
   }
 

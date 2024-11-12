@@ -74,6 +74,8 @@ export class DetalleComponent implements OnInit {
   selectedTamano: number | null = null;
   cantidadesPorTamano: { [id: number]: number } = {};
 
+  esTamanoSeleccionable: boolean = true;
+
   atributos: Atributos[] = [];
   selectedAtributo: number | null = null;
 
@@ -227,9 +229,11 @@ export class DetalleComponent implements OnInit {
     });
   }
 
-  selectPrecio(idprecio: number): void {
+  selectPrecio(idprecio: number, idmaterial: number | null = null, idtamano: number | null = null): void {
     this.selectedPrecio = idprecio;
-    //console.log(this.selectedPrecio);
+    this.selectedMaterial = idmaterial;
+    this.selectedTamano = idtamano;
+    this.esTamanoSeleccionable = !(idmaterial || idtamano);
 
   }
 
