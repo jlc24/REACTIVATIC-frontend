@@ -1,0 +1,58 @@
+<app-cabeceratitulos [titulo]="'Evaluaciones'" [descripcion]="'Lista de Evaluaciones'" [icono]="'file'" [opcion]="'evaluaciones'">
+</app-cabeceratitulos>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+      <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
+        <h4 class="text-white">LISTA DE EVALUACIONES</h4>
+        <button class="btn btn-sm btn-outline-light rounded-pill mr-2" type="button" ><i class="fa fa-plus"></i> Agregar Evaluación</button>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-6 mt-1">
+            <!-- <p *ngIf="total == 0">
+              Total: <b>{{ total }} registros</b>
+            </p>
+            <p *ngIf="total == 1">
+              Total: <b>{{ total }} registro</b>
+            </p>
+            <p *ngIf="total > 1">
+              Total: <b>{{ total }} registros</b>
+            </p> -->
+          </div>
+          <div class="col-sm-6">
+            <div class="row justify-content-end">
+              <div class="col-sm-2 text-md-right text-sm-left mt-1">
+                <label for="">Buscar: </label>
+              </div>
+              <div class="col-sm-10">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                  </div>
+                  <!-- <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Empresa a buscar ..." (keyup)="fbuscar()" style="text-transform: uppercase;"/> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive" >
+          <table class="table table-sm table-bordered table-hover table-striped tabla-empresa">
+            <thead>
+              <tr class="table-primary">
+                <th class="text-center">Nro.</th>
+                <th class="text-center">Evaluaciones</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Fecha creacion</th>
+                <th class="text-center">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

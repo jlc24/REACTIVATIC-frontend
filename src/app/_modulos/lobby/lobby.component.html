@@ -1,0 +1,242 @@
+<app-cabeceratitulos [titulo]="'Rueda de Negocios > Lobby'" [descripcion]="'Lista de Categorías'" [icono]="'shopping-bag'" [opcion]="'Negocios / Networking'">
+</app-cabeceratitulos>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+      <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
+        <ng-container *ngIf="beneficio; else sinBeneficio">
+          <div class="row text-white align-items-center">
+            <div class="col-12 col-lg-auto text-center text-lg-start mb-2 mb-lg-0">
+              <h3>{{ beneficio?.beneficio }}</h3>
+            </div>
+            <div class="col-12 col-md-auto text-center text-lg-end mb-2 mb-lg-0">
+              <h5><strong>Fecha Inicio:</strong> {{ beneficio?.fechainicio | date:'EEEE, d \'de\' MMMM \'de\' y, HH:mm' }}</h5>
+            </div>
+            <div class="col-12 col-md-auto text-center text-lg-end">
+              <h5><strong>Fecha Fin:</strong> {{ beneficio?.fechafin | date:'EEEE, d \'de\' MMMM \'de\' y, HH:mm' }}</h5>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #sinBeneficio>
+          <div class="text-center w-100 text-white">
+            <h3>Sin rueda de negocios</h3>
+          </div>
+        </ng-template>
+      </div>
+      <div class="card-body">
+        <ng-container *ngIf="beneficio; else mensajeSinEvento">
+          <div class="row justify-content-center">
+            <div class="col-xl-10 col-sm-12">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pills-home-tab" data-toggle="pill" data-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">En Curso . . . </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-profile-tab" data-toggle="pill" data-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Participantes</button>
+                  </li>
+                </ul>
+                <div class="ms-3" style="flex: 1; max-width: 300px;">
+                  <input type="text" class="form-control buscar_lobby w-100" placeholder="Buscar..." style="border: 2px solid #4A5568; border-radius: 5px;">
+                </div>
+              </div>
+              <div class="tab-content p-2 " id="pills-tabContent" style="border: 1px solid #4A5568; border-radius: 10px;">
+                <div class="tab-pane fade show active table-responsive" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                  <table class="table table-bordered table-striped">
+                    <thead style="background-color: #4A5568; color: #fff;">
+                      <tr>
+                        <th>Unidad Productiva</th>
+                        <th>Cliente</th>
+                        <th class="text-center">Cita del Evento</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <img src="logo-up.png" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
+                            <div class="ms-3 ml-2">
+                              <strong>Nombre UP</strong><br>
+                              <span>correo&#64;up.com</span><br>
+                              <span>+591 12345678</span><br>
+                              <span class="badge badge-success">En Curso</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <img src="logo-cliente.png" alt="Logo Cliente" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
+                            <div class="ms-3 ml-2">
+                              <strong>Nombre Cliente</strong><br>
+                              <span>correo&#64;cliente.com</span><br>
+                              <span>+591 87654321</span><br>
+                              <span class="badge badge-success">En Curso</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div>
+                            <strong>Hora Inicio:</strong> 08:00 AM<br>
+                            <strong>Hora Fin:</strong> 09:00 AM<br>
+                            <strong>Mesa:</strong> 12<br>
+                            <button class="btn btn-sm btn-info mt-2" style="background-color: #4A5568; border-color: #4A5568; color: #fff;" disabled>
+                              Resultados
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <img src="logo-up.png" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
+                            <div class="ms-3 ml-2">
+                              <strong>Nombre UP</strong><br>
+                              <span>correo&#64;up.com</span><br>
+                              <span>+591 12345678</span><br>
+                              <span class="badge badge-success">En Curso</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <img src="logo-cliente.png" alt="Logo Cliente" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
+                            <div class="ms-3 ml-2">
+                              <strong>Nombre Cliente</strong><br>
+                              <span>correo&#64;cliente.com</span><br>
+                              <span>+591 87654321</span><br>
+                              <span class="badge badge-warning">Ausente</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div>
+                            <strong>Hora Inicio:</strong> 08:00 AM<br>
+                            <strong>Hora Fin:</strong> 09:00 AM<br>
+                            <strong>Mesa:</strong> 12<br>
+                            <button class="btn btn-sm btn-info mt-2" style="background-color: #4A5568; border-color: #4A5568; color: #fff;" disabled>
+                              Resultados
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <img src="logo-up.png" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
+                            <div class="ms-3 ml-2">
+                              <strong>Nombre UP</strong><br>
+                              <span>correo&#64;up.com</span><br>
+                              <span>+591 12345678</span><br>
+                              <span class="badge badge-secondary">Por iniciar</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <img src="logo-cliente.png" alt="Logo Cliente" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
+                            <div class="ms-3 ml-2">
+                              <strong>Nombre Cliente</strong><br>
+                              <span>correo&#64;cliente.com</span><br>
+                              <span>+591 87654321</span><br>
+                              <span class="badge badge-secondary">Por iniciar</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div>
+                            <strong>Hora Inicio:</strong> 08:00 AM<br>
+                            <strong>Hora Fin:</strong> 09:00 AM<br>
+                            <strong>Mesa:</strong> 12<br>
+                            <button class="btn btn-sm btn-info mt-2" style="background-color: #4A5568; border-color: #4A5568; color: #fff;" disabled>
+                              Resultados
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <img src="logo-up.png" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
+                            <div class="ms-3 ml-2">
+                              <strong>Nombre UP</strong><br>
+                              <span>correo&#64;up.com</span><br>
+                              <span>+591 12345678</span><br>
+                              <span class="badge badge-danger">Finalizado</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <img src="logo-cliente.png" alt="Logo Cliente" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
+                            <div class="ms-3 ml-2">
+                              <strong>Nombre Cliente</strong><br>
+                              <span>correo&#64;cliente.com</span><br>
+                              <span>+591 87654321</span><br>
+                              <span class="badge badge-danger">Finalizado</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div>
+                            <strong>Hora Inicio:</strong> 08:00 AM<br>
+                            <strong>Hora Fin:</strong> 09:00 AM<br>
+                            <strong>Mesa:</strong> 12<br>
+                            <button class="btn btn-sm btn-info mt-2" style="background-color: #4A5568; border-color: #4A5568; color: #fff;">
+                              Resultados
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="tab-pane fade table-responsive" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                  <table class="table table-bordered table-striped">
+                    <thead style="background-color: #4A5568; color: #fff;">
+                      <tr>
+                        <th>Unidad Productiva</th>
+                        <th>Rubro</th>
+                        <th class="text-center">Op</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <img src="logo-up.png" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
+                            <div class="ms-3 ml-2">
+                              <strong>Nombre UP</strong><br>
+                              <span>correo&#64;up.com</span><br>
+                              <span>+591 12345678</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>ARTESANIA</td>
+                        <td class="text-center">
+                          <button class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i> Ver</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Dato 4</td>
+                        <td>Dato 5</td>
+                        <td>Dato 6</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #mensajeSinEvento>
+          <div class="text-center w-100">
+            <i class="fa fa-exclamation-triangle fa-5x text-warning mb-4"></i>
+            <h1>El evento no está disponible en estos momentos.</h1><br>
+            <h1> Gracias por su comprensión.</h1>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

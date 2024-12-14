@@ -19,6 +19,7 @@ import { registerLocaleData } from '@angular/common';
 import { DetalleComponent } from './catalogo/detalle/detalle.component';
 import { EmpresaComponent } from './catalogo/empresa/empresa.component';
 import { PerfilComponent } from './catalogo/perfil/perfil.component';
+import { TradeComponent } from './trade/trade.component';
 registerLocaleData(localeEsBo,  'es-Bo');
 
 @NgModule({
@@ -31,6 +32,7 @@ registerLocaleData(localeEsBo,  'es-Bo');
     DetalleComponent,
     EmpresaComponent,
     PerfilComponent,
+    TradeComponent,
   ],
   imports: [
     BrowserModule,

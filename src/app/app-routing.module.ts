@@ -9,11 +9,16 @@ import { Routes, RouterModule } from '@angular/router';
 import { DetalleComponent } from './catalogo/detalle/detalle.component';
 import { EmpresaComponent } from './catalogo/empresa/empresa.component';
 import { PerfilComponent } from './catalogo/perfil/perfil.component';
+import { TradeComponent } from './trade/trade.component';
 
 const routes: Routes = [
   {
     path: 'acceso',
     component: AccesoComponent,
+  },
+  {
+    path: 'negocios',
+    component: TradeComponent,
   },
   {
     path: 'catalogo',

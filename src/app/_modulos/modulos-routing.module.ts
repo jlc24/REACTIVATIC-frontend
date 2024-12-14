@@ -34,6 +34,10 @@ import { CargosComponent } from './cargos/cargos.component';
 import { ReporteunidadesComponent } from './reporteunidades/reporteunidades.component';
 import { ReportebeneficiosComponent } from './reportebeneficios/reportebeneficios.component';
 import { NegociosComponent } from './negocios/negocios.component';
+import { EvaluacionesComponent } from './evaluaciones/evaluaciones.component';
+import { CertificadosComponent } from './certificados/certificados.component';
+import { LobbyComponent } from './lobby/lobby.component';
+import { NetworkingComponent } from './networking/networking.component';
 
 const routes: Routes = [
   {
@@ -179,6 +183,38 @@ const routes: Routes = [
   {
     path: 'beneficios',
     component: BeneficiosComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
+    path: 'evaluaciones',
+    component: EvaluacionesComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
+    path: 'certificados',
+    component: CertificadosComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
+    path: 'tradelobby',
+    component: LobbyComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
+    path: 'tradenetworking',
+    component: NetworkingComponent,
     canActivate: [GuardianGuard],
     data: {
       rol: 'ROLE_TODOS'
