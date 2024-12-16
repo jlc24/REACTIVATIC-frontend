@@ -1,12 +1,12 @@
-import { Productos } from "./productos";
+import { Empresas } from "./empresas";
 
 export class Ofertas {
-  idofertas: number;
-  idproducto: number;
+  idoferta: number;
+  idempresa: number;
+  tipooferta: string;
   oferta: number;
-  duracion: Date;
   estado: boolean;
   created_at: Date;
   
-  productos: Productos;
+  empresa: Empresas;
 }

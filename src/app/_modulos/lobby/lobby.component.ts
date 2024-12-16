@@ -17,39 +17,34 @@ export class LobbyComponent implements OnInit {
   ruta = `${RUTA}/catalogos/descargarempresa/`;
 
   beneficio: Beneficios;
-  beneficiosempresas: Beneficiosempresas[];
   negocios: Negocios[];
   negocio: Negocios;
 
-  buscar: string;
+  buscarnegocios: string = '';
 
   constructor(
     private _beneficiosService: BeneficiosService,
-    private _beneficiosempresasService: BeneficiosempresasService,
     private _tradesService: TradesService,
   ) { }
 
   ngOnInit(): void {
     this.fnegocios();
-    this.fdatos();
-    this.fbeneficiosempresas();
   }
-
+  
   fnegocios(){
     this._beneficiosService.negocios().subscribe((data) => {
       this.beneficio = data;
+      this.fdatos();
     });
+  }
+
+  fbuscarnegocios(){
+    this.fdatos();
   }
 
   fdatos(){
-    this._tradesService.datos(this.buscar, this.beneficio.idbeneficio.toString()).subscribe(data => {
+    this._tradesService.datos(this.buscarnegocios, this.beneficio.idbeneficio.toString()).subscribe(data => {
       this.negocios = data;
-    });
-  }
-
-  fbeneficiosempresas(){
-    this._beneficiosempresasService.datosl(this.beneficio.idbeneficio).subscribe(data => {
-      this.beneficiosempresas = data;
     });
   }
 

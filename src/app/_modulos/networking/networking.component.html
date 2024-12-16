@@ -7,13 +7,13 @@
       <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
         <ng-container *ngIf="beneficio; else sinBeneficio">
           <div class="row text-white align-items-center">
-            <div class="col-12 col-lg-auto text-center text-lg-start mb-2 mb-lg-0">
+            <div class="col-12 col-lg-12 text-center text-lg-start mb-2 mb-lg-0">
               <h3>{{ beneficio?.beneficio }}</h3>
             </div>
-            <div class="col-12 col-md-auto text-center text-lg-end mb-2 mb-lg-0">
+            <div class="col-6 col-md-auto text-center text-lg-end mb-2 mb-lg-0">
               <h5><strong>Fecha Inicio:</strong> {{ beneficio?.fechainicio | date:'EEEE, d \'de\' MMMM \'de\' y, HH:mm' }}</h5>
             </div>
-            <div class="col-12 col-md-auto text-center text-lg-end">
+            <div class="col-6 col-md-auto text-center text-lg-end">
               <h5><strong>Fecha Fin:</strong> {{ beneficio?.fechafin | date:'EEEE, d \'de\' MMMM \'de\' y, HH:mm' }}</h5>
             </div>
           </div>
@@ -28,48 +28,79 @@
         <ng-container *ngIf="beneficio; else mensajeSinEvento">
           <div class="row justify-content-center">
             <div class="col-xl-10 col-sm-12">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                  <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="pills-home-tab" data-toggle="pill" data-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Participantes</button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-profile-tab" data-toggle="pill" data-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Citas Agendadas</button>
-                  </li>
-                </ul>
-                <div class="ms-3" style="flex: 1; max-width: 300px;">
-                  <input type="text" class="form-control buscar_lobby w-100" placeholder="Buscar..." style="border: 2px solid #4A5568; border-radius: 5px;">
-                </div>
-              </div>
+              <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="pills-participantes-tab" data-toggle="pill" data-target="#pills-participantes" type="button" role="tab" aria-controls="pills-participantes" aria-selected="true">Participantes</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="pills-citas-tab" data-toggle="pill" data-target="#pills-citas" type="button" role="tab" aria-controls="pills-citas" aria-selected="false">Citas Agendadas</button>
+                </li>
+              </ul>
               <div class="tab-content p-2 " id="pills-tabContent" style="border: 1px solid #4A5568; border-radius: 10px;">
-                <div class="tab-pane fade show active table-responsive" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                  <table class="table table-bordered table-striped">
-                    <thead style="background-color: #4A5568; color: #fff;">
-                      <tr>
-                        <th>Unidad Productiva</th>
-                        <th>Rubro</th>
-                        <th class="text-center">Op</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          <div class="d-flex align-items-center">
-                            <img src="logo-up.png" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
-                            <div class="ms-3 ml-2">
-                              <strong>Nombre UP</strong><br>
-                              <span>correo&#64;up.com</span><br>
-                              <span>+591 12345678</span>
+                <div class="tab-pane fade show active" id="pills-participantes" role="tabpanel" aria-labelledby="pills-participantes-tab">
+                  <div class="row justify-content-end">
+                    <div class="col-sm-2 text-md-right text-sm-left mt-1">
+                      <label for="">Buscar: </label>
+                    </div>
+                    <div class="col-sm-10">
+                      <div class="input-group input-group-sm">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                        </div>
+                        <input type="text" class="form-control form-control-sm buscar_lobby" [(ngModel)]="buscarinscritos" placeholder="Buscar..." (keyup)="fbuscarinscritos()" style="border: 2px solid #4A5568; border-radius: 5px;">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="table-responsive" *ngIf="beneficiosempresas?.length > 0">
+                    <table class="table table-bordered table-striped">
+                      <thead style="background-color: #4A5568; color: #fff;">
+                        <tr>
+                          <th>Unidad Productiva</th>
+                          <th width="150px" class="text-center">Rubro</th>
+                          <th class="text-center">Op</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let _empresa of beneficiosempresas; let i = index">
+                          <td>
+                            <div class="d-flex align-items-center">
+                              <img [src]="ruta+_empresa.idempresa" width="80px" (error)="$event.target.src='assets/imagenes/images/default/404.png'" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;"/>
+                              <div class="ms-3 ml-2">
+                                <strong>{{ _empresa.empresa.empresa }}</strong><br>
+                                <span>{{ _empresa.empresa.correo }}</span><br>
+                                <span>+591 {{ _empresa.empresa.celular }}</span>
+                              </div>
                             </div>
-                          </div>
-                        </td>
-                        <td>ARTESANIA</td>
-                        <td class="text-center"><button class="btn btn-sm btn-outline-info"><i class="fa fa-handshake-o"></i> Conectar</button></td>
-                      </tr>
-                    </tbody>
-                  </table>
+                          </td>
+                          <td class="text-center">{{ _empresa.empresa.rubro.rubro }}</td>
+                          <td class="text-center">
+                            <button class="btn btn-sm btn-outline-info" (click)="fver(_empresa.empresa.idempresa, ver)"><i class="bi bi-eye"></i> Ver</button>
+                            <button class="btn btn-sm btn-outline-success" (click)="fverinfo(_empresa.empresa.idempresa, verinfo)"><i class="fa fa-handshake-o"></i> Conectar</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="table-responsive" *ngIf="beneficiosempresas?.length == 0">
+                    <table class="table table-bordered table-striped">
+                      <thead style="background-color: #4A5568; color: #fff;">
+                        <tr>
+                          <th>Unidad Productiva</th>
+                          <th>Rubro</th>
+                          <th class="text-center">Op</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td colspan="3" class="text-center">
+                            No hay Unidades Productivas Inscritas en el evento.
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-                <div class="tab-pane fade table-responsive" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                <div class="tab-pane fade table-responsive" id="pills-citas" role="tabpanel" aria-labelledby="pills-citas-tab">
                   <table class="table table-bordered table-striped">
                     <thead style="background-color: #4A5568; color: #fff;">
                       <tr>
@@ -136,3 +167,186 @@
     </div>
   </div>
 </div>
+
+<ng-template #ver>
+  <div class="modal-header" style="background-color: #4A5568;">
+    <h4 class="modal-title pull-left text-white"><i class="fa fa-eye"></i> Ver Ofertas y Demandas</h4>
+    <button type="button" class="close" aria-label="Close" (click)="fcancelar()">
+      <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="col-sm-12">
+      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="pills-ofertas-tab" data-toggle="pill" data-target="#pills-ofertas" type="button" role="tab" aria-controls="pills-ofertas" aria-selected="true">Ofertas</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-demandas-tab" data-toggle="pill" data-target="#pills-demandas" type="button" role="tab" aria-controls="pills-demandas" aria-selected="false">Demandas</button>
+        </li>
+      </ul>
+      <div class="tab-content p-2 " id="pills-tabContent" style="border: 1px solid #4A5568; border-radius: 10px;">
+        <div class="tab-pane fade show active" id="pills-ofertas" role="tabpanel" aria-labelledby="pills-ofertas-tab">
+          <form [formGroup]="formOferta" (ngSubmit)="isEditingOferta ? fmodificaroferta() : fadicionaroferta()">
+            <div class="row">
+              <div class="col-sm-12 mb-3">
+                <label for="tipooferta">Tipo Oferta: <span class="text-danger">*</span></label>
+                <select class="custom-select custom-select-sm" id="tipooferta" formControlName="tipooferta">
+                  <option value="" selected>Seleccionar ...</option>
+                  <option value="PRODUCTO">PRODUCTO</option>
+                  <option value="SERVICIO">SERVICIO</option>
+                </select>
+                <div class="invalid-feedback">Este campo es obligatorio.</div>
+              </div>
+              <div class="col-sm-12 mb-3">
+                <label for="oferta">Oferta: <span class="text-danger">*</span></label>
+                <input type="text" id="oferta" class="form-control form-control-sm" formControlName="oferta"
+                  [class.is-invalid]="fO.oferta.errors && fO.oferta.touched"
+                  (input)="onInput($event, 'oferta', 'letrasyespacios')"
+                  autocomplete="no" placeholder="Ingrese oferta" required/>
+                <div class="invalid-feedback">Este campo es obligatorio.</div>
+              </div>
+              <div class="col-sm-12 mb-3 text-right">
+                <button *ngIf="!isEditingOferta" type="submit" class="btn btn-sm btn-outline-success rounded-pill" [disabled]="!formOferta.valid">Guardar <i class="bi bi-floppy"></i></button>
+                <button *ngIf="isEditingOferta" type="submit" class="btn btn-sm btn-outline-success rounded-pill" [disabled]="!formOferta.valid">Modificar <i class="bi bi-floppy"></i></button>
+                <button *ngIf="isEditingOferta" class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelareditoferta()" >Cancelar <i class="bi bi-x"></i></button>
+              </div>
+            </div>
+          </form>
+
+          <div class="row">
+            <div class="col-sm-12 mt-3 table-responsive" *ngIf="ofertas.length > 0">
+              <table class="table table-sm table-bordered table-striped">
+                <thead style="background-color: #4A5568; color: #fff;">
+                  <tr>
+                    <th>Oferta</th>
+                    <th>Tipo</th>
+                    <th class="text-center">Op</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let _oferta of ofertas; let i = index">
+                    <td>{{ _oferta.oferta }}</td>
+                    <td>{{ _oferta.tipooferta }}</td>
+                    <td>
+                      <div class="btn-group" role="group" aria-label="First group">
+                        <button class="btn btn-outline-warning btn-sm" title="Editar" (click)="feditaroferta(_oferta.idoferta)">
+                          <i class="fa fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm" title="Eliminar" (click)="feliminaroferta(_oferta.idoferta)">
+                          <i class="fa fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-sm-12 mt-3 table-responsive" *ngIf="ofertas.length == 0">
+              <table class="table table-sm table-bordered table-striped">
+                <thead style="background-color: #4A5568; color: #fff;">
+                  <tr>
+                    <th>Oferta</th>
+                    <th>Tipo</th>
+                    <th class="text-center">Op</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="3" class="text-center">No hay datos.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="pills-demandas" role="tabpanel" aria-labelledby="pills-demandas-tab">
+          <form [formGroup]="formDemanda" (ngSubmit)="isEditingDemanda ? fmodificardemanda() : fadicionardemanda()">
+            <div class="row">
+              <div class="col-sm-12 mb-3">
+                <label for="tipodemanda">Tipo Demanda: <span class="text-danger">*</span></label>
+                <select class="custom-select custom-select-sm" id="tipodemanda" formControlName="tipodemanda">
+                  <option value="" selected>Seleccionar ...</option>
+                  <option value="PRODUCTO">PRODUCTO</option>
+                  <option value="SERVICIO">SERVICIO</option>
+                </select>
+                <div class="invalid-feedback">Este campo es obligatorio.</div>
+              </div>
+              <div class="col-sm-12 mb-3">
+                <label for="demanda">Demanda: <span class="text-danger">*</span></label>
+                <input type="text" id="demanda" class="form-control form-control-sm" formControlName="demanda"
+                  [class.is-invalid]="fD.demanda.errors && fD.demanda.touched"
+                  (input)="onInput($event, 'demanda', 'letrasyespacios')"
+                  autocomplete="no" placeholder="Ingrese demanda" required/>
+                <div class="invalid-feedback">Este campo es obligatorio.</div>
+              </div>
+              <div class="col-sm-12 mb-3 text-right">
+                <button *ngIf="!isEditingDemanda" type="submit" class="btn btn-sm btn-outline-success rounded-pill" [disabled]="!formDemanda.valid">Guardar <i class="bi bi-floppy"></i></button>
+                <button *ngIf="isEditingDemanda" type="submit" class="btn btn-sm btn-outline-success rounded-pill" [disabled]="!formDemanda.valid">Modificar <i class="bi bi-floppy"></i></button>
+                <button *ngIf="isEditingDemanda" class="btn btn-sm btn-outline-secondary rounded-pill" (click)="fcancelareditdemanda()" >Cancelar <i class="bi bi-x"></i></button>
+              </div>
+            </div>
+          </form>
+
+          <div class="row">
+            <div class="col-sm-12 mt-3 table-responsive" *ngIf="demandas.length > 0">
+              <table class="table table-sm table-bordered table-striped">
+                <thead style="background-color: #4A5568; color: #fff;">
+                  <tr>
+                    <th>Demanda</th>
+                    <th>Tipo</th>
+                    <th class="text-center">Op</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let _demanda of demandas; let i = index">
+                    <td>{{ _demanda.demanda }}</td>
+                    <td>{{ _demanda.tipodemanda }}</td>
+                    <td>
+                      <div class="btn-group" role="group" aria-label="First group">
+                        <button class="btn btn-outline-warning btn-sm" title="Editar" (click)="feditarDemanda(_demanda.iddemanda)">
+                          <i class="fa fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm" title="Eliminar" (click)="feliminardemanda(_demanda.iddemanda)">
+                          <i class="fa fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-sm-12 mt-3 table-responsive" *ngIf="demandas.length == 0">
+              <table class="table table-sm table-bordered table-striped">
+                <thead style="background-color: #4A5568; color: #fff;">
+                  <tr>
+                    <th>Demandas</th>
+                    <th>Tipo</th>
+                    <th class="text-center">Op</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="3" class="text-center">No hay datos.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #verinfo>
+  <div class="modal-header" style="background-color: #4A5568;">
+    <h4 class="modal-title pull-left text-white"><i class="fa fa-eye"></i> Ver Informacion</h4>
+    <button type="button" class="close" aria-label="Close" (click)="fcancelar()">
+      <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    
+  </div>
+</ng-template>

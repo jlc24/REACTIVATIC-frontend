@@ -1,7 +1,20 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { BeneficiosService } from 'src/app/_aods/beneficios.service';
+import { BeneficiosempresasService } from 'src/app/_aods/beneficiosempresas.service';
+import { DemandasService } from 'src/app/_aods/demandas.service';
+import { EmpresasService } from 'src/app/_aods/empresas.service';
+import { OfertasService } from 'src/app/_aods/ofertas.service';
+import { TradesService } from 'src/app/_aods/trades.service';
 import { RUTA } from 'src/app/_config/application';
 import { Beneficios } from 'src/app/_entidades/beneficios';
+import { Beneficiosempresas } from 'src/app/_entidades/beneficiosempresas';
+import { Demandas } from 'src/app/_entidades/demandas';
+import { Empresas } from 'src/app/_entidades/empresas';
+import { Negocios } from 'src/app/_entidades/negocios';
+import { Ofertas } from 'src/app/_entidades/ofertas';
 
 @Component({
   selector: 'app-networking',
@@ -12,20 +25,349 @@ export class NetworkingComponent implements OnInit {
 
   ruta = `${RUTA}/catalogos/descargarempresa/`;
 
+  empresa: Empresas;
   beneficio: Beneficios;
+  beneficiosempresas: Beneficiosempresas[];
+  negocios: Negocios[];
+  negocio: Negocios;
+
+  ofertas: Ofertas[];
+  oferta: Ofertas;
+  isEditingOferta = false;
+  demandas: Demandas[];
+  demanda: Demandas;
+  isEditingDemanda = false;
+
+  buscarnegocios: string = '';
+  buscarinscritos: string = '';
+
+  formOferta: FormGroup;
+  formDemanda: FormGroup;
+  submitted:boolean = false;
+
+  modalRefVer: NgbModalRef;
+  modalRefConectar: NgbModalRef;
 
   constructor(
+    private _empresasService: EmpresasService,
     private _beneficiosService: BeneficiosService,
+    private _beneficiosempresasService: BeneficiosempresasService,
+    private _tradesService: TradesService,
+    private _ofertasService: OfertasService,
+    private _demandasService: DemandasService,
+    private _fO: FormBuilder,
+    private _fD: FormBuilder,
+    private _modalService: NgbModal,
+    private _toast: ToastrService,
   ) { }
 
   ngOnInit(): void {
+    this.formOferta = this._fO.group({
+      idoferta: [''],
+      tipooferta: [''],
+      oferta: ['']
+    });
+    this.formDemanda = this._fD.group({
+      iddemanda: [''],
+      tipodemanda: [''],
+      demanda: ['']
+    });
     this.fnegocios();
   }
-
+  
   fnegocios(){
     this._beneficiosService.negocios().subscribe((data) => {
       this.beneficio = data;
+      this.fbeneficiosempresas();
+      this.fdatos();
     });
+  }
+
+  fbuscarnegocios(){
+    this.fdatos();
+  }
+
+  fdatos(){
+    this._tradesService.datos(this.buscarnegocios, this.beneficio.idbeneficio.toString()).subscribe(data => {
+      this.negocios = data;
+    });
+  }
+
+  fbuscarinscritos(){
+    this.fbeneficiosempresas();
+  }
+
+  fbeneficiosempresas(){
+    this._beneficiosempresasService.datosl(this.beneficio.idbeneficio).subscribe(data => {
+      this.beneficiosempresas = data;
+    });
+  }
+
+  fofertas(id: number){
+    this._ofertasService.ofertas(id).subscribe(data => {
+      this.ofertas = data;
+    });
+  }
+
+  fdemandas(id: number){
+    this._demandasService.demandas(id).subscribe(data => {
+      this.demandas = data;
+    });
+  }
+
+  fver(id: number, content: any){
+    this._empresasService.dato(id).subscribe(data => {
+      this.empresa = data;
+      this.fofertas(data.idempresa);
+      this.fdemandas(data.idempresa);
+      this.modalRefVer = this._modalService.open(content, {
+        backdrop: 'static',
+        keyboard: false,
+        size: 'md',
+        scrollable: true
+      });
+    });
+  }
+
+  fadicionaroferta(){
+    this.submitted = true;
+
+    this.oferta = new Ofertas;
+
+    this.oferta.idempresa = this.empresa.idempresa;
+    this.oferta.tipooferta = this.formOferta.value.tipooferta;
+    this.oferta.oferta = this.formOferta.value.oferta;
+
+    this._ofertasService.adicionar(this.oferta).subscribe(
+      response => {
+        this.fofertas(this.empresa.idempresa);
+        this.formOferta.reset();
+        this.submitted = false;
+        this._toast.success('Oferta agregada', 'Hecho');
+      },
+      (error) => {
+        this._toast.error('', 'Error en la operación');
+      }
+    );
+  }
+
+  fformOfertas(dato: Ofertas){
+    this.formOferta = this._fO.group({
+      idoferta: [
+        dato.idoferta,
+        [
+          Validators.required
+        ]
+      ],
+      tipooferta: [
+        dato.tipooferta,
+        [
+          Validators.required
+        ]
+      ],
+      oferta: [
+        dato.oferta,
+        [
+          Validators.required,
+          Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$')
+        ]
+      ]
+    });
+  }
+
+  get fO() { return this.formOferta.controls; }
+
+  onInput(event: any, controlName: string, type: 'letras' | 'letrasyespacios' | 'numeros' | 'letrasyespacioguion' | 'division' ): void {
+    let input = event.target.value;
+    switch (type) {
+      case 'letras':
+        input = input.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1]/g, '');
+        break;
+      case 'letrasyespacios':
+        input = input.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1\s]/g, '');
+        break;
+      case 'numeros':
+        input = input.replace(/[^0-9]/g, '');
+        break;
+      case 'letrasyespacioguion':
+        input = input.replace(/[^a-z\s\-]/g, '');
+        break;
+      case 'division':
+        input = input.replace(/[^/]/g, '');
+        break;
+    }
+    if (this.formOferta.get(controlName)) {
+      this.formOferta.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
+    }
+
+    if (this.formDemanda.get(controlName)) {
+      this.formDemanda.get(controlName)?.setValue(input.toUpperCase(), { emitEvent: false });
+    }
+  }
+
+  feditaroferta(id: number){
+    this.isEditingOferta = true;
+    this._ofertasService.dato(id, this.empresa.idempresa.toString()).subscribe(data => {
+      this.oferta = data;
+      this.fformOfertas(this.oferta);
+    });
+  }
+
+  fmodificaroferta(){
+    this.submitted = true
+
+    this.oferta.idoferta = this.formOferta.value.idoferta;
+    this.oferta.idempresa = this.empresa.idempresa;
+    this.oferta.tipooferta = this.formOferta.value.tipooferta;
+    this.oferta.oferta = this.formOferta.value.oferta;
+
+    this._ofertasService.modificar(this.oferta).subscribe(
+      data => {
+        this.fofertas(this.empresa.idempresa);
+        this.formOferta.reset();
+        this.submitted = false;
+        this.isEditingOferta = false;
+        this._toast.success('Oferta modificada', 'Hecho');
+      },
+      (error) => {
+        this._toast.error('', 'Error en la operación');
+      }
+    );
+  }
+
+  feliminaroferta(id: number){
+    this._ofertasService.eliminar(id).subscribe(
+      data => {
+        this.fofertas(this.empresa.idempresa);
+        this._toast.success('Oferta eliminada', 'Hecho');
+      },
+      (error) => {
+        this._toast.error('', 'Error en la operación');
+      }
+    );
+  }
+  
+  fverinfo(id: number, content: any){
+    this._empresasService.dato(id).subscribe(data => {
+      this.empresa = data;
+      this.modalRefVer = this._modalService.open(content, {
+        backdrop: 'static',
+        keyboard: false,
+        size: 'md',
+        scrollable: true
+      });
+    });
+  }
+
+  fcancelareditoferta(){
+    this.submitted = false;
+    this.isEditingOferta = false;
+    this.formOferta.reset();
+  }
+
+  fadicionardemanda(){
+    this.submitted = true;
+
+    this.demanda = new Demandas;
+
+    this.demanda.idempresa = this.empresa.idempresa;
+    this.demanda.tipodemanda = this.formDemanda.value.tipodemanda;
+    this.demanda.demanda = this.formDemanda.value.demanda;
+
+    this._demandasService.adicionar(this.demanda).subscribe(
+      response => {
+        this.fdemandas(this.empresa.idempresa);
+        this.formDemanda.reset();
+        this.submitted = false;
+        this._toast.success('Demanda agregada', 'Hecho');
+      },
+      (error) => {
+        this._toast.error('', 'Error en la operación');
+      }
+    );
+  }
+
+  fformDemandas(dato: Demandas){
+    this.formDemanda = this._fO.group({
+      iddemanda: [
+        dato.iddemanda,
+        [
+          Validators.required
+        ]
+      ],
+      tipodemanda: [
+        dato.tipodemanda,
+        [
+          Validators.required
+        ]
+      ],
+      demanda: [
+        dato.demanda,
+        [
+          Validators.required,
+          Validators.pattern('^[a-zA-ZÀ-ÿ\u00f1\u00d1\\s]+$')
+        ]
+      ]
+    });
+  }
+
+  get fD() { return this.formDemanda.controls; }
+
+  feditarDemanda(id: number){
+    this.isEditingDemanda = true;
+    this._demandasService.dato(id, this.empresa.idempresa.toString()).subscribe(data => {
+      this.demanda = data;
+      this.fformDemandas(this.demanda);
+    });
+  }
+
+  fmodificardemanda(){
+    this.submitted = true
+
+    this.demanda.iddemanda = this.formDemanda.value.iddemanda;
+    this.demanda.idempresa = this.empresa.idempresa;
+    this.demanda.tipodemanda = this.formDemanda.value.tipodemanda;
+    this.demanda.demanda = this.formDemanda.value.demanda;
+
+    this._demandasService.modificar(this.demanda).subscribe(
+      data => {
+        this.fdemandas(this.empresa.idempresa);
+        this.formDemanda.reset();
+        this.submitted = false;
+        this.isEditingDemanda = false;
+        this._toast.success('Demanda modificada', 'Hecho');
+      },
+      (error) => {
+        this._toast.error('', 'Error en la operación');
+      }
+    );
+  }
+
+  feliminardemanda(id: number){
+    this._demandasService.eliminar(id).subscribe(
+      data => {
+        this.fdemandas(this.empresa.idempresa);
+        this._toast.success('Demanda eliminada', 'Hecho');
+      },
+      (error) => {
+        this._toast.error('', 'Error en la operación');
+      }
+    );
+  }
+
+  fcancelareditdemanda(){
+    this.submitted = false;
+    this.isEditingDemanda = false;
+    this.formDemanda.reset();
+  }
+
+  fcancelar(){
+    if (this.modalRefVer) {
+      this.modalRefVer.dismiss();
+    }
+    if (this.modalRefConectar){
+      this.modalRefConectar.dismiss();
+    }
   }
 
 }
