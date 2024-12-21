@@ -77,6 +77,8 @@ export class BeneficiosComponent implements OnInit {
   modalRefImagen: NgbModalRef;
   modalRefPlanilla: NgbModalRef;
 
+  mostrarMesas: boolean = false;
+
   convocatoria: any[];
   afiche: any[];
 
@@ -258,6 +260,14 @@ export class BeneficiosComponent implements OnInit {
           Validators.required,
         ]
       ],
+      mesas:[
+        beneficio.mesas,
+        disabled ? [Validators.required] : []
+      ],
+      duracion:[
+        beneficio.duracion,
+        disabled ? [Validators.required] : []
+      ],
       idmunicipio: [
         beneficio.municipio?.idmunicipio,
         [
@@ -297,6 +307,22 @@ export class BeneficiosComponent implements OnInit {
       ],
     });
 
+    if (beneficio.tipobeneficio?.idtipobeneficio === 7) {
+      this.mostrarMesas = true;
+      // Si el tipo de beneficio es 7, habilitar los campos de mesas e intervalo
+      this.formulario.get('mesas')?.setValidators([Validators.required]);
+      this.formulario.get('duracion')?.setValidators([Validators.required]);
+    } else {
+      this.mostrarMesas = false;
+      // Si el tipo de beneficio no es 7, deshabilitar estos campos
+      this.formulario.get('mesas')?.clearValidators();
+      this.formulario.get('duracion')?.clearValidators();
+    }
+
+    // Forzar la validación de los campos
+    this.formulario.get('mesas')?.updateValueAndValidity();
+    this.formulario.get('duracion')?.updateValueAndValidity();
+
     this.formulario.get('descripcion').valueChanges.subscribe(value => {
       this.caracteresRestantes = this.caracteresMaximos - (value ? value.length : 0);
     });
@@ -335,6 +361,13 @@ export class BeneficiosComponent implements OnInit {
     return Object.keys(this.formulario.controls);
   }
 
+  onTipoBeneficioChange(idtipobeneficio: string): void {
+    this.mostrarMesas = idtipobeneficio === '7';
+    if (!this.mostrarMesas) {
+      this.formulario.get('mesas')?.setValue(null); // Limpia el campo si no es visible
+    }
+  }
+
   fadicionar(content: any){
     this.estado = 'Adicionar';
     this.beneficio = new Beneficios();
@@ -353,6 +386,9 @@ export class BeneficiosComponent implements OnInit {
     this.estado = 'Modificar';
     this._beneficiosService.dato(id).subscribe((data) => {
       this.beneficio = data;
+      if (data.idtipobeneficio === 7) {
+        this.mostrarMesas = true;
+      }
       this.fdescargar(data.idbeneficio, 'Convocatoria');
       this.fdescargar(data.idbeneficio, 'Afiche');
       this.fformulario(this.beneficio);
@@ -371,6 +407,13 @@ export class BeneficiosComponent implements OnInit {
     this.beneficio.beneficio = this.formulario.value.beneficio;
     this.beneficio.descripcion = this.formulario.value.descripcion;
     this.beneficio.idtipobeneficio = this.formulario.value.idtipobeneficio;
+
+    if(this.beneficio.idtipobeneficio == 7){
+      this.beneficio.duracion = this.formulario.value.duracion;
+      this.beneficio.mesas = this.formulario.value.mesas;
+
+    }
+
     this.beneficio.idmunicipio = this.formulario.value.idmunicipio;
     this.beneficio.direccion = this.formulario.value.direccion;
     this.beneficio.fechainicio = this.formulario.value.fechainicio;
@@ -382,6 +425,7 @@ export class BeneficiosComponent implements OnInit {
       this._beneficiosService.modificar(this.beneficio).subscribe((data) => {
         this.fdatos();
         this.modalRefBeneficio.dismiss();
+        this.mostrarMesas = false;
         Swal.fire('Exito', 'Beneficio modificado correctamente', 'success');
         this._toast.success('','Operación exitosa');
       });
@@ -389,6 +433,7 @@ export class BeneficiosComponent implements OnInit {
       this._beneficiosService.adicionar(this.beneficio).subscribe(data => {
         this.fdatos();
         this.modalRefBeneficio.dismiss();
+        this.mostrarMesas = false;
         Swal.fire('Exito', 'Beneficio adicionado correctamente', 'success');
         this._toast.success('','Operación exitosa');
       });
@@ -400,6 +445,7 @@ export class BeneficiosComponent implements OnInit {
     if (this.representantes) {
       this.limpiarRep();
     }
+    this.mostrarMesas = false;
   }
 
   fcancelarImagen(){

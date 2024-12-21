@@ -1,3 +1,107 @@
+.puntero{
+  cursor: pointer;
+}
+
+.btn-outline-custom {
+  color: #FF5919;
+  border-color: #FF5919;
+}
+
+.btn-outline-custom:hover {
+  color: #FFF;
+  background-color: #FF5919;
+  border-color: #FF5919;
+}
+
+.btn-outline-custom:focus,
+.btn-outline-custom.focus {
+  -webkit-box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+  box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+}
+
+.btn-outline-custom.disabled,
+.btn-outline-custom:disabled {
+  color: #FF5919;
+  background-color: transparent;
+}
+
+.btn-outline-custom:not(:disabled):not(.disabled):active,
+.btn-outline-custom:not(:disabled):not(.disabled).active,
+.show>.btn-outline-custom.dropdown-toggle {
+  color: #FFF;
+  background-color: #FF5919;
+  border-color: #FF5919;
+}
+
+.btn-outline-custom:not(:disabled):not(.disabled):active:focus,
+.btn-outline-custom:not(:disabled):not(.disabled).active:focus,
+.show>.btn-outline-custom.dropdown-toggle:focus {
+  -webkit-box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+  box-shadow: 0 0 0 0 rgba(255, 89, 25, 0.5);
+}
+
 .table img {
   border: 2px solid #4A5568;
+}
+
+.scrollable-horas {
+  max-height: 250px; /* Altura fija para mostrar solo 5 elementos */
+  overflow-y: auto; /* Scroll vertical cuando excede el espacio */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background-color: #f8f9fa;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Borde redondeado y sombreado */
+.bg-light {
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+/* Efecto de hover */
+.bg-light:hover {
+  transform: scale(1.05);
+}
+
+/* Botones de radio más estilizados */
+.form-check-input {
+  width: 20px;
+  height: 20px;
+  background-color: #960023;
+  border: 2px solid #ccc;
+  transition: background-color 0.3s;
+}
+
+.form-check-input:checked {
+  background-color: #960023;
+  border-color: #960023;
+}
+
+.form-check-label {
+  font-weight: 600;
+  color: #333;
+  font-size: 16px;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+
+.form-check-label:hover {
+  color: #960023;
+}
+
+input[type="radio"]:disabled + label {
+  pointer-events: none; /* Desactiva interacción */
+  color: #6c757d; /* Color gris para mostrar que está deshabilitado */
+  cursor: not-allowed; /* Cambia el cursor a uno que indique deshabilitado */
+  opacity: 0.6; /* Reduce la opacidad */
+}
+
+#listClientes {
+  max-height: 200px; /* Limita la altura de la lista desplegable */
+  overflow-y: auto;  /* Agrega un scroll si hay demasiados elementos */
 }

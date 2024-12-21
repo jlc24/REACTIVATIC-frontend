@@ -7,6 +7,8 @@ export class Beneficios {
   beneficio: string;
   descripcion: string;
   idtipobeneficio: number;
+  mesas: number;
+  duracion: number;
   idmunicipio: number;
   direccion: string;
   fechainicio: Date;

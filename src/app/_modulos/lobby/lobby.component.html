@@ -6,15 +6,28 @@
     <div class="card" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
       <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
         <ng-container *ngIf="beneficio; else sinBeneficio">
-          <div class="row text-white align-items-center">
+          <div class="row text-white align-items-center justify-content-center">
             <div class="col-12 col-lg-12 text-center text-lg-start mb-2 mb-lg-0">
               <h3>{{ beneficio?.beneficio }}</h3>
             </div>
             <div class="col-6 col-md-auto text-center text-lg-end mb-2 mb-lg-0">
-              <h5><strong>Fecha Inicio:</strong> {{ beneficio?.fechainicio | date:'EEEE, d \'de\' MMMM \'de\' y, HH:mm' }}</h5>
-            </div>
-            <div class="col-6 col-md-auto text-center text-lg-end">
-              <h5><strong>Fecha Fin:</strong> {{ beneficio?.fechafin | date:'EEEE, d \'de\' MMMM \'de\' y, HH:mm' }}</h5>
+              <h5>
+                <strong><i class="bi bi-calendar-check"></i></strong>
+                <!-- Compara solo las fechas, sin la parte de la hora -->
+                <ng-container *ngIf="isSameDate">
+                  <!-- Si las fechas son iguales -->
+                  {{ beneficio?.fechainicio | date:'EEEE, d \'de\' MMMM \'de\' y' }}
+                </ng-container>
+                <ng-container *ngIf="!isSameDate">
+                  <!-- Si las fechas son diferentes -->
+                  {{ beneficio?.fechainicio | date:'EEEE, d \'de\' MMMM \'de\' y' }} -
+                  {{ beneficio?.fechafin | date:'EEEE, d \'de\' MMMM \'de\' y' }}
+                </ng-container>
+              </h5>
+              <h5>
+                <strong><i class="bi bi-clock"></i></strong>
+                {{ beneficio?.fechainicio | date:'HH:mm' }} - {{ beneficio?.fechafin | date:'HH:mm' }}
+              </h5>
             </div>
           </div>
         </ng-container>
@@ -35,10 +48,35 @@
               </ul>
               <div class="tab-content p-2 " id="pills-tabContent" style="border: 1px solid #4A5568; border-radius: 10px;">
                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                  <div class="ms-3" style="flex: 1; max-width: 300px;">
-                    <input type="text" class="form-control form-control-sm buscar_lobby w-100" [(ngModel)]="buscarnegocios" placeholder="Buscar..." (keyup)="fbuscarnegocios()" style="border: 2px solid #4A5568; border-radius: 5px;">
+                  <div class="row">
+                    <div class="col-sm-6 mt-1">
+                      <p *ngIf="totalcitas == 0">
+                        Total: <b>{{ totalcitas }} registros</b>
+                      </p>
+                      <p *ngIf="totalcitas == 1">
+                        Total: <b>{{ totalcitas }} registro</b>
+                      </p>
+                      <p *ngIf="totalcitas > 1">
+                        Total: <b>{{ totalcitas }} registros</b>
+                      </p>
+                    </div>
+                    <div class="col-sm-6 mt-1">
+                      <div class="row justify-content-end">
+                        <div class="col-sm-2 text-md-right text-sm-left mt-1">
+                          <label for="">Buscar: </label>
+                        </div>
+                        <div class="col-sm-8">
+                          <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                            </div>
+                            <input type="text" class="form-control form-control-sm buscar_lobby" [(ngModel)]="buscarnegocios" placeholder="Buscar..." (keyup)="fbuscarnegocios()" style="border: 2px solid #4A5568; border-radius: 5px;">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="table-responsive" *ngIf="negocios?.length > 0">
+                  <div class="table-responsive mt-2" *ngIf="negocios?.length > 0">
                     <table class="table table-bordered table-striped">
                       <thead style="background-color: #4A5568; color: #fff;">
                         <tr>
@@ -51,134 +89,36 @@
                         <tr *ngFor="let _dato of negocios; let i = index">
                           <td>
                             <div class="d-flex align-items-center">
-                              <img src="logo-up.png" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
+                              <img [src]="ruta+_dato.beneficioempresa?.empresa?.idempresa" width="80px" (error)="$event.target.src='assets/imagenes/images/default/404.png'" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;"/>
                               <div class="ms-3 ml-2">
                                 <strong>{{ _dato.beneficioempresa.empresa.empresa }}</strong><br>
                                 <span>{{ _dato.beneficioempresa.empresa.correo }}</span><br>
                                 <span>+591 {{ _dato.beneficioempresa.empresa.celular }}</span><br>
-                                <span class="badge badge-success">{{ _dato.estadoempresa }}</span>
+                                <span [ngClass]="getBadgeClass(_dato.estadoempresa)" class="badge">
+                                  {{ getBadgeText(_dato.estadoempresa) }}
+                                </span>
                               </div>
                             </div>
                           </td>
                           <td>
                             <div class="d-flex align-items-center">
-                              <img src="logo-cliente.png" alt="Logo Cliente" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
+                              <img src="assets/imagenes/images/default/404.png" alt="Logo Cliente" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
                               <div class="ms-3 ml-2">
-                                <strong>Nombre Cliente</strong><br>
-                                <span>correo&#64;cliente.com</span><br>
-                                <span>+591 87654321</span><br>
-                                <span class="badge badge-success">{{ _dato.estadocliente }}</span>
+                                <strong>{{ _dato.persona.primerapellido }} {{ _dato.persona.primerapellido }} {{ _dato.persona.segundoapellido }} {{ _dato.persona.primernombre }}</strong><br>
+                                <span>{{ _dato.persona.correo }}</span><br>
+                                <span>+591 {{ _dato.persona.celular }}</span><br>
+                                <span [ngClass]="getBadgeClass(_dato.estadopersona)" class="badge">
+                                  {{ getBadgeText(_dato.estadopersona) }}
+                                </span>
                               </div>
                             </div>
                           </td>
                           <td>
                             <div>
-                              <strong>Hora Inicio:</strong> 08:00 AM<br>
-                              <strong>Hora Fin:</strong> 09:00 AM<br>
-                              <strong>Mesa:</strong> 12<br>
-                              <button class="btn btn-sm btn-info mt-2" style="background-color: #4A5568; border-color: #4A5568; color: #fff;" disabled>
-                                Resultados
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <div class="d-flex align-items-center">
-                              <img src="logo-up.png" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
-                              <div class="ms-3 ml-2">
-                                <strong>Nombre UP</strong><br>
-                                <span>correo&#64;up.com</span><br>
-                                <span>+591 12345678</span><br>
-                                <span class="badge badge-success">En Curso</span>
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <div class="d-flex align-items-center">
-                              <img src="logo-cliente.png" alt="Logo Cliente" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
-                              <div class="ms-3 ml-2">
-                                <strong>Nombre Cliente</strong><br>
-                                <span>correo&#64;cliente.com</span><br>
-                                <span>+591 87654321</span><br>
-                                <span class="badge badge-warning">Ausente</span>
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <div>
-                              <strong>Hora Inicio:</strong> 08:00 AM<br>
-                              <strong>Hora Fin:</strong> 09:00 AM<br>
-                              <strong>Mesa:</strong> 12<br>
-                              <button class="btn btn-sm btn-info mt-2" style="background-color: #4A5568; border-color: #4A5568; color: #fff;" disabled>
-                                Resultados
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <div class="d-flex align-items-center">
-                              <img src="logo-up.png" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
-                              <div class="ms-3 ml-2">
-                                <strong>Nombre UP</strong><br>
-                                <span>correo&#64;up.com</span><br>
-                                <span>+591 12345678</span><br>
-                                <span class="badge badge-secondary">Por iniciar</span>
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <div class="d-flex align-items-center">
-                              <img src="logo-cliente.png" alt="Logo Cliente" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
-                              <div class="ms-3 ml-2">
-                                <strong>Nombre Cliente</strong><br>
-                                <span>correo&#64;cliente.com</span><br>
-                                <span>+591 87654321</span><br>
-                                <span class="badge badge-secondary">Por iniciar</span>
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <div>
-                              <strong>Hora Inicio:</strong> 08:00 AM<br>
-                              <strong>Hora Fin:</strong> 09:00 AM<br>
-                              <strong>Mesa:</strong> 12<br>
-                              <button class="btn btn-sm btn-info mt-2" style="background-color: #4A5568; border-color: #4A5568; color: #fff;" disabled>
-                                Resultados
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <div class="d-flex align-items-center">
-                              <img src="logo-up.png" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
-                              <div class="ms-3 ml-2">
-                                <strong>Nombre UP</strong><br>
-                                <span>correo&#64;up.com</span><br>
-                                <span>+591 12345678</span><br>
-                                <span class="badge badge-danger">Finalizado</span>
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <div class="d-flex align-items-center">
-                              <img src="logo-cliente.png" alt="Logo Cliente" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
-                              <div class="ms-3 ml-2">
-                                <strong>Nombre Cliente</strong><br>
-                                <span>correo&#64;cliente.com</span><br>
-                                <span>+591 87654321</span><br>
-                                <span class="badge badge-danger">Finalizado</span>
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <div>
-                              <strong>Hora Inicio:</strong> 08:00 AM<br>
-                              <strong>Hora Fin:</strong> 09:00 AM<br>
-                              <strong>Mesa:</strong> 12<br>
-                              <button class="btn btn-sm btn-info mt-2" style="background-color: #4A5568; border-color: #4A5568; color: #fff;">
+                              <strong>Hora Inicio:</strong> {{ _dato.horainicio | slice:0:5 }}<br>
+                              <strong>Hora Fin:</strong> {{ _dato.horafin | slice:0:5 }}<br>
+                              <strong>Mesa:</strong> {{ _dato.mesa }}<br>
+                              <button class="btn btn-sm btn-info mt-2" style="background-color: #4A5568; border-color: #4A5568; color: #fff;" [disabled]="_dato.estadoempresa !== 5 || _dato.estadopersona !== 5">
                                 Resultados
                               </button>
                             </div>
@@ -187,7 +127,7 @@
                       </tbody>
                     </table>
                   </div>
-                  <div class="table-responsive" *ngIf="negocios?.length == 0">
+                  <div class="table-responsive mt-2" *ngIf="negocios?.length == 0">
                     <table class="table table-bordered table-striped">
                       <thead style="background-color: #4A5568; color: #fff;">
                         <tr>
@@ -199,7 +139,7 @@
                       <tbody>
                         <tr>
                           <td colspan="3" class="text-center">
-                            No se encontraron datos
+                            No hay citas en curso en el evento.
                           </td>
                         </tr>
                       </tbody>

@@ -1,1 +1,267 @@
-<p>trade works!</p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lobby - Rueda de Negocios</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons (opcional) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+
+
+    .navbar {
+      background-color: #960023;
+    }
+
+    .header-overlay {
+      background-color: rgba(255, 255, 255, 0.85);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+      color: #0056b3;
+    }
+
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-outline-primary {
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-outline-primary:hover {
+      background-color: #0056b3;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Barra superior -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="https://reactivatic.oruro.gob.bo">
+        <img src="assets/imagenes/logo.png" alt="Logo" width="100" height="40" class="me-2">
+      </a>
+    </div>
+  </nav>
+
+  <!-- Contenedor principal -->
+  <div class="container-lg py-2" style="background-color: #fff;">
+    <!-- Encabezado -->
+    <ng-container *ngIf="beneficio; else sinBeneficio">
+      <div  class="header-overlay text-center mb-5 position-relative" style="background-image: url('assets/imagenes/negocios_1.jpg'); background-size: cover; background-position: center; height: 300px; color: white;">
+        <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.5);"></div>
+        <div class="position-relative py-5">
+          <h1 class="display-3 fw-bold">{{ beneficio.beneficio }}</h1>
+          <h4>
+            <strong><i class="bi bi-calendar-check"></i></strong>
+            <!-- Compara solo las fechas, sin la parte de la hora -->
+            <ng-container *ngIf="isSameDate">
+              <!-- Si las fechas son iguales -->
+              {{ beneficio?.fechainicio | date:'EEEE, d \'de\' MMMM \'de\' y' }}
+            </ng-container>
+            <ng-container *ngIf="!isSameDate">
+              <!-- Si las fechas son diferentes -->
+              {{ beneficio?.fechainicio | date:'EEEE, d \'de\' MMMM \'de\' y' }} -
+              {{ beneficio?.fechafin | date:'EEEE, d \'de\' MMMM \'de\' y' }}
+            </ng-container>
+          </h4>
+          <h4>
+            <strong><i class="bi bi-clock"></i></strong>
+            {{ beneficio?.fechainicio | date:'HH:mm' }} - {{ beneficio?.fechafin | date:'HH:mm' }}
+          </h4>
+          <h5 class="text-light">Explora todas las reuniones en curso.</h5>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #sinBeneficio>
+      <div class="text-center w-100 text-white">
+        <h3>Sin rueda de negocios</h3>
+        <div  class="header-overlay text-center mb-5 position-relative" style="background-image: url('assets/imagenes/negocios_1.jpg'); background-size: cover; background-position: center; height: 200px; color: white;">
+          <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.5);"></div>
+          <div class="position-relative py-3">
+            <h1 class="display-3 fw-bold">Sin evento disponible</h1>
+            <h5 class="text-light">En estos momentos no se encuentra nigun evento disponible.</h5>
+            <h5 class="text-light">Gracias por su comprensión.</h5>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-container *ngIf="beneficio; else mensajesinBeneficio">
+      <!-- Sección de reuniones -->
+      <div class="row g-4 mb-3">
+        <div class="row">
+          <div class="col-sm-6 mt-1">
+            <p *ngIf="totalcitas == 0">
+              Total: <b>{{ totalcitas }} registros</b>
+            </p>
+            <p *ngIf="totalcitas == 1">
+              Total: <b>{{ totalcitas }} registro</b>
+            </p>
+            <p *ngIf="totalcitas > 1">
+              Total: <b>{{ totalcitas }} registros</b>
+            </p>
+          </div>
+          <div class="col-sm-6 mt-1">
+            <div class="row justify-content-end">
+              <div class="col-sm-2 text-md-right text-sm-left mt-1">
+                <label for="">Buscar: </label>
+              </div>
+              <div class="col-sm-8">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                  </div>
+                  <input type="text" class="form-control form-control-sm buscar_lobby" [(ngModel)]="buscarnegocios" placeholder="Buscar..." (keyup)="fbuscarnegocios()" style="border: 2px solid #4A5568; border-radius: 5px;">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta de reunión -->
+        <div class="col-md-6 col-lg-4" *ngFor="let _negocio of negocios">
+          <div class="card border-1 shadow h-100">
+            <div class="card-body ml-3">
+              <h5 class="card-title fw-bold">Mesa de Negociación</h5>
+              <p class="card-text text-muted small mb-2">
+                <i class="bi bi-calendar"></i> <strong class="ml-2">Fecha:</strong> {{ _negocio?.fecha | date:'EEEE, d \'de\' MMMM \'de\' y' }} <br>
+              </p>
+              <p class="card-text text-muted small mb-2">
+                <i class="bi bi-clock"></i> <strong class="ml-2">Hora:</strong> {{ _negocio.horainicio | slice:0:5 }} - {{ _negocio.horafin | slice:0:5 }}
+              </p>
+              <p class="card-text text-muted small mb-2">
+                <i class="bi bi-geo-alt"></i> <strong class="ml-2">Lugar:</strong> Mesa {{ _negocio.mesa }}
+              </p>
+              <p class="card-text text-muted small">
+                <i class="bi bi-people"></i> <strong class="ml-2">Participantes:</strong><br>
+              </p>
+              <div class="participantes-lista">
+                <ul>
+                  <li>
+                    {{ _negocio.beneficioempresa.empresa.empresa }}
+                  </li>
+                  <li >
+                    {{ _negocio.persona.primerapellido }} {{ _negocio.persona.primerapellido }} {{ _negocio.persona.segundoapellido }} {{ _negocio.persona.primernombre }}
+                  </li>
+                </ul>
+              </div>
+              <div class="card-footer bg-white border-0 text-center">
+                <div class="d-flex justify-content-between">
+                  <span [ngClass]="getBadgeClass(_negocio.estadopersona)" class="badge">
+                    {{ getBadgeText(_negocio.estadopersona) }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer bg-white border-0 text-center" hidden>
+              <button class="btn btn-outline-primary btn-sm">Ver detalles</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </ng-container>
+    <ng-template #mensajesinBeneficio>
+      <div class="row justify-content-center g-4">
+        <!-- Imagen de "En espera" con bordes y transparencia -->
+        <!-- <div class="col-md-6 col-lg-4">
+          <div class="image-container">
+            <img src="assets/imagenes/enespera.jpg" alt="En espera" class="image-placeholder"/>
+            <div class="text-overlay">
+              <h5 class="fw-bold ">Estamos trabajando en</h5>
+              <h5 class="fw-bold ">el proximo evento a realizarse.</h5>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </ng-template>
+  </div>
+  <div class="container-lg bg-white">
+    <div class="row m-3 justify-content-center align-items-center">
+      <div class="col-sm-3 text-center">
+        <img src="assets/imagenes/logogadorblack.png"  class="img-fluid imagen-logos" alt="" width="200px">
+      </div>
+      <div class="col-sm-3 text-center">
+        <img src="assets/imagenes/sddpi2.png"  class="img-fluid imagen-logos" alt="" width="200px">
+      </div>
+      <div class="col-sm-3 text-center">
+        <img src="assets/imagenes/dpeic.png"  class="img-fluid imagen-logos" alt="" width="200px">
+      </div>
+      <div class="col-sm-3 text-center">
+        <img src="assets/imagenes/logo.png"  class="img-fluid imagen-logos" alt="" width="200px">
+      </div>
+    </div>
+  </div>
+  <footer class="container-fluid " style="background-color: #960023;">
+    <div class="container">
+      <div class="row mt-3">
+        <div class="col-lg-4 col-md-4 col-sm-12 pt-3 align-content-center">
+          <h4 class="text-white">Contacto</h4>
+          <div class="contact-item">
+              <i class="bi bi-house-door-fill text-white"></i>
+              <p class="text-white">
+                  Calle Adolfo Mier entre Pdte. Montes y Washington Nro. 1900 <br>
+                  (Interior Salón de Exposiciones Productivas) <br>
+                  Plaza 10 de Febrero <br>
+                  Departamento de Oruro
+              </p>
+          </div>
+          <div class="contact-item">
+              <i class="bi bi-telephone-fill text-white"></i>
+              <p class="text-white">2 5254161</p>
+          </div>
+          <div class="contact-item">
+              <i class="bi bi-envelope-fill text-white"></i>
+              <p class="text-white"><a href="mailto:reactivatic24@gmail.com">reactivatic24&#64;gmail.com</a></p>
+          </div>
+          <div class="contact-item">
+              <i class="bi bi-globe text-white"></i>
+              <p class="text-white"><a href="http://reactivatic.oruro.gob.bo/" target="_blank">http://reactivatic.oruro.gob.bo/</a></p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12 text-center align-content-center">
+          <h2 class="text-white mb-4">Síguenos en:</h2>
+          <div class="d-flex justify-content-center mb-4">
+            <a href="https://www.facebook.com/profile.php?id=100083098698972" target="_blank" class="social-icon text-white mx-2" title="Facebook">
+                <i class="bi bi-facebook"></i>
+            </a>
+            <a href="https://www.youtube.com/channel/UCVggi6_9TF8xIBP3hJjGOeQ" target="_blank" class="social-icon text-white mx-2" title="YouTube">
+                <i class="bi bi-youtube"></i>
+            </a>
+            <a href="https://www.instagram.com/" target="_blank" class="social-icon text-white mx-2" title="Instagram">
+                <i class="bi bi-instagram"></i>
+            </a>
+            <a href="https://www.tiktok.com/" target="_blank" class="social-icon text-white mx-2" title="Tiktok">
+                <i class="bi bi-tiktok"></i>
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12 text-center justify-content-center align-content-center">
+          <img src="assets/imagenes/escudo_oruro.png" alt="" width="150px">
+          <img src="assets/imagenes/lema_oruro.png" alt="" width="150px">
+        </div>
+      </div>
+      <hr class="border-white">
+      <div>
+        <p class="app-footer__logo text-right pb-3">
+          <small class="text-white">&copy; 2022-{{ gestion }} Derechos Reservados | REACTIVA TIC - DPEIC - SDDPI - GADOR </small>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

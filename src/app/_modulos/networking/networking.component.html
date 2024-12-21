@@ -6,15 +6,28 @@
     <div class="card" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
       <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
         <ng-container *ngIf="beneficio; else sinBeneficio">
-          <div class="row text-white align-items-center">
+          <div class="row text-white align-items-center justify-content-center">
             <div class="col-12 col-lg-12 text-center text-lg-start mb-2 mb-lg-0">
               <h3>{{ beneficio?.beneficio }}</h3>
             </div>
             <div class="col-6 col-md-auto text-center text-lg-end mb-2 mb-lg-0">
-              <h5><strong>Fecha Inicio:</strong> {{ beneficio?.fechainicio | date:'EEEE, d \'de\' MMMM \'de\' y, HH:mm' }}</h5>
-            </div>
-            <div class="col-6 col-md-auto text-center text-lg-end">
-              <h5><strong>Fecha Fin:</strong> {{ beneficio?.fechafin | date:'EEEE, d \'de\' MMMM \'de\' y, HH:mm' }}</h5>
+              <h5>
+                <strong><i class="bi bi-calendar-check"></i></strong>
+                <!-- Compara solo las fechas, sin la parte de la hora -->
+                <ng-container *ngIf="isSameDate">
+                  <!-- Si las fechas son iguales -->
+                  {{ beneficio?.fechainicio | date:'EEEE, d \'de\' MMMM \'de\' y' }}
+                </ng-container>
+                <ng-container *ngIf="!isSameDate">
+                  <!-- Si las fechas son diferentes -->
+                  {{ beneficio?.fechainicio | date:'EEEE, d \'de\' MMMM \'de\' y' }} -
+                  {{ beneficio?.fechafin | date:'EEEE, d \'de\' MMMM \'de\' y' }}
+                </ng-container>
+              </h5>
+              <h5>
+                <strong><i class="bi bi-clock"></i></strong>
+                {{ beneficio?.fechainicio | date:'HH:mm' }} - {{ beneficio?.fechafin | date:'HH:mm' }}
+              </h5>
             </div>
           </div>
         </ng-container>
@@ -30,29 +43,44 @@
             <div class="col-xl-10 col-sm-12">
               <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="pills-participantes-tab" data-toggle="pill" data-target="#pills-participantes" type="button" role="tab" aria-controls="pills-participantes" aria-selected="true">Participantes</button>
+                  <button class="nav-link active" id="pills-participantes-tab" data-toggle="pill" data-target="#pills-participantes" type="button" role="tab" aria-controls="pills-participantes" aria-selected="true">Participantes ({{ totalEmp }})</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="pills-citas-tab" data-toggle="pill" data-target="#pills-citas" type="button" role="tab" aria-controls="pills-citas" aria-selected="false">Citas Agendadas</button>
+                  <button class="nav-link" id="pills-citas-tab" data-toggle="pill" data-target="#pills-citas" type="button" role="tab" aria-controls="pills-citas" aria-selected="false" (click)="fdatos()">Citas Agendadas ({{ totalcitas }})</button>
                 </li>
               </ul>
               <div class="tab-content p-2 " id="pills-tabContent" style="border: 1px solid #4A5568; border-radius: 10px;">
                 <div class="tab-pane fade show active" id="pills-participantes" role="tabpanel" aria-labelledby="pills-participantes-tab">
-                  <div class="row justify-content-end">
-                    <div class="col-sm-2 text-md-right text-sm-left mt-1">
-                      <label for="">Buscar: </label>
+                  <div class="row">
+                    <div class="col-sm-6 mt-1">
+                      <p *ngIf="totalEmp == 0">
+                        Total: <b>{{ totalEmp }} registros</b>
+                      </p>
+                      <p *ngIf="totalEmp == 1">
+                        Total: <b>{{ totalEmp }} registro</b>
+                      </p>
+                      <p *ngIf="totalEmp > 1">
+                        Total: <b>{{ totalEmp }} registros</b>
+                      </p>
                     </div>
-                    <div class="col-sm-10">
-                      <div class="input-group input-group-sm">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                    <div class="col-sm-6 mt-1">
+                      <div class="row justify-content-end">
+                        <div class="col-sm-2 text-md-right text-sm-left mt-1">
+                          <label for="">Buscar: </label>
                         </div>
-                        <input type="text" class="form-control form-control-sm buscar_lobby" [(ngModel)]="buscarinscritos" placeholder="Buscar..." (keyup)="fbuscarinscritos()" style="border: 2px solid #4A5568; border-radius: 5px;">
+                        <div class="col-sm-8">
+                          <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                            </div>
+                            <input type="text" class="form-control form-control-sm buscar_lobby" [(ngModel)]="buscarinscritos" placeholder="Buscar..." (keyup)="fbuscarinscritos()" style="border: 2px solid #4A5568; border-radius: 5px;">
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div class="table-responsive" *ngIf="beneficiosempresas?.length > 0">
-                    <table class="table table-bordered table-striped">
+                  <div class="table-responsive mt-2" *ngIf="beneficiosempresas?.length > 0">
+                    <table class="table table-bordered table-striped table-hover">
                       <thead style="background-color: #4A5568; color: #fff;">
                         <tr>
                           <th>Unidad Productiva</th>
@@ -64,7 +92,7 @@
                         <tr *ngFor="let _empresa of beneficiosempresas; let i = index">
                           <td>
                             <div class="d-flex align-items-center">
-                              <img [src]="ruta+_empresa.idempresa" width="80px" (error)="$event.target.src='assets/imagenes/images/default/404.png'" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;"/>
+                              <img [src]="ruta+_empresa.empresa.idempresa" width="80px" (error)="$event.target.src='assets/imagenes/images/default/404.png'" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;"/>
                               <div class="ms-3 ml-2">
                                 <strong>{{ _empresa.empresa.empresa }}</strong><br>
                                 <span>{{ _empresa.empresa.correo }}</span><br>
@@ -81,8 +109,8 @@
                       </tbody>
                     </table>
                   </div>
-                  <div class="table-responsive" *ngIf="beneficiosempresas?.length == 0">
-                    <table class="table table-bordered table-striped">
+                  <div class="table-responsive mt-2" *ngIf="beneficiosempresas?.length == 0">
+                    <table class="table table-bordered table-striped table-hover">
                       <thead style="background-color: #4A5568; color: #fff;">
                         <tr>
                           <th>Unidad Productiva</th>
@@ -100,57 +128,110 @@
                     </table>
                   </div>
                 </div>
-                <div class="tab-pane fade table-responsive" id="pills-citas" role="tabpanel" aria-labelledby="pills-citas-tab">
-                  <table class="table table-bordered table-striped">
-                    <thead style="background-color: #4A5568; color: #fff;">
-                      <tr>
-                        <th>Unidad Productiva</th>
-                        <th>Cliente</th>
-                        <th>Horario</th>
-                        <th class="text-center">Op</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          <div class="d-flex align-items-center">
-                            <img src="logo-up.png" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
-                            <div class="ms-3 ml-2">
-                              <strong>Nombre UP</strong><br>
-                              <span>correo&#64;up.com</span><br>
-                              <span>+591 12345678</span>
+                <div class="tab-pane fade" id="pills-citas" role="tabpanel" aria-labelledby="pills-citas-tab">
+                  <div class="row">
+                    <div class="col-sm-6 mt-1">
+                      <p *ngIf="totalcitas == 0">
+                        Total: <b>{{ totalcitas }} registros</b>
+                      </p>
+                      <p *ngIf="totalcitas == 1">
+                        Total: <b>{{ totalcitas }} registro</b>
+                      </p>
+                      <p *ngIf="totalcitas > 1">
+                        Total: <b>{{ totalcitas }} registros</b>
+                      </p>
+                    </div>
+                    <div class="col-sm-6 mt-1">
+                      <div class="row justify-content-end">
+                        <div class="col-sm-2 text-md-right text-sm-left mt-1">
+                          <label for="">Buscar: </label>
+                        </div>
+                        <div class="col-sm-8">
+                          <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
                             </div>
+                            <input type="text" class="form-control form-control-sm buscar_lobby" [(ngModel)]="buscarnegocios" placeholder="Buscar..." (keyup)="fbuscarnegocios()" style="border: 2px solid #4A5568; border-radius: 5px;">
                           </div>
-                        </td>
-                        <td>
-                          <div class="d-flex align-items-center">
-                            <img src="logo-up.png" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
-                            <div class="ms-3 ml-2">
-                              <strong>Nombre Cliente</strong><br>
-                              <span>correo&#64;up.com</span><br>
-                              <span>+591 12345678</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="table-responsive mt-2" *ngIf="negocios?.length > 0">
+                    <table class="table table-bordered table-striped table-hover">
+                      <thead style="background-color: #4A5568; color: #fff;">
+                        <tr>
+                          <th>Unidad Productiva</th>
+                          <th>Cliente</th>
+                          <th>Horario</th>
+                          <th class="text-center">Op</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let _negocio of negocios; let i = index">
+                          <td>
+                            <div class="d-flex align-items-center">
+                              <img [src]="ruta+_negocio?.beneficioempresa?.empresa?.idempresa" width="80px" (error)="$event.target.src='assets/imagenes/images/default/404.png'" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;"/>
+                              <div class="ms-3 ml-2">
+                                <strong>{{ _negocio?.beneficioempresa?.empresa?.empresa }}</strong><br>
+                                <span>{{ _negocio?.beneficioempresa?.empresa?.correo }}</span><br>
+                                <span>+591 {{ _negocio?.beneficioempresa?.empresa?.celular }}</span>
+                                <span>{{ _negocio?.estado }}</span>
+                              </div>
                             </div>
-                          </div>
-                        </td>
-                        <td class="text-center">
-                          <i class="bi bi-calendar-check"></i> <strong class="ml-1">viernes, 20 de diciembre de 2024</strong><br>
-                          <strong>Hora Inicio:</strong> 08:00 AM<br>
-                          <strong>Hora Fin:</strong> 09:00 AM<br>
-                          <strong>Mesa:</strong> 12
-                        </td>
-                        <td class="text-center">
-                          <button class="btn btn-sm btn-outline-warning" title="Reprogramar"><i class="bi bi-arrow-repeat"></i></button>
-                          <button class="btn btn-sm btn-outline-danger" title="Cancelar"><i class="bi bi-x-circle"></i></button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Dato 4</td>
-                        <td>Dato 5</td>
-                        <td>Dato 5</td>
-                        <td>Dato 6</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                          </td>
+                          <td>
+                            <div class="d-flex align-items-center">
+                              <img src="assets/imagenes/images/default/404.png" alt="Logo UP" style="width: 80px; height: 80px; border-radius: 5px; object-fit: cover;">
+                              <div class="ms-3 ml-2">
+                                <strong>{{ _negocio?.persona?.primerapellido }} {{ _negocio?.persona?.segundoapellido }} {{ _negocio?.persona?.primernombre }}</strong><br>
+                                <span>{{ _negocio?.persona?.correo }}</span><br>
+                                <span>+591 {{ _negocio?.persona?.celular }}</span>
+                                <span>{{ _negocio?.estadopersona }}</span>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="text-center">
+                            <i class="bi bi-calendar-check"></i> <strong class="ml-1">{{ _negocio?.fecha | date:'EEEE, d \'de\' MMMM \'de\' y' }}</strong><br>
+                            <strong>Hora Inicio:</strong> {{ _negocio?.horainicio | slice:0:5 }}<br>
+                            <strong>Hora Fin:</strong> {{ _negocio?.horafin | slice:0:5 }}<br>
+                            <strong>Mesa:</strong> {{ _negocio?.mesa }}
+                          </td>
+                          <td class="text-center">
+                            <div class="btn-group">
+                              <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" data-boundary="viewport" aria-expanded="false">
+                                <i class="bi bi-list"></i>
+                              </button>
+                              <div class="dropdown-menu">
+                                <div class="dropdown-item puntero" title="Ver" (click)="fvercita(_negocio.idnegocio, vercita)"><i class="bi bi-eye text-info"></i> Ver Cita</div>
+                                <div class="dropdown-item puntero" title="Reprogramar"><i class="bi bi-arrow-repeat text-warning"></i> Reprogramar</div>
+                                <div class="dropdown-item puntero" title="Cancelar"><i class="bi bi-x-circle text-success"></i> Cancelar Cita</div>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-item puntero" title="Eliminar cita"><i class="bi bi-trash text-danger"></i> Eliminar</div>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="table-responsive mt-2" *ngIf="negocios?.length == 0">
+                    <table class="table table-bordered table-striped table-hover">
+                      <thead style="background-color: #4A5568; color: #fff;">
+                        <tr>
+                          <th>Unidad Productiva</th>
+                          <th>Cliente</th>
+                          <th>Horario</th>
+                          <th class="text-center">Op</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td colspan="4" class="text-center">No hay citas agendadas en el evento.</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
@@ -215,7 +296,7 @@
           </form>
 
           <div class="row">
-            <div class="col-sm-12 mt-3 table-responsive" *ngIf="ofertas.length > 0">
+            <div class="col-sm-12 mt-3 table-responsive" *ngIf="ofertas?.length > 0">
               <table class="table table-sm table-bordered table-striped">
                 <thead style="background-color: #4A5568; color: #fff;">
                   <tr>
@@ -242,7 +323,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="col-sm-12 mt-3 table-responsive" *ngIf="ofertas.length == 0">
+            <div class="col-sm-12 mt-3 table-responsive" *ngIf="ofertas?.length == 0">
               <table class="table table-sm table-bordered table-striped">
                 <thead style="background-color: #4A5568; color: #fff;">
                   <tr>
@@ -289,7 +370,7 @@
           </form>
 
           <div class="row">
-            <div class="col-sm-12 mt-3 table-responsive" *ngIf="demandas.length > 0">
+            <div class="col-sm-12 mt-3 table-responsive" *ngIf="demandas?.length > 0">
               <table class="table table-sm table-bordered table-striped">
                 <thead style="background-color: #4A5568; color: #fff;">
                   <tr>
@@ -316,7 +397,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="col-sm-12 mt-3 table-responsive" *ngIf="demandas.length == 0">
+            <div class="col-sm-12 mt-3 table-responsive" *ngIf="demandas?.length == 0">
               <table class="table table-sm table-bordered table-striped">
                 <thead style="background-color: #4A5568; color: #fff;">
                   <tr>
@@ -347,6 +428,222 @@
     </button>
   </div>
   <div class="modal-body">
-    
+    <div class="row">
+      <div class="col sm 6">
+        <div class="col-sm-12">
+          <label for="buscarcliente">Cliente:</label>
+        </div>
+        <div class="row">
+          <div class="col-sm-8">
+            <div class="input-group input-group-sm">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+              </div>
+              <input type="text" id="buscarcliente" class="form-control form-control-sm" [(ngModel)]="buscarCliente" name="buscarCliente" (keyup)="fbuscarCliente()" (change)="onSelect($event.target.value)" list="listClientes" autocomplete="off"  placeholder="Buscar Cliente ..." style="border: 2px solid #4A5568; border-radius: 5px;"/>
+              <datalist id="listClientes">
+                <option *ngFor="let _cli of clientes"
+                    [value]="_cli.persona.primerapellido + ' ' + _cli.persona.segundoapellido + ' ' + _cli.persona.primernombre">
+                </option>
+              </datalist>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <button class="btn btn-sm btn-outline-info" (click)="fadicionar(am)" [disabled]="persona"><i class="bi bi-plus"></i> Agregar</button>
+          </div>
+        </div>
+        <div class="row mt-2 justify-content-center" *ngIf="persona">
+          <div class="col-sm-10 border border-success">
+            <div class="row justify-content-end" *ngIf="persona">
+              <button class="btn btn-sm btn-danger" (click)="flimpiarbuscar()" title="Borrar selección"><i class="bi bi-x"></i></button>
+            </div>
+            <div class="col-sm-12 mt-3 mb-3" >
+              <div class="row">
+                <div class="col-md-4 col-sm-4 text-sm-right">
+                  <Strong>Nombre: </Strong>
+                </div>
+                <div class="col-md-8 col-sm-8">
+                  {{ persona?.primerapellido }}
+                  {{ persona?.segundoapellido }}
+                  {{ persona?.primernombre }}
+                </div>
+              </div>
+              <div class="row" *ngIf="persona?.celular">
+                <div class="col-md-4 col-sm-4 text-sm-right">
+                  <strong>Celular:</strong>
+                </div>
+                <div class="col-md-8 col-sm-8">
+                  {{ persona?.celular }}
+                </div>
+              </div>
+              <div class="row" *ngIf="persona?.telefono">
+                <div class="col-md-4 col-sm-4 text-sm-right">
+                  <strong>Telefono:</strong>
+                </div>
+                <div class="col-md-8 col-sm-8">
+                  {{ persona?.telefono }}
+                </div>
+              </div>
+              <div class="row" *ngIf="persona?.correo">
+                <div class="col-md-4 col-sm-4 text-sm-right">
+                  <strong>Correo:</strong>
+                </div>
+                <div class="col-md-8 col-sm-8">
+                  {{ persona?.correo }}
+                </div>
+              </div>
+              <div class="row" *ngIf="persona?.direccion">
+                <div class="col-md-4 col-sm-4 text-sm-right">
+                  <strong>Dirección:</strong>
+                </div>
+                <div class="col-md-8 col-sm-8">
+                  {{ persona?.direccion }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 mt-3" *ngIf="horas?.length > 0">
+          <p><strong>Duracion:</strong> {{ beneficio.duracion }} minutos</p>
+        </div>
+        <div class="col-sm-12 mt-3" *ngIf="horas?.length > 0">
+          <h5>Mesas disponibles:</h5>
+          <select class="custom-select custom-select-sm" id="horadisponible">
+            <option *ngFor="let mesa of mesas" [value]="mesa">
+              Mesa {{ mesa }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="col sm 6">
+        <h5><i class="bi bi-calendar-check"></i> Horarios disponibles</h5>
+        <div class="col-sm-12">
+          <select class="custom-select custom-select-sm" id="fechadisponible" (change)="fhoras($event)">
+            <option value="" [selected]>Seleccionar ...</option>
+            <option value="" *ngFor="let _fecha of fechas" [value]="_fecha.fecha">{{ _fecha.fecha }}</option>
+          </select>
+        </div>
+        <div class="col-sm-12 mt-3" *ngIf="horas?.length > 0">
+          <h5>Horarios disponibles:</h5>
+          <div class="scrollable-horas">
+            <div *ngFor="let hora of horas" class="p-3 mb-2 rounded shadow bg-light">
+              <div class="d-flex align-items-center">
+                <input
+                  type="radio"
+                  [id]="hora.idnegocio"
+                  [value]="hora.horainicio"
+                  [disabled]="hora.idpersona !== null && hora.idpersona !== ''"
+                  name="horarioSeleccionado"
+                  (change)="seleccionarHora(hora)"
+                />
+                <label [for]="hora.idnegocio" class="form-check-label ml-3">
+                  {{ hora.horainicio | slice:0:5 }} - {{ sumarCincoMinutos(hora.horainicio) }} <i class="bi bi-chevron-double-right"></i> {{ hora.horafin | slice:0:5 }} - {{ sumarCincoMinutos(hora.horafin) }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 mt-3 text-right">
+        <button class="btn btn-sm btn-outline-success" [disabled]="!persona && !seleccionarHora" (click)="fconectar()">Conectar</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #am>
+  <div class="modal-header" style="background-color: #4A5568;">
+    <h4 class="modal-title pull-left text-white"><i class="bi bi-person-fill-add" style="font-size: 2rem;"></i> Registrar Datos de Cliente</h4>
+    <button type="button" class="close" aria-label="Close" (click)="fcancelarcliente()">
+      <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <form [formGroup]="formulario" (ngSubmit)="faceptar()">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="primerapellido">Apellido Paterno: <span class="text-danger">*</span></label>
+            <input type="text" id="primerapellido" class="form-control form-control-sm" formControlName="primerapellido"
+              [class.is-invalid]="fC.primerapellido.errors && fC.primerapellido.touched"
+              (input)="onInputRegister($event, 'primerapellido', 'letrasyespacios')"
+              autocomplete="no" placeholder="Ingrese su apellido paterno" required/>
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="segundoapellido">Apellido Materno:</label>
+            <input type="text" id="segundoapellido" class="form-control form-control-sm" formControlName="segundoapellido"
+              [class.is-invalid]="fC.segundoapellido.errors && fC.segundoapellido.touched"
+              (input)="onInputRegister($event, 'segundoapellido', 'letrasyespacios')"
+              autocomplete="no" placeholder="Ingrese su apellido materno"/>
+            <div class="invalid-feedback">Este campo no es obligatorio.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="primernombre">Nombres: <span class="text-danger">*</span></label>
+            <input type="text" id="primernombre" class="form-control form-control-sm" formControlName="primernombre"
+              [class.is-invalid]="fC.primernombre.errors && fC.primernombre.touched"
+              (input)="onInputRegister($event, 'primernombre', 'letrasyespacios')"
+              autocomplete="no" placeholder="Ingrese su nombre" required/>
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="celular">Celular: <span class="text-danger">*</span></label>
+            <input type="text" id="celular" class="form-control form-control-sm" formControlName="celular"
+              [class.is-invalid]="fC.celular.errors && fC.celular.touched"
+              (input)="onInputRegister($event, 'celular', 'numeros')"
+              autocomplete="no" placeholder="Ingrese su número de celular"/>
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" class="form-control form-control-sm" formControlName="direccion"
+              [class.is-invalid]="fC.direccion.errors && fC.direccion.touched"
+              (input)="onInputRegister($event, 'direccion', 'direccion')"
+              autocomplete="no" placeholder="Ingrese su dirección"/>
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="correo">Correo:</label>
+            <input type="email" id="correo" class="form-control form-control-sm" formControlName="correo"
+              [class.is-invalid]="fC.correo.errors && fC.correo.touched"
+              autocomplete="no" placeholder="Ingrese su correo electrónico"/>
+            <div class="invalid-feedback">Por favor ingrese un correo válido.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="usuario">Usuario:</label>
+            <input type="text" id="usuario" class="form-control form-control-sm" formControlName="usuario"
+              [class.is-invalid]="fC.usuario.errors && fC.usuario.touched"
+              autocomplete="no" placeholder="Ingrese su usuario" readonly/>
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="clave">Clave:</label>
+            <input type="password" id="clave" class="form-control form-control-sm" formControlName="clave"
+              [class.is-invalid]="fC.clave.errors && fC.clave.touched"
+              autocomplete="no" placeholder="Ingrese su clave" readonly/>
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-outline-success m-2" [disabled]="!formulario.valid" style="border-radius: 50px;">
+            <i class="bi bi-floppy"></i> Registrar datos
+          </button>
+          <button type="button" class="btn btn-outline-secondary" (click)="fcancelarcliente()" style="border-radius: 50px;">
+            <i class="bi bi-x"></i> Cancelar
+          </button>
+        </div>
+      </form>
+  </div>
+</ng-template>
+
+<ng-template #vercita>
+  <div class="modal-header" style="background-color: #4A5568;">
+    <h4 class="modal-title pull-left text-white"><i class="fa fa-eye"></i> Ver Cita Agendada</h4>
+    <button type="button" class="close" aria-label="Close" (click)="fcancelar()">
+      <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
   </div>
 </ng-template>

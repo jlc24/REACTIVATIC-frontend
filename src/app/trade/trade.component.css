@@ -1,0 +1,164 @@
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: auto;
+  object-fit: cover; /* Asegura que la imagen cubra todo el espacio */
+  border-radius: 5px; /* Puedes agregar bordes redondeados si lo deseas */
+}
+
+.text-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro con transparencia para el texto */
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.text-overlay h5 {
+  margin-bottom: 10px;
+}
+
+.text-overlay p {
+  font-size: 14px;
+}
+
+.imagen-logos{
+  transition: transform 0.3s;
+}
+.imagen-logos:hover{
+  transform: scale(1.05);
+}
+
+.card {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.6s ease, box-shadow 0.3s, border 0.6s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.card:hover{
+  transform: scale(1.05);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  border: 1px solid #FF5919;
+}
+
+.social-icon i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem; /* Tamaño del icono */
+  height: 3rem;
+  border-radius: 50%; /* Hace que el fondo sea circular */
+  background-color: transparent; /* Fondo transparente por defecto */
+  transition: background-color 0.3s, color 0.3s, transform 0.3s; /* Efecto de transición para hover */
+  text-decoration: none;
+  font-size: 1.5rem; /* Tamaño del icono */
+  color: #FFF;
+  border: solid 1px #fff;
+}
+
+.social-icon:hover i {
+  color: #bb2036; /* Color del icono al pasar el ratón */
+  background-color: #FFF;
+  transform: scale(1.5); /* Aumenta el tamaño del icono al pasar el ratón */
+}
+
+.contact-info {
+  padding: 20px;
+  background-color: #f8f9fa; /* Fondo gris claro para resaltar el contenido */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Sombra sutil para un efecto de elevación */
+}
+
+.contact-info h4 {
+  margin-bottom: 20px;
+  font-size: 1.5rem; /* Tamaño de fuente del título */
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px; /* Espacio entre cada ítem */
+}
+
+.contact-item i {
+  font-size: 1.5rem; /* Tamaño del ícono */
+  margin-right: 10px; /* Espacio entre el ícono y el texto */
+}
+
+.contact-item p {
+  margin: 0; /* Elimina el margen por defecto */
+}
+
+p {
+  margin: 5px 0;
+}
+
+.contact-item a {
+  color: #fff; /* Color del enlace */
+  text-decoration: none; /* Elimina el subrayado del enlace */
+}
+
+.contact-item a:hover {
+  text-decoration: underline; /* Subrayado al pasar el ratón sobre el enlace */
+}
+
+.scroll-to-top-btn {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  padding: 10px 20px;
+  font-size: 20px;
+  background-color: #FF5919;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.scroll-to-top-btn:hover {
+  background-color: #ff5a1996;
+}
+
+.participantes-lista ul {
+  list-style-type: none; /* Elimina las viñetas */
+  padding-left: 0; /* Elimina el padding predeterminado */
+  margin-top: 0; /* Elimina el margen superior */
+}
+
+.participantes-lista li {
+  font-size: 0.9rem; /* Tamaño de fuente consistente */
+  color: #6c757d; /* Color de texto más suave */
+  margin-bottom: 5px; /* Espaciado entre los elementos de la lista */
+}
+
+.participantes-lista li:last-child {
+  margin-bottom: 0; /* Elimina el margen del último ítem */
+}
+
+/* Alineación de los estados a la derecha */
+.card-footer .d-flex {
+  display: flex;
+  justify-content: space-between; /* Espacia los elementos de manera uniforme */
+}
+
+.card-footer .badge {
+  margin-left: auto; /* Empuja el badge hacia la derecha */
+}
+
+.participantes-lista {
+  margin-left: 50px; /* Desplaza la lista de participantes a la derecha */
+}

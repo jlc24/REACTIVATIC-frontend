@@ -5820,6 +5820,11 @@ a.badge-light.focus {
     background-color: #343a40;
 }
 
+.badge-custom {
+  background-color: #FF5919;
+  color: #fff;
+}
+
 a.badge-dark:hover,
 a.badge-dark:focus {
     color: #FFF;

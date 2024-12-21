@@ -195,7 +195,7 @@
             <label>Buscar:</label>
           </div>
           <div class="col-lg-6 col-sm-6">
-            <input type="text" class="form-control form-control-sm" [(ngModel)]="buscarRep" name="buscarRep" (keyup)="fbuscarRep()" (input)="onInputRep($event)" (change)="onSelect($event.target.value)" autocomplete="no" list="listRep" placeholder="Buscar representante..." required/>
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="buscarRep" name="buscarRep" (keyup)="fbuscarRep()" (input)="onInputRep($event)" (change)="onSelect($event.target.value)" autocomplete="off" list="listRep" placeholder="Buscar representante..." required/>
             <datalist id="listRep">
               <option *ngFor="let _rep of representantes"
                       [value]="_rep.persona.primerapellido + ' ' + _rep.persona.segundoapellido + ' ' + _rep.persona.primernombre">

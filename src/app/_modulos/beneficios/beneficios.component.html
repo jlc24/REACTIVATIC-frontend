@@ -234,6 +234,8 @@
                 </ng-container>
               </small>
             </div>
+          </div>
+          <div class="row justify-content-center">
             <div class="col-sm-3 text-sm-right mt-3">
               <label for="descripcion"><strong>Descripción:</strong></label>
             </div>
@@ -252,11 +254,13 @@
                 {{ caracteresRestantes }} caracteres restantes.
               </small>
             </div>
+          </div>
+          <div class="row">
             <div class="col-sm-3 text-sm-right mt-3">
               <label for="idtipobeneficio"><strong>Tipo:</strong><span class="text-danger"><b>*</b></span></label>
             </div>
             <div class="col-sm-9 mt-3">
-              <select class="form-control form-control-sm" id="idtipobeneficio" formControlName="idtipobeneficio" [class.is-invalid]="f.idtipobeneficio.errors && f.idtipobeneficio.touched">
+              <select class="form-control form-control-sm" id="idtipobeneficio" formControlName="idtipobeneficio" [class.is-invalid]="f.idtipobeneficio.errors && f.idtipobeneficio.touched" (change)="onTipoBeneficioChange($event.target.value)">
                 <option *ngFor="let _tipo of tiposbeneficios" [value]="_tipo.idtipobeneficio">
                   {{ _tipo.tipobeneficio }}
                 </option>
@@ -267,6 +271,9 @@
                 </ng-container>
               </small>
             </div>
+
+          </div>
+          <div class="row justify-content-center">
             <div class="col-sm-3 text-sm-right mt-3">
               <label for="idmunicipio"><strong>Municipio:</strong><span class="text-danger"><b>*</b></span></label>
             </div>
@@ -322,7 +329,7 @@
                 </ng-container>
               </small>
             </div>
-            <div class="col-sm-3 text-sm-right mt-3">
+            <div class="col-sm-3 text-sm-right mt-3 p-0">
               <label for="fechafin"><strong>Fin:</strong><span class="text-danger"><b>*</b></span></label>
             </div>
             <div class="col-sm-9 mt-3">
@@ -342,6 +349,23 @@
                 </ng-container>
               </small>
             </div>
+
+            <div class="row" *ngIf="mostrarMesas">
+              <div class="col-sm-3 text-sm-right mt-3 ">
+                <label for="intervalo"><strong>Intervalo:</strong></label>
+              </div>
+              <div class="col-sm-2 mt-3 ">
+                <input type="text" class="form-control form-control-sm" id="intervalo" formControlName="duracion" maxlength="2" (input)="onInput($event, 'duracion', 'numeros')" autocomplete="no" required/>
+              </div>
+              <div class="col-sm-2 text-sm-right mt-3 ">
+                <label for="mesa"><strong>Mesas:</strong></label>
+              </div>
+              <div class="col-sm-2 mt-3 ">
+                <input type="text" class="form-control form-control-sm" id="mesa" formControlName="mesas" maxlength="3" (input)="onInput($event, 'mesas', 'numeros')" autocomplete="no" required/>
+              </div>
+            </div>
+
+
             <div class="col-sm-3 text-sm-right mt-3">
               <label for="idcapacitador"><strong>Capacitador:</strong></label>
             </div>

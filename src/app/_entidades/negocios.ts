@@ -7,6 +7,7 @@ export class Negocios {
   idbeneficio: number;
   idbeneficioempresa: number;
   idpersona: number;
+  fecha: Date;
   horainicio: string;
   horafin: string;
   duracion: number;
