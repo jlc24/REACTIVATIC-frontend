@@ -25,7 +25,7 @@ export class TradesService {
 
   dato(id: number, beneficio: number): Observable<Negocios>{
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
-    return this._httpClient.get<Negocios>(`${this.ruta}/${id}&beneficio=${beneficio}`, {
+    return this._httpClient.get<Negocios>(`${this.ruta}/${id}?beneficio=${beneficio}`, {
           headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
   }
@@ -47,6 +47,13 @@ export class TradesService {
   horas(empresa: string, beneficio: string, fecha: Date): Observable<Negocios[]>{
     const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
     return this._httpClient.get<Negocios[]>(`${this.ruta}/horas?empresa=${empresa}&beneficio=${beneficio}&fecha=${fecha}`, {
+          headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+
+  mesas(hora: string, beneficio: string, fecha: Date): Observable<Negocios[]>{
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Negocios[]>(`${this.ruta}/mesas?hora=${hora}&beneficio=${beneficio}&fecha=${fecha}`, {
           headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
     });
   }

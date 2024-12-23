@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RUTA } from '../_config/application';
 import { Beneficios } from '../_entidades/beneficios';
 import { Negocios } from '../_entidades/negocios';
@@ -27,11 +27,26 @@ export class TradeComponent implements OnInit {
 
   gestion: number = new Date().getFullYear();
 
+  horaActual: string = '';
+  private intervalId: any;
+
   constructor(
     private _negociosService: NegociosService,
   ) { }
 
   ngOnInit(): void {
+    this.fnegocios();
+    this.actualizarHora();
+    this.intervalId = setInterval(() => this.actualizarHora(), 1000);
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.intervalId);
+  }
+
+  actualizarHora(): void {
+    const ahora = new Date();
+    this.horaActual = ahora.toLocaleTimeString();
     this.fnegocios();
   }
 

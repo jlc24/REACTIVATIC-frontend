@@ -101,7 +101,7 @@
       <!-- Sección de reuniones -->
       <div class="row g-4 mb-3">
         <div class="row">
-          <div class="col-sm-6 mt-1">
+          <div class="col-sm-3 mt-1">
             <p *ngIf="totalcitas == 0">
               Total: <b>{{ totalcitas }} registros</b>
             </p>
@@ -112,7 +112,10 @@
               Total: <b>{{ totalcitas }} registros</b>
             </p>
           </div>
-          <div class="col-sm-6 mt-1">
+          <div class="col-sm-4 mt-1 text-center">
+            <p><b>Hora actual:</b> {{ horaActual }}</p>
+          </div>
+          <div class="col-sm-5 mt-1">
             <div class="row justify-content-end">
               <div class="col-sm-2 text-md-right text-sm-left mt-1">
                 <label for="">Buscar: </label>
@@ -152,7 +155,7 @@
                     {{ _negocio.beneficioempresa.empresa.empresa }}
                   </li>
                   <li >
-                    {{ _negocio.persona.primerapellido }} {{ _negocio.persona.primerapellido }} {{ _negocio.persona.segundoapellido }} {{ _negocio.persona.primernombre }}
+                    {{ _negocio.persona.primerapellido }} {{ _negocio.persona.segundoapellido }} {{ _negocio.persona.primernombre }}
                   </li>
                 </ul>
               </div>

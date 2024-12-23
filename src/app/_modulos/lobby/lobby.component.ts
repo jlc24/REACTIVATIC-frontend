@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BeneficiosService } from 'src/app/_aods/beneficios.service';
 import { BeneficiosempresasService } from 'src/app/_aods/beneficiosempresas.service';
 import { TradesService } from 'src/app/_aods/trades.service';
@@ -26,6 +26,14 @@ export class LobbyComponent implements OnInit {
 
   isSameDate: boolean = false;
 
+  timers: { [key: string]: any[] } = {};
+
+  horaActual: string = '';
+  private intervalId: any;
+
+  estadoempresa: number = 0;
+  estadopersona: number = 0;
+
   constructor(
     private _beneficiosService: BeneficiosService,
     private _tradesService: TradesService,
@@ -33,6 +41,19 @@ export class LobbyComponent implements OnInit {
 
   ngOnInit(): void {
     this.fnegocios();
+    this.actualizarHora();
+    this.intervalId = setInterval(() => this.actualizarHora(), 1000);
+    this.intervalId = setInterval(() => this.programarEstadosParaNegocios(), 30000);
+  }
+
+  ngOnDestroy(): void {
+    //this.limpiarTodosLosTimers(); // Limpiar timers al destruir el componente
+    clearInterval(this.intervalId);
+  }
+
+  actualizarHora(): void {
+    const ahora = new Date();
+    this.horaActual = ahora.toLocaleTimeString('en-US', { hour12: false });
   }
 
   getBadgeClass(estado: number): string {
@@ -87,7 +108,76 @@ export class LobbyComponent implements OnInit {
     this._tradesService.datos(this.buscarnegocios, this.beneficio.idbeneficio).subscribe(data => {
       this.negocios = data;
       this.fcantidad();
+      //this.programarEstadosParaNegocios();
     });
   }
 
+  programarEstadosParaNegocios(): void {
+    this.negocios.forEach(negocio => {
+      const horaActual = new Date();
+      const horaInicio = new Date(`${negocio.fecha}T${negocio.horainicio}`);
+      const horaFin = new Date(`${negocio.fecha}T${negocio.horafin}`);
+  
+      if (horaInicio.getTime() - horaActual.getTime() <= 5 * 60 * 1000 && 
+          horaActual.getTime() < horaInicio.getTime() && 
+          negocio.estadoempresa !== 4 && negocio.estadoempresa === 6
+        ) {
+        this.estadoempresa = 4; // Pendiente
+        this.estadopersona = 4; // Pendiente
+        this.fmodificarestados(negocio);
+      }
+  
+      else if (horaActual.getTime() >= horaInicio.getTime() && horaActual.getTime() <= horaFin.getTime()) {
+        let estadoModificado = false;
+        if (negocio.estadoempresa === 5 && this.estadoempresa !== 1) {
+          this.estadoempresa = 1; // En curso
+          estadoModificado = true;
+        } else if (negocio.estadoempresa === 4 && this.estadoempresa !== 2) {
+          this.estadoempresa = 2; // Ausente
+          estadoModificado = true;
+        }
+      
+        if (negocio.estadopersona === 5 && this.estadopersona !== 1) {
+          this.estadopersona = 1; // En curso
+        } else if (negocio.estadopersona === 4 && this.estadopersona !== 2) {
+          this.estadopersona = 2; // Ausente
+          estadoModificado = true;
+        }
+        if (estadoModificado) {
+          this.fmodificarestados(negocio);
+        }
+      }
+  
+      else if (horaFin.getTime() <= horaActual.getTime()) {
+        this.estadoempresa = 8; // Finalizado
+        this.estadopersona = 8; // Finalizado
+        this.fmodificarestados(negocio);
+      }
+      else {
+        this.estadoempresa = 6; // Finalizado
+        this.estadopersona = 6; 
+        this.fmodificarestados(negocio);
+      }
+    });
+  }
+
+  fmodificarestados(negocio: Negocios){
+    console.log({
+      idnegocio: negocio.idnegocio,
+      idpersona: negocio.persona.idpersona,
+      estadoempresa: this.estadoempresa,
+      estadopersona: this.estadopersona,
+      mesa: negocio.mesa,
+      tipo: negocio.tipo
+    });
+    this._tradesService.modificar({ idnegocio: negocio.idnegocio,
+            idpersona: negocio.persona.idpersona,
+            estadoempresa: this.estadoempresa,
+            estadopersona: this.estadopersona,
+            mesa: negocio.mesa,
+            tipo: negocio.tipo,
+      }).subscribe(data => {
+        this.fdatos();
+      });
+  }
 }

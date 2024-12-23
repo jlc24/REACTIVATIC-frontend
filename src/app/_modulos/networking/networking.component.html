@@ -199,7 +199,7 @@
                           </td>
                           <td class="text-center">
                             <div class="btn-group">
-                              <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" data-boundary="viewport" aria-expanded="false">
+                              <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" data-boundary="viewport" aria-expanded="false" [disabled]="_negocio.estadoempresa === 8 && _negocio.estadopersona === 8">
                                 <i class="bi bi-list"></i>
                               </button>
                               <div class="dropdown-menu">
@@ -456,7 +456,7 @@
             <div class="row justify-content-end" *ngIf="persona">
               <button class="btn btn-sm btn-danger" (click)="flimpiarbuscar()" title="Borrar selección"><i class="bi bi-x"></i></button>
             </div>
-            <div class="col-sm-12 mt-3 mb-3" >
+            <div class="col-sm-12 mt-3 mb-2" >
               <div class="row">
                 <div class="col-md-4 col-sm-4 text-sm-right">
                   <Strong>Nombre: </Strong>
@@ -502,16 +502,27 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-12 mt-3" *ngIf="horas?.length > 0">
-          <p><strong>Duracion:</strong> {{ beneficio.duracion }} minutos</p>
-        </div>
-        <div class="col-sm-12 mt-3" *ngIf="horas?.length > 0">
-          <h5>Mesas disponibles:</h5>
-          <select class="custom-select custom-select-sm" id="horadisponible">
-            <option *ngFor="let mesa of mesas" [value]="mesa">
-              Mesa {{ mesa }}
-            </option>
-          </select>
+        <div class="row">
+          <div class="col-sm-12 mt-1" *ngIf="horas?.length > 0">
+            <p><strong>Duracion:</strong> {{ beneficio.duracion }} minutos</p>
+          </div>
+          <div class="col-sm-6 mt-1" *ngIf="horas?.length > 0">
+            <h5>Tipo de reunion</h5>
+            <select class="custom-select custom-select-sm" id="fechadisponible" (change)="seleccionartipo($event.target.value)">
+              <option value="" [selected]>Seleccionar ...</option>
+              <option value="PRESENCIAL" >PRESENCIAL</option>
+              <option value="VIRTUAL" >VIRTUAL</option>
+            </select>
+          </div>
+          <div class="col-sm-6 mt-1" *ngIf="horas?.length > 0">
+            <h5>Mesas disponibles:</h5>
+            <select class="custom-select custom-select-sm" id="mesadisponible" (change)="onMesaChange($event.target.value)">
+              <option value="" [selected]>Seleccionar ...</option>
+              <option *ngFor="let mesa of mesas" [value]="mesa">
+                Mesa {{ mesa }}
+              </option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="col sm 6">
@@ -542,7 +553,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
     <div class="row">
@@ -644,6 +654,49 @@
       <span aria-hidden="true" class="text-white">&times;</span>
     </button>
   </div>
-  <div class="modal-body">
+  <div class="modal-body m-2">
+    <div class="row justify-content-center">
+      <label for=""><strong>{{ negocio.fecha | date:'EEEE, d \'de\' MMMM \'de\' y' }}</strong></label>
+    </div>
+    <div class="row justify-content-center">
+      <label for=""><strong>{{ negocio.horainicio | slice:0:5 }} - {{ negocio.horafin | slice:0:5 }}</strong></label>
+    </div>
+    <div class="row justify-content-center">
+      <label for=""><strong>Mesa: {{ negocio.mesa }}</strong></label>
+    </div>
+    <div class="row border border-1 mt-2">
+      <div class="col-sm-6 mt-2">
+        <h6>Empresa</h6>
+        <label><small><strong>Nombre:</strong> {{ negocio?.beneficioempresa?.empresa?.empresa }}</small></label><br>
+        <label ><small><strong>Correo:</strong> {{ negocio?.beneficioempresa?.empresa?.correo }}</small></label><br>
+        <label><small><strong>Contacto:</strong> {{ negocio?.beneficioempresa?.empresa?.celular }}</small></label>
+        
+        <div class="form-group">
+          <label for="estadoempresa"><small><strong>Estado de la Empresa</strong></small></label>
+          <select id="estadoempresa" class="custom-select custom-select-sm" [(ngModel)]="negocio.estadoempresa" (change)="OnChangeEstapdoEmpresa($event.target.value)">
+            <option value="" [selected]>Seleccionar ...</option>
+            <option *ngFor="let estado of estados" [value]="estado.value">{{ estado.text }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-sm-6 mt-2">
+        <h6>Cliente</h6>
+        <label><small><strong>Nombre:</strong> {{ negocio?.persona?.primerapellido }} {{ negocio?.persona?.segundoapellido }} {{ negocio?.persona?.primernombre }}</small></label><br>
+        <label ><small><strong>Correo:</strong> {{ negocio?.persona?.correo }}</small></label><br>
+        <label><small><strong>Teléfono:</strong> {{ negocio?.persona?.celular }}</small></label>
+  
+        <div class="form-group">
+          <label for="estadopersona"><small><strong>Estado de la Persona</strong></small></label>
+          <select id="estadopersona" class="custom-select custom-select-sm" [(ngModel)]="negocio.estadopersona" (change)="OnChangeEstapdoPersona($event.target.value)">
+            <option value="" [selected]>Seleccionar ...</option>
+            <option *ngFor="let estado of estados" [value]="estado.value">{{ estado.text }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row justify-content-end mr-2 mt-2">
+      <button class="btn btn-sm btn-outline-success" (click)="fmodificarestados()">Confirmar</button>
+    </div>
   </div>
 </ng-template>

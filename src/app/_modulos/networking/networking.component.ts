@@ -37,6 +37,7 @@ export class NetworkingComponent implements OnInit {
   beneficiosempresas: Beneficiosempresas[];
   negocios: Negocios[];
   negocio: Negocios;
+  reunion: any;
 
   fechas: Negocios[];
   horas: Negocios[];
@@ -70,11 +71,24 @@ export class NetworkingComponent implements OnInit {
 
   personaseleccionada: Personas;
   horarioseleccionado: Negocios = null;
+  mesasocupadas: Negocios[];
   mesas: number[] = [];
   mesa: number = 0;
+  tiposeleccionado: string = '';
+  fechaseleccionada: Date;
+
+  estadoempresa: number = 0;
+  estadopersona: number = 0;
 
   modalRefVer: NgbModalRef;
   modalRefConectar: NgbModalRef;
+
+  estados = [
+    { value: 2, text: 'Ausente' },
+    { value: 4, text: 'Pendiente' },
+    { value: 5, text: 'Confirmado' },
+    { value: 8, text: 'Finalizado' }
+  ];
 
   constructor(
     private _empresasService: EmpresasService,
@@ -403,6 +417,7 @@ export class NetworkingComponent implements OnInit {
       if (this.horarioseleccionado){
         this.horarioseleccionado = null
         this.horas = [];
+        this.mesa = null;
       }
     }
   }
@@ -420,8 +435,8 @@ export class NetworkingComponent implements OnInit {
   }
 
   fhoras(event: any){
-    const fechaSeleccionada = event.target.value;
-    this._tradesService.horas(this.empresa.idempresa.toString(), this.beneficio.idbeneficio.toString(), fechaSeleccionada).subscribe(data => {
+    this.fechaseleccionada = event.target.value;
+    this._tradesService.horas(this.empresa.idempresa.toString(), this.beneficio.idbeneficio.toString(), this.fechaseleccionada).subscribe(data => {
       this.horas = data
     });
   }
@@ -438,8 +453,34 @@ export class NetworkingComponent implements OnInit {
     return `${hh}:${mm}`;
   }
 
+  fmesasocupadas(hora: string, idbeneficio: number, fecha: Date){
+    this._tradesService.mesas(hora, idbeneficio.toString(), fecha).subscribe(data => {
+      this.mesasocupadas = data;
+      this.generarMesas();
+    })
+  }
+
+  seleccionartipo(tipo: string){
+    this.tiposeleccionado = tipo;
+  }
+
   seleccionarHora(hora: any) {
     this.horarioseleccionado = hora;
+    
+    this.fmesasocupadas(this.horarioseleccionado.horainicio, this.beneficio.idbeneficio, this.fechaseleccionada);
+  }
+
+  generarMesas(): void {
+    this.mesas = Array.from({ length: this.beneficio.mesas }, (_, i) => i + 1);
+    if (this.mesas && this.mesasocupadas) {
+      const mesasOcupadasNumeros = this.mesasocupadas.map(ocupada => ocupada.mesa); // Extraer las mesas ocupadas
+      this.mesas = this.mesas.filter(mesa => !mesasOcupadasNumeros.includes(mesa));
+    }
+    console.log(this.mesas);
+  }
+
+  onMesaChange(selectedValue: string) {
+    this.mesa = parseInt(selectedValue, 10);
   }
 
   fconectar(){
@@ -465,24 +506,44 @@ export class NetworkingComponent implements OnInit {
         },
         buttonsStyling: false,
       });
+    }else if (this.tiposeleccionado == '') {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Información',
+        text: `Por favor selecione Tipo de reunion`,
+        confirmButtonText: 'Aceptar',
+        customClass: {
+          confirmButton: 'btn btn-success rounded-pill mr-3',
+        },
+        buttonsStyling: false,
+      });
+    }else if (this.mesa == null) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Información',
+        text: `Por favor selecione una mesa`,
+        confirmButtonText: 'Aceptar',
+        customClass: {
+          confirmButton: 'btn btn-success rounded-pill mr-3',
+        },
+        buttonsStyling: false,
+      });
     }else{
-
-      // this.negocio.idnegocio = this.horarioseleccionado.idnegocio;
-      // this.
-
       this._tradesService.modificar({ idnegocio: this.horarioseleccionado.idnegocio,
                                       idpersona: this.persona.idpersona,
                                       estadoempresa: 6,
                                       estadopersona: 6,
                                       mesa: this.mesa,
-
-                                    }).subscribe(data => {
+                                      tipo: this.tiposeleccionado,
+      }).subscribe(data => {
         this.fdatos();
         this.modalRefVer.dismiss();
         this._toast.success('Cita agendada con exito', 'Hecho');
       });
     }
   }
+
+  
 
   fverinfo(id: number, content: any){
     this._empresasService.dato(id).subscribe(data => {
@@ -690,14 +751,57 @@ export class NetworkingComponent implements OnInit {
       this.modalRefVer = this._modalService.open(content, {
         backdrop:'static',
         keyboard: false,
-        size: 'lg',
+        size: 'md',
         scrollable: true
       });
     });
   }
 
-  generarMesas(): void {
-    this.mesas = Array.from({ length: this.beneficio.mesas }, (_, i) => i + 1);
+  OnChangeEstapdoEmpresa(selectedValue: string): void{
+    this.estadoempresa = +selectedValue;
+  }
+  OnChangeEstapdoPersona(selectedValue: string): void{
+    this.estadopersona = +selectedValue;
+  }
+
+  fmodificarestados(){
+    if (this.estadoempresa == 0 || this.estadoempresa == null) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Información',
+        text: `Por favor selecione un estado de la Empresa`,
+        confirmButtonText: 'Aceptar',
+        customClass: {
+          confirmButton: 'btn btn-success rounded-pill mr-3',
+        },
+        buttonsStyling: false,
+      });
+    }else if (this.estadopersona == 0 || this.estadopersona == null) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Información',
+        text: `Por favor selecione un estado del Cliente.`,
+        confirmButtonText: 'Aceptar',
+        customClass: {
+          confirmButton: 'btn btn-success rounded-pill mr-3',
+        },
+        buttonsStyling: false,
+      });
+    }else{
+      this._tradesService.modificar(
+        { idnegocio: this.negocio.idnegocio,
+              idpersona: this.negocio?.persona?.idpersona,
+              estadoempresa: this.estadoempresa,
+              estadopersona: this.estadopersona,
+              mesa: this.negocio.mesa,
+              tipo: this.negocio.tipo,
+        }
+      ).subscribe(data => {
+        this.fdatos();
+        this.modalRefVer.dismiss();
+        this._toast.success('','Operacion exitosa');
+      });
+    }
   }
 
 }

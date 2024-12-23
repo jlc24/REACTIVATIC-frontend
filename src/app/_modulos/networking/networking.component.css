@@ -105,3 +105,6 @@ input[type="radio"]:disabled + label {
   max-height: 200px; /* Limita la altura de la lista desplegable */
   overflow-y: auto;  /* Agrega un scroll si hay demasiados elementos */
 }
+
+
+

@@ -4,6 +4,7 @@ import { Personas } from "./personas";
 
 export class Negocios {
   idnegocio: number;
+  tipo: string;
   idbeneficio: number;
   idbeneficioempresa: number;
   idpersona: number;
