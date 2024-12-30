@@ -81,7 +81,7 @@ Si prefieres utilizar NVM (Node Version Manager) para gestionar la instalación 
 
 ##### Configuración del entorno:
 
-1. Clonar el repositorio:
+1. Clonar del repositorio:
     ```sh
     git clone https://github.com/jlc24/REACTIVATIC-frontend.git
     cd REACTIVATIC-frontend
@@ -152,7 +152,16 @@ Si prefieres utilizar NVM (Node Version Manager) para gestionar la instalación 
         ```sh
         ng serve
         ```
-        Esto levantará el servidor de desarrollo en http://localhost:4200/. Puedes acceder a la aplicación desde cualquier navegador.
+        Esto levantará el servidor de desarrollo en `http://localhost:4200/`. Puedes acceder a la aplicación desde cualquier navegador.
+    - Modo Produccion.
+        Para desplegar el proyecto en producción, sigue estos pasos:
+        ```sh
+        ng build --prod
+        ```
+        Esto generará una carpeta llamado `dist/` dentro del directorio raíz de tu proyecto. Dentro de esta carpeta estará otra subcarpeta que contiene los archivos listos para producción normalmente con el nombre de tu proyecto o directamente "frontend".
+        Una vez que se generen los archivos en `dist/`, copia su contenido al servidor web. Si estás utilizando nginx o Apache como servidor web, los archivos deben ser colocados en `/var/www/html/`.
+
+        Abrir un navegador y acceder al dominio configurado `https://reactivatic.oruro.gob.bo/reactivaticapp/#/acceso` o `https://reactivatic.oruro.gob.bo/reactivaticapp/#/catalogo`.
 
 
 ## License
