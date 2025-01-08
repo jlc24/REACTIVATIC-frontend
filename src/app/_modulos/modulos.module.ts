@@ -51,12 +51,14 @@ import { EvaluacionesComponent } from './evaluaciones/evaluaciones.component';
 import { CertificadosComponent } from './certificados/certificados.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { NetworkingComponent } from './networking/networking.component';
+import { ReportetiendavirtualComponent } from './reportetiendavirtual/reportetiendavirtual.component';
+import { IndicadoresComponent } from './indicadores/indicadores.component';
 
 
 
 
 @NgModule({
-  declarations: [EscritorioComponent, PerfilesComponent, ConfiguracionesComponent, E401Component, RubrosComponent, MunicipiosComponent, LocalidadesComponent, SubrubrosComponent, AsociacionesComponent, UsuariosComponent, EmpresasComponent, RepresentantesComponent, ProductosComponent, SolicitudesventaComponent, SolicitudescompraComponent, ReportesComponent, SeguimientosComponent, ClientesnoregistradosComponent, ClientesregistradosComponent, ProductosmasvendidosComponent, ClientesconmascomprasComponent, EmpresasmassolicitadasComponent, CategoriaComponent, BeneficiosComponent, ColoresComponent, ComentariosComponent, MaterialesComponent, OfertasComponent, PreciosComponent, TamanosComponent, DocumentosComponent, EnlacesComponent, ExtensionesComponent, GenerosComponent, RolesComponent, CargosComponent, ReporteunidadesComponent, ReportebeneficiosComponent, NegociosComponent, EvaluacionesComponent, CertificadosComponent, LobbyComponent, NetworkingComponent],
+  declarations: [EscritorioComponent, PerfilesComponent, ConfiguracionesComponent, E401Component, RubrosComponent, MunicipiosComponent, LocalidadesComponent, SubrubrosComponent, AsociacionesComponent, UsuariosComponent, EmpresasComponent, RepresentantesComponent, ProductosComponent, SolicitudesventaComponent, SolicitudescompraComponent, ReportesComponent, SeguimientosComponent, ClientesnoregistradosComponent, ClientesregistradosComponent, ProductosmasvendidosComponent, ClientesconmascomprasComponent, EmpresasmassolicitadasComponent, CategoriaComponent, BeneficiosComponent, ColoresComponent, ComentariosComponent, MaterialesComponent, OfertasComponent, PreciosComponent, TamanosComponent, DocumentosComponent, EnlacesComponent, ExtensionesComponent, GenerosComponent, RolesComponent, CargosComponent, ReporteunidadesComponent, ReportebeneficiosComponent, NegociosComponent, EvaluacionesComponent, CertificadosComponent, LobbyComponent, NetworkingComponent, ReportetiendavirtualComponent, IndicadoresComponent],
   imports: [
     CommonModule,
     ModulosRoutingModule,

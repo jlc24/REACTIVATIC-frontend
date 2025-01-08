@@ -499,6 +499,7 @@ export class EmpresasComponent implements OnInit {
     }
   }
   fselrepresentante(id: number){
+    this.utilsService.mostrarCargando();
     if (this.estado === 'Adicionar') {
       this._empresasService.verificar(id).pipe(
         switchMap(empresasRegistradas => {
@@ -531,11 +532,13 @@ export class EmpresasComponent implements OnInit {
           this.toast.error(error, 'Error');
         }
       );
+      this.utilsService.cerrarCargando();
     }else{
       this._representantesService.dato(id).subscribe((data) => {
         this.representante = data;
         this.fdescargar(data.persona.idpersona, 'repanverso');
         this.fdescargar(data.persona.idpersona, 'repreverso');
+        this.utilsService.cerrarCargando();
       });
     }
   }
@@ -1454,10 +1457,10 @@ export class EmpresasComponent implements OnInit {
       })
       .then((result) => {
         if (result.value) {
-          // this._empresasService.eliminar(id).subscribe((data) => {
-          //   this.fdatos();
-          // });
-          swal.fire('Error', 'Procedimiento NO autorizado, por favor contacte al Administrador', 'error');
+          this._empresasService.eliminar(id).subscribe((data) => {
+            this.fdatos();
+          });
+          swal.fire('Hecho', 'Unidad Productiva eliminado', 'success');
         }
       });
   }
@@ -1477,7 +1480,7 @@ export class EmpresasComponent implements OnInit {
       buttonsStyling: false,
     }).then((result) => {
       if (result.value) {
-        // this._localicadesService.cambiarestado({ idlocalidad, estado }).subscribe( response => {
+        // this._empresasService.cambiarestado({ idempresa, estado }).subscribe( response => {
         //   this.fdatos();
         //   swal.fire('Cambio realizado', 'El estado de la localidad ha sido cambiado con éxito.', 'success');
         // });

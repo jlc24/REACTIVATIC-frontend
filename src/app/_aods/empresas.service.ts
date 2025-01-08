@@ -204,4 +204,28 @@ export class EmpresasService {
       });
     }
   }
+
+  enTienda(pagina: number, cantidad: number, buscar: string): Observable<Empresas[]> {
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Empresas[]>(`${this.ruta}/tienda?pagina=${pagina}&cantidad=${cantidad}&buscar=${buscar}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+
+  cantidadtienda(buscar: string): Observable<number> {
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<number>(`${this.ruta}/cantidadtienda?buscar=${buscar}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+
+  datosTiendaXLS() {
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get(`${this.ruta}/datosTiendaXLS`, {
+      responseType: "blob",
+      headers: new HttpHeaders()
+        .set("Authorization", `bearer ${access_token}`)
+        .set("Content-Type", "application/json")
+    });
+  }
 }

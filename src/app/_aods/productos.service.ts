@@ -183,4 +183,11 @@ export class ProductosService {
     });
   }
 
+  productos(id: number): Observable<Productos[]> {
+    const access_token = JSON.parse(sessionStorage.getItem(TOKEN)).access_token;
+    return this._httpClient.get<Productos[]>(`${this.ruta}/empresas/${id}`, {
+      headers: new HttpHeaders().set('Authorization', `bearer ${access_token}`).set('Content-Type', 'application/json')
+    });
+  }
+
 }

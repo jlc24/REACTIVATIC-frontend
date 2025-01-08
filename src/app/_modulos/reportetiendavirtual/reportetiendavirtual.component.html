@@ -1,0 +1,149 @@
+<app-cabeceratitulos [titulo]="'Reportes'" [descripcion]="'Lista de Empresas en Tienda Virtual'" [icono]="'fa fa-file'" [opcion]="'Reporte Tienda Virtual'">
+</app-cabeceratitulos>
+
+<div class="row">
+    <div class="col-md-12">
+      <div class="card" style="border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border: 1px solid #4A5568;">
+        <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #4A5568; border-radius: 10px 10px 0 0;">
+          <h4 class="text-white">LISTA DE UNIDADES PRODUCTIVAS EN TIENDA VIRTUAL</h4>
+          <button class="btn btn-sm btn-outline-light rounded-pill mr-2" type="button" (click)="fdatosTiendaXLS()"><i class="fa fa-file-excel-o"></i> Descargar EXCEL</button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6 mt-1">
+                  <p *ngIf="total == 0">
+                    Total: <b>{{ total }} registros</b>
+                  </p>
+                  <p *ngIf="total == 1">
+                    Total: <b>{{ total }} registro</b>
+                  </p>
+                  <p *ngIf="total > 1">
+                    Total: <b>{{ total }} registros</b>
+                  </p>
+                </div>
+                <div class="col-sm-6">
+                  <div class="row justify-content-end">
+                    <div class="col-sm-2 text-md-right text-sm-left mt-1">
+                      <label for="">Buscar: </label>
+                    </div>
+                    <div class="col-sm-10">
+                      <div class="input-group input-group-sm">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="inputGroup-sizing-sm"><i class="bi bi-search"></i></span>
+                        </div>
+                        <input type="text" class="form-control form-control-sm" [(ngModel)]="buscar" placeholder="Empresa a buscar ..." (keyup)="fbuscar()" style="text-transform: uppercase;"/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="table-responsive" *ngIf="empresas?.length > 0">
+                <table class="table table-sm table-bordered table-hover table-striped tabla-empresa">
+                    <thead>
+                        <tr class="table-primary">
+                            <th class="text-center">Nro.</th>
+                            <th class="text-center">Unidad Productiva</th>
+                            <th class="text-center">Representante</th>
+                            <th class="text-center">Carnet</th>
+                            <th class="text-center">Rubro</th>
+                            <th class="text-center">Municipio</th>
+                            <th class="text-center">Op</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let _item of empresas; let i = index">
+                            <td class="text-right">{{ pagina > 1 ? (i + 1 + ((pagina-1)*10)) : (i + 1) }}</td>
+                            <td>{{ _item.empresa}}</td>
+                            <td >{{ _item.representante.persona?.primerapellido }} {{ _item.representante.persona?.segundoapellido }} {{ _item.representante.persona?.primernombre }}</td>
+                            <td class="text-right">{{ _item.representante.persona?.dip }}</td>
+                            <td class="text-center">{{ _item.rubro?.rubro }}</td>
+                            <td class="text-center">{{ _item.municipio?.municipio }}</td>
+                            <td class="text-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" data-boundary="viewport" aria-expanded="false">
+                                    <i class="bi bi-list"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <div class="dropdown-item puntero" (click)="fver(_item.idempresa, ver)"><i class="fa fa-eye text-info"></i> Ver</div>
+                                </div>
+                            </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive" *ngIf="total == 0">
+                <table class="table table-sm table-bordered table-hover tabla-empresa">
+                  <thead>
+                    <tr class="table-primary">
+                        <th class="text-center">Nro.</th>
+                        <th class="text-center">Unidad Productiva</th>
+                        <th class="text-center">Representante</th>
+                        <th class="text-center">Carnet</th>
+                        <th class="text-center">Rubro</th>
+                        <th class="text-center">Municipio</th>
+                        <th class="text-center">Op</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colspan="7" class="text-center">No se encontraron registros.</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm-6">
+                  <p>Mostrando del {{((pagina-1)*10)+1}} al {{((pagina-1)*10)+10}} de {{total}} datos</p>
+                </div>
+                <div class="col-sm-6">
+                  <ngb-pagination class="d-flex justify-content-end pagination-rounded" [collectionSize]="total" [(page)]="pagina" [maxSize]="cantidad" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="mostrarMas($event)"></ngb-pagination>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<ng-template #ver>
+    <div class="modal-header" style="background-color: #4A5568;">
+      <h4 class="modal-title pull-left text-white"><i class="fa fa-eye"></i> {{ estado }} Productos</h4>
+      <button type="button" class="close" aria-label="Close" (click)="fcancelar()">
+        <span aria-hidden="true" class="text-white">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="col-12 mt-2 table-responsive">
+            <table class="table table-bordered table-hover tabla-enlaces">
+                <thead class="table-info">
+                    <tr>
+                        <th class="text-center">Nro</th>
+                        <th class="text-center">Producto</th>
+                        <th class="text-center">Descripcion</th>
+                        <th class="text-center">Precios</th>
+                        <th class="text-center">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let _prod of productos; let i = index">
+                        <td class="text-right">{{ i + 1 }}</td>
+                        <td>{{ _prod.producto }}</td>
+                        <td>{{ _prod.descripcion }}</td>
+                        <td>
+                            {{
+                                (_prod.minPrecio === _prod.maxPrecio)
+                                ? (_prod.minPrecio | number:'1.2-2')
+                                : ((_prod.minPrecio | number:'1.2-2') + ' - Bs. ' + (_prod.maxPrecio | number:'1.2-2'))
+                            }}
+                        </td>
+                        <td>
+                            <span class="estado badge {{ _prod.estado ? 'badge-success' : 'badge-danger' }}" title="Cambiar estado" >
+                            {{ _prod.estado ? 'HABILITADO' : 'INHABILITADO' }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</ng-template>

@@ -38,6 +38,8 @@ import { EvaluacionesComponent } from './evaluaciones/evaluaciones.component';
 import { CertificadosComponent } from './certificados/certificados.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { NetworkingComponent } from './networking/networking.component';
+import { ReportetiendavirtualComponent } from './reportetiendavirtual/reportetiendavirtual.component';
+import { IndicadoresComponent } from './indicadores/indicadores.component';
 
 const routes: Routes = [
   {
@@ -229,6 +231,14 @@ const routes: Routes = [
     }
   },
   {
+    path: 'reptiendavirtual',
+    component: ReportetiendavirtualComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
     path: 'reportebeneficios',
     component: ReportebeneficiosComponent,
     canActivate: [GuardianGuard],
@@ -255,6 +265,14 @@ const routes: Routes = [
   {
     path: 'clientes',
     component: ClientesregistradosComponent,
+    canActivate: [GuardianGuard],
+    data: {
+      rol: 'ROLE_TODOS'
+    }
+  },
+  {
+    path: 'indicadores',
+    component: IndicadoresComponent,
     canActivate: [GuardianGuard],
     data: {
       rol: 'ROLE_TODOS'
